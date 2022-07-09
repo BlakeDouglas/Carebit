@@ -1,15 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
+import AuthenticationScreen from "./AuthenticationScreen";
 
 export default function App() {
-    return (
-        <View style={styles.container}>
-            <Text style={{ fontSize: 25, fontStyle: "italic" }}>
-                HELLO CAREBIT HELLO HELLO
-            </Text>
-            <StatusBar style="auto" />
-        </View>
-    );
+    return <AuthenticationScreen />;
 }
 
 const styles = StyleSheet.create({
