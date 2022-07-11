@@ -1,16 +1,42 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import AuthenticationScreen from "./AuthenticationScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+
+import TitleScreen from "./screens/TitleScreen";
+import RoleSelectScreen from "./screens/RoleSelectScreen";
+import LoginScreen from "./screens/LoginScreen";
+
+import { useFonts } from "expo-font";
+
+const Stack = createStackNavigator();
 
 export default function App() {
-    return <AuthenticationScreen />;
-}
+    const [loaded] = useFonts({
+        RobotoBold: require("../assets/fonts/Roboto-Bold.ttf"),
+    });
+    if (!loaded) {
+        return null;
+    }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "pink",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-});
+    // TODO: Need to implement navigation between screens
+    return (
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen
+                    name="Title"
+                    component={TitleScreen}
+                    options={{ header: () => null }}
+                />
+                <Stack.Screen
+                    name="Role Select"
+                    component={RoleSelectScreen}
+                    options={{ header: () => null }}
+                />
+                <Stack.Screen
+                    name="Login"
+                    component={LoginScreen}
+                    options={{ header: () => null }}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
+}
