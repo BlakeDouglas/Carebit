@@ -1,9 +1,9 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import TitleScreen from "./screens/TitleScreen";
-import RoleSelectScreen from "./screens/RoleSelectScreen";
-import LoginScreen from "./screens/LoginScreen";
+import TitleScreen from "./src/screens/TitleScreen";
+import RoleSelectScreen from "./src/screens/RoleSelectScreen";
+import LoginScreen from "./src/screens/LoginScreen";
 
 import { useFonts } from "expo-font";
 
@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 
 export default function App() {
     const [loaded] = useFonts({
-        RobotoBold: require("../assets/fonts/Roboto-Bold.ttf"),
+        RobotoBold: require("./assets/fonts/Roboto-Bold.ttf"),
     });
     if (!loaded) {
         return null;
