@@ -23,11 +23,14 @@ export default function TitleScreen({ navigation }) {
                     Register
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={loginButtonHandler}>
+            <Text></Text>
+            <TouchableOpacity 
+            style={GlobalStyle.Button}
+            onPress={loginButtonHandler}>
                 <Text
                     style={[
                         GlobalStyle.Text,
-                        { fontWeight: "bold", paddingTop: 20 },
+                        { fontWeight: "bold"},
                     ]}
                 >
                     Login

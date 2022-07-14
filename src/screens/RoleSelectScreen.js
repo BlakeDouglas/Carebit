@@ -37,6 +37,7 @@ export default function RoleSelectScreen({ navigation }) {
                     I'm Caregiving
                 </Text>
             </TouchableOpacity>
+            <Text/>
             <TouchableOpacity
                 style={GlobalStyle.Button}
                 onPress={caregiveeCreateAccountButtonHandler}
@@ -44,10 +45,10 @@ export default function RoleSelectScreen({ navigation }) {
                 <Text
                     style={[
                         GlobalStyle.Text,
-                        { fontWeight: "bold", paddingTop: 20 },
+                        { fontWeight: "bold", paddingTop: 0 },
                     ]}
                 >
-                    I'm Reveiving Care
+                    I'm Receiving Care
                 </Text>
             </TouchableOpacity>
         </SafeAreaView>
