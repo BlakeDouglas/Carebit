@@ -3,17 +3,27 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 import GlobalStyle from "../utils/GlobalStyle";
 
-export default function TitleScreen() {
+export default function TitleScreen({ navigation }) {
+    const createAccountButtonHandler = () => {
+        navigation.navigate("RoleSelectScreen");
+    };
+    const loginButtonHandler = () => {
+        navigation.navigate("LoginScreen");
+    };
+
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={GlobalStyle.Container}>
             <TitleText />
 
-            <TouchableOpacity style={styles.registerButton}>
+            <TouchableOpacity
+                style={GlobalStyle.Button}
+                onPress={createAccountButtonHandler}
+            >
                 <Text style={[GlobalStyle.Text, { fontWeight: "bold" }]}>
                     Register
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={loginButtonHandler}>
                 <Text
                     style={[
                         GlobalStyle.Text,
@@ -28,6 +38,7 @@ export default function TitleScreen() {
 }
 
 const TitleText = () => {
+    // TODO: Change paddingTop in title to dynamically adjust. Same for other modules
     return (
         <View>
             <Text style={[GlobalStyle.Subtitle, { paddingTop: 100 }]}>
@@ -62,20 +73,4 @@ const TitleText = () => {
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "dodgerblue",
-        paddingLeft: 30,
-        paddingRight: 45,
-        alignItems: "center",
-    },
-    registerButton: {
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "deepskyblue",
-        borderRadius: 5,
-        padding: 15,
-        width: 150,
-    },
-});
+const styles = StyleSheet.create({});

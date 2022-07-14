@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import TitleScreen from "./src/screens/TitleScreen";
 import RoleSelectScreen from "./src/screens/RoleSelectScreen";
 import LoginScreen from "./src/screens/LoginScreen";
+import AccountCreationScreen from "./src/screens/AccountCreationScreen";
 
 import { useFonts } from "expo-font";
 
@@ -17,22 +18,26 @@ export default function App() {
         return null;
     }
 
-    // TODO: Need to implement navigation between screens
     return (
         <NavigationContainer>
             <Stack.Navigator>
                 <Stack.Screen
-                    name="Title"
+                    name="TitleScreen"
                     component={TitleScreen}
                     options={{ header: () => null }}
                 />
                 <Stack.Screen
-                    name="Role Select"
+                    name="RoleSelectScreen"
                     component={RoleSelectScreen}
                     options={{ header: () => null }}
                 />
                 <Stack.Screen
-                    name="Login"
+                    name="AccountCreationScreen"
+                    component={AccountCreationScreen}
+                    options={{ header: () => null }}
+                />
+                <Stack.Screen
+                    name="LoginScreen"
                     component={LoginScreen}
                     options={{ header: () => null }}
                 />
