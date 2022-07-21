@@ -11,53 +11,53 @@ import { useFonts } from "expo-font";
 const Stack = createStackNavigator();
 
 export default function App() {
-    const [loaded] = useFonts({
-        RobotoBold: require("./assets/fonts/Roboto-Bold.ttf"),
-    });
-    if (!loaded) {
-        return null;
-    }
+  const [loaded] = useFonts({
+    RobotoBold: require("./assets/fonts/Roboto-Bold.ttf"),
+  });
+  if (!loaded) {
+    return null;
+  }
 
-    return (
-        <NavigationContainer>
-            <Stack.Navigator>
-                <Stack.Screen
-                    name="TitleScreen"
-                    component={TitleScreen}
-                    options={{
-                        headerTransparent: true,
-                        headerTintColor: "#fff",
-                        title: "",
-                    }}
-                />
-                <Stack.Screen
-                    name="RoleSelectScreen"
-                    component={RoleSelectScreen}
-                    options={{
-                        headerTransparent: true,
-                        headerTintColor: "#fff",
-                        title: "",
-                    }}
-                />
-                <Stack.Screen
-                    name="AccountCreationScreen"
-                    component={AccountCreationScreen}
-                    options={{
-                        headerTransparent: true,
-                        headerTintColor: "#fff",
-                        title: "",
-                    }}
-                />
-                <Stack.Screen
-                    name="LoginScreen"
-                    component={LoginScreen}
-                    options={{
-                        headerTransparent: true,
-                        headerTintColor: "#fff",
-                        title: "",
-                    }}
-                />
-            </Stack.Navigator>
-        </NavigationContainer>
-    );
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="TitleScreen"
+          component={TitleScreen}
+          options={{
+            headerTransparent: true,
+            headerTintColor: "#fff",
+            title: "",
+          }}
+        />
+        <Stack.Screen
+          name="RoleSelectScreen"
+          component={RoleSelectScreen}
+          options={{
+            headerTransparent: true,
+            headerTintColor: "#fff",
+            title: "",
+          }}
+        />
+        <Stack.Screen
+          name="AccountCreationScreen"
+          component={AccountCreationScreen}
+          options={{
+            headerTransparent: true,
+            headerTintColor: "#fff",
+            title: "",
+          }}
+        />
+        <Stack.Screen
+          name="LoginScreen"
+          component={LoginScreen}
+          options={{
+            headerTransparent: true,
+            headerTintColor: "#fff",
+            title: "",
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
