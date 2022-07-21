@@ -1,4 +1,11 @@
-import { StyleSheet, Text, SafeAreaView, TextInput, View } from "react-native";
+import {
+    StyleSheet,
+    Text,
+    SafeAreaView,
+    TextInput,
+    View,
+    ImageBackground,
+} from "react-native";
 
 import GlobalStyle from "../utils/GlobalStyle";
 
@@ -9,35 +16,29 @@ export default function AccountCreationScreen({ navigation, route }) {
     // TODO: BIG MAJOR BUG. DO PRESSABLES FROM PREVIOUS SCREENS STILL HAVE INTERACTABILITY
     // I CLICKED SOMEWHERE ON ROLE SELECT AND IT OPENED THE HYPERLINK ON TITLE SCREEN
     return (
-        <SafeAreaView
-            style={[GlobalStyle.Container, { alignItems: "baseline" }]}
+        <ImageBackground
+            source={require("../../assets/gradient.png")} // Edit me if you find a better image~!
+            resizeMode="stretch"
+            style={GlobalStyle.Background}
         >
-            <SafeAreaView style={{ paddingTop: 100 }}>
+            <SafeAreaView style={[GlobalStyle.Container1, { paddingTop: 100 }]}>
                 <Text style={GlobalStyle.Subtitle}>
                     {careType ? "Caregiver" : "Caregivee"}
                 </Text>
                 <Text style={[GlobalStyle.Title, { paddingBottom: 20 }]}>
                     Account
                 </Text>
+                <TextInput style={GlobalStyle.InputBox} placeholder="Name" />
+                <TextInput style={GlobalStyle.InputBox} placeholder="Email" />
+                <TextInput style={GlobalStyle.InputBox} placeholder="Phone" />
+                <TextInput
+                    secureTextEntry={true}
+                    placeholder="Password"
+                    style={GlobalStyle.InputBox}
+                />
             </SafeAreaView>
-            <TextInput style={GlobalStyle.InputBox} placeholder="Name" />
-            <TextInput style={GlobalStyle.InputBox} placeholder="Email" />
-            <TextInput style={GlobalStyle.InputBox} placeholder="Phone" />
-            <TextInput
-                secureTextEntry={true}
-                placeholder="Password"
-                style={GlobalStyle.InputBox}
-            />
-        </SafeAreaView>
+        </ImageBackground>
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "dodgerblue",
-        paddingLeft: 30,
-        paddingRight: 45,
-        alignItems: "center",
-    },
-});
+const styles = StyleSheet.create({});

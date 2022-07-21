@@ -24,22 +24,38 @@ export default function App() {
                 <Stack.Screen
                     name="TitleScreen"
                     component={TitleScreen}
-                    options={{ header: () => null }}
+                    options={{
+                        headerTransparent: true,
+                        headerTintColor: "#fff",
+                        title: "",
+                    }}
                 />
                 <Stack.Screen
                     name="RoleSelectScreen"
                     component={RoleSelectScreen}
-                    options={{ header: () => null }}
+                    options={{
+                        headerTransparent: true,
+                        headerTintColor: "#fff",
+                        title: "",
+                    }}
                 />
                 <Stack.Screen
                     name="AccountCreationScreen"
                     component={AccountCreationScreen}
-                    options={{ header: () => null }}
+                    options={{
+                        headerTransparent: true,
+                        headerTintColor: "#fff",
+                        title: "",
+                    }}
                 />
                 <Stack.Screen
                     name="LoginScreen"
                     component={LoginScreen}
-                    options={{ header: () => null }}
+                    options={{
+                        headerTransparent: true,
+                        headerTintColor: "#fff",
+                        title: "",
+                    }}
                 />
             </Stack.Navigator>
         </NavigationContainer>

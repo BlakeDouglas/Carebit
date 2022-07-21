@@ -1,4 +1,11 @@
-import { StyleSheet, SafeAreaView, Text, Linking, View } from "react-native";
+import {
+    StyleSheet,
+    SafeAreaView,
+    Text,
+    Linking,
+    View,
+    ImageBackground,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import GlobalStyle from "../utils/GlobalStyle";
@@ -12,36 +19,42 @@ export default function TitleScreen({ navigation }) {
     };
 
     return (
-        <SafeAreaView style={GlobalStyle.Container}>
-            <TitleText />
-
-            <TouchableOpacity
-                style={GlobalStyle.Button}
-                onPress={createAccountButtonHandler}
+        <SafeAreaView style={GlobalStyle.SuperContainer}>
+            <ImageBackground
+                source={require("../../assets/gradient.png")} // Edit me if you find a better image~!
+                resizeMode="stretch"
             >
-                <Text style={[GlobalStyle.Text, { fontWeight: "bold" }]}>
-                    Register
-                </Text>
-            </TouchableOpacity>
-            <Text></Text>
-            <TouchableOpacity 
-            style={GlobalStyle.Button}
-            onPress={loginButtonHandler}>
-                <Text
-                    style={[
-                        GlobalStyle.Text,
-                        { fontWeight: "bold"},
-                    ]}
-                >
-                    Login
-                </Text>
-            </TouchableOpacity>
+                <View style={GlobalStyle.SubContainer}>
+                    <TitleText />
+
+                    <TouchableOpacity
+                        style={GlobalStyle.Button}
+                        onPress={createAccountButtonHandler}
+                    >
+                        <Text
+                            style={[GlobalStyle.Text, { fontWeight: "bold" }]}
+                        >
+                            Register
+                        </Text>
+                    </TouchableOpacity>
+                    <Text></Text>
+                    <TouchableOpacity
+                        style={GlobalStyle.Button}
+                        onPress={loginButtonHandler}
+                    >
+                        <Text
+                            style={[GlobalStyle.Text, { fontWeight: "bold" }]}
+                        >
+                            Login
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </ImageBackground>
         </SafeAreaView>
     );
 }
 
 const TitleText = () => {
-    // TODO: Change paddingTop in title to dynamically adjust. Same for other modules
     return (
         <View>
             <Text style={[GlobalStyle.Subtitle, { paddingTop: 100 }]}>

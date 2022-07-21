@@ -1,46 +1,38 @@
-import { StyleSheet, Text, SafeAreaView, TextInput, View } from "react-native";
+import {
+    StyleSheet,
+    Text,
+    SafeAreaView,
+    TextInput,
+    View,
+    ImageBackground,
+} from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 import GlobalStyle from "../utils/GlobalStyle";
 
 export default function LoginScreen() {
     return (
-        <SafeAreaView style={[styles.container, {paddingTop: 30}]}>
-            <Text style={GlobalStyle.Title}>Carebit</Text>
-            <Text style={[GlobalStyle.Subtitle, {paddingTop: 30, textAlign: "center"}]}>Remote Caregiving</Text>
-
-            <View style={[styles.auth_container, {paddingTop: 70}]}>
-                <Text style={GlobalStyle.Text}> Username: </Text>
-                <TextInput style={[styles.input_box, {}]} 
-                placeholder="Username"
-                maxLength={20}
+        <ImageBackground
+            source={require("../../assets/gradient.png")} // Edit me if you find a better image~!
+            resizeMode="stretch"
+            style={GlobalStyle.Background}
+        >
+            <SafeAreaView style={[GlobalStyle.Container1, { paddingTop: 100 }]}>
+                <Text style={[GlobalStyle.Title, { paddingBottom: 20 }]}>
+                    Log In
+                </Text>
+                <TextInput
+                    style={GlobalStyle.InputBox}
+                    placeholder="Username"
                 />
-                <Text style={GlobalStyle.Text}> Password: </Text>
-                <TextInput secureTextEntry={true} 
-                style={styles.input_box} 
-                placeholder="Password"
-                maxLength={20}
+                <TextInput
+                    secureTextEntry={true}
+                    style={GlobalStyle.InputBox}
+                    placeholder="Password"
                 />
-            </View>
-        </SafeAreaView>
+            </SafeAreaView>
+        </ImageBackground>
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "dodgerblue",
-        alignItems: "center",
-    },
-    auth_container: {
-        alignItems: "baseline",
-        padding: 30,
-        paddingTop: 15,
-    },
-    input_box: {
-        borderColor: "black",
-        borderWidth: 1,
-        minWidth: 150,
-        backgroundColor: "white",
-        padding: 5,
-    },
-});
+const styles = StyleSheet.create({});
