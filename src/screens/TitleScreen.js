@@ -24,8 +24,10 @@ export default function TitleScreen({ navigation }) {
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >
-      <SafeAreaView style={[GlobalStyle.Container, { paddingTop: 100 }]}>
-        <Text style={GlobalStyle.Subtitle}>Welcome to</Text>
+      <SafeAreaView style={GlobalStyle.Container}>
+        <Text style={[GlobalStyle.Subtitle, { marginTop: "25%" }]}>
+          Welcome to
+        </Text>
         <Text style={GlobalStyle.Title}>Carebit</Text>
         <Text style={[GlobalStyle.Text, { paddingTop: 30, marginBottom: 68 }]}>
           Carebit uses Fitbit devices to monitor the heart rate and activity of
@@ -50,9 +52,12 @@ export default function TitleScreen({ navigation }) {
         >
           <Text style={GlobalStyle.ButtonText}>Create an Account</Text>
         </TouchableOpacity>
-        <Text></Text>
+
         <TouchableOpacity
-          style={[GlobalStyle.Button, { backgroundColor: "transparent" }]}
+          style={[
+            GlobalStyle.Button,
+            { backgroundColor: "transparent", marginTop: "7%" },
+          ]}
           onPress={loginButtonHandler}
         >
           <Text style={GlobalStyle.ButtonText}>Log In</Text>

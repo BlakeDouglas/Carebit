@@ -14,7 +14,7 @@ export default StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "deepskyblue",
     alignSelf: "center",
-    borderRadius: 5,
+    borderRadius: 15,
     padding: 15,
     width: "80%",
     backgroundColor: "rgba(255, 255, 255, .2)",
@@ -31,10 +31,9 @@ export default StyleSheet.create({
   Background: {
     flex: 1,
   },
-
   Container: {
     flex: 1,
-    paddingLeft: 30,
-    paddingRight: 45,
+    marginLeft: 40,
+    marginRight: 45,
   },
 });
