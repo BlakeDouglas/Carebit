@@ -6,13 +6,25 @@ import {
   View,
   ImageBackground,
 } from "react-native";
+
+import { NavigationActions } from "react-navigation";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { CommonActions } from "@react-navigation/native";
 
 import GlobalStyle from "../utils/GlobalStyle";
 
 export default function AccountCreationScreen({ navigation, route }) {
   const loginButtonHandler = () => {
-    //navigation.navigate("DashboardScreen");
+    navigation.dispatch({
+      ...CommonActions.reset({
+        index: 0,
+        routes: [
+          { name: careType ? "GiverTabNavigator" : "GiveeTabNavigator" },
+        ],
+      }),
+    });
+
+    // Also pull data and authenticate
   };
 
   // careType will be a boolean, true for "caregiver" and false for "caregivee"

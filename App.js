@@ -1,14 +1,20 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 
 import TitleScreen from "./src/screens/TitleScreen";
 import RoleSelectScreen from "./src/screens/RoleSelectScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import AccountCreationScreen from "./src/screens/AccountCreationScreen";
+import GiveeHomeScreen from "./src/screens/GiveeHomeScreen";
+import GiverHomeScreen from "./src/screens/GiverHomeScreen";
+import GiveeSettingsScreen from "./src/screens/GiveeSettingsScreen";
+import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
 
 import { useFonts } from "expo-font";
 
 const Stack = createStackNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
 export default function App() {
   const [loaded] = useFonts({
@@ -21,43 +27,56 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
-          name="TitleScreen"
-          component={TitleScreen}
-          options={{
+        <Stack.Group
+          screenOptions={{
             headerTransparent: true,
             headerTintColor: "#fff",
             title: "",
           }}
-        />
-        <Stack.Screen
-          name="RoleSelectScreen"
-          component={RoleSelectScreen}
-          options={{
-            headerTransparent: true,
-            headerTintColor: "#fff",
+        >
+          <Stack.Screen name="TitleScreen" component={TitleScreen} />
+          <Stack.Screen name="RoleSelectScreen" component={RoleSelectScreen} />
+          <Stack.Screen
+            name="AccountCreationScreen"
+            component={AccountCreationScreen}
+          />
+          <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        </Stack.Group>
+
+        <Stack.Group
+          screenOptions={{
+            headerShown: false,
             title: "",
           }}
-        />
-        <Stack.Screen
-          name="AccountCreationScreen"
-          component={AccountCreationScreen}
-          options={{
-            headerTransparent: true,
-            headerTintColor: "#fff",
-            title: "",
-          }}
-        />
-        <Stack.Screen
-          name="LoginScreen"
-          component={LoginScreen}
-          options={{
-            headerTransparent: true,
-            headerTintColor: "#fff",
-            title: "",
-          }}
-        />
+        >
+          <Stack.Screen
+            name="GiverTabNavigator"
+            component={GiverTabNavigator}
+          />
+          <Stack.Screen
+            name="GiveeTabNavigator"
+            component={GiveeTabNavigator}
+          />
+        </Stack.Group>
       </Stack.Navigator>
     </NavigationContainer>
+  );
+}
+
+function GiverTabNavigator() {
+  return (
+    <Tab.Navigator initialRouteName="HomeScreen">
+      <Tab.Screen name="HomeScreen" component={GiverHomeScreen} />
+      <Tab.Screen name="SettingsScreen" component={GiverSettingsScreen} />
+    </Tab.Navigator>
+  );
+}
+
+function GiveeTabNavigator() {
+  return (
+    <Tab.Navigator initialRouteName="HomeScreen">
+      <Tab.Screen name="HomeScreen" component={GiveeHomeScreen} />
+      <Tab.Screen name="SettingsScreen" component={GiveeSettingsScreen} />
+    </Tab.Navigator>
   );
 }
