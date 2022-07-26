@@ -28,7 +28,6 @@ export default StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
-
   Background: {
     flex: 1,
   },
