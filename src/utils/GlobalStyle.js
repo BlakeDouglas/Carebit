@@ -20,12 +20,13 @@ export default StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, .2)",
   },
   InputBox: {
-    borderColor: "#AAA",
+    borderColor: "rgba(255, 255, 255, .25)",
     borderBottomWidth: 1,
     backgroundColor: "transparent",
     margin: 10,
     fontSize: 20,
-    color: "#d5eff7",
+    color: "white",
+    fontWeight: "bold"
   },
 
   Background: {

@@ -21,13 +21,18 @@ export default function LoginScreen() {
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >
-      <SafeAreaView style={[GlobalStyle.Container, { paddingTop: 100 }]}>
-        <Text style={[GlobalStyle.Title, { paddingBottom: 35 }]}>Log In</Text>
-        <TextInput style={GlobalStyle.InputBox} placeholder="Username" />
+      <SafeAreaView style={[GlobalStyle.Container, { marginTop: 150 }]}>
+        <Text style={[GlobalStyle.Title, { marginBottom: 50 }]}>Log into Carebit</Text>
+        <TextInput 
+          style={GlobalStyle.InputBox} 
+          placeholder="Email" 
+          placeholderTextColor="white"
+          />
         <TextInput
           secureTextEntry={true}
-          style={GlobalStyle.InputBox}
+          style={[GlobalStyle.InputBox, {marginTop: 40}]}
           placeholder="Password"
+          placeholderTextColor = "white"
         />
         <TouchableOpacity
           style={[

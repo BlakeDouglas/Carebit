@@ -29,7 +29,7 @@ export default function TitleScreen({ navigation }) {
           Welcome to
         </Text>
         <Text style={GlobalStyle.Title}>Carebit</Text>
-        <Text style={[GlobalStyle.Text, { paddingTop: 30, marginBottom: 68 }]}>
+        <Text style={[GlobalStyle.Text, { marginTop: 30, marginBottom: 68 }]}>
           Carebit uses Fitbit devices to monitor the heart rate and activity of
           you or your loved one {"\n\n"}If you or your loved one's Fitbit is not
           set up, visit{" "}

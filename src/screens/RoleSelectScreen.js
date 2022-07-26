@@ -23,10 +23,10 @@ export default function RoleSelectScreen({ navigation }) {
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >
-      <SafeAreaView style={[GlobalStyle.Container, { paddingTop: 100 }]}>
+      <SafeAreaView style={[GlobalStyle.Container, { marginTop: 120 }]}>
         <Text style={GlobalStyle.Subtitle}>Choose Your</Text>
         <Text style={GlobalStyle.Title}>Role</Text>
-        <Text style={[GlobalStyle.Text, { paddingTop: 35, paddingBottom: 50 }]}>
+        <Text style={[GlobalStyle.Text, { marginTop: 35, marginBottom: 75 }]}>
           To create your account, let us know if you're giving care or are being
           cared for
         </Text>

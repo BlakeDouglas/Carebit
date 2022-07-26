@@ -38,28 +38,29 @@ export default function AccountCreationScreen({ navigation, route }) {
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >
-      <SafeAreaView style={[GlobalStyle.Container, { paddingTop: 100 }]}>
+      <SafeAreaView style={[GlobalStyle.Container, { marginTop: 110 }]}>
         <Text style={GlobalStyle.Subtitle}>
           {careType ? "Caregiver" : "Caregivee"}
         </Text>
-        <Text style={[GlobalStyle.Title, { paddingBottom: 20 }]}>Account</Text>
-        <TextInput style={GlobalStyle.InputBox} placeholder="Name" />
-        <TextInput style={GlobalStyle.InputBox} placeholder="Email" />
-        <TextInput style={GlobalStyle.InputBox} placeholder="Phone" />
+        <Text style={[GlobalStyle.Title, { marginBottom: 55 }]}>Account</Text>
+        <TextInput placeholderTextColor = "white" style={[GlobalStyle.InputBox, {marginBottom: 40 }]} placeholder="Name" />
+        <TextInput placeholderTextColor = "white" style={[GlobalStyle.InputBox, {marginBottom: 40 }]} placeholder="Email" />
+        <TextInput placeholderTextColor = "white" style={[GlobalStyle.InputBox, {marginBottom: 40 }]} placeholder="Phone" />
         <TextInput
           secureTextEntry={true}
           placeholder="Password"
+          placeholderTextColor = "white"
           style={GlobalStyle.InputBox}
         />
 
         <TouchableOpacity
           style={[
             GlobalStyle.Button,
-            { backgroundColor: "rgba(255, 255, 255, .2)", marginTop: 68 },
+            { backgroundColor: "rgba(255, 255, 255, .2)", marginTop: 65 },
           ]}
           onPress={loginButtonHandler}
         >
-          <Text style={GlobalStyle.ButtonText}>Log In</Text>
+          <Text style={GlobalStyle.ButtonText}>Create Account</Text>
         </TouchableOpacity>
       </SafeAreaView>
     </ImageBackground>
