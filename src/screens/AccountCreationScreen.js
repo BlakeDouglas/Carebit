@@ -5,6 +5,8 @@ import {
   TextInput,
   View,
   ImageBackground,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 
 import { NavigationActions } from "react-navigation";
@@ -38,31 +40,47 @@ export default function AccountCreationScreen({ navigation, route }) {
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >
-      <SafeAreaView style={[GlobalStyle.Container, { marginTop: 110 }]}>
-        <Text style={GlobalStyle.Subtitle}>
-          {careType ? "Caregiver" : "Caregivee"}
-        </Text>
-        <Text style={[GlobalStyle.Title, { marginBottom: 55 }]}>Account</Text>
-        <TextInput placeholderTextColor = "white" style={[GlobalStyle.InputBox, {marginBottom: 40 }]} placeholder="Name" />
-        <TextInput placeholderTextColor = "white" style={[GlobalStyle.InputBox, {marginBottom: 40 }]} placeholder="Email" />
-        <TextInput placeholderTextColor = "white" style={[GlobalStyle.InputBox, {marginBottom: 40 }]} placeholder="Phone" />
-        <TextInput
-          secureTextEntry={true}
-          placeholder="Password"
-          placeholderTextColor = "white"
-          style={GlobalStyle.InputBox}
-        />
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <SafeAreaView style={[GlobalStyle.Container, { marginTop: 110 }]}>
+          <Text style={GlobalStyle.Subtitle}>
+            {careType ? "Caregiver" : "Caregivee"}
+          </Text>
+          <Text style={[GlobalStyle.Title, { marginBottom: 55 }]}>Account</Text>
+          <TextInput
+            placeholderTextColor="white"
+            style={[GlobalStyle.InputBox, { marginBottom: 40 }]}
+            placeholder="Name"
+          />
+          <TextInput
+            placeholderTextColor="white"
+            keyboardType="email-address"
+            style={[GlobalStyle.InputBox, { marginBottom: 40 }]}
+            placeholder="Email"
+          />
+          <TextInput
+            placeholderTextColor="white"
+            keyboardType="phone-pad"
+            style={[GlobalStyle.InputBox, { marginBottom: 40 }]}
+            placeholder="Phone"
+          />
+          <TextInput
+            secureTextEntry={true}
+            placeholder="Password"
+            placeholderTextColor="white"
+            style={GlobalStyle.InputBox}
+          />
 
-        <TouchableOpacity
-          style={[
-            GlobalStyle.Button,
-            { backgroundColor: "rgba(255, 255, 255, .2)", marginTop: 65 },
-          ]}
-          onPress={loginButtonHandler}
-        >
-          <Text style={GlobalStyle.ButtonText}>Create Account</Text>
-        </TouchableOpacity>
-      </SafeAreaView>
+          <TouchableOpacity
+            style={[
+              GlobalStyle.Button,
+              { backgroundColor: "rgba(255, 255, 255, .2)", marginTop: 65 },
+            ]}
+            onPress={loginButtonHandler}
+          >
+            <Text style={GlobalStyle.ButtonText}>Create Account</Text>
+          </TouchableOpacity>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
     </ImageBackground>
   );
 }

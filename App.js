@@ -26,6 +26,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
+      !isSignedIn ? (
       <Stack.Navigator>
         <Stack.Group
           screenOptions={{
@@ -42,41 +43,26 @@ export default function App() {
           />
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
         </Stack.Group>
-
-        <Stack.Group
+      </Stack.Navigator>
+      ) : (
+      <Tab.Navigator>
+        <Tab.Group
           screenOptions={{
             headerShown: false,
             title: "",
           }}
         >
-          <Stack.Screen
-            name="GiverTabNavigator"
-            component={GiverTabNavigator}
+          <Tab.Screen
+            name="HomeScreen"
+            component={careType ? GiverHomeScreen : GiveeHomeScreen}
           />
-          <Stack.Screen
-            name="GiveeTabNavigator"
-            component={GiveeTabNavigator}
+          <Tab.Screen
+            name="SettingsScreen"
+            component={careType ? GiverSettingsScreen : GiveeSettingsScreen}
           />
-        </Stack.Group>
-      </Stack.Navigator>
+        </Tab.Group>
+      </Tab.Navigator>
+      );
     </NavigationContainer>
-  );
-}
-
-function GiverTabNavigator() {
-  return (
-    <Tab.Navigator initialRouteName="HomeScreen">
-      <Tab.Screen name="HomeScreen" component={GiverHomeScreen} />
-      <Tab.Screen name="SettingsScreen" component={GiverSettingsScreen} />
-    </Tab.Navigator>
-  );
-}
-
-function GiveeTabNavigator() {
-  return (
-    <Tab.Navigator initialRouteName="HomeScreen">
-      <Tab.Screen name="HomeScreen" component={GiveeHomeScreen} />
-      <Tab.Screen name="SettingsScreen" component={GiveeSettingsScreen} />
-    </Tab.Navigator>
   );
 }
