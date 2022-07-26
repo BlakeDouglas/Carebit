@@ -26,7 +26,7 @@ export default StyleSheet.create({
     margin: 10,
     fontSize: 20,
     color: "white",
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
 
   Background: {
