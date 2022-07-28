@@ -11,12 +11,15 @@ import GiverHomeScreen from "./src/screens/GiverHomeScreen";
 import GiveeSettingsScreen from "./src/screens/GiveeSettingsScreen";
 import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
 
+import { Provider, useSelector, useDispatch } from "react-redux";
+import { Store } from "./src/redux/store";
+
 import { useFonts } from "expo-font";
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
-export default function App() {
+const App = () => {
   const [loaded] = useFonts({
     RobotoBold: require("./assets/fonts/Roboto-Bold.ttf"),
   });
@@ -25,44 +28,69 @@ export default function App() {
   }
 
   return (
+    <Provider store={Store}>
+      <RootNavigation />
+    </Provider>
+  );
+};
+
+const RootNavigation = () => {
+  const token = useSelector((state) => state.Reducers.authToken);
+  const dispatch = useDispatch();
+  console.log(token);
+
+  return (
     <NavigationContainer>
-      !isSignedIn ? (
-      <Stack.Navigator>
-        <Stack.Group
-          screenOptions={{
-            headerTransparent: true,
-            headerTintColor: "#fff",
-            title: "",
-          }}
-        >
-          <Stack.Screen name="TitleScreen" component={TitleScreen} />
-          <Stack.Screen name="RoleSelectScreen" component={RoleSelectScreen} />
-          <Stack.Screen
-            name="AccountCreationScreen"
-            component={AccountCreationScreen}
-          />
-          <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        </Stack.Group>
-      </Stack.Navigator>
-      ) : (
-      <Tab.Navigator>
-        <Tab.Group
-          screenOptions={{
-            headerShown: false,
-            title: "",
-          }}
-        >
-          <Tab.Screen
-            name="HomeScreen"
-            component={careType ? GiverHomeScreen : GiveeHomeScreen}
-          />
-          <Tab.Screen
-            name="SettingsScreen"
-            component={careType ? GiverSettingsScreen : GiveeSettingsScreen}
-          />
-        </Tab.Group>
-      </Tab.Navigator>
-      );
+      {token === true ? <HomeStack /> : <AuthStack />}
     </NavigationContainer>
   );
-}
+};
+
+const AuthStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Group
+        screenOptions={{
+          headerTransparent: true,
+          headerTintColor: "#fff",
+          title: "",
+        }}
+      >
+        <Stack.Screen name="TitleScreen" component={TitleScreen} />
+        <Stack.Screen name="RoleSelectScreen" component={RoleSelectScreen} />
+        <Stack.Screen
+          name="AccountCreationScreen"
+          component={AccountCreationScreen}
+        />
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      </Stack.Group>
+    </Stack.Navigator>
+  );
+};
+
+const HomeStack = () => {
+  const careType = useSelector((state) => state.Reducers.careType);
+  return (
+    <Tab.Navigator>
+      <Tab.Group
+        screenOptions={{
+          headerShown: false,
+          title: "",
+        }}
+      >
+        <Tab.Screen
+          name="HomeScreen"
+          component={careType === true ? GiverHomeScreen : GiveeHomeScreen}
+        />
+        <Tab.Screen
+          name="SettingsScreen"
+          component={
+            careType === true ? GiverSettingsScreen : GiveeSettingsScreen
+          }
+        />
+      </Tab.Group>
+    </Tab.Navigator>
+  );
+};
+
+export default App;

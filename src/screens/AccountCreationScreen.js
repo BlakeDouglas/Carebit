@@ -9,31 +9,23 @@ import {
   Keyboard,
 } from "react-native";
 
-import { NavigationActions } from "react-navigation";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { CommonActions } from "@react-navigation/native";
 
 import GlobalStyle from "../utils/GlobalStyle";
 
-export default function AccountCreationScreen({ navigation, route }) {
-  const loginButtonHandler = () => {
-    navigation.dispatch({
-      ...CommonActions.reset({
-        index: 0,
-        routes: [
-          { name: careType ? "GiverTabNavigator" : "GiveeTabNavigator" },
-        ],
-      }),
-    });
+import { useSelector, useDispatch } from "react-redux";
+import { Login } from "../redux/actions";
 
-    // Also pull data and authenticate
+export default function AccountCreationScreen({ navigation, route }) {
+  // These are the two tools of the redux state manager. Use them instead of hooks
+  const careType = useSelector((state) => state.Reducers.careType);
+  const dispatch = useDispatch();
+
+  const loginButtonHandler = () => {
+    // TODO: Pull from text inputs, plug into dispatch
+    dispatch(Login("evan", "123"));
   };
 
-  // careType will be a boolean, true for "caregiver" and false for "caregivee"
-  const careType = route.params?.careType;
-
-  // TODO: BIG MAJOR BUG. DO PRESSABLES FROM PREVIOUS SCREENS STILL HAVE INTERACTABILITY
-  // I CLICKED SOMEWHERE ON ROLE SELECT AND IT OPENED THE HYPERLINK ON TITLE SCREEN
   return (
     <ImageBackground
       source={require("../../assets/gradient.png")} // Edit me if you find a better image~!
