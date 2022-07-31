@@ -1,13 +1,24 @@
 export const Login = (username, password) => {
   return async (dispatch) => {
-    let token = true;
-    // call api here?
+    try {
+      const response = await fetch("https://www.carebit.xyz/login", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: "goddemraw@gmail.com",
+          password: "securepassword@1",
+        }),
+      });
+      const json = await response.json();
+      console.log(json);
+    } catch (error) {
+      console.error(error);
+    }
 
-    // Call dispatch(username, password) in account creation/login screen
-    // Then, code right here <- gets called
-    // Send username/password to API right here
-    // Use results to set token
-    console.log(username + " " + password);
+    // Only if valid
     dispatch({
       type: "LOGIN",
       payload: token,

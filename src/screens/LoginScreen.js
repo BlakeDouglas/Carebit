@@ -9,12 +9,20 @@ import {
   Keyboard,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
+import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
+import { Login } from "../redux/actions";
 
 export default function LoginScreen() {
+  const careType = useSelector((state) => state.Reducers.careType);
+  const dispatch = useDispatch();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   const loginButtonHandler = () => {
-    //navigation.navigate("DashboardScreen");
+    dispatch(Login(username, password));
   };
 
   return (
@@ -33,12 +41,14 @@ export default function LoginScreen() {
             placeholder="Email"
             placeholderTextColor="white"
             keyboardType="email-address"
+            onChangeText={(value) => setUsername(value)}
           />
           <TextInput
             secureTextEntry={true}
             style={[GlobalStyle.InputBox, { marginTop: 40 }]}
             placeholder="Password"
             placeholderTextColor="white"
+            onChangeText={(value) => setPassword(value)}
           />
           <TouchableOpacity
             style={[

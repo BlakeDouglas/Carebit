@@ -10,20 +10,24 @@ import {
 } from "react-native";
 
 import { TouchableOpacity } from "react-native-gesture-handler";
-
+import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
-
-import { useSelector, useDispatch } from "react-redux";
 import { Login } from "../redux/actions";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function AccountCreationScreen({ navigation, route }) {
   // These are the two tools of the redux state manager. Use them instead of hooks
   const careType = useSelector((state) => state.Reducers.careType);
   const dispatch = useDispatch();
 
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   const loginButtonHandler = () => {
-    // TODO: Pull from text inputs, plug into dispatch
-    dispatch(Login("evan", "123"));
+    // Switch from Login to new account creation function
+
+    // Uses a default user
+    dispatch(Login(username, password));
   };
 
   return (
@@ -48,6 +52,7 @@ export default function AccountCreationScreen({ navigation, route }) {
             keyboardType="email-address"
             style={[GlobalStyle.InputBox, { marginBottom: 40 }]}
             placeholder="Email"
+            onChangeText={(value) => setUsername(value)}
           />
           <TextInput
             placeholderTextColor="white"
@@ -60,6 +65,7 @@ export default function AccountCreationScreen({ navigation, route }) {
             placeholder="Password"
             placeholderTextColor="white"
             style={GlobalStyle.InputBox}
+            onChangeText={(value) => setPassword(value)}
           />
 
           <TouchableOpacity
