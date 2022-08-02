@@ -15,17 +15,17 @@ export const Login = (username, password) => {
       .then((response) => response.json())
       .then((json) => {
         authToken = true;
-        return json;
+        if (json.access_token !== undefined) {
+          dispatch({
+            type: "LOGIN",
+            payload: authToken,
+          });
+        }
       })
       .catch((error) => {
         console.log(error);
         authToken = false;
       });
-    // Only if valid
-    dispatch({
-      type: "LOGIN",
-      payload: authToken,
-    });
   };
 };
 

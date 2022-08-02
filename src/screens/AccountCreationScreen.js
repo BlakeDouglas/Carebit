@@ -18,7 +18,6 @@ import { useSelector, useDispatch } from "react-redux";
 export default function AccountCreationScreen({ navigation, route }) {
   // These are the two tools of the redux state manager. Use them instead of hooks
   const careType = useSelector((state) => state.Reducers.careType);
-  const token = useSelector((state) => state.Reducers.authToken);
   const dispatch = useDispatch();
 
   const [username, setUsername] = useState("");
@@ -29,7 +28,6 @@ export default function AccountCreationScreen({ navigation, route }) {
 
     // Uses a default user
     dispatch(Login(username, password));
-    console.log(token);
   };
 
   return (
