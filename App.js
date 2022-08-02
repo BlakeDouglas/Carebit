@@ -36,7 +36,6 @@ const App = () => {
 
 const RootNavigation = () => {
   const token = useSelector((state) => state.Reducers.authToken);
-  const dispatch = useDispatch();
   console.log(token);
 
   return (
