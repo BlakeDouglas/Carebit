@@ -8,8 +8,8 @@ export const Login = (username, password) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: "goddemraw@gmail.com",
-          password: "securepassword@1",
+          email: username,
+          password: password,
         }),
       });
       const json = await response.json();
