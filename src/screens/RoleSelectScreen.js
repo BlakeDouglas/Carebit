@@ -9,13 +9,20 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 import GlobalStyle from "../utils/GlobalStyle";
 
+import { useSelector, useDispatch } from "react-redux";
+import { setCareType } from "../redux/actions";
+
 export default function RoleSelectScreen({ navigation }) {
+  const dispatch = useDispatch();
+
   const caregiverCreateAccountButtonHandler = () => {
-    navigation.navigate("AccountCreationScreen", { careType: true });
+    dispatch(setCareType(true));
+    navigation.navigate("AccountCreationScreen");
   };
 
   const caregiveeCreateAccountButtonHandler = () => {
-    navigation.navigate("AccountCreationScreen", { careType: false });
+    dispatch(setCareType(false));
+    navigation.navigate("AccountCreationScreen");
   };
   return (
     <ImageBackground

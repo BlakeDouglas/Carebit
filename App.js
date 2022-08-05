@@ -11,12 +11,15 @@ import GiverHomeScreen from "./src/screens/GiverHomeScreen";
 import GiveeSettingsScreen from "./src/screens/GiveeSettingsScreen";
 import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
 
+import { Provider, useSelector, useDispatch } from "react-redux";
+import { Store } from "./src/redux/store";
+
 import { useFonts } from "expo-font";
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
-export default function App() {
+const App = () => {
   const [loaded] = useFonts({
     RobotoBold: require("./assets/fonts/Roboto-Bold.ttf"),
   });
@@ -25,58 +28,67 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Group
-          screenOptions={{
-            headerTransparent: true,
-            headerTintColor: "#fff",
-            title: "",
-          }}
-        >
-          <Stack.Screen name="TitleScreen" component={TitleScreen} />
-          <Stack.Screen name="RoleSelectScreen" component={RoleSelectScreen} />
-          <Stack.Screen
-            name="AccountCreationScreen"
-            component={AccountCreationScreen}
-          />
-          <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        </Stack.Group>
+    <Provider store={Store}>
+      <RootNavigation />
+    </Provider>
+  );
+};
 
-        <Stack.Group
-          screenOptions={{
-            headerShown: false,
-            title: "",
-          }}
-        >
-          <Stack.Screen
-            name="GiverTabNavigator"
-            component={GiverTabNavigator}
-          />
-          <Stack.Screen
-            name="GiveeTabNavigator"
-            component={GiveeTabNavigator}
-          />
-        </Stack.Group>
-      </Stack.Navigator>
+const RootNavigation = () => {
+  const token = useSelector((state) => state.Reducers.authToken);
+
+  return (
+    <NavigationContainer>
+      {token === true ? <HomeStack /> : <AuthStack />}
     </NavigationContainer>
   );
-}
+};
 
-function GiverTabNavigator() {
+const AuthStack = () => {
   return (
-    <Tab.Navigator initialRouteName="HomeScreen">
-      <Tab.Screen name="HomeScreen" component={GiverHomeScreen} />
-      <Tab.Screen name="SettingsScreen" component={GiverSettingsScreen} />
+    <Stack.Navigator>
+      <Stack.Group
+        screenOptions={{
+          headerTransparent: true,
+          headerTintColor: "#fff",
+          title: "",
+        }}
+      >
+        <Stack.Screen name="TitleScreen" component={TitleScreen} />
+        <Stack.Screen name="RoleSelectScreen" component={RoleSelectScreen} />
+        <Stack.Screen
+          name="AccountCreationScreen"
+          component={AccountCreationScreen}
+        />
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      </Stack.Group>
+    </Stack.Navigator>
+  );
+};
+
+const HomeStack = () => {
+  const careType = useSelector((state) => state.Reducers.careType);
+  return (
+    <Tab.Navigator>
+      <Tab.Group
+        screenOptions={{
+          headerShown: false,
+          title: "",
+        }}
+      >
+        <Tab.Screen
+          name="HomeScreen"
+          component={careType === true ? GiverHomeScreen : GiveeHomeScreen}
+        />
+        <Tab.Screen
+          name="SettingsScreen"
+          component={
+            careType === true ? GiverSettingsScreen : GiveeSettingsScreen
+          }
+        />
+      </Tab.Group>
     </Tab.Navigator>
   );
-}
+};
 
-function GiveeTabNavigator() {
-  return (
-    <Tab.Navigator initialRouteName="HomeScreen">
-      <Tab.Screen name="HomeScreen" component={GiveeHomeScreen} />
-      <Tab.Screen name="SettingsScreen" component={GiveeSettingsScreen} />
-    </Tab.Navigator>
-  );
-}
+export default App;

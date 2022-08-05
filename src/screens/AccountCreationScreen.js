@@ -9,31 +9,27 @@ import {
   Keyboard,
 } from "react-native";
 
-import { NavigationActions } from "react-navigation";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { CommonActions } from "@react-navigation/native";
-
+import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
+import { Login } from "../redux/actions";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function AccountCreationScreen({ navigation, route }) {
-  const loginButtonHandler = () => {
-    navigation.dispatch({
-      ...CommonActions.reset({
-        index: 0,
-        routes: [
-          { name: careType ? "GiverTabNavigator" : "GiveeTabNavigator" },
-        ],
-      }),
-    });
+  // These are the two tools of the redux state manager. Use them instead of hooks
+  const careType = useSelector((state) => state.Reducers.careType);
+  const dispatch = useDispatch();
 
-    // Also pull data and authenticate
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const loginButtonHandler = () => {
+    // Switch from Login to new account creation function
+
+    // Uses a default user
+    dispatch(Login(username, password));
   };
 
-  // careType will be a boolean, true for "caregiver" and false for "caregivee"
-  const careType = route.params?.careType;
-
-  // TODO: BIG MAJOR BUG. DO PRESSABLES FROM PREVIOUS SCREENS STILL HAVE INTERACTABILITY
-  // I CLICKED SOMEWHERE ON ROLE SELECT AND IT OPENED THE HYPERLINK ON TITLE SCREEN
   return (
     <ImageBackground
       source={require("../../assets/gradient.png")} // Edit me if you find a better image~!
@@ -56,6 +52,7 @@ export default function AccountCreationScreen({ navigation, route }) {
             keyboardType="email-address"
             style={[GlobalStyle.InputBox, { marginBottom: 40 }]}
             placeholder="Email"
+            onChangeText={(value) => setUsername(value)}
           />
           <TextInput
             placeholderTextColor="white"
@@ -68,6 +65,7 @@ export default function AccountCreationScreen({ navigation, route }) {
             placeholder="Password"
             placeholderTextColor="white"
             style={GlobalStyle.InputBox}
+            onChangeText={(value) => setPassword(value)}
           />
 
           <TouchableOpacity
