@@ -16,12 +16,12 @@ export default function RoleSelectScreen({ navigation }) {
   const dispatch = useDispatch();
 
   const caregiverCreateAccountButtonHandler = () => {
-    dispatch(setCareType(true));
+    dispatch(setCareType("caregiver"));
     navigation.navigate("AccountCreationScreen");
   };
 
   const caregiveeCreateAccountButtonHandler = () => {
-    dispatch(setCareType(false));
+    dispatch(setCareType("caregivee"));
     navigation.navigate("AccountCreationScreen");
   };
   return (

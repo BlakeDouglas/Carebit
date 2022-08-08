@@ -1,7 +1,7 @@
 // This is the default state, in which should be included default settings
 // As an example, auth is false because the user is not logged in by default.
 const initialState = {
-  authToken: false,
+  authToken: null,
   careType: null,
   // Settings go here
 };

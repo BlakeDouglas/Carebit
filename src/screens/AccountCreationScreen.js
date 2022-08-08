@@ -2,12 +2,11 @@ import {
   StyleSheet,
   Text,
   SafeAreaView,
-  TextInput,
-  View,
   ImageBackground,
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  Platform,
 } from "react-native";
 
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -15,6 +14,7 @@ import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
+import { Register } from "../redux/actions";
 
 export default function AccountCreationScreen({ navigation, route }) {
   // These are the two tools of the redux state manager. Use them instead of hooks
@@ -25,10 +25,17 @@ export default function AccountCreationScreen({ navigation, route }) {
   // are inspired by kymzTech's React Native Tutorial
 
   const [inputs, setInputs] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     phone: "",
     password: "",
+    type: "",
+    mobilePlatform: "",
+  });
+
+  const [name, setName] = useState({
+    name: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -41,17 +48,17 @@ export default function AccountCreationScreen({ navigation, route }) {
       handleError("Please enter your email", "email");
       valid = false;
     } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-      handleError("Please input a valid email", "email");
+      handleError("Invalid email", "email");
       valid = false;
     }
 
-    if (!inputs.name) {
+    if (!name) {
       handleError("Please enter your name", "name");
       valid = false;
     }
 
     if (!inputs.phone) {
-      handleError("Please enter a phone number", "phone");
+      handleError("Please enter your phone number", "phone");
       valid = false;
     } else if (
       !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
@@ -77,7 +84,33 @@ export default function AccountCreationScreen({ navigation, route }) {
   };
 
   const register = () => {
-    // Register new account here
+    let nameTrimmed = name.trim();
+    let splitIndex = nameTrimmed.indexOf(" ");
+
+    let firstName = "";
+    let lastName = "";
+
+    // If there is no space, then the entire string is the firstName
+    if (splitIndex === -1) {
+      firstName = nameTrimmed;
+    } else {
+      // firstName is the first word in name
+      // lastName is every other word, with spaces changed to hyphens
+
+      firstName = nameTrimmed.substring(0, splitIndex);
+      lastName = nameTrimmed.substring(splitIndex + 1);
+      lastName.replace(/\s+/g, "-");
+    }
+
+    setInputs((prevState) => ({
+      ...prevState,
+      ["type"]: careType,
+      ["mobilePlatform"]: Platform.OS,
+      ["firstName"]: firstName,
+      ["lastName"]: lastName,
+    }));
+
+    dispatch(Register(inputs));
   };
 
   const handleChange = (text, input) => {
@@ -105,7 +138,7 @@ export default function AccountCreationScreen({ navigation, route }) {
               iconName="account-outline"
               label="Name"
               error={errors.name}
-              onChangeText={(text) => handleChange(text, "name")}
+              onChangeText={(text) => setName(text)}
               onFocus={() => {
                 handleError(null, "name");
               }}
@@ -115,7 +148,10 @@ export default function AccountCreationScreen({ navigation, route }) {
               iconName="phone-outline"
               label="Phone"
               error={errors.phone}
-              onChangeText={(text) => handleChange(text, "phone")}
+              onChangeText={(text) =>
+                // Removes everything but numbers, so it complies with the api
+                handleChange(text.replace(/[^0-9]+/g, ""), "phone")
+              }
               onFocus={() => {
                 handleError(null, "phone");
               }}

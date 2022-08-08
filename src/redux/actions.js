@@ -38,3 +38,33 @@ export const setCareType = (type) => {
     });
   };
 };
+
+export const Register = (userInfo) => {
+  return async (dispatch) => {
+    let authToken = false;
+    console.log(userInfo);
+    fetch("https://www.carebit.xyz/user", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userInfo),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        authToken = true;
+        if (json.access_token !== undefined) {
+          dispatch({
+            type: "LOGIN",
+            payload: authToken,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        authToken = false;
+      });
+  };
+};

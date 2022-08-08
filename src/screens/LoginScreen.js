@@ -3,7 +3,6 @@ import {
   Text,
   SafeAreaView,
   TextInput,
-  View,
   ImageBackground,
   TouchableWithoutFeedback,
   Keyboard,

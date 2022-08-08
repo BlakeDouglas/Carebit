@@ -78,12 +78,14 @@ const HomeStack = () => {
       >
         <Tab.Screen
           name="HomeScreen"
-          component={careType === true ? GiverHomeScreen : GiveeHomeScreen}
+          component={
+            careType === "caregiver" ? GiverHomeScreen : GiveeHomeScreen
+          }
         />
         <Tab.Screen
           name="SettingsScreen"
           component={
-            careType === true ? GiverSettingsScreen : GiveeSettingsScreen
+            careType === "caregiver" ? GiverSettingsScreen : GiveeSettingsScreen
           }
         />
       </Tab.Group>
