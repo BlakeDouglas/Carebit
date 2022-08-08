@@ -20,7 +20,7 @@ export default function TitleScreen({ navigation }) {
 
   return (
     <ImageBackground
-      source={require("../../assets/gradient.png")} // Edit me if you find a better image~!
+      source={require("../../assets/images/background-hearts.imageset/background01.png")} // Edit me if you find a better image~!
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >

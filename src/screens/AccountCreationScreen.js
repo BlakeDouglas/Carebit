@@ -7,6 +7,7 @@ import {
   Keyboard,
   ScrollView,
   Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -123,77 +124,82 @@ export default function AccountCreationScreen({ navigation, route }) {
 
   return (
     <ImageBackground
-      source={require("../../assets/gradient.png")} // Edit me if you find a better image~!
+      source={require("../../assets/images/background-hearts.imageset/background03.png")} // Edit me if you find a better image~!
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <ScrollView contentInsetAdjustmentBehavior="automatic">
-          <SafeAreaView style={[GlobalStyle.Container, { marginTop: 90 }]}>
-            <Text style={GlobalStyle.Subtitle}>
-              {(careType ? "Caregiver" : "Caregivee") + " Registration"}
-            </Text>
-            <CustomTextInput
-              placeholder="Enter your name"
-              iconName="account-outline"
-              label="Name"
-              error={errors.name}
-              onChangeText={(text) => setName(text)}
-              onFocus={() => {
-                handleError(null, "name");
-              }}
-            />
-            <CustomTextInput
-              placeholder="Enter your phone number"
-              iconName="phone-outline"
-              label="Phone"
-              error={errors.phone}
-              onChangeText={(text) =>
-                // Removes everything but numbers, so it complies with the api
-                handleChange(text.replace(/[^0-9]+/g, ""), "phone")
-              }
-              onFocus={() => {
-                handleError(null, "phone");
-              }}
-            />
-            <CustomTextInput
-              placeholder="Enter your email address"
-              iconName="email-outline"
-              label="Email"
-              error={errors.email}
-              onChangeText={(text) => handleChange(text, "email")}
-              onFocus={() => {
-                handleError(null, "email");
-              }}
-            />
-            <CustomTextInput
-              placeholder="Enter your password"
-              iconName="lock-outline"
-              label="Password"
-              error={errors.password}
-              onChangeText={(text) => handleChange(text, "password")}
-              onFocus={() => {
-                handleError(null, "password");
-              }}
-              password
-            />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={GlobalStyle.Background}
+      >
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <ScrollView contentInsetAdjustmentBehavior="automatic">
+            <SafeAreaView style={[GlobalStyle.Container, { marginTop: 90 }]}>
+              <Text style={GlobalStyle.Subtitle}>
+                {(careType ? "Caregiver" : "Caregivee") + " Registration"}
+              </Text>
+              <CustomTextInput
+                placeholder="Enter your name"
+                iconName="account-outline"
+                label="Name"
+                error={errors.name}
+                onChangeText={(text) => setName(text)}
+                onFocus={() => {
+                  handleError(null, "name");
+                }}
+              />
+              <CustomTextInput
+                placeholder="Enter your phone number"
+                iconName="phone-outline"
+                label="Phone"
+                error={errors.phone}
+                onChangeText={(text) =>
+                  // Removes everything but numbers, so it complies with the api
+                  handleChange(text.replace(/[^0-9]+/g, ""), "phone")
+                }
+                onFocus={() => {
+                  handleError(null, "phone");
+                }}
+              />
+              <CustomTextInput
+                placeholder="Enter your email address"
+                iconName="email-outline"
+                label="Email"
+                error={errors.email}
+                onChangeText={(text) => handleChange(text, "email")}
+                onFocus={() => {
+                  handleError(null, "email");
+                }}
+              />
+              <CustomTextInput
+                placeholder="Enter your password"
+                iconName="lock-outline"
+                label="Password"
+                error={errors.password}
+                onChangeText={(text) => handleChange(text, "password")}
+                onFocus={() => {
+                  handleError(null, "password");
+                }}
+                password
+              />
 
-            <TouchableOpacity
-              style={[
-                GlobalStyle.Button,
-                {
-                  backgroundColor: "rgba(255, 255, 255, .2)",
-                  marginTop: 15,
-                  marginBottom: 30,
-                },
-              ]}
-              onPress={validate}
-            >
-              <Text style={GlobalStyle.ButtonText}>Create Account</Text>
-            </TouchableOpacity>
-          </SafeAreaView>
-        </ScrollView>
-      </TouchableWithoutFeedback>
+              <TouchableOpacity
+                style={[
+                  GlobalStyle.Button,
+                  {
+                    backgroundColor: "rgba(255, 255, 255, .2)",
+                    marginTop: 15,
+                    marginBottom: 30,
+                  },
+                ]}
+                onPress={validate}
+              >
+                <Text style={GlobalStyle.ButtonText}>Create Account</Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </ImageBackground>
   );
 }
