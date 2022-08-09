@@ -12,16 +12,37 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { Login } from "../redux/actions";
+import CustomTextInput from "../utils/CustomTextInput";
 
 export default function LoginScreen() {
   const careType = useSelector((state) => state.Reducers.careType);
   const dispatch = useDispatch();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [inputs, setInputs] = useState({
+    email: "",
+    password: "",
+  });
 
-  const loginButtonHandler = () => {
-    dispatch(Login(username, password));
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (text, input) => {
+    setInputs((prevState) => ({ ...prevState, [input]: text }));
+  };
+
+  const handleError = (errorMessage, input) => {
+    setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
+  };
+
+  const validate = () => {
+    Keyboard.dismiss();
+    let valid = true;
+
+    // TODO Error checks go here, set valid to false
+
+    if (valid) {
+      let response = dispatch(Login(inputs.email, inputs.password));
+      console.log(response);
+    }
   };
 
   return (
@@ -31,30 +52,38 @@ export default function LoginScreen() {
       style={GlobalStyle.Background}
     >
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <SafeAreaView style={[GlobalStyle.Container, { marginTop: 150 }]}>
-          <Text style={[GlobalStyle.Title, { marginBottom: 50 }]}>
+        <SafeAreaView style={[GlobalStyle.Container, { marginTop: "25%" }]}>
+          <Text style={[GlobalStyle.Title, { marginBottom: 20 }]}>
             Log into Carebit
           </Text>
-          <TextInput
-            style={GlobalStyle.InputBox}
-            placeholder="Email"
-            placeholderTextColor="white"
+          <CustomTextInput
+            placeholder="Enter your email address"
+            iconName="email-outline"
+            label="Email"
             keyboardType="email-address"
-            onChangeText={(value) => setUsername(value)}
+            error={errors.email}
+            onChangeText={(text) => handleChange(text, "email")}
+            onFocus={() => {
+              handleError(null, "email");
+            }}
           />
-          <TextInput
-            secureTextEntry={true}
-            style={[GlobalStyle.InputBox, { marginTop: 40 }]}
-            placeholder="Password"
-            placeholderTextColor="white"
-            onChangeText={(value) => setPassword(value)}
+          <CustomTextInput
+            placeholder="Enter your password"
+            iconName="lock-outline"
+            label="Password"
+            error={errors.password}
+            onChangeText={(text) => handleChange(text, "password")}
+            onFocus={() => {
+              handleError(null, "password");
+            }}
+            password
           />
           <TouchableOpacity
             style={[
               GlobalStyle.Button,
-              { backgroundColor: "rgba(255, 255, 255, .2)", marginTop: 68 },
+              { backgroundColor: "rgba(255, 255, 255, .2)", marginTop: 20 },
             ]}
-            onPress={loginButtonHandler}
+            onPress={validate}
           >
             <Text style={GlobalStyle.ButtonText}>Log In</Text>
           </TouchableOpacity>

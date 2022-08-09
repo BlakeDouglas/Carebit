@@ -35,9 +35,7 @@ export default function AccountCreationScreen({ navigation, route }) {
     mobilePlatform: "",
   });
 
-  const [name, setName] = useState({
-    name: "",
-  });
+  const [name, setName] = useState("");
 
   const [errors, setErrors] = useState({});
 
@@ -152,6 +150,7 @@ export default function AccountCreationScreen({ navigation, route }) {
                 placeholder="Enter your phone number"
                 iconName="phone-outline"
                 label="Phone"
+                keyboardType="phone-pad"
                 error={errors.phone}
                 onChangeText={(text) =>
                   // Removes everything but numbers, so it complies with the api
@@ -165,6 +164,7 @@ export default function AccountCreationScreen({ navigation, route }) {
                 placeholder="Enter your email address"
                 iconName="email-outline"
                 label="Email"
+                keyboardType="email-address"
                 error={errors.email}
                 onChangeText={(text) => handleChange(text, "email")}
                 onFocus={() => {
