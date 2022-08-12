@@ -2,20 +2,18 @@ import {
   StyleSheet,
   Text,
   SafeAreaView,
-  TextInput,
   ImageBackground,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
-import { Login } from "../redux/actions";
 import CustomTextInput from "../utils/CustomTextInput";
+import { setTokenData, setUserData } from "../redux/actions";
 
 export default function LoginScreen() {
-  const careType = useSelector((state) => state.Reducers.careType);
   const dispatch = useDispatch();
 
   const [inputs, setInputs] = useState({
@@ -37,17 +35,82 @@ export default function LoginScreen() {
     Keyboard.dismiss();
     let valid = true;
 
-    // TODO Error checks go here, set valid to false
+    if (!inputs.email) {
+      handleError("Please enter your email", "email");
+      valid = false;
+    } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
+      handleError("Invalid email", "email");
+      valid = false;
+    }
 
-    if (valid) {
-      let response = dispatch(Login(inputs.email, inputs.password));
-      console.log(response);
+    if (!inputs.password) {
+      handleError("Please enter your password", "password");
+      valid = false;
+    } else if (inputs.password.length < 5) {
+      handleError("Your password is too short", "password");
+      valid = false;
+    } else if (!/[0-9]/.test(inputs.password)) {
+      handleError("Password must contain a number", "password");
+      valid = false;
+    }
+
+    if (valid === true) {
+      login();
+    }
+  };
+
+  const login = async () => {
+    try {
+      let response = await fetch("https://www.carebit.xyz/login", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: inputs.email,
+          password: inputs.password,
+        }),
+      });
+      const json = await response.json();
+      if (json.access_token !== undefined) {
+        dispatch(setTokenData(json));
+        //fetchUserData(json);
+        console.log(json);
+      } else {
+        if (json.message === "Email not found")
+          handleError("Email not found", "email");
+        else handleError("Incorrect password", "password");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchUserData = async (jsonTokenData) => {
+    try {
+      let url = "https://www.carebit.xyz/user/" + jsonTokenData.userId;
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      const json = await response.json();
+      console.log(json);
+      if (json.email !== undefined) {
+        dispatch(setUserData(json));
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   return (
     <ImageBackground
-      source={require("../../assets/gradient.png")} // Edit me if you find a better image~!
+      // TODO: Fix background
+      source={require("../../assets/gradient.png")}
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >

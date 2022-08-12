@@ -11,9 +11,8 @@ import GiverHomeScreen from "./src/screens/GiverHomeScreen";
 import GiveeSettingsScreen from "./src/screens/GiveeSettingsScreen";
 import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
 
-import { Provider, useSelector, useDispatch } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
-
 import { useFonts } from "expo-font";
 
 const Stack = createStackNavigator();
@@ -35,11 +34,11 @@ const App = () => {
 };
 
 const RootNavigation = () => {
-  const token = useSelector((state) => state.Reducers.authToken);
-
+  const userData = useSelector((state) => state.Reducers.userData);
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
   return (
     <NavigationContainer>
-      {token === true ? <HomeStack /> : <AuthStack />}
+      {tokenData.access_token !== "" ? <HomeStack /> : <AuthStack />}
     </NavigationContainer>
   );
 };
@@ -67,7 +66,7 @@ const AuthStack = () => {
 };
 
 const HomeStack = () => {
-  const careType = useSelector((state) => state.Reducers.careType);
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
   return (
     <Tab.Navigator>
       <Tab.Group
@@ -79,13 +78,15 @@ const HomeStack = () => {
         <Tab.Screen
           name="HomeScreen"
           component={
-            careType === "caregiver" ? GiverHomeScreen : GiveeHomeScreen
+            tokenData.type === "caregiver" ? GiverHomeScreen : GiveeHomeScreen
           }
         />
         <Tab.Screen
           name="SettingsScreen"
           component={
-            careType === "caregiver" ? GiverSettingsScreen : GiveeSettingsScreen
+            tokenData.type === "caregiver"
+              ? GiverSettingsScreen
+              : GiveeSettingsScreen
           }
         />
       </Tab.Group>

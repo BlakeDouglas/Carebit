@@ -1,27 +1,23 @@
-import {
-  StyleSheet,
-  SafeAreaView,
-  Text,
-  View,
-  ImageBackground,
-} from "react-native";
+import { StyleSheet, SafeAreaView, Text, ImageBackground } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import GlobalStyle from "../utils/GlobalStyle";
 
 import { useSelector, useDispatch } from "react-redux";
-import { setCareType } from "../redux/actions";
+import { setTokenData } from "../redux/actions";
 
 export default function RoleSelectScreen({ navigation }) {
   const dispatch = useDispatch();
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
 
   const caregiverCreateAccountButtonHandler = () => {
-    dispatch(setCareType("caregiver"));
+    dispatch(setTokenData({ ...tokenData, type: "caregiver" }));
     navigation.navigate("AccountCreationScreen");
   };
 
   const caregiveeCreateAccountButtonHandler = () => {
-    dispatch(setCareType("caregivee"));
+    // TODO: Make sure this works
+    dispatch(setTokenData({ ...tokenData, type: "caregivee" }));
     navigation.navigate("AccountCreationScreen");
   };
   return (

@@ -1,18 +1,29 @@
 // This is the default state, in which should be included default settings
-// As an example, auth is false because the user is not logged in by default.
 const initialState = {
-  authToken: null,
-  careType: null,
-  // Settings go here
+  tokenData: {
+    access_token: "",
+    caregiveeId: "",
+    caregiverId: null,
+    refresh_token: "",
+    type: "",
+    userId: null,
+  },
+  userData: {
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    mobilePlatform: "",
+  },
 };
 
 // Handles the actions in actions.js
 export default (state = initialState, action) => {
   switch (action.type) {
-    case "LOGIN":
-      return { ...state, authToken: action.payload };
-    case "SET_CARE_TYPE":
-      return { ...state, careType: action.payload };
+    case "SET_USER_DATA":
+      return { ...state, userData: action.payload };
+    case "SET_TOKEN_DATA":
+      return { ...state, tokenData: action.payload };
     default:
       return state;
   }

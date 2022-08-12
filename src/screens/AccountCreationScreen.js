@@ -15,11 +15,11 @@ import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
-import { Register } from "../redux/actions";
+import { setTokenData, setUserData } from "../redux/actions";
 
 export default function AccountCreationScreen({ navigation, route }) {
   // These are the two tools of the redux state manager. Use them instead of hooks
-  const careType = useSelector((state) => state.Reducers.careType);
+  const careType = useSelector((state) => state.Reducers.tokenData.type);
   const dispatch = useDispatch();
 
   // Content between this point and the return statement
@@ -109,7 +109,32 @@ export default function AccountCreationScreen({ navigation, route }) {
       ["lastName"]: lastName,
     }));
 
-    dispatch(Register(inputs));
+    fetch("https://www.carebit.xyz/user", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(inputs),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.access_token !== undefined) {
+          console.log(json);
+          // Clever line using span to exclude password etc from the userdata
+          const { type, password, ...output } = inputs;
+          dispatch(setUserData(output));
+          dispatch(setTokenData(json));
+        } else {
+          handleError(
+            "An account is already associated with this email",
+            "email"
+          );
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleChange = (text, input) => {
@@ -136,6 +161,7 @@ export default function AccountCreationScreen({ navigation, route }) {
               <Text style={GlobalStyle.Subtitle}>
                 {(careType ? "Caregiver" : "Caregivee") + " Registration"}
               </Text>
+              {/* TODO: Split in two */}
               <CustomTextInput
                 placeholder="Enter your name"
                 iconName="account-outline"
