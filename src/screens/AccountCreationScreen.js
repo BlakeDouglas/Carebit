@@ -7,6 +7,7 @@ import {
   Keyboard,
   ScrollView,
   Platform,
+  View,
   KeyboardAvoidingView,
 } from "react-native";
 
@@ -35,8 +36,6 @@ export default function AccountCreationScreen({ navigation, route }) {
     mobilePlatform: "",
   });
 
-  const [name, setName] = useState("");
-
   const [errors, setErrors] = useState({});
 
   // Checks for formatting in text fields
@@ -51,8 +50,13 @@ export default function AccountCreationScreen({ navigation, route }) {
       valid = false;
     }
 
-    if (!name) {
-      handleError("Please enter your name", "name");
+    if (!inputs.firstName) {
+      handleError("Please enter your first name", "firstName");
+      valid = false;
+    }
+
+    if (!inputs.lastName) {
+      handleError("Please enter your last name", "lastName");
       valid = false;
     }
 
@@ -83,24 +87,6 @@ export default function AccountCreationScreen({ navigation, route }) {
   };
 
   const register = () => {
-    let nameTrimmed = name.trim();
-    let splitIndex = nameTrimmed.indexOf(" ");
-
-    let firstName = "";
-    let lastName = "";
-
-    // If there is no space, then the entire string is the firstName
-    if (splitIndex === -1) {
-      firstName = nameTrimmed;
-    } else {
-      // firstName is the first word in name
-      // lastName is every other word, with spaces changed to hyphens
-
-      firstName = nameTrimmed.substring(0, splitIndex);
-      lastName = nameTrimmed.substring(splitIndex + 1);
-      lastName.replace(/\s+/g, "-");
-    }
-
     setInputs((prevState) => ({
       ...prevState,
       ["type"]: careType,
@@ -157,21 +143,33 @@ export default function AccountCreationScreen({ navigation, route }) {
       >
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <ScrollView contentInsetAdjustmentBehavior="automatic">
-            <SafeAreaView style={[GlobalStyle.Container, { marginTop: 90 }]}>
-              <Text style={GlobalStyle.Subtitle}>
+            <SafeAreaView style={[GlobalStyle.Container, { marginTop: 50 }]}>
+              <Text style={GlobalStyle.Subtitle2}>
                 {(careType ? "Caregiver" : "Caregivee") + " Registration"}
               </Text>
-              {/* TODO: Split in two */}
+
               <CustomTextInput
-                placeholder="Enter your name"
+                placeholder="Enter Your First Name"
                 iconName="account-outline"
-                label="Name"
-                error={errors.name}
-                onChangeText={(text) => setName(text)}
+                label="First Name"
+                error={errors.firstName}
+                onChangeText={(text) => handleChange(text, "firstName")}
                 onFocus={() => {
-                  handleError(null, "name");
+                  handleError(null, "firstName");
                 }}
               />
+
+              <CustomTextInput
+                placeholder="Enter Your Last Name"
+                iconName="account-outline"
+                label="Last Name"
+                error={errors.lastName}
+                onChangeText={(text) => handleChange(text, "lastName")}
+                onFocus={() => {
+                  handleError(null, "lastName");
+                }}
+              />
+
               <CustomTextInput
                 placeholder="Enter your phone number"
                 iconName="phone-outline"
@@ -186,6 +184,7 @@ export default function AccountCreationScreen({ navigation, route }) {
                   handleError(null, "phone");
                 }}
               />
+
               <CustomTextInput
                 placeholder="Enter your email address"
                 iconName="email-outline"
@@ -197,6 +196,7 @@ export default function AccountCreationScreen({ navigation, route }) {
                   handleError(null, "email");
                 }}
               />
+
               <CustomTextInput
                 placeholder="Enter your password"
                 iconName="lock-outline"
@@ -214,7 +214,7 @@ export default function AccountCreationScreen({ navigation, route }) {
                   GlobalStyle.Button,
                   {
                     backgroundColor: "rgba(255, 255, 255, .2)",
-                    marginTop: 15,
+                    marginTop: 40,
                     marginBottom: 30,
                   },
                 ]}

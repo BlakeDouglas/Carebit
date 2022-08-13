@@ -28,7 +28,11 @@ export default StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
-
+  Subtitle2: {
+    fontSize: 30,
+    color: "white",
+    marginBottom: 20,
+  },
   Background: {
     flex: 1,
   },
