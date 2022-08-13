@@ -91,8 +91,6 @@ export default function AccountCreationScreen({ navigation, route }) {
       ...prevState,
       ["type"]: careType,
       ["mobilePlatform"]: Platform.OS,
-      ["firstName"]: firstName,
-      ["lastName"]: lastName,
     }));
 
     fetch("https://www.carebit.xyz/user", {
