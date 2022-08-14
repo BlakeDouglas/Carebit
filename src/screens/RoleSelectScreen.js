@@ -11,13 +11,13 @@ export default function RoleSelectScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
 
   const caregiverCreateAccountButtonHandler = () => {
-    dispatch(setTokenData({ ...tokenData, type: "caregiver" }));
+    dispatch(setTokenData({ ...tokenData, type: "Caregiver" }));
     navigation.navigate("AccountCreationScreen");
   };
 
   const caregiveeCreateAccountButtonHandler = () => {
     // TODO: Make sure this works
-    dispatch(setTokenData({ ...tokenData, type: "caregivee" }));
+    dispatch(setTokenData({ ...tokenData, type: "Caregivee" }));
     navigation.navigate("AccountCreationScreen");
   };
   return (

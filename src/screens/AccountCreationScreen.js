@@ -141,33 +141,35 @@ export default function AccountCreationScreen({ navigation, route }) {
       >
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <ScrollView contentInsetAdjustmentBehavior="automatic">
-            <SafeAreaView style={[GlobalStyle.Container, { marginTop: 50 }]}>
+            <SafeAreaView style={[GlobalStyle.Container, { marginTop: 80 }]}>
               <Text style={GlobalStyle.Subtitle2}>
-                {(careType ? "Caregiver" : "Caregivee") + " Registration"}
+                {careType + " Registration"}
               </Text>
-
-              <CustomTextInput
-                placeholder="Enter Your First Name"
-                iconName="account-outline"
-                label="First Name"
-                error={errors.firstName}
-                onChangeText={(text) => handleChange(text, "firstName")}
-                onFocus={() => {
-                  handleError(null, "firstName");
-                }}
-              />
-
-              <CustomTextInput
-                placeholder="Enter Your Last Name"
-                iconName="account-outline"
-                label="Last Name"
-                error={errors.lastName}
-                onChangeText={(text) => handleChange(text, "lastName")}
-                onFocus={() => {
-                  handleError(null, "lastName");
-                }}
-              />
-
+              <View style={{ flexDirection: "row", flex: 1 }}>
+                <View style={GlobalStyle.Background}>
+                  <CustomTextInput
+                    placeholder="First Name"
+                    iconName="account-outline"
+                    label="Name"
+                    error={errors.firstName}
+                    onChangeText={(text) => handleChange(text, "firstName")}
+                    onFocus={() => {
+                      handleError(null, "firstName");
+                    }}
+                  />
+                </View>
+                <View style={GlobalStyle.Background}>
+                  <CustomTextInput
+                    placeholder="Last Name"
+                    label="  "
+                    error={errors.lastName}
+                    onChangeText={(text) => handleChange(text, "lastName")}
+                    onFocus={() => {
+                      handleError(null, "lastName");
+                    }}
+                  />
+                </View>
+              </View>
               <CustomTextInput
                 placeholder="Enter your phone number"
                 iconName="phone-outline"
@@ -212,7 +214,7 @@ export default function AccountCreationScreen({ navigation, route }) {
                   GlobalStyle.Button,
                   {
                     backgroundColor: "rgba(255, 255, 255, .2)",
-                    marginTop: 40,
+                    marginTop: 60,
                     marginBottom: 30,
                   },
                 ]}
