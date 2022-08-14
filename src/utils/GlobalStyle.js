@@ -29,7 +29,7 @@ export default StyleSheet.create({
     fontWeight: "bold",
   },
   Subtitle2: {
-    fontSize: 30,
+    fontSize: 35,
     color: "white",
     marginBottom: 20,
   },
@@ -40,5 +40,10 @@ export default StyleSheet.create({
     flex: 1,
     marginLeft: 40,
     marginRight: 45,
+  },
+  Inner: {
+    padding: 24,
+    flex: 1,
+    justifyContent: "space-around",
   },
 });

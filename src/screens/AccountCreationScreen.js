@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
@@ -43,7 +44,7 @@ export default function AccountCreationScreen({ navigation, route }) {
     Keyboard.dismiss();
     let valid = true;
     if (!inputs.email) {
-      handleError("Please enter your email", "email");
+      handleError("Email Required", "email");
       valid = false;
     } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
       handleError("Invalid email", "email");
@@ -51,17 +52,17 @@ export default function AccountCreationScreen({ navigation, route }) {
     }
 
     if (!inputs.firstName) {
-      handleError("Please enter your first name", "firstName");
+      handleError("First Name Required", "firstName");
       valid = false;
     }
 
     if (!inputs.lastName) {
-      handleError("Please enter your last name", "lastName");
+      handleError("Last Name Required", "lastName");
       valid = false;
     }
 
     if (!inputs.phone) {
-      handleError("Please enter your phone number", "phone");
+      handleError("Phone Number Required", "phone");
       valid = false;
     } else if (
       !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
@@ -71,7 +72,7 @@ export default function AccountCreationScreen({ navigation, route }) {
     }
 
     if (!inputs.password) {
-      handleError("Please enter your password", "password");
+      handleError("Password Required", "password");
       valid = false;
     } else if (inputs.password.length < 5) {
       handleError("Your password is too short", "password");
@@ -135,97 +136,91 @@ export default function AccountCreationScreen({ navigation, route }) {
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={GlobalStyle.Background}
-      >
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <ScrollView contentInsetAdjustmentBehavior="automatic">
-            <SafeAreaView style={[GlobalStyle.Container, { marginTop: 80 }]}>
-              <Text style={GlobalStyle.Subtitle2}>
-                {careType + " Registration"}
-              </Text>
-              <View style={{ flexDirection: "row", flex: 1 }}>
-                <View style={GlobalStyle.Background}>
-                  <CustomTextInput
-                    placeholder="First Name"
-                    iconName="account-outline"
-                    label="Name"
-                    error={errors.firstName}
-                    onChangeText={(text) => handleChange(text, "firstName")}
-                    onFocus={() => {
-                      handleError(null, "firstName");
-                    }}
-                  />
-                </View>
-                <View style={GlobalStyle.Background}>
-                  <CustomTextInput
-                    placeholder="Last Name"
-                    label="  "
-                    error={errors.lastName}
-                    onChangeText={(text) => handleChange(text, "lastName")}
-                    onFocus={() => {
-                      handleError(null, "lastName");
-                    }}
-                  />
-                </View>
-              </View>
+      <KeyboardAwareScrollView>
+        <View style={GlobalStyle.Inner}>
+          <Text
+            style={[GlobalStyle.Subtitle2, { marginTop: 70, marginBottom: 40 }]}
+          >
+            {careType + " Registration"}
+          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <View style={GlobalStyle.Background}>
               <CustomTextInput
-                placeholder="Enter your phone number"
-                iconName="phone-outline"
-                label="Phone"
-                keyboardType="phone-pad"
-                error={errors.phone}
-                onChangeText={(text) =>
-                  // Removes everything but numbers, so it complies with the api
-                  handleChange(text.replace(/[^0-9]+/g, ""), "phone")
-                }
+                placeholder="First Name"
+                iconName="account-outline"
+                label="Name"
+                error={errors.firstName}
+                onChangeText={(text) => handleChange(text, "firstName")}
                 onFocus={() => {
-                  handleError(null, "phone");
+                  handleError(null, "firstName");
                 }}
               />
-
+            </View>
+            <View style={GlobalStyle.Background}>
               <CustomTextInput
-                placeholder="Enter your email address"
-                iconName="email-outline"
-                label="Email"
-                keyboardType="email-address"
-                error={errors.email}
-                onChangeText={(text) => handleChange(text, "email")}
+                placeholder="Last Name"
+                label="  "
+                error={errors.lastName}
+                onChangeText={(text) => handleChange(text, "lastName")}
                 onFocus={() => {
-                  handleError(null, "email");
+                  handleError(null, "lastName");
                 }}
               />
+            </View>
+          </View>
+          <CustomTextInput
+            placeholder="(XXX)-XXX-XXXX"
+            iconName="phone-outline"
+            label="Phone"
+            keyboardType="number-pad"
+            error={errors.phone}
+            onChangeText={(text) =>
+              // Removes everything but numbers, so it complies with the api
+              handleChange(text.replace(/[^0-9]+/g, ""), "phone")
+            }
+            onFocus={() => {
+              handleError(null, "phone");
+            }}
+          />
 
-              <CustomTextInput
-                placeholder="Enter your password"
-                iconName="lock-outline"
-                label="Password"
-                error={errors.password}
-                onChangeText={(text) => handleChange(text, "password")}
-                onFocus={() => {
-                  handleError(null, "password");
-                }}
-                password
-              />
+          <CustomTextInput
+            placeholder="example@domain.com"
+            iconName="email-outline"
+            label="Email"
+            keyboardType="email-address"
+            error={errors.email}
+            onChangeText={(text) => handleChange(text, "email")}
+            onFocus={() => {
+              handleError(null, "email");
+            }}
+          />
 
-              <TouchableOpacity
-                style={[
-                  GlobalStyle.Button,
-                  {
-                    backgroundColor: "rgba(255, 255, 255, .2)",
-                    marginTop: 60,
-                    marginBottom: 30,
-                  },
-                ]}
-                onPress={validate}
-              >
-                <Text style={GlobalStyle.ButtonText}>Create Account</Text>
-              </TouchableOpacity>
-            </SafeAreaView>
-          </ScrollView>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+          <CustomTextInput
+            placeholder="Password"
+            iconName="lock-outline"
+            label="Password"
+            error={errors.password}
+            onChangeText={(text) => handleChange(text, "password")}
+            onFocus={() => {
+              handleError(null, "password");
+            }}
+            password
+          />
+
+          <TouchableOpacity
+            style={[
+              GlobalStyle.Button,
+              {
+                backgroundColor: "rgba(255, 255, 255, .2)",
+                marginTop: "8%",
+              },
+            ]}
+            onPress={validate}
+          >
+            <Text style={GlobalStyle.ButtonText}>Create Account</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
     </ImageBackground>
   );
 }
