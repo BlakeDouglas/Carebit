@@ -32,7 +32,7 @@ export default function GiverHomeScreen() {
             <View style = {styles.cardTitle}>
               <View style = {styles.title}>
                 <Image
-                 source={require("./assets/images/heart/heart.png")}
+                 source={require("../../assets/images/heart/heart.png")}
                 
                 />
                 <Text  style={styles.h2}>Heart Rate</Text>
@@ -53,7 +53,7 @@ export default function GiverHomeScreen() {
             <View style = {styles.cardTitle}>
             <View style = {styles.title}>
                 <Image
-                 source={require("./assets/images/steps/steps.png")}
+                 source={require("../../assets/images/steps/steps.png")}
                 
                 />
                 <Text  style={styles.h2}>Steps</Text>
@@ -79,7 +79,7 @@ export default function GiverHomeScreen() {
         <View style={styles.cardTitle}>
         <View style = {styles.title}>
                 <Image
-                 source={require("./assets/images/heart/heart.png")}
+                 source={require("../../assets/images/heart/heart.png")}
                 
                 />
                <Text  style={styles.h2}>Heart Rate Summary</Text>
@@ -118,7 +118,7 @@ export default function GiverHomeScreen() {
           <View style = {styles.title}>
 
                 <Image
-                 source={require("./assets/images/steps/steps.png")}
+                 source={require("../../assets/images/steps/steps.png")}
                 
                 />
                 <Text  style={styles.h2}>Total Steps</Text>
@@ -135,7 +135,7 @@ export default function GiverHomeScreen() {
           <View style = {styles.cardTitle}>
           <View style = {styles.title}>
                 <Image
-                 source={require("./assets/images/fitbit/fitbit.png")}
+                 source={require(".../../assets/images/fitbit/fitbit.png")}
                 
                 />
                 <Text  style={styles.h2}>Fitbit Battery</Text>
@@ -146,7 +146,7 @@ export default function GiverHomeScreen() {
           <View style = {styles.batteryImage} >
           <Image
                  
-                 source={require("./assets/images/batterymedium/batterymedium.png")}
+                 source={require("../../assets/images/batterymedium/batterymedium.png")}
                 
                 />
             </View>
