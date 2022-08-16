@@ -15,20 +15,22 @@ const CustomTextInput = ({
   const [isFocused, setIsFocused] = useState(false);
   const [hidePassword, setHidePassword] = useState(password);
   return (
-    <View style={{ marginBottom: 10 }}>
-      <Text style={style.label}>{label}</Text>
-      {error && (
-        <Text
-          style={{
-            color: "red",
-            fontSize: 15,
-            marginBottom: 5,
-            fontFamily: "RobotoBold",
-          }}
-        >
-          {error}
-        </Text>
-      )}
+    <View style={{ marginBottom: 15 }}>
+      <View style={{ flexDirection: "row" }}>
+        <Text style={style.label}>{label}</Text>
+        {error && (
+          <Text
+            style={{
+              color: "red",
+              fontSize: 15,
+              marginBottom: 5,
+              fontFamily: "RobotoBold",
+            }}
+          >
+            {error}
+          </Text>
+        )}
+      </View>
       <View
         style={[
           style.inputContainer,
@@ -70,8 +72,8 @@ const CustomTextInput = ({
 
 const style = StyleSheet.create({
   label: {
-    marginVertical: 5,
-    fontSize: 14,
+    marginBottom: 5,
+    fontSize: 15,
     color: "white",
   },
   inputContainer: {

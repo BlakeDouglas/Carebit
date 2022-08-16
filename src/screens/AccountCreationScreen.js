@@ -24,6 +24,8 @@ export default function AccountCreationScreen({ navigation, route }) {
   const careType = useSelector((state) => state.Reducers.tokenData.type);
   const dispatch = useDispatch();
 
+  const requiredText = " Input required";
+
   // Content between this point and the return statement
   // are inspired by kymzTech's React Native Tutorial
 
@@ -44,41 +46,41 @@ export default function AccountCreationScreen({ navigation, route }) {
     Keyboard.dismiss();
     let valid = true;
     if (!inputs.email) {
-      handleError("Email Required", "email");
+      handleError(requiredText, "email");
       valid = false;
     } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-      handleError("Invalid email", "email");
+      handleError(requiredText, "email");
       valid = false;
     }
 
     if (!inputs.firstName) {
-      handleError("First Name Required", "firstName");
+      handleError(requiredText, "firstName");
       valid = false;
     }
 
     if (!inputs.lastName) {
-      handleError("Last Name Required", "lastName");
+      handleError(requiredText, "lastName");
       valid = false;
     }
 
     if (!inputs.phone) {
-      handleError("Phone Number Required", "phone");
+      handleError(requiredText, "phone");
       valid = false;
     } else if (
       !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
     ) {
-      handleError("Invalid phone number", "phone");
+      handleError(" Invalid phone number", "phone");
       valid = false;
     }
 
     if (!inputs.password) {
-      handleError("Password Required", "password");
+      handleError(requiredText, "password");
       valid = false;
-    } else if (inputs.password.length < 5) {
-      handleError("Your password is too short", "password");
+    } else if (inputs.password.length < 8) {
+      handleError(" Too short (8 minimum)", "password");
       valid = false;
     } else if (!/[0-9]/.test(inputs.password)) {
-      handleError("Password must contain a number", "password");
+      handleError(" Must contain a number", "password");
       valid = false;
     }
 
@@ -148,7 +150,7 @@ export default function AccountCreationScreen({ navigation, route }) {
               <CustomTextInput
                 placeholder="First Name"
                 iconName="account-outline"
-                label="Name"
+                label="Name*"
                 error={errors.firstName}
                 onChangeText={(text) => handleChange(text, "firstName")}
                 onFocus={() => {
@@ -171,7 +173,7 @@ export default function AccountCreationScreen({ navigation, route }) {
           <CustomTextInput
             placeholder="(XXX)-XXX-XXXX"
             iconName="phone-outline"
-            label="Phone"
+            label="Phone*"
             keyboardType="number-pad"
             error={errors.phone}
             onChangeText={(text) =>
@@ -186,7 +188,7 @@ export default function AccountCreationScreen({ navigation, route }) {
           <CustomTextInput
             placeholder="example@domain.com"
             iconName="email-outline"
-            label="Email"
+            label="Email*"
             keyboardType="email-address"
             error={errors.email}
             onChangeText={(text) => handleChange(text, "email")}
@@ -198,7 +200,7 @@ export default function AccountCreationScreen({ navigation, route }) {
           <CustomTextInput
             placeholder="Password"
             iconName="lock-outline"
-            label="Password"
+            label="Password*"
             error={errors.password}
             onChangeText={(text) => handleChange(text, "password")}
             onFocus={() => {

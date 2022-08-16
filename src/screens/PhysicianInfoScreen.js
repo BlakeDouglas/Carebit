@@ -22,40 +22,42 @@ export default function PhysicianInfoScreen({ navigation }) {
     physicianZipCode: "",
   });
 
+  const requiredText = " Input required";
+
   const [errors, setErrors] = useState({});
 
   const validate = () => {
     Keyboard.dismiss();
     let valid = true;
     if (!inputs.physicianName) {
-      handleError("Physician's Name Required", "physicianName");
+      handleError(requiredText, "physicianName");
       valid = false;
     }
     if (!inputs.physicianPhone) {
-      handleError("Phone Number Required", "physicianPhone");
+      handleError(requiredText, "physicianPhone");
       valid = false;
     } else if (
       !inputs.physicianPhone.match(
         /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/
       )
     ) {
-      handleError("Invalid phone number", "physicianPhone");
+      handleError(" Invalid phone number", "physicianPhone");
       valid = false;
     }
     if (!inputs.physicianStreet) {
-      handleError("Physician's Address Required", "physicianStreet");
+      handleError(requiredText, "physicianStreet");
       valid = false;
     }
     if (!inputs.physicianCity) {
-      handleError("Physician's City Required", "physicianCity");
+      handleError(requiredText, "physicianCity");
       valid = false;
     }
     if (!inputs.physicianState) {
-      handleError("State Required", "physicianState");
+      handleError(requiredText, "physicianState");
       valid = false;
     }
     if (!inputs.physicianZipCode) {
-      handleError("Zipcode Required", "physicianZipCode");
+      handleError(requiredText, "physicianZipCode");
       valid = false;
     }
     if (valid) {
@@ -103,17 +105,17 @@ export default function PhysicianInfoScreen({ navigation }) {
           <CustomTextInput
             placeholder="Physician's Name"
             iconName="account-outline"
-            label="Physician's Name"
+            label="Physician's Name*"
             error={errors.physicianName}
             onChangeText={(text) => handleChange(text, "physicianName")}
             onFocus={() => {
-              handleError(label, "physicianName");
+              handleError(null, "physicianName");
             }}
           />
           <CustomTextInput
             placeholder="(XXX) XXX-XXXX"
             iconName="phone-outline"
-            label="Physician's Number"
+            label="Physician's Number*"
             keyboardType="number-pad"
             error={errors.physicianPhone}
             onChangeText={(text) =>
@@ -124,7 +126,7 @@ export default function PhysicianInfoScreen({ navigation }) {
             }}
           />
           <CustomTextInput
-            placeholder="e.g. 111 Lane Road"
+            placeholder="e.g. 111 Lane Road, STE. 120"
             //iconName="phone-outline"
             label="Physician's Street Address"
             error={errors.physicianStreet}
