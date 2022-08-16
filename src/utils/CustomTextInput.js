@@ -15,8 +15,20 @@ const CustomTextInput = ({
   const [isFocused, setIsFocused] = useState(false);
   const [hidePassword, setHidePassword] = useState(password);
   return (
-    <View style={{ marginBottom: 15 }}>
+    <View style={{ marginBottom: 10 }}>
       <Text style={style.label}>{label}</Text>
+      {error && (
+        <Text
+          style={{
+            color: "red",
+            fontSize: 15,
+            marginBottom: 5,
+            fontFamily: "RobotoBold",
+          }}
+        >
+          {error}
+        </Text>
+      )}
       <View
         style={[
           style.inputContainer,
@@ -38,7 +50,7 @@ const CustomTextInput = ({
             setIsFocused(false);
           }}
           style={{ color: "white", flex: 1, fontSize: 17 }}
-          placeholderTextColor="white"
+          placeholderTextColor="rgba(255, 255, 255, .5)"
           secureTextEntry={hidePassword}
           {...props}
         />
@@ -52,18 +64,6 @@ const CustomTextInput = ({
           />
         )}
       </View>
-      {error && (
-        <Text
-          style={{
-            color: "red",
-            fontSize: 15,
-            marginTop: 3,
-            fontFamily: "RobotoBold",
-          }}
-        >
-          {error}
-        </Text>
-      )}
     </View>
   );
 };

@@ -51,11 +51,11 @@ export default function PhysicianInfoScreen({ navigation }) {
       valid = false;
     }
     if (!inputs.physicianState) {
-      handleError("Physician's State Required", "physicianState");
+      handleError("State Required", "physicianState");
       valid = false;
     }
     if (!inputs.physicianZipCode) {
-      handleError("Physician's Zipcode Required", "physicianZipcode");
+      handleError("Zipcode Required", "physicianZipCode");
       valid = false;
     }
     if (valid) {
@@ -91,7 +91,12 @@ export default function PhysicianInfoScreen({ navigation }) {
     >
       <KeyboardAwareScrollView>
         <View style={GlobalStyle.Inner}>
-          <Text style={[GlobalStyle.Subtitle, { marginTop: 70 }]}>
+          <Text
+            style={[
+              GlobalStyle.Subtitle,
+              { marginTop: 70, fontSize: 40, marginBottom: 30 },
+            ]}
+          >
             Physician Contact
           </Text>
 
@@ -102,7 +107,7 @@ export default function PhysicianInfoScreen({ navigation }) {
             error={errors.physicianName}
             onChangeText={(text) => handleChange(text, "physicianName")}
             onFocus={() => {
-              handleError(null, "physicianName");
+              handleError(label, "physicianName");
             }}
           />
           <CustomTextInput

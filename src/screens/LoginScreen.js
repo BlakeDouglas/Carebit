@@ -110,7 +110,7 @@ export default function LoginScreen() {
   return (
     <ImageBackground
       // TODO: Fix background
-      source={require("../../assets/gradient.png")}
+      source={require("../../assets/images/background-hearts.imageset/background02.png")}
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >
