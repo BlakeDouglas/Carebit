@@ -1,7 +1,6 @@
 import {
   StyleSheet,
   Text,
-  SafeAreaView,
   View,
   Keyboard,
   ImageBackground,
@@ -13,10 +12,10 @@ import CustomTextInput from "../utils/CustomTextInput";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 
-export default function PhysicianInfo({ navigation }) {
+export default function PhysicianInfoScreen({ navigation }) {
   const [inputs, setInputs] = useState({
     physicianName: "",
-    physicanPhone: "",
+    physicianPhone: "",
     physicianStreet: "",
     physicianCity: "",
     physicianState: "",
@@ -32,13 +31,15 @@ export default function PhysicianInfo({ navigation }) {
       handleError("Physician's Name Required", "physicianName");
       valid = false;
     }
-    if (!inputs.phone) {
-      handleError("Phone Number Required", "phone");
+    if (!inputs.physicianPhone) {
+      handleError("Phone Number Required", "physicianPhone");
       valid = false;
     } else if (
-      !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
+      !inputs.physicianPhone.match(
+        /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/
+      )
     ) {
-      handleError("Invalid phone number", "phone");
+      handleError("Invalid phone number", "physicianPhone");
       valid = false;
     }
     if (!inputs.physicianStreet) {
@@ -58,7 +59,7 @@ export default function PhysicianInfo({ navigation }) {
       valid = false;
     }
     if (valid) {
-      physicianUpload;
+      physicianUpload();
     }
   };
 
@@ -98,7 +99,7 @@ export default function PhysicianInfo({ navigation }) {
             placeholder="Physician's Name"
             iconName="account-outline"
             label="Physician's Name"
-            error={errors.name}
+            error={errors.physicianName}
             onChangeText={(text) => handleChange(text, "physicianName")}
             onFocus={() => {
               handleError(null, "physicianName");
@@ -109,19 +110,19 @@ export default function PhysicianInfo({ navigation }) {
             iconName="phone-outline"
             label="Physician's Number"
             keyboardType="number-pad"
-            error={errors.phone}
+            error={errors.physicianPhone}
             onChangeText={(text) =>
-              handleChange(text.replace(/[^0-9]+/g, ""), "phone")
+              handleChange(text.replace(/[^0-9]+/g, ""), "physicianPhone")
             }
             onFocus={() => {
-              handleError(null, "Physician's Number");
+              handleError(null, "physicianPhone");
             }}
           />
           <CustomTextInput
             placeholder="e.g. 111 Lane Road"
             //iconName="phone-outline"
             label="Physician's Street Address"
-            error={errors.address}
+            error={errors.physicianStreet}
             onChangeText={(text) => handleChange(text, "physicianStreet")}
             onFocus={() => {
               handleError(null, "physicianStreet");
@@ -132,7 +133,7 @@ export default function PhysicianInfo({ navigation }) {
             placeholder="e.g. London"
             //iconName="phone-outline"
             label="City"
-            error={errors.city}
+            error={errors.physicianCity}
             onChangeText={(text) => handleChange(text, "physicianCity")}
             onFocus={() => {
               handleError(null, "physicianCity");
@@ -144,7 +145,7 @@ export default function PhysicianInfo({ navigation }) {
                 placeholder="e.g. Florida"
                 //iconName="phone-outline"
                 label="State"
-                error={errors.state}
+                error={errors.physicianState}
                 onChangeText={(text) => handleChange(text, "physicianState")}
                 onFocus={() => {
                   handleError(null, "physicianState");
@@ -157,7 +158,7 @@ export default function PhysicianInfo({ navigation }) {
                 //iconName="phone-outline"
                 label="Zipcode"
                 keyboardType="number-pad"
-                error={errors.state}
+                error={errors.physicianZipCode}
                 onChangeText={(text) => handleChange(text, "physicianZipCode")}
                 onFocus={() => {
                   handleError(null, "physicianZipCode");
