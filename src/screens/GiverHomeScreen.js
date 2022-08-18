@@ -1,20 +1,12 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  StatusBar,
-  Image,
-} from "react-native";
-import moment from "moment";
-export default function GiverHomeScreen() {
-  let date = moment().format("dddd, MMM M");
+import { StyleSheet, Text, View, StatusBar, Image, SafeAreaView } from "react-native";
 
+export default function GiverHomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
-      {/*Sync Container*/}
-      <View style={styles.lastSyncContainer}>
-        <Text style={[styles.h3, styles.syncText]}> Carebit</Text>
+       {/*Sync Container*/}
+
+       <View style={styles.lastSyncContainer}>
+       <Text style={[styles.h3, styles.syncText]}> Carebit</Text>
         <Text style={[styles.h4, styles.syncText]}> Last Sync 4 hours ago</Text>
       </View>
       {/*Alerts Container*/}
@@ -22,28 +14,32 @@ export default function GiverHomeScreen() {
         <Text style={styles.h4}> 0 Alerts Today</Text>
         <Text style={[styles.h4, styles.viewhistory]}> View History</Text>
       </View>
+
       {/*Greetings Container*/}
       <View style={styles.greetingsContainer}>
         <Text style={styles.h4}> Hello Name</Text>
         <Text style={styles.h2}> Some other text goes in here</Text>
       </View>
+
       {/*HeartRate & Steps Container*/}
       <View style={styles.dataContainer}>
         <View style={styles.titleContainer}>
-          <Text style={styles.h3}>Last Recorded Activity</Text>
+          <Text style={styles.h3}>Last Recorded activity</Text>
           <Text style={styles.h4}>Time</Text>
         </View>
         <View style={styles.dataCardsContainer}>
           <View style={styles.smallCard}>
-            <View style={styles.cardTitle}>
-              <View style={styles.title}>
+            <View style = {styles.cardTitle}>
+              <View style = {styles.title}>
                 <Image
-                  source={require("../../assets/images/heart/heart.png")}
+                 source={require("../../assets/images/heart/heart.png")}
+                
                 />
-                <Text style={styles.h2}>Heart Rate</Text>
+                <Text  style={styles.h2}>Heart Rate</Text>
               </View>
+              
             </View>
-            <View style={styles.inCard}>
+            <View style = {styles.inCard}>
               <View style={styles.heartData}>
                 <Text style={styles.h1}>74</Text>
                 <Text style={styles.h4}>BPM</Text>
@@ -54,16 +50,18 @@ export default function GiverHomeScreen() {
             </View>
           </View>
           <View style={styles.smallCard}>
-            <View style={styles.cardTitle}>
-              <View style={styles.title}>
+            <View style = {styles.cardTitle}>
+            <View style = {styles.title}>
                 <Image
-                  source={require("../../assets/images/steps/steps.png")}
+                 source={require("./assets/images/steps/steps.png")}
+                
                 />
-                <Text style={styles.h2}>Steps</Text>
+                <Text  style={styles.h2}>Steps</Text>
               </View>
+              
             </View>
-            <View style={styles.inCard}>
-              <Text style={styles.h1}>174</Text>
+            <View style = {styles.inCard}>
+              <Text  style={styles.h1}>174</Text>
 
               <Text style={styles.h4}>15 mins ago</Text>
             </View>
@@ -74,71 +72,86 @@ export default function GiverHomeScreen() {
       {/*Summary Container*/}
       <View style={styles.summaryContainer}>
         <View style={styles.titleContainer}>
-          <Text style={styles.h3}>Today</Text>
-          <Text style={styles.h4}>{date}</Text>
+          <Text  style={styles.h3}>Today</Text>
+          <Text style={styles.h4}>Date</Text>
         </View>
         <View style={styles.largeCard}>
-          <View style={styles.cardTitle}>
-            <View style={styles.title}>
-              <Image source={require("../../assets/images/heart/heart.png")} />
-              <Text style={styles.h2}>Heart Rate Summary</Text>
-            </View>
-
-            <Text style={styles.h4}>BPM</Text>
+        <View style={styles.cardTitle}>
+        <View style = {styles.title}>
+                <Image
+                 source={require("../../assets/images/heart/heart.png")}
+                
+                />
+               <Text  style={styles.h2}>Heart Rate Summary</Text>
+              </View>
+          
+          <Text style={styles.h4}>BPM</Text>
+        </View>
+        <View style={styles.summaryDataContainer}>
+        <View style = {styles.leftBoarder}>
+          <View style = {styles.inCard}>
+            <Text  style={styles.h1}>74</Text>
+            <Text style={styles.h4}>min</Text>
           </View>
-          <View style={styles.summaryDataContainer}>
-            <View style={styles.leftBoarder}>
-              <View style={styles.inCard}>
-                <Text style={styles.h1}>74</Text>
-                <Text style={styles.h4}>min</Text>
-              </View>
-            </View>
-            <View style={styles.leftBoarder}>
-              <View style={styles.inCard}>
-                <Text style={styles.h1}>74</Text>
-                <Text style={styles.h4}>average</Text>
-              </View>
-            </View>
-            <View style={styles.leftBoarder}>
-              <View style={[styles.inCard]}>
-                <Text style={styles.h1}>74</Text>
-                <Text style={styles.h4}>max</Text>
-              </View>
-            </View>
+          </View>
+          <View style = {styles.leftBoarder}>
+          <View style = {styles.inCard}>
+            <Text  style={styles.h1}>74</Text>
+            <Text style={styles.h4}>average</Text>
+          </View>
+          </View>
+          <View style = {styles.leftBoarder}>
+          <View style = {[styles.inCard]}>
+            <Text  style={styles.h1}>74</Text>
+            <Text style={styles.h4}>max</Text>
+          </View>
           </View>
         </View>
+        </View>
+       
       </View>
+
       {/*Total steps and Battery Container*/}
       <View style={styles.batteryContainer}>
         <View style={styles.smallCard}>
-          <View style={styles.cardTitle}>
-            <View style={styles.title}>
-              <Image source={require("../../assets/images/steps/steps.png")} />
-              <Text style={styles.h2}>Total Steps</Text>
-            </View>
+          <View style = {styles.cardTitle}>
+          <View style = {styles.title}>
+
+                <Image
+                 source={require("../../assets/images/steps/steps.png")}
+                
+                />
+                <Text  style={styles.h2}>Total Steps</Text>
+              </View>
+            
           </View>
-          <View style={styles.inCard}>
-            <Text style={styles.h1}>174</Text>
+          <View style = {styles.inCard}>
+            <Text  style={styles.h1}>174</Text>
 
             <Text style={styles.h4}>15 mins ago</Text>
           </View>
         </View>
         <View style={styles.smallCard}>
-          <View style={styles.cardTitle}>
-            <View style={styles.title}>
-              <Image
-                source={require("../../assets/images/fitbit/fitbit.png")}
-              />
-              <Text style={styles.h2}>Fitbit Battery</Text>
-            </View>
+          <View style = {styles.cardTitle}>
+          <View style = {styles.title}>
+                <Image
+                 source={require(".../../assets/images/fitbit/fitbit.png")}
+                
+                />
+                <Text  style={styles.h2}>Fitbit Battery</Text>
+              </View>
+            
           </View>
-          <View style={styles.inCard}>
-            <View style={styles.batteryImage}>
-              <Image
-                source={require("../../assets/images/batterymedium/batterymedium.png")}
-              />
+          <View style = {styles.inCard}>
+          <View style = {styles.batteryImage} >
+          <Image
+                 
+                 source={require("../../assets/images/batterymedium/batterymedium.png")}
+                
+                />
             </View>
             <Text style={styles.h4}>15 mins ago</Text>
+          
           </View>
         </View>
       </View>
@@ -148,15 +161,17 @@ export default function GiverHomeScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "whitesmoke",
+    backgroundColor:"whitesmoke",
     flex: 1,
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   lastSyncContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 15,
-    backgroundColor: "dodgerblue",
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding:15,
+    
+    backgroundColor: 'dodgerblue',
+
   },
   alertsContainer: {
     backgroundColor: "white",
@@ -165,8 +180,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     ...Platform.select({
       ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 1, height: 3 },
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 3},
         shadowOpacity: 0.2,
       },
       android: {
@@ -181,77 +196,82 @@ const styles = StyleSheet.create({
   },
 
   syncText: {
-    fontWeight: "bold",
-    color: "white",
+    fontWeight: 'bold',
+    color:  "white"
+
   },
   viewhistory: {
-    color: "dodgerblue",
+    color: 'dodgerblue',
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   h1: {
-    fontSize: 42,
-    fontWeight: "bold",
+    fontSize:42,
+    fontWeight:"bold"
   },
   h2: {
-    fontSize: 21,
-    marginLeft: 5,
+    fontSize:21,
   },
   h3: {
-    fontSize: 18,
+    fontSize:18,
   },
   h4: {
-    fontSize: 17,
-    color: "grey",
-    fontWeight: "400",
+    fontSize:17,
+    color:"grey",
+    fontWeight:"500"
   },
-  title: {
+  title:{
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems:"center"
+
   },
   largeCard: {
     backgroundColor: "white",
     borderRadius: 10,
-    margin: 15,
+    margin: 12,
     ...Platform.select({
       ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 1, height: 2 },
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 2},
         shadowOpacity: 0.2,
       },
       android: {
         elevation: 3,
       },
     }),
+
   },
   greetingsContainer: {
-    padding: 10,
-    marginTop: 15,
-    borderBottomColor: "lightgrey",
+    padding: 5,
+    marginTop:10,
+    borderBottomColor: 'lightgrey',
     borderBottomWidth: 1,
   },
   dataCardsContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
+    
+    
   },
   leftBoarder: {
-    flex: 1,
-    borderRightWidth: 1,
-    borderRightColor: "whitesmoke",
+    flex:1,
+    borderRightWidth:1,
+    borderRightColor:'whitesmoke',
     justifyContent: "center",
-    alignItems: "center",
+    alignItems:"center",
+
   },
   smallCard: {
     backgroundColor: "white",
-    width: 170,
+    width: 180,
     borderRadius: 10,
-    margin: 15,
-    marginTop: 5,
+    marginTop: 10,
+    marginBottom: 15,
     ...Platform.select({
       ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 1, height: 2 },
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 2},
         shadowOpacity: 0.2,
       },
       android: {
@@ -261,50 +281,55 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     flexDirection: "row",
-    borderBottomColor: "lightgrey",
-    padding: 10,
+    borderBottomColor: 'lightgrey',
+    padding:10,
     justifyContent: "space-between",
     borderBottomWidth: 1,
-    width: "100%",
+    width:"100%",
+    marginTop:0,
     ...Platform.select({
-      android: {
-        borderBottomWidth: 1,
-        borderBottomColor: "whitesmoke",
+      android:{
+         borderBottomWidth:1,
+         borderBottomColor:'whitesmoke'      
       },
-      default: {
+      default:{
         shadowOffset: { width: 0, height: 1 },
         shadowRadius: 2,
         shadowOpacity: 0.25,
-      },
+      }
     }),
+    
   },
   heartData: {
     flexDirection: "row",
   },
   dataContainer: {
-    borderBottomColor: "lightgrey",
+    marginTop:0,
+    borderBottomColor: 'lightgrey',
     borderBottomWidth: 1,
+    
   },
   summaryContainer: {
     justifyContent: "space-around",
   },
-  inCard: {
-    margin: 15,
-    alignItems: "center",
-    justifyContent: "center",
+  inCard:{
+    padding:24,
+    alignItems:"center",
+    justifyContent:"center"
   },
 
   summaryDataContainer: {
     flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent:"center",
+    alignItems:"center",
   },
   batteryContainer: {
-    marginTop: 2,
+    marginTop:10,
     flexDirection: "row",
     justifyContent: "space-around",
   },
   batteryImage: {
-    margin: 12,
-  },
+    
+    padding:12,
+  }
 });
