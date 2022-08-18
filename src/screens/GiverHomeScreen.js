@@ -1,10 +1,18 @@
-import { StyleSheet, Text, View, StatusBar, Image } from "react-native";
-
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  StatusBar,
+  Image,
+} from "react-native";
+import moment from "moment";
 export default function GiverHomeScreen() {
-  return (
-    <View style={styles.container}>
-      {/*Sync Container*/}
+  let date = moment().format("dddd, MMM M");
 
+  return (
+    <SafeAreaView style={styles.container}>
+      {/*Sync Container*/}
       <View style={styles.lastSyncContainer}>
         <Text style={[styles.h3, styles.syncText]}> Carebit</Text>
         <Text style={[styles.h4, styles.syncText]}> Last Sync 4 hours ago</Text>
@@ -14,17 +22,15 @@ export default function GiverHomeScreen() {
         <Text style={styles.h4}> 0 Alerts Today</Text>
         <Text style={[styles.h4, styles.viewhistory]}> View History</Text>
       </View>
-
       {/*Greetings Container*/}
       <View style={styles.greetingsContainer}>
         <Text style={styles.h4}> Hello Name</Text>
         <Text style={styles.h2}> Some other text goes in here</Text>
       </View>
-
       {/*HeartRate & Steps Container*/}
       <View style={styles.dataContainer}>
         <View style={styles.titleContainer}>
-          <Text style={styles.h3}>Last Recorded activity</Text>
+          <Text style={styles.h3}>Last Recorded Activity</Text>
           <Text style={styles.h4}>Time</Text>
         </View>
         <View style={styles.dataCardsContainer}>
@@ -69,7 +75,7 @@ export default function GiverHomeScreen() {
       <View style={styles.summaryContainer}>
         <View style={styles.titleContainer}>
           <Text style={styles.h3}>Today</Text>
-          <Text style={styles.h4}>Date</Text>
+          <Text style={styles.h4}>{date}</Text>
         </View>
         <View style={styles.largeCard}>
           <View style={styles.cardTitle}>
@@ -102,7 +108,6 @@ export default function GiverHomeScreen() {
           </View>
         </View>
       </View>
-
       {/*Total steps and Battery Container*/}
       <View style={styles.batteryContainer}>
         <View style={styles.smallCard}>
@@ -137,7 +142,7 @@ export default function GiverHomeScreen() {
           </View>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -151,7 +156,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 15,
-
     backgroundColor: "dodgerblue",
   },
   alertsContainer: {
@@ -191,6 +195,7 @@ const styles = StyleSheet.create({
   },
   h2: {
     fontSize: 21,
+    marginLeft: 5,
   },
   h3: {
     fontSize: 18,
@@ -198,7 +203,7 @@ const styles = StyleSheet.create({
   h4: {
     fontSize: 17,
     color: "grey",
-    fontWeight: "500",
+    fontWeight: "400",
   },
   title: {
     flexDirection: "row",
@@ -208,7 +213,7 @@ const styles = StyleSheet.create({
   largeCard: {
     backgroundColor: "white",
     borderRadius: 10,
-    margin: 12,
+    margin: 15,
     ...Platform.select({
       ios: {
         shadowColor: "#000",
@@ -221,8 +226,8 @@ const styles = StyleSheet.create({
     }),
   },
   greetingsContainer: {
-    padding: 5,
-    marginTop: 10,
+    padding: 10,
+    marginTop: 15,
     borderBottomColor: "lightgrey",
     borderBottomWidth: 1,
   },
@@ -239,10 +244,10 @@ const styles = StyleSheet.create({
   },
   smallCard: {
     backgroundColor: "white",
-    width: 180,
+    width: 170,
     borderRadius: 10,
-    marginTop: 10,
-    marginBottom: 15,
+    margin: 15,
+    marginTop: 5,
     ...Platform.select({
       ios: {
         shadowColor: "#000",
@@ -261,7 +266,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderBottomWidth: 1,
     width: "100%",
-    marginTop: 0,
     ...Platform.select({
       android: {
         borderBottomWidth: 1,
@@ -278,7 +282,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   dataContainer: {
-    marginTop: 0,
     borderBottomColor: "lightgrey",
     borderBottomWidth: 1,
   },
@@ -286,7 +289,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   inCard: {
-    padding: 24,
+    margin: 15,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -297,11 +300,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   batteryContainer: {
-    marginTop: 10,
+    marginTop: 2,
     flexDirection: "row",
     justifyContent: "space-around",
   },
   batteryImage: {
-    padding: 12,
+    margin: 12,
   },
 });
