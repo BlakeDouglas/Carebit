@@ -7,7 +7,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 export default function GiveeHomeScreen() {
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
-  const [isEnabledMonitor, setIsEnabledMonitor] = useState(false);
+  const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
   const toggleSwitchSleep = () => {
     setIsEnabledSleep((previousState) => !previousState);
   };
@@ -74,6 +74,20 @@ export default function GiveeHomeScreen() {
         <SafeAreaView
           style={[
             styles.bottomRowBody,
+            isEnabledSleep
+              ? {
+                  ...Platform.select({
+                    ios: {
+                      shadowColor: "blue",
+                      shadowOffset: { width: 5, height: 8 },
+                      shadowOpacity: 0.7,
+                    },
+                    android: {
+                      elevation: 4,
+                    },
+                  }),
+                }
+              : {},
             isEnabledSleep
               ? { backgroundColor: "black" }
               : { backgroundColor: "white" },
