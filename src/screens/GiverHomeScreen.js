@@ -3,8 +3,7 @@ import { StyleSheet, Text, View, StatusBar, Image, SafeAreaView } from "react-na
 export default function GiverHomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
-       {/*Sync Container*/}
-
+       {/*Alerts Container*/}
        <View style={styles.lastSyncContainer}>
        <Text style={[styles.h3, styles.syncText]}> Carebit</Text>
         <Text style={[styles.h4, styles.syncText]}> Last Sync 4 hours ago</Text>
@@ -14,7 +13,7 @@ export default function GiverHomeScreen() {
         <Text style={styles.h4}> 0 Alerts Today</Text>
         <Text style={[styles.h4, styles.viewhistory]}> View History</Text>
       </View>
-
+      <View style ={styles.contetnyContainer}>
       {/*Greetings Container*/}
       <View style={styles.greetingsContainer}>
         <Text style={styles.h4}> Hello Name</Text>
@@ -32,7 +31,7 @@ export default function GiverHomeScreen() {
             <View style = {styles.cardTitle}>
               <View style = {styles.title}>
                 <Image
-                 source={require("../../assets/images/heart/heart.png")}
+                 source={require("./assets/images/heart/heart.png")}
                 
                 />
                 <Text  style={styles.h2}>Heart Rate</Text>
@@ -79,7 +78,7 @@ export default function GiverHomeScreen() {
         <View style={styles.cardTitle}>
         <View style = {styles.title}>
                 <Image
-                 source={require("../../assets/images/heart/heart.png")}
+                 source={require("./assets/images/heart/heart.png")}
                 
                 />
                <Text  style={styles.h2}>Heart Rate Summary</Text>
@@ -118,7 +117,7 @@ export default function GiverHomeScreen() {
           <View style = {styles.title}>
 
                 <Image
-                 source={require("../../assets/images/steps/steps.png")}
+                 source={require("./assets/images/steps/steps.png")}
                 
                 />
                 <Text  style={styles.h2}>Total Steps</Text>
@@ -135,7 +134,7 @@ export default function GiverHomeScreen() {
           <View style = {styles.cardTitle}>
           <View style = {styles.title}>
                 <Image
-                 source={require(".../../assets/images/fitbit/fitbit.png")}
+                 source={require("./assets/images/fitbit/fitbit.png")}
                 
                 />
                 <Text  style={styles.h2}>Fitbit Battery</Text>
@@ -146,7 +145,7 @@ export default function GiverHomeScreen() {
           <View style = {styles.batteryImage} >
           <Image
                  
-                 source={require("../../assets/images/batterymedium/batterymedium.png")}
+                 source={require("./assets/images/batterymedium/batterymedium.png")}
                 
                 />
             </View>
@@ -155,15 +154,25 @@ export default function GiverHomeScreen() {
           </View>
         </View>
       </View>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor:"whitesmoke",
+    
     flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    ...Platform.select({
+      android: {
+        paddingTop: StatusBar.currentHeight,
+      },
+    })
+    
+  },
+  contetnyContainer: {
+    backgroundColor: "whitesmoke"
+
   },
   lastSyncContainer: {
     alignItems: 'center',
