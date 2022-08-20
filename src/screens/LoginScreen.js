@@ -36,21 +36,15 @@ export default function LoginScreen() {
     let valid = true;
 
     if (!inputs.email) {
-      handleError("Please enter your email", "email");
+      handleError(" Please enter your email", "email");
       valid = false;
     } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-      handleError("Invalid email", "email");
+      handleError(" Invalid email", "email");
       valid = false;
     }
 
     if (!inputs.password) {
-      handleError("Please enter your password", "password");
-      valid = false;
-    } else if (inputs.password.length < 5) {
-      handleError("Your password is too short", "password");
-      valid = false;
-    } else if (!/[0-9]/.test(inputs.password)) {
-      handleError("Password must contain a number", "password");
+      handleError(" Please enter your password", "password");
       valid = false;
     }
 
@@ -78,9 +72,9 @@ export default function LoginScreen() {
         //fetchUserData(json);
         console.log(json);
       } else {
-        if (json.message === "Email not found")
-          handleError("Email not found", "email");
-        else handleError("Incorrect password", "password");
+        if (json.message === " Email not found")
+          handleError(" Email not found", "email");
+        else handleError(" Incorrect password", "password");
       }
     } catch (error) {
       console.log(error);
