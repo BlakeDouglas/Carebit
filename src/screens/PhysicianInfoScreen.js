@@ -11,8 +11,11 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import CustomTextInput from "../utils/CustomTextInput";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
+import { setPhysicianData } from "../redux/actions";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function PhysicianInfoScreen({ navigation }) {
+  const dispatch = useDispatch();
   const [inputs, setInputs] = useState({
     physicianName: "",
     physicianPhone: "",
@@ -61,7 +64,8 @@ export default function PhysicianInfoScreen({ navigation }) {
       valid = false;
     }
     if (valid) {
-      physicianUpload();
+      dispatch(setPhysicianData(inputs));
+      // TODO: Also handle fetch / asynch storage here
     }
   };
 
@@ -71,18 +75,6 @@ export default function PhysicianInfoScreen({ navigation }) {
 
   const handleError = (errorMessage, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
-  };
-
-  const physicianUpload = () => {
-    setInputs((prevState) => ({
-      ...prevState,
-      ["physicianName"]: physicianName,
-      ["physicianPhone"]: physicianPhone,
-      ["physicianStreet"]: physicianStreet,
-      ["physicianCity"]: physicianCity,
-      ["physicianState"]: physicianState,
-      ["physicianZipCode"]: physicianZipCode,
-    }));
   };
 
   return (

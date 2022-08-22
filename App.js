@@ -10,6 +10,7 @@ import GiveeHomeScreen from "./src/screens/GiveeHomeScreen";
 import GiverHomeScreen from "./src/screens/GiverHomeScreen";
 import GiveeSettingsScreen from "./src/screens/GiveeSettingsScreen";
 import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
+import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
 
 import { Provider, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
@@ -34,12 +35,44 @@ const App = () => {
 };
 
 const RootNavigation = () => {
-  const userData = useSelector((state) => state.Reducers.userData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const physicianData = useSelector((state) => state.Reducers.physicianData);
+
+  // Issue is as follows: tokendata.type becomes undefined at some point
   return (
     <NavigationContainer>
-      {tokenData.access_token !== "" ? <HomeStack /> : <AuthStack />}
+      {tokenData.access_token === "" ? (
+        <AuthStack />
+      ) : tokenData.type === "Caregivee" &&
+        physicianData.physicianName === "" ? (
+        <MiddleStack />
+      ) : (
+        <HomeStack />
+      )}
     </NavigationContainer>
+  );
+};
+
+// Stack of screens to handle little things between authentication and the home screen,
+// like physician data, first-time instructions, etc
+const MiddleStack = () => {
+  const physicianData = useSelector((state) => state.Reducers.physicianData);
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
+  return (
+    <Stack.Navigator>
+      <Stack.Group
+        screenOptions={{
+          headerTransparent: true,
+          headerTintColor: "#fff",
+          title: "",
+        }}
+      >
+        <Stack.Screen
+          name="PhysicianInfoScreen"
+          component={PhysicianInfoScreen}
+        />
+      </Stack.Group>
+    </Stack.Navigator>
   );
 };
 

@@ -15,3 +15,12 @@ export const setTokenData = (tokenData) => {
     });
   };
 };
+
+export const setPhysicianData = (physicianData) => {
+  return async (dispatch) => {
+    dispatch({
+      type: "SET_PHYSICIAN_DATA",
+      payload: physicianData,
+    });
+  };
+};

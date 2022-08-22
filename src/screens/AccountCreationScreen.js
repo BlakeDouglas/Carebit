@@ -22,6 +22,7 @@ import { setTokenData, setUserData } from "../redux/actions";
 export default function AccountCreationScreen({ navigation, route }) {
   // These are the two tools of the redux state manager. Use them instead of hooks
   const careType = useSelector((state) => state.Reducers.tokenData.type);
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
 
   const requiredText = " Input required";
@@ -107,14 +108,13 @@ export default function AccountCreationScreen({ navigation, route }) {
       .then((response) => response.json())
       .then((json) => {
         if (json.access_token !== undefined) {
-          console.log(json);
           // Clever line using span to exclude password etc from the userdata
           const { type, password, ...output } = inputs;
           dispatch(setUserData(output));
-          dispatch(setTokenData(json));
+          dispatch(setTokenData({ ...tokenData, ...json }));
         } else {
           handleError(
-            "An account is already associated with this email",
+            "The email could not be registered. It may already exist.",
             "email"
           );
         }

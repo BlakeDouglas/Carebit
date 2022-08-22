@@ -70,7 +70,6 @@ export default function LoginScreen() {
       if (json.access_token !== undefined) {
         dispatch(setTokenData(json));
         //fetchUserData(json);
-        console.log(json);
       } else {
         if (json.message === " Email not found")
           handleError(" Email not found", "email");
@@ -92,7 +91,6 @@ export default function LoginScreen() {
         },
       });
       const json = await response.json();
-      console.log(json);
       if (json.email !== undefined) {
         dispatch(setUserData(json));
       }
