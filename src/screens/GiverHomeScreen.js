@@ -12,34 +12,48 @@ import { useEffect } from "react";
 export default function GiverHomeScreen() {
   useEffect(() => {
     StatusBar.setBarStyle("light-content");
-    StatusBar.setBackgroundColor("dodgerblue");
   }, []);
   return (
     <View style={styles.container}>
-      {/*Alerts Container*/}
-      <SafeAreaView>
-        <View style={styles.lastSyncContainer}>
-          <Text style={[styles.h3, styles.syncText]}> Carebit</Text>
-          <Text style={[styles.h4, styles.syncText]}>
-            {" "}
-            Last Sync 4 hours ago
-          </Text>
-        </View>
-      </SafeAreaView>
-      {/*Alerts Container*/}
-      <View style={styles.alertsContainer}>
-        <Text style={styles.h4}> 0 Alerts Today</Text>
-        <Text style={[styles.h4, styles.viewhistory]}> View History</Text>
-      </View>
-      <View style={styles.contentContainer}>
-        {/*Greetings Container*/}
-        <View style={styles.greetingsMainContainer}>
-          <View style={styles.greetingsContainer}>
-            <Text style={styles.h4}> Hello Name</Text>
-            <Text style={styles.h2}> Some other text goes in here</Text>
+      <View style={styles.mainWrapper}>
+        {/*=====================Top Container=================================*/}
+        <SafeAreaView style={styles.topContainer}>
+          <View style={styles.topContainerContent}>
+            <View>
+              <Image source={require("../../assets/images/settings/settings.png")} />
+            </View>
+            <View style={styles.lastSyncContainer}>
+              <Text style={[styles.h3, styles.syncText]}> Carebit</Text>
+              <Text style={[styles.h4, styles.syncText]}>
+                Last Sync 15 mins ago
+              </Text>
+            </View>
+            <View>
+              <Image
+                source={require("../../assets/images/readMessage/readMessage.png")}
+              />
+            </View>
           </View>
-        </View>
-        <SafeAreaView>
+
+          {/*Alerts Container*/}
+
+          <View style={styles.alertsContainer}>
+            <Text style={styles.h4}> 0 Alerts Today</Text>
+            <Text style={[styles.h4, styles.viewhistory]}> View History</Text>
+          </View>
+          {/*Greetings Container*/}
+          <View style={styles.greetingsContainer}>
+            <View style={styles.greetingsContainerContent}>
+              <Text style={styles.h4}> Hello Name</Text>
+              <Text style={styles.h2}> Some other text goes in here</Text>
+            </View>
+          </View>
+        </SafeAreaView>
+        {/*=====================Bottom Container=================================*/}
+
+        <View style={styles.contentContainer}>
+
+
           {/*HeartRate & Steps Container*/}
           <View style={styles.dataContainer}>
             <View style={styles.titleContainer}>
@@ -90,34 +104,34 @@ export default function GiverHomeScreen() {
               <Text style={styles.h3}>Today</Text>
               <Text style={styles.h4}>Date</Text>
             </View>
-            <View style={styles.largeCard}>
-              <View style={styles.cardTitle}>
-                <View style={styles.title}>
-                  <Image
-                    source={require("../../assets/images/heart/heart.png")}
-                  />
-                  <Text style={styles.h2}>Heart Rate Summary</Text>
-                </View>
+            <View style={styles.largeCardContainer}>
+              <View style={styles.largeCard}>
+                <View style={styles.cardTitle}>
+                  <View style={styles.title}>
+                    <Image source={require("../../assets/images/heart/heart.png")} />
+                    <Text style={styles.h2}>Heart Rate Summary</Text>
+                  </View>
 
-                <Text style={styles.h4}>BPM</Text>
-              </View>
-              <View style={styles.summaryDataContainer}>
-                <View style={styles.leftBoarder}>
-                  <View style={styles.inCard}>
-                    <Text style={styles.h1}>74</Text>
-                    <Text style={styles.h4}>min</Text>
-                  </View>
+                  <Text style={styles.h4}>BPM</Text>
                 </View>
-                <View style={styles.leftBoarder}>
-                  <View style={styles.inCard}>
-                    <Text style={styles.h1}>74</Text>
-                    <Text style={styles.h4}>average</Text>
+                <View style={styles.summaryDataContainer}>
+                  <View style={styles.leftBoarder}>
+                    <View style={styles.inCard}>
+                      <Text style={styles.h1}>74</Text>
+                      <Text style={styles.h4}>min</Text>
+                    </View>
                   </View>
-                </View>
-                <View style={styles.leftBoarder}>
-                  <View style={[styles.inCard]}>
-                    <Text style={styles.h1}>74</Text>
-                    <Text style={styles.h4}>max</Text>
+                  <View style={styles.leftBoarder}>
+                    <View style={styles.inCard}>
+                      <Text style={styles.h1}>74</Text>
+                      <Text style={styles.h4}>average</Text>
+                    </View>
+                  </View>
+                  <View style={styles.leftBoarder}>
+                    <View style={[styles.inCard]}>
+                      <Text style={styles.h1}>74</Text>
+                      <Text style={styles.h4}>max</Text>
+                    </View>
                   </View>
                 </View>
               </View>
@@ -129,9 +143,7 @@ export default function GiverHomeScreen() {
             <View style={styles.smallCard}>
               <View style={styles.cardTitle}>
                 <View style={styles.title}>
-                  <Image
-                    source={require("../../assets/images/steps/steps.png")}
-                  />
+                  <Image source={require("../../assets/images/steps/steps.png")} />
                   <Text style={styles.h2}>Total Steps</Text>
                 </View>
               </View>
@@ -160,7 +172,7 @@ export default function GiverHomeScreen() {
               </View>
             </View>
           </View>
-        </SafeAreaView>
+        </View>
       </View>
     </View>
   );
@@ -169,6 +181,7 @@ export default function GiverHomeScreen() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "dodgerblue",
+    justifyContent: "space-evenly",
 
     flex: 1,
     ...Platform.select({
@@ -177,25 +190,40 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  mainWrapper: {
 
-  contentContainer: {
-    padding: 5,
-    justifyContent: "space-evenly",
-    backgroundColor: "whitesmoke",
-    flex: 1,
+    flex: 1
+  },
+
+  topContainer: {
+    justifyContent: 'space-evenly',
+
+  },
+
+  topContainerContent: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
   },
   lastSyncContainer: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 15,
-
     backgroundColor: "dodgerblue",
+    marginBottom: 25,
+    marginTop: 15
   },
+  contentContainer: {
+    flex: 1,
+    justifyContent: 'space-evenly',
+    backgroundColor: 'whitesmoke',
+
+  },
+
   alertsContainer: {
     backgroundColor: "white",
     flexDirection: "row",
-    padding: 10,
     justifyContent: "space-between",
+    padding: 10,
     ...Platform.select({
       ios: {
         shadowColor: "#000",
@@ -209,8 +237,9 @@ const styles = StyleSheet.create({
   },
 
   titleContainer: {
-    flexDirection: "row",
     padding: 10,
+    marginBottom: 10,
+    flexDirection: "row",
     justifyContent: "space-between",
   },
 
@@ -243,10 +272,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  largeCardContainer: {
+    margin: 15,
+    marginTop: 0
+
+  },
   largeCard: {
+    marginTop: 0,
     backgroundColor: "white",
     borderRadius: 10,
-    margin: 15,
     ...Platform.select({
       ios: {
         shadowColor: "#000",
@@ -258,14 +292,26 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  greetingsContainerContent: {
+    marginTop: 10
+  },
   greetingsContainer: {
-    padding: 5,
-    borderBottomColor: "lightgrey",
-    borderBottomWidth: 1,
+    backgroundColor: 'whitesmoke',
+    padding: 10,
+
+
   },
   dataCardsContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
+    marginBottom: 15
+
+  },
+  dataContainer: {
+    borderTopColor: "lightgrey",
+    borderTopWidth: 1,
+
+
   },
   leftBoarder: {
     flex: 1,
@@ -278,8 +324,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     width: 180,
     borderRadius: 10,
-    marginTop: 10,
-    marginBottom: 15,
     ...Platform.select({
       ios: {
         shadowColor: "#000",
@@ -292,9 +336,9 @@ const styles = StyleSheet.create({
     }),
   },
   cardTitle: {
+    padding: 10,
     flexDirection: "row",
     borderBottomColor: "lightgrey",
-    padding: 10,
     justifyContent: "space-between",
     borderBottomWidth: 1,
     width: "100%",
@@ -313,12 +357,12 @@ const styles = StyleSheet.create({
   heartData: {
     flexDirection: "row",
   },
-  dataContainer: {
-    borderBottomColor: "lightgrey",
-    borderBottomWidth: 1,
-  },
+
   summaryContainer: {
-    justifyContent: "space-around",
+    marginBottom: 10,
+    borderTopColor: "lightgrey",
+    borderTopWidth: 1,
+
   },
   inCard: {
     padding: 24,
@@ -332,11 +376,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   batteryContainer: {
-    marginTop: 10,
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
+    marginBottom: 25
   },
   batteryImage: {
-    padding: 12,
+    padding: 10,
   },
 });
