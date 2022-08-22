@@ -43,7 +43,7 @@ const RootNavigation = () => {
     <NavigationContainer>
       {tokenData.access_token === "" ? (
         <AuthStack />
-      ) : tokenData.type === "Caregivee" &&
+      ) : tokenData.type === "caregivee" &&
         physicianData.physicianName === "" ? (
         <MiddleStack />
       ) : (
@@ -111,13 +111,13 @@ const HomeStack = () => {
         <Tab.Screen
           name="HomeScreen"
           component={
-            tokenData.type === "Caregiver" ? GiverHomeScreen : GiveeHomeScreen
+            tokenData.type === "caregiver" ? GiverHomeScreen : GiveeHomeScreen
           }
         />
         <Tab.Screen
           name="SettingsScreen"
           component={
-            tokenData.type === "Caregiver"
+            tokenData.type === "caregiver"
               ? GiverSettingsScreen
               : GiveeSettingsScreen
           }
