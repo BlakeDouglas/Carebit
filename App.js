@@ -111,13 +111,13 @@ const HomeStack = () => {
         <Tab.Screen
           name="HomeScreen"
           component={
-            tokenData.type === "caregiver" ? GiverHomeScreen : GiveeHomeScreen
+            tokenData.type === "Caregiver" ? GiverHomeScreen : GiveeHomeScreen
           }
         />
         <Tab.Screen
           name="SettingsScreen"
           component={
-            tokenData.type === "caregiver"
+            tokenData.type === "Caregiver"
               ? GiverSettingsScreen
               : GiveeSettingsScreen
           }
