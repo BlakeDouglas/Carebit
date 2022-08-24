@@ -36,4 +36,42 @@ export default StyleSheet.create({
     marginLeft: 40,
     marginRight: 45,
   },
+<<<<<<< Updated upstream
+=======
+  HeaderText: {
+    flex: 1,
+    //  textAlignVertical: "center",
+    textAlign: "center",
+    textAlignVertical: "center",
+    color: "white",
+    fontSize: 16,
+  },
+  SettingsContainer: {
+    alignSelf: "center",
+    width: "80%",
+    borderRadius: 15,
+    height: "15%",
+    margin: "15%",
+    marginTop: "3%",
+
+    backgroundColor: "white",
+  },
+  SettingsText: {
+    marginLeft: "10%",
+    color: "gray",
+    fontSize: 16,
+  },
+  Inner: {
+    padding: 24,
+    flex: 1,
+    justifyContent: "space-around",
+  },
+  ActionBar: {
+    backgroundColor: "gray",
+    height: 41,
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+>>>>>>> Stashed changes
 });

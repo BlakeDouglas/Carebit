@@ -11,7 +11,12 @@ import GlobalStyle from "../utils/GlobalStyle";
 
 export default function RoleSelectScreen({ navigation }) {
   const caregiverCreateAccountButtonHandler = () => {
+<<<<<<< Updated upstream
     navigation.navigate("AccountCreationScreen", { careType: true });
+=======
+    dispatch(setTokenData({ ...tokenData, type: "caregiver" }));
+    navigation.navigate("ChatScreen");
+>>>>>>> Stashed changes
   };
 
   const caregiveeCreateAccountButtonHandler = () => {
