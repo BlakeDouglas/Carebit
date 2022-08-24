@@ -92,10 +92,8 @@ export default function LoginScreen() {
         },
       });
       const json = await response.json();
-
-      if (json.email !== undefined) {
-        dispatch(setUserData(json));
-      }
+      dispatch(setUserData(json));
+      // TODO: user.mobilePlatform is "" for my account
     } catch (error) {
       console.log("Caught error: " + error);
     }
@@ -103,7 +101,6 @@ export default function LoginScreen() {
 
   return (
     <ImageBackground
-      // TODO: Fix background
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
       resizeMode="stretch"
       style={GlobalStyle.Background}

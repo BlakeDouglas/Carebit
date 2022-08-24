@@ -38,7 +38,7 @@ const RootNavigation = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const physicianData = useSelector((state) => state.Reducers.physicianData);
 
-  // Issue is as follows: tokendata.type becomes undefined at some point
+  // TODO: Issue is as follows: tokendata.type is null on login
   return (
     <NavigationContainer>
       {tokenData.access_token === "" ? (
@@ -111,15 +111,13 @@ const HomeStack = () => {
         <Tab.Screen
           name="HomeScreen"
           component={
-            tokenData.type === "caregiver" ? GiverHomeScreen : GiveeHomeScreen
+            tokenData.type === "caregivee" ? GiveeHomeScreen : GiverHomeScreen
           }
         />
         <Tab.Screen
           name="SettingsScreen"
           component={
-            tokenData.type === "caregiver"
-              ? GiverSettingsScreen
-              : GiveeSettingsScreen
+            tokenData.type === "caregivee" ? GiveeHomeScreen : GiverHomeScreen
           }
         />
       </Tab.Group>

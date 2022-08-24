@@ -1,6 +1,7 @@
 import { StyleSheet, Text, SafeAreaView, Image, Switch } from "react-native";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useSelector } from "react-redux";
 
 import GlobalStyle from "../utils/GlobalStyle";
 
@@ -17,6 +18,7 @@ export default function GiveeHomeScreen() {
   const toggleSwitchMonitor = () => {
     setIsEnabledMonitor((previousState) => !previousState);
   };
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
 
   return (
     <SafeAreaView style={styles.background}>

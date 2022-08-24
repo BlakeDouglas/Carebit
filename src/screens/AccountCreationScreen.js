@@ -143,7 +143,9 @@ export default function AccountCreationScreen({ navigation, route }) {
           <Text
             style={[GlobalStyle.Subtitle2, { marginTop: 70, marginBottom: 40 }]}
           >
-            {careType + " Registration"}
+            {careType.charAt(0).toUpperCase() +
+              careType.slice(1) +
+              " Registration"}
           </Text>
           <View style={{ flexDirection: "row" }}>
             <View style={GlobalStyle.Background}>

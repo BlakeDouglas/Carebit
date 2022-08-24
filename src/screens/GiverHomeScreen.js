@@ -7,12 +7,54 @@ import {
   SafeAreaView,
 } from "react-native";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
+const fetchFitbitData = (tokenData) => {
+  refreshToken(tokenData);
+  fetch("https://api.fitbit.com/1/user/-/profile.json", {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + tokenData.access_token,
+    },
+  })
+    .then((response) => response.json())
+    .then((json) => {
+      console.log("FETCH GOT: " + JSON.stringify(json));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+const refreshToken = (tokenData) => {
+  fetch("https://api.fitbit.com/oauth2/token", {
+    method: "POST",
+    headers: {
+      Authorization:
+        "Basic MjM4UVMzOjYzZTJlNWNjY2M2OWY2ZThmMTk4Yjg2ZDYyYjUyYzE5",
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: JSON.stringify({
+      grant_type: "refresh_token",
+      refresh_token: tokenData.refresh_token,
+    }),
+  })
+    .then((response) => response.json())
+    .then((json) => {
+      console.log(JSON.stringify(json));
+    })
+    .catch((error) => {
+      console.log("Got error: " + error);
+    });
+};
 
 export default function GiverHomeScreen() {
   useEffect(() => {
     StatusBar.setBarStyle("light-content");
   }, []);
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
+  //fetchFitbitData(tokenData);
+  refreshToken(tokenData);
   return (
     <View style={styles.container}>
       <View style={styles.mainWrapper}>
@@ -20,7 +62,9 @@ export default function GiverHomeScreen() {
         <SafeAreaView style={styles.topContainer}>
           <View style={styles.topContainerContent}>
             <View>
-              <Image source={require("../../assets/images/settings/settings.png")} />
+              <Image
+                source={require("../../assets/images/settings/settings.png")}
+              />
             </View>
             <View style={styles.lastSyncContainer}>
               <Text style={[styles.h3, styles.syncText]}> Carebit</Text>
@@ -52,8 +96,6 @@ export default function GiverHomeScreen() {
         {/*=====================Bottom Container=================================*/}
 
         <View style={styles.contentContainer}>
-
-
           {/*HeartRate & Steps Container*/}
           <View style={styles.dataContainer}>
             <View style={styles.titleContainer}>
@@ -108,7 +150,9 @@ export default function GiverHomeScreen() {
               <View style={styles.largeCard}>
                 <View style={styles.cardTitle}>
                   <View style={styles.title}>
-                    <Image source={require("../../assets/images/heart/heart.png")} />
+                    <Image
+                      source={require("../../assets/images/heart/heart.png")}
+                    />
                     <Text style={styles.h2}>Heart Rate Summary</Text>
                   </View>
 
@@ -143,7 +187,9 @@ export default function GiverHomeScreen() {
             <View style={styles.smallCard}>
               <View style={styles.cardTitle}>
                 <View style={styles.title}>
-                  <Image source={require("../../assets/images/steps/steps.png")} />
+                  <Image
+                    source={require("../../assets/images/steps/steps.png")}
+                  />
                   <Text style={styles.h2}>Total Steps</Text>
                 </View>
               </View>
@@ -191,13 +237,11 @@ const styles = StyleSheet.create({
     }),
   },
   mainWrapper: {
-
-    flex: 1
+    flex: 1,
   },
 
   topContainer: {
-    justifyContent: 'space-evenly',
-
+    justifyContent: "space-evenly",
   },
 
   topContainerContent: {
@@ -210,13 +254,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "dodgerblue",
     marginBottom: 25,
-    marginTop: 15
+    marginTop: 15,
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'space-evenly',
-    backgroundColor: 'whitesmoke',
-
+    justifyContent: "space-evenly",
+    backgroundColor: "whitesmoke",
   },
 
   alertsContainer: {
@@ -274,8 +317,7 @@ const styles = StyleSheet.create({
   },
   largeCardContainer: {
     margin: 15,
-    marginTop: 0
-
+    marginTop: 0,
   },
   largeCard: {
     marginTop: 0,
@@ -293,25 +335,20 @@ const styles = StyleSheet.create({
     }),
   },
   greetingsContainerContent: {
-    marginTop: 10
+    marginTop: 10,
   },
   greetingsContainer: {
-    backgroundColor: 'whitesmoke',
+    backgroundColor: "whitesmoke",
     padding: 10,
-
-
   },
   dataCardsContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    marginBottom: 15
-
+    marginBottom: 15,
   },
   dataContainer: {
     borderTopColor: "lightgrey",
     borderTopWidth: 1,
-
-
   },
   leftBoarder: {
     flex: 1,
@@ -362,7 +399,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderTopColor: "lightgrey",
     borderTopWidth: 1,
-
   },
   inCard: {
     padding: 24,
@@ -378,7 +414,7 @@ const styles = StyleSheet.create({
   batteryContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    marginBottom: 25
+    marginBottom: 25,
   },
   batteryImage: {
     padding: 10,
