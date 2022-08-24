@@ -69,8 +69,7 @@ export default function LoginScreen() {
       const json = await response.json();
       if (json.access_token !== undefined) {
         dispatch(setTokenData(json));
-        // TODO: Fix this
-        //fetchUserData(json);
+        fetchUserData(json);
       } else {
         if (json.message === " Email not found")
           handleError(" Email not found", "email");
@@ -85,15 +84,14 @@ export default function LoginScreen() {
     try {
       let url = "https://www.carebit.xyz/user/" + jsonTokenData.userId;
       const response = await fetch(url, {
-        method: "PUT",
+        method: "GET",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
+          Authorization: "Bearer " + jsonTokenData.access_token,
         },
       });
       const json = await response.json();
-
-      console.log("Got: " + JSON.stringify(json));
 
       if (json.email !== undefined) {
         dispatch(setUserData(json));
