@@ -16,8 +16,21 @@ import { Provider, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
 import { useFonts } from "expo-font";
 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+const firebaseConfig = {
+  apiKey: "AIzaSyAu69cdb30ONSKMcrIrL7P4YT0ghQoNEdg",
+  authDomain: "carebit-48f39.firebaseapp.com",
+  databaseURL: "https://carebit-48f39.firebaseio.com",
+  projectId: "carebit-48f39",
+  storageBucket: "carebit-48f39.appspot.com",
+  messagingSenderId: "1042058218989",
+  appId: "1:1042058218989:web:f28598ffbacb69e3a9ebe4",
+  measurementId: "G-QCBPVPX8QC",
+};
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
+initializeApp(firebaseConfig);
 
 const App = () => {
   const [loaded] = useFonts({
