@@ -10,7 +10,7 @@ import {
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
-import GlobalStyle from "./utils/GlobalStyle";
+import GlobalStyle from "../utils/GlobalStyle";
 
 export default function GiveeHomeScreen() {
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
@@ -89,17 +89,17 @@ export default function GiveeHomeScreen() {
               styles.bottomRowBody,
               isEnabledSleep
                 ? {
-                  ...Platform.select({
-                    ios: {
-                      shadowColor: "blue",
-                      shadowOffset: { width: 5, height: 8 },
-                      shadowOpacity: 0.7,
-                    },
-                    android: {
-                      elevation: 4,
-                    },
-                  }),
-                }
+                    ...Platform.select({
+                      ios: {
+                        shadowColor: "blue",
+                        shadowOffset: { width: 5, height: 8 },
+                        shadowOpacity: 0.7,
+                      },
+                      android: {
+                        elevation: 4,
+                      },
+                    }),
+                  }
                 : {},
               isEnabledSleep
                 ? { backgroundColor: "black" }
