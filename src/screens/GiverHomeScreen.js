@@ -28,20 +28,17 @@ const fetchFitbitData = (tokenData) => {
 
 const refreshToken = (tokenData) => {
   fetch("https://api.fitbit.com/oauth2/token", {
-    method: "POST",
+    body: "grant_type=refresh_token&refresh_token=" + tokenData.refresh_token,
     headers: {
       Authorization:
         "Basic MjM4UVMzOjYzZTJlNWNjY2M2OWY2ZThmMTk4Yjg2ZDYyYjUyYzE5",
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: JSON.stringify({
-      grant_type: "refresh_token",
-      refresh_token: tokenData.refresh_token,
-    }),
+    method: "POST",
   })
     .then((response) => response.json())
     .then((json) => {
-      console.log(JSON.stringify(json));
+      console.log("Refresh got: " + JSON.stringify(json));
     })
     .catch((error) => {
       console.log("Got error: " + error);
@@ -53,8 +50,6 @@ export default function GiverHomeScreen() {
     StatusBar.setBarStyle("light-content");
   }, []);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  //fetchFitbitData(tokenData);
-  refreshToken(tokenData);
   return (
     <View style={styles.container}>
       <View style={styles.mainWrapper}>

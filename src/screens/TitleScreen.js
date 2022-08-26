@@ -4,11 +4,20 @@ import {
   Text,
   Linking,
   View,
+  Button,
   ImageBackground,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import GlobalStyle from "../utils/GlobalStyle";
+
+import { makeRedirectUri, useAuthRequest } from "expo-auth-session";
+import React from "react";
+const discovery = {
+  authorizationEndpoint: "https://www.fitbit.com/oauth2/authorize",
+  tokenEndpoint: "https://api.fitbit.com/oauth2/token",
+  revocationEndpoint: "https://api.fitbit.com/oauth2/revoke",
+};
 
 export default function TitleScreen({ navigation }) {
   const createAccountButtonHandler = () => {
@@ -17,6 +26,21 @@ export default function TitleScreen({ navigation }) {
   const loginButtonHandler = () => {
     navigation.navigate("LoginScreen");
   };
+
+  const [request, response, promptAsync] = useAuthRequest(
+    {
+      clientId: "238QS3",
+      scopes: ["activity", "sleep"],
+      redirectUri: "https://www.carebit.xyz/profile",
+    },
+    discovery
+  );
+
+  React.useEffect(() => {
+    if (response?.type === "success") {
+      const { code } = response.params;
+    }
+  }, [response]);
 
   return (
     <ImageBackground
@@ -45,6 +69,15 @@ export default function TitleScreen({ navigation }) {
             fitbit.com/start
           </Text>
         </Text>
+
+        <Button
+          disabled={!request}
+          title="Login"
+          onPress={() => {
+            promptAsync();
+          }}
+          style={GlobalStyle.Button}
+        />
 
         <TouchableOpacity
           style={GlobalStyle.Button}

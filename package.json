@@ -42,7 +42,9 @@
     "react-navigation": "^4.4.4",
     "react-redux": "^8.0.2",
     "redux": "^4.2.0",
-    "rn-material-ui-textfield": "^1.0.6"
+    "rn-material-ui-textfield": "^1.0.6",
+    "expo-auth-session": "~3.6.1",
+    "expo-random": "~12.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
