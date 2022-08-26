@@ -2,12 +2,12 @@ import {
   StyleSheet,
   SafeAreaView,
   Text,
-  Linking,
   View,
   Button,
   ImageBackground,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import * as Linking from "expo-linking";
 
 import GlobalStyle from "../utils/GlobalStyle";
 
@@ -31,7 +31,7 @@ export default function TitleScreen({ navigation }) {
     {
       clientId: "238QS3",
       scopes: ["activity", "sleep"],
-      redirectUri: "https://www.carebit.xyz/profile",
+      redirectUri: Linking.createURL("carebit"),
     },
     discovery
   );
@@ -39,6 +39,7 @@ export default function TitleScreen({ navigation }) {
   React.useEffect(() => {
     if (response?.type === "success") {
       const { code } = response.params;
+      console.log(code);
     }
   }, [response]);
 
