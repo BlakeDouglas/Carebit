@@ -1,14 +1,24 @@
 import {
   StyleSheet,
   Text,
-  View,
-  StatusBar,
-  Image,
   SafeAreaView,
+  Image,
+  StatusBar,
+  View,
+  Switch,
 } from "react-native";
+import React, { useState } from "react";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import EStyleSheet from "react-native-extended-stylesheet";
 
+const MyStatusBar = ({ backgroundColor, ...props }) => (
+  <View style={[styles.statusBar, { backgroundColor }]}>
+    <SafeAreaView>
+      <StatusBar translucent backgroundColor={backgroundColor} {...props} />
+    </SafeAreaView>
+  </View>
+);
 const fetchFitbitData = (tokenData) => {
   refreshToken(tokenData);
   fetch("https://api.fitbit.com/1/user/-/profile.json", {
@@ -49,14 +59,12 @@ const refreshToken = (tokenData) => {
 };
 
 export default function GiverHomeScreen() {
-  useEffect(() => {
-    StatusBar.setBarStyle("light-content");
-  }, []);
-  const tokenData = useSelector((state) => state.Reducers.tokenData);
-  //fetchFitbitData(tokenData);
-  refreshToken(tokenData);
+
   return (
     <View style={styles.container}>
+      <View style={styles.sBar}>
+        <MyStatusBar backgroundColor="dodgerblue" barStyle="light-content" />
+      </View>
       <View style={styles.mainWrapper}>
         {/*=====================Top Container=================================*/}
         <SafeAreaView style={styles.topContainer}>
@@ -187,9 +195,7 @@ export default function GiverHomeScreen() {
             <View style={styles.smallCard}>
               <View style={styles.cardTitle}>
                 <View style={styles.title}>
-                  <Image
-                    source={require("../../assets/images/steps/steps.png")}
-                  />
+                  <Image source={require("../../assets/images/steps/steps.png")} />
                   <Text style={styles.h2}>Total Steps</Text>
                 </View>
               </View>
@@ -224,9 +230,9 @@ export default function GiverHomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   container: {
-    backgroundColor: "dodgerblue",
+    backgroundColor: "whitesmoke",
     justifyContent: "space-evenly",
 
     flex: 1,
@@ -239,9 +245,13 @@ const styles = StyleSheet.create({
   mainWrapper: {
     flex: 1,
   },
+  sBar: {
+    backgroundColor: "dodgerblue",
+  },
 
   topContainer: {
     justifyContent: "space-evenly",
+    backgroundColor: "dodgerblue",
   },
 
   topContainerContent: {
@@ -253,20 +263,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "dodgerblue",
-    marginBottom: 25,
-    marginTop: 15,
+    marginBottom: "1.5rem",
+    marginTop: "0.9375rem",
   },
   contentContainer: {
     flex: 1,
     justifyContent: "space-evenly",
-    backgroundColor: "whitesmoke",
   },
 
   alertsContainer: {
     backgroundColor: "white",
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 10,
+    padding: "0.625rem",
     ...Platform.select({
       ios: {
         shadowColor: "#000",
@@ -280,8 +289,8 @@ const styles = StyleSheet.create({
   },
 
   titleContainer: {
-    padding: 10,
-    marginBottom: 10,
+    padding: "0.625rem",
+    marginBottom: "0.625rem",
     flexDirection: "row",
     justifyContent: "space-between",
   },
@@ -292,21 +301,21 @@ const styles = StyleSheet.create({
   },
   viewhistory: {
     color: "dodgerblue",
-    fontSize: 15,
+    fontSize: "0.9375rem",
     fontWeight: "bold",
   },
   h1: {
-    fontSize: 40,
+    fontSize: "2.5rem",
     fontWeight: "bold",
   },
   h2: {
-    fontSize: 20,
+    fontSize: "1.25rem",
   },
   h3: {
-    fontSize: 17,
+    fontSize: "1.063rem",
   },
   h4: {
-    fontSize: 15,
+    fontSize: "0.9375rem",
     color: "grey",
     fontWeight: "500",
   },
@@ -316,7 +325,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   largeCardContainer: {
-    margin: 15,
+    margin: "0.9375rem",
     marginTop: 0,
   },
   largeCard: {
@@ -359,7 +368,7 @@ const styles = StyleSheet.create({
   },
   smallCard: {
     backgroundColor: "white",
-    width: 180,
+    width: "11.25rem",
     borderRadius: 10,
     ...Platform.select({
       ios: {
@@ -396,12 +405,12 @@ const styles = StyleSheet.create({
   },
 
   summaryContainer: {
-    marginBottom: 10,
+    marginBottom: "0.625rem",
     borderTopColor: "lightgrey",
     borderTopWidth: 1,
   },
   inCard: {
-    padding: 24,
+    padding: "1.5rem",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -414,9 +423,10 @@ const styles = StyleSheet.create({
   batteryContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    marginBottom: 25,
+    marginBottom: "1.5rem",
   },
   batteryImage: {
-    padding: 10,
+    padding: "0.625rem",
   },
 });
+EStyleSheet.build({});
