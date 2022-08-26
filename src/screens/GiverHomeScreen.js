@@ -344,16 +344,16 @@ const styles = EStyleSheet.create({
     }),
   },
   greetingsContainerContent: {
-    marginTop: 10,
+    marginTop: '0.625rem',
   },
   greetingsContainer: {
     backgroundColor: "whitesmoke",
-    padding: 10,
+    padding: '0.625rem',
   },
   dataCardsContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    marginBottom: 15,
+    marginBottom: '0.9375rem',
   },
   dataContainer: {
     borderTopColor: "lightgrey",
@@ -382,7 +382,7 @@ const styles = EStyleSheet.create({
     }),
   },
   cardTitle: {
-    padding: 10,
+    padding: '0.625rem',
     flexDirection: "row",
     borderBottomColor: "lightgrey",
     justifyContent: "space-between",
