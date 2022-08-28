@@ -9,47 +9,12 @@ import {
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-const fetchFitbitData = (tokenData) => {
-  refreshToken(tokenData);
-  fetch("https://api.fitbit.com/1/user/-/profile.json", {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + tokenData.access_token,
-    },
-  })
-    .then((response) => response.json())
-    .then((json) => {
-      console.log("FETCH GOT: " + JSON.stringify(json));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
-
-const refreshToken = (tokenData) => {
-  fetch("https://api.fitbit.com/oauth2/token", {
-    body: "grant_type=refresh_token&refresh_token=" + tokenData.refresh_token,
-    headers: {
-      Authorization:
-        "Basic MjM4UVMzOjYzZTJlNWNjY2M2OWY2ZThmMTk4Yjg2ZDYyYjUyYzE5",
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    method: "POST",
-  })
-    .then((response) => response.json())
-    .then((json) => {
-      console.log("Refresh got: " + JSON.stringify(json));
-    })
-    .catch((error) => {
-      console.log("Got error: " + error);
-    });
-};
-
 export default function GiverHomeScreen() {
   useEffect(() => {
     StatusBar.setBarStyle("light-content");
   }, []);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  console.log(tokenData);
   return (
     <View style={styles.container}>
       <View style={styles.mainWrapper}>

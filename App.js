@@ -8,6 +8,7 @@ import LoginScreen from "./src/screens/LoginScreen";
 import AccountCreationScreen from "./src/screens/AccountCreationScreen";
 import GiveeHomeScreen from "./src/screens/GiveeHomeScreen";
 import GiverHomeScreen from "./src/screens/GiverHomeScreen";
+import AuthenticationScreen from "./src/screens/AuthenticationScreen";
 import GiveeSettingsScreen from "./src/screens/GiveeSettingsScreen";
 import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
@@ -50,14 +51,14 @@ const App = () => {
 const RootNavigation = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const physicianData = useSelector((state) => state.Reducers.physicianData);
-
+  console.log(tokenData);
   // TODO: Issue is as follows: tokendata.type is null on login
   return (
     <NavigationContainer>
       {tokenData.access_token === "" ? (
         <AuthStack />
-      ) : tokenData.type === "caregivee" &&
-        physicianData.physicianName === "" ? (
+      ) : (tokenData.type === "caregivee" && !physicianData.physicianName) ||
+        !tokenData.caregiveeId ? (
         <MiddleStack />
       ) : (
         <HomeStack />
@@ -71,6 +72,7 @@ const RootNavigation = () => {
 const MiddleStack = () => {
   const physicianData = useSelector((state) => state.Reducers.physicianData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const authData = useSelector((state) => state.Reducers.authData);
   return (
     <Stack.Navigator>
       <Stack.Group
@@ -80,10 +82,18 @@ const MiddleStack = () => {
           title: "",
         }}
       >
-        <Stack.Screen
-          name="PhysicianInfoScreen"
-          component={PhysicianInfoScreen}
-        />
+        {tokenData.type === "caregivee" && !physicianData.physicianName && (
+          <Stack.Screen
+            name="PhysicianInfoScreen"
+            component={PhysicianInfoScreen}
+          />
+        )}
+        {!tokenData.caregiveeId && (
+          <Stack.Screen
+            name="AuthenticationScreen"
+            component={AuthenticationScreen}
+          />
+        )}
       </Stack.Group>
     </Stack.Navigator>
   );
