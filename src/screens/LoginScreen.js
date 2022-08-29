@@ -93,7 +93,6 @@ export default function LoginScreen() {
       });
       const json = await response.json();
       dispatch(setUserData(json));
-      // TODO: user.mobilePlatform is "" for my account
     } catch (error) {
       console.log("Caught error: " + error);
     }

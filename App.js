@@ -52,6 +52,7 @@ const App = () => {
 const RootNavigation = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const physData = useSelector((state) => state.Reducers.physData);
+  console.log(tokenData);
   return (
     <NavigationContainer>
       {tokenData.access_token === "" ? (

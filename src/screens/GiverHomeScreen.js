@@ -6,6 +6,7 @@ import {
   StatusBar,
   View,
   Switch,
+  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
