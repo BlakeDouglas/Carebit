@@ -11,7 +11,7 @@ import GiverHomeScreen from "./src/screens/GiverHomeScreen";
 import GiveeSettingsScreen from "./src/screens/GiveeSettingsScreen";
 import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
-
+import { Button } from "react-native";
 import { Provider, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
 import { useFonts } from "expo-font";
@@ -95,10 +95,30 @@ const AuthStack = () => {
       <Stack.Group
         screenOptions={{
           headerTransparent: true,
-          headerTintColor: "#fff",
+          //headerTintColor: "#fff",
           title: "",
         }}
       >
+        <Stack.Screen
+          name="GiveeHomeScreen"
+          component={GiveeHomeScreen}
+          options={{
+            headerTransparent: false,
+            // headerTintColor: "white",
+            headerTitleAlign: "center",
+            title: "Carebit",
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerLeft: () => (
+              <Button
+                onPress={() => alert("this is a button")}
+                title="info"
+                //color="fff"
+              />
+            ),
+          }}
+        />
         <Stack.Screen name="TitleScreen" component={TitleScreen} />
         <Stack.Screen name="RoleSelectScreen" component={RoleSelectScreen} />
         <Stack.Screen
