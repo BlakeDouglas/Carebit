@@ -73,7 +73,7 @@ export default function GiverHomeScreen() {
             {/* Settings Button*/}
             <TouchableOpacity>
               <Image
-                source={require("./assets/images/settings/settings.png")}
+                source={require("../../assets/images/settings/settings.png")}
               />
             </TouchableOpacity>
 
@@ -88,7 +88,7 @@ export default function GiverHomeScreen() {
             {/* Messages / Chat Button*/}
             <TouchableOpacity>
               <Image
-                source={require("./assets/images/readMessage/readMessage.png")}
+                source={require("../../assets/images/readMessage/readMessage.png")}
               />
             </TouchableOpacity>
           </View>
@@ -127,7 +127,7 @@ export default function GiverHomeScreen() {
                   <View style={styles.title}>
                     {/* Loading the icon Image for Heart Rate from the Assets Folder*/}
                     <Image
-                      source={require("./assets/images/heart/heart.png")}
+                      source={require("../../assets/images/heart/heart.png")}
                     />
 
                     {/* Text for the Title*/}
@@ -153,7 +153,7 @@ export default function GiverHomeScreen() {
                   <View style={styles.title}>
                     {/* Loading the Image for Steps*/}
                     <Image
-                      source={require("./assets/images/steps/steps.png")}
+                      source={require("../../assets/images/steps/steps.png")}
                     />
                     <Text style={styles.h2}>Steps</Text>
                   </View>
@@ -184,7 +184,7 @@ export default function GiverHomeScreen() {
                   <View style={styles.title}>
                     {/* Loading the icon image from assets folder */}
                     <Image
-                      source={require("./assets/images/heart/heart.png")}
+                      source={require("../../assets/images/heart/heart.png")}
                     />
                     <Text style={styles.h2}>Heart Rate Summary</Text>
                   </View>
@@ -227,7 +227,7 @@ export default function GiverHomeScreen() {
             <View style={styles.smallCard}>
               <View style={styles.cardTitle}>
                 <View style={styles.title}>
-                  <Image source={require("./assets/images/steps/steps.png")} />
+                  <Image source={require("../../assets/images/steps/steps.png")} />
                   <Text style={styles.h2}>Total Steps</Text>
                 </View>
               </View>
@@ -243,7 +243,7 @@ export default function GiverHomeScreen() {
               <View style={styles.cardTitle}>
                 <View style={styles.title}>
                   <Image
-                    source={require("./assets/images/fitbit/fitbit.png")}
+                    source={require("../../assets/images/fitbit/fitbit.png")}
                   />
                   <Text style={styles.h2}>Fitbit Battery</Text>
                 </View>
@@ -252,7 +252,7 @@ export default function GiverHomeScreen() {
                 <View style={styles.batteryImage}>
                   {/* Battery level Image, NOTE: we will compute the image to display depending on battery levels Empty, mid, full... */}
                   <Image
-                    source={require("./assets/images/batterymedium/batterymedium.png")}
+                    source={require("../../assets/images/batterymedium/batterymedium.png")}
                   />
                 </View>
                 <Text style={styles.h4}>15 mins ago</Text>
@@ -484,4 +484,6 @@ const styles = EStyleSheet.create({
 });
 
 //Here we specify our rem for resizing on smaller screens
-EStyleSheet.build({ $rem: 16 });
+
+const getScreenWidth = Dimensions.get('window').width;
+EStyleSheet.build({ $rem: getScreenWidth / 25 });
