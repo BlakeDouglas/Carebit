@@ -15,22 +15,6 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setTokenData } from "../redux/actions";
 
-const fetchFitbitData = (tokenData) => {
-  fetch("https://api.fitbit.com/1/user/-/profile.json", {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + tokenData.access_token,
-    },
-  })
-    .then((response) => response.json())
-    .then((json) => {
-      console.log("FETCH GOT: " + JSON.stringify(json));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
-
 export default function AuthenticationScreen({ navigation }) {
   const dispatch = useDispatch();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -68,32 +52,9 @@ export default function AuthenticationScreen({ navigation }) {
     }
   };
 
-  const sendEmail = async (tokenData, email) => {
-    try {
-      const response = await fetch("https://www.carebit.xyz/requestCaregivee", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ caregiver: tokenData.userId, caregivee: email }),
-      });
-
-      const json = await response.json();
-      console.log(JSON.stringify(json));
-    } catch (error) {
-      console.log("Caught error: " + error);
-    }
-  };
-
-  // TODO: Switch to onpost
   React.useEffect(() => {
-    if (response?.type === "success") {
-      if (tokenData.type === "caregivee" && tokenData.caregiveeId === null)
-        makeCaregivee(response.params.code, tokenData);
-
-      //sendEmail(tokenData, "Bdouglas928@gmail.com");
-    }
+    if (response?.type === "success")
+      makeCaregivee(response.params.code, tokenData);
   }, [response]);
 
   return (
@@ -103,8 +64,9 @@ export default function AuthenticationScreen({ navigation }) {
       style={GlobalStyle.Background}
     >
       <SafeAreaView style={GlobalStyle.Container}>
+        {/* TODO: Change styling here*/}
         <Text style={[GlobalStyle.Text, { marginTop: 30, marginBottom: 68 }]}>
-          Authenticate here
+          Authentication
         </Text>
 
         <TouchableOpacity

@@ -54,8 +54,8 @@ const RootNavigation = () => {
     <NavigationContainer>
       {tokenData.access_token === "" ? (
         <AuthStack />
-      ) : (tokenData.type === "caregivee" && !physData.physName) ||
-        !tokenData.caregiveeId ? (
+      ) : (tokenData.type !== "caregiver" && !physData.physName) ||
+        (tokenData.type !== "caregiver" && !tokenData.caregiveeId) ? (
         <MiddleStack />
       ) : (
         <HomeStack />
@@ -69,7 +69,6 @@ const RootNavigation = () => {
 const MiddleStack = () => {
   const physData = useSelector((state) => state.Reducers.physData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const authData = useSelector((state) => state.Reducers.authData);
   return (
     <Stack.Navigator>
       <Stack.Group
@@ -79,13 +78,13 @@ const MiddleStack = () => {
           title: "",
         }}
       >
-        {!tokenData.caregiveeId && (
+        {tokenData.type !== "caregiver" && !tokenData.caregiveeId && (
           <Stack.Screen
             name="AuthenticationScreen"
             component={AuthenticationScreen}
           />
         )}
-        {tokenData.type === "caregivee" && !physData.physName && (
+        {tokenData.type !== "caregiver" && !physData.physName && (
           <Stack.Screen
             name="PhysicianInfoScreen"
             component={PhysicianInfoScreen}
