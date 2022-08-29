@@ -21,7 +21,6 @@ import { setTokenData, setUserData } from "../redux/actions";
 
 export default function AccountCreationScreen({ navigation, route }) {
   // These are the two tools of the redux state manager. Use them instead of hooks
-  const careType = useSelector((state) => state.Reducers.tokenData.type);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
 
@@ -91,26 +90,23 @@ export default function AccountCreationScreen({ navigation, route }) {
   };
 
   const register = () => {
-    setInputs((prevState) => ({
-      ...prevState,
-      ["type"]: careType,
-      ["mobilePlatform"]: Platform.OS,
-    }));
-
+    const output = {
+      ...inputs,
+      type: tokenData.type,
+      mobilePlatform: Platform.OS,
+    };
     fetch("https://www.carebit.xyz/user", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(inputs),
+      body: JSON.stringify(output),
     })
       .then((response) => response.json())
       .then((json) => {
         if (json.access_token !== undefined) {
-          // Clever line using span to exclude password etc from the userdata
-          const { type, password, ...output } = inputs;
-          dispatch(setUserData(output));
+          dispatch(setUserData({ ...output, password: undefined }));
           dispatch(setTokenData({ ...tokenData, ...json }));
         } else {
           handleError(
@@ -143,8 +139,8 @@ export default function AccountCreationScreen({ navigation, route }) {
           <Text
             style={[GlobalStyle.Subtitle2, { marginTop: 70, marginBottom: 40 }]}
           >
-            {careType.charAt(0).toUpperCase() +
-              careType.slice(1) +
+            {tokenData.type.charAt(0).toUpperCase() +
+              tokenData.type.slice(1) +
               " Registration"}
           </Text>
           <View style={{ flexDirection: "row" }}>

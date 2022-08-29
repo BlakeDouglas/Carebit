@@ -8,6 +8,7 @@ import LoginScreen from "./src/screens/LoginScreen";
 import AccountCreationScreen from "./src/screens/AccountCreationScreen";
 import GiveeHomeScreen from "./src/screens/GiveeHomeScreen";
 import GiverHomeScreen from "./src/screens/GiverHomeScreen";
+import AuthenticationScreen from "./src/screens/AuthenticationScreen";
 import GiveeSettingsScreen from "./src/screens/GiveeSettingsScreen";
 import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
@@ -50,15 +51,13 @@ const App = () => {
 
 const RootNavigation = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const physicianData = useSelector((state) => state.Reducers.physicianData);
-
-  // TODO: Issue is as follows: tokendata.type is null on login
+  const physData = useSelector((state) => state.Reducers.physData);
   return (
     <NavigationContainer>
       {tokenData.access_token === "" ? (
         <AuthStack />
-      ) : tokenData.type === "caregivee" &&
-        physicianData.physicianName === "" ? (
+      ) : (tokenData.type !== "caregiver" && !physData.physName) ||
+        (tokenData.type !== "caregiver" && !tokenData.caregiveeId) ? (
         <MiddleStack />
       ) : (
         <HomeStack />
@@ -68,9 +67,9 @@ const RootNavigation = () => {
 };
 
 // Stack of screens to handle little things between authentication and the home screen,
-// like physician data, first-time instructions, etc
+// like phys data, first-time instructions, etc
 const MiddleStack = () => {
-  const physicianData = useSelector((state) => state.Reducers.physicianData);
+  const physData = useSelector((state) => state.Reducers.physData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   return (
     <Stack.Navigator>
@@ -81,10 +80,18 @@ const MiddleStack = () => {
           title: "",
         }}
       >
-        <Stack.Screen
-          name="PhysicianInfoScreen"
-          component={PhysicianInfoScreen}
-        />
+        {tokenData.type !== "caregiver" && !tokenData.caregiveeId && (
+          <Stack.Screen
+            name="AuthenticationScreen"
+            component={AuthenticationScreen}
+          />
+        )}
+        {tokenData.type !== "caregiver" && !physData.physName && (
+          <Stack.Screen
+            name="PhysicianInfoScreen"
+            component={PhysicianInfoScreen}
+          />
+        )}
       </Stack.Group>
     </Stack.Navigator>
   );

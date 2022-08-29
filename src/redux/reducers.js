@@ -2,7 +2,7 @@
 const initialState = {
   tokenData: {
     access_token: "",
-    caregiveeId: "",
+    caregiveeId: null,
     caregiverId: null,
     refresh_token: "",
     type: "",
@@ -15,13 +15,13 @@ const initialState = {
     phone: "",
     mobilePlatform: "",
   },
-  physicianData: {
-    physicianName: "",
-    physicianPhone: "",
-    physicianStreet: "",
-    physicianCity: "",
-    physicianState: "",
-    physicianZipCode: "",
+  physData: {
+    physName: "",
+    physPhone: "",
+    physStreet: "",
+    physCity: "",
+    physState: "",
+    physZipCode: "",
   },
 };
 
@@ -33,7 +33,7 @@ export default (state = initialState, action) => {
     case "SET_TOKEN_DATA":
       return { ...state, tokenData: action.payload };
     case "SET_PHYSICIAN_DATA":
-      return { ...state, physicianData: action.payload };
+      return { ...state, physData: action.payload };
     default:
       return state;
   }

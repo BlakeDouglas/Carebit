@@ -16,11 +16,11 @@ export const setTokenData = (tokenData) => {
   };
 };
 
-export const setPhysicianData = (physicianData) => {
+export const setPhysicianData = (physData) => {
   return async (dispatch) => {
     dispatch({
       type: "SET_PHYSICIAN_DATA",
-      payload: physicianData,
+      payload: physData,
     });
   };
 };

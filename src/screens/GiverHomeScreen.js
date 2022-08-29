@@ -19,22 +19,6 @@ const MyStatusBar = ({ backgroundColor, ...props }) => (
     </SafeAreaView>
   </View>
 );
-const fetchFitbitData = (tokenData) => {
-  refreshToken(tokenData);
-  fetch("https://api.fitbit.com/1/user/-/profile.json", {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + tokenData.access_token,
-    },
-  })
-    .then((response) => response.json())
-    .then((json) => {
-      console.log("FETCH GOT: " + JSON.stringify(json));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
 
 const refreshToken = (tokenData) => {
   fetch("https://api.fitbit.com/oauth2/token", {
@@ -59,7 +43,6 @@ const refreshToken = (tokenData) => {
 };
 
 export default function GiverHomeScreen() {
-
   return (
     <View style={styles.container}>
       <View style={styles.sBar}>
@@ -227,7 +210,9 @@ export default function GiverHomeScreen() {
             <View style={styles.smallCard}>
               <View style={styles.cardTitle}>
                 <View style={styles.title}>
-                  <Image source={require("../../assets/images/steps/steps.png")} />
+                  <Image
+                    source={require("../../assets/images/steps/steps.png")}
+                  />
                   <Text style={styles.h2}>Total Steps</Text>
                 </View>
               </View>
@@ -485,5 +470,5 @@ const styles = EStyleSheet.create({
 
 //Here we specify our rem for resizing on smaller screens
 
-const getScreenWidth = Dimensions.get('window').width;
+const getScreenWidth = Dimensions.get("window").width;
 EStyleSheet.build({ $rem: getScreenWidth / 25 });
