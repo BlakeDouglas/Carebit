@@ -58,7 +58,7 @@ export default function GiveeHomeScreen() {
             <Text style={styles.buttonSmallText}>0 Today</Text>
           </TouchableOpacity>
         </SafeAreaView>
-        <SafeAreaView style={styles.alertBody}>
+        <SafeAreaView style={styles.chatBody}>
           <TouchableOpacity
             style={{ alignItems: "center", justifyContent: "center" }}
           >
@@ -74,13 +74,13 @@ export default function GiveeHomeScreen() {
       <SafeAreaView
         style={{
           borderBottomColor: "lightgray",
-          borderBottomWidth: 2,
-          marginTop: "5%",
+          borderBottomWidth: 1,
+          marginTop: "8%",
         }}
       ></SafeAreaView>
       <Text style={styles.preferencesText}>Preferences</Text>
 
-      <SafeAreaView style={styles.bottomBody}>
+      <SafeAreaView style={[styles.bottomBody]}>
         <SafeAreaView
           style={[
             styles.bottomRowBody,
@@ -89,8 +89,8 @@ export default function GiveeHomeScreen() {
                   ...Platform.select({
                     ios: {
                       shadowColor: "blue",
-                      shadowOffset: { width: 5, height: 8 },
-                      shadowOpacity: 0.7,
+                      shadowOffset: { width: 4, height: 10 },
+                      shadowOpacity: 0.4,
                     },
                     android: {
                       elevation: 4,
@@ -105,12 +105,18 @@ export default function GiveeHomeScreen() {
         >
           {isEnabledSleep ? (
             <Image
-              style={[styles.imagesBody, { marginLeft: 20, marginRight: 20 }]}
+              style={[
+                styles.imagesBody,
+                { marginLeft: "5%", marginRight: "5%" },
+              ]}
               source={require("../../assets/images/icons-caregivee-sleep-on.imageset/icons-caregivee-sleep-on.png")}
             />
           ) : (
             <Image
-              style={[styles.imagesBody, { marginLeft: 20, marginRight: 20 }]}
+              style={[
+                styles.imagesBody,
+                { marginLeft: "5%", marginRight: "5%" },
+              ]}
               source={require("../../assets/images/icons-caregivee-sleep-off.imageset/icons-caregivee-sleep-off.png")}
             />
           )}
@@ -139,12 +145,18 @@ export default function GiveeHomeScreen() {
         <SafeAreaView style={styles.bottomRowBody}>
           {isEnabledDisturb ? (
             <Image
-              style={[styles.imagesBody, { marginLeft: 20, marginRight: 20 }]}
+              style={[
+                styles.imagesBody,
+                { marginLeft: "5%", marginRight: "5%" },
+              ]}
               source={require("../../assets/images/icons-caregivee-dnd-on.imageset/icons-caregivee-dnd-on.png")}
             />
           ) : (
             <Image
-              style={[styles.imagesBody, { marginLeft: 20, marginRight: 20 }]}
+              style={[
+                styles.imagesBody,
+                { marginLeft: "5%", marginRight: "5%" },
+              ]}
               source={require("../../assets/images/icons-caregivee-dnd-off.imageset/icons-caregivee-dnd-off.png")}
             />
           )}
@@ -167,12 +179,18 @@ export default function GiveeHomeScreen() {
         <SafeAreaView style={styles.bottomRowBody}>
           {isEnabledMonitor ? (
             <Image
-              style={[styles.imagesBody, { marginLeft: 20, marginRight: 20 }]}
+              style={[
+                styles.imagesBody,
+                { marginLeft: "5%", marginRight: "5%" },
+              ]}
               source={require("../../assets/images/icons-caregivee-monitor-on.imageset/icons-caregivee-monitor-on.png")}
             />
           ) : (
             <Image
-              style={[styles.imagesBody, { marginLeft: 20, marginRight: 20 }]}
+              style={[
+                styles.imagesBody,
+                { marginLeft: "5%", marginRight: "5%" },
+              ]}
               source={require("../../assets/images/icons-caregivee-monitor-off.imageset/icons-caregivee-monitor-off.png")}
             />
           )}
@@ -186,7 +204,7 @@ export default function GiveeHomeScreen() {
           <Switch
             trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
             thumbColor={isEnabledMonitor ? "white" : "white"}
-            style={styles.switchBody}
+            style={styles.switchBodyMonitoring}
             onValueChange={toggleSwitchMonitor}
             value={isEnabledMonitor}
           />
@@ -233,6 +251,7 @@ const styles = StyleSheet.create({
   mediumBody: {
     flexDirection: "row",
     justifyContent: "center",
+    alignItems: "center",
     height: "20%",
   },
   alertBody: {
@@ -242,29 +261,41 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 7,
-    marginLeft: 10,
+    marginRight: "2%",
+  },
+  chatBody: {
+    width: "43%",
+    height: "100%",
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 7,
+    marginLeft: "2%",
   },
   imagesBody: {
     width: 45,
     height: 45,
   },
   switchBody: {
-    marginLeft: 120,
+    marginLeft: "32%",
+    transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+  },
+  switchBodyMonitoring: {
+    marginLeft: "34%",
     transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
   },
   switchBodyDisturb: {
-    marginLeft: 95,
+    marginLeft: "25%",
     transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
   },
   bottomBody: {
     flex: 1,
-    flexDirection: "column",
     justifyContent: "space-evenly",
     alignItems: "center",
   },
   bottomRowBody: {
-    width: 370,
-    height: 90,
+    width: "95%",
+    height: "22%",
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "flex-start",

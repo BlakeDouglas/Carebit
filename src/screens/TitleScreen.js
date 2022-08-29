@@ -15,7 +15,7 @@ export default function TitleScreen({ navigation }) {
     navigation.navigate("RoleSelectScreen");
   };
   const loginButtonHandler = () => {
-    navigation.navigate("LoginScreen");
+    navigation.navigate("GiveeHomeScreen");
   };
 
   return (
