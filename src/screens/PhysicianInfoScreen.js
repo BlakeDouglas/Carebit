@@ -15,57 +15,78 @@ import { setPhysicianData } from "../redux/actions";
 import { useSelector, useDispatch } from "react-redux";
 
 export default function PhysicianInfoScreen({ navigation }) {
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
   const [inputs, setInputs] = useState({
-    physicianName: "",
-    physicianPhone: "",
-    physicianStreet: "",
-    physicianCity: "",
-    physicianState: "",
-    physicianZipCode: "",
+    physName: "",
+    physPhone: "",
+    physStreet: "",
+    physCity: "",
+    physState: "",
+    physZipCode: "",
   });
 
   const requiredText = " Input required";
 
   const [errors, setErrors] = useState({});
 
-  const validate = () => {
+  const validate = (tokenData) => {
     Keyboard.dismiss();
     let valid = true;
-    if (!inputs.physicianName) {
-      handleError(requiredText, "physicianName");
+    if (!inputs.physName) {
+      handleError(requiredText, "physName");
       valid = false;
     }
-    if (!inputs.physicianPhone) {
-      handleError(requiredText, "physicianPhone");
+    if (!inputs.physPhone) {
+      handleError(requiredText, "physPhone");
       valid = false;
     } else if (
-      !inputs.physicianPhone.match(
+      !inputs.physPhone.match(
         /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/
       )
     ) {
-      handleError(" Invalid phone number", "physicianPhone");
+      handleError(" Invalid phone number", "physPhone");
       valid = false;
     }
-    if (!inputs.physicianStreet) {
-      handleError(requiredText, "physicianStreet");
+    if (!inputs.physStreet) {
+      handleError(requiredText, "physStreet");
       valid = false;
     }
-    if (!inputs.physicianCity) {
-      handleError(requiredText, "physicianCity");
+    if (!inputs.physCity) {
+      handleError(requiredText, "physCity");
       valid = false;
     }
-    if (!inputs.physicianState) {
-      handleError(requiredText, "physicianState");
+    if (!inputs.physState) {
+      handleError(requiredText, "physState");
       valid = false;
     }
-    if (!inputs.physicianZipCode) {
-      handleError(requiredText, "physicianZipCode");
+    if (!inputs.physZipCode) {
+      handleError(requiredText, "physZipCode");
       valid = false;
     }
     if (valid) {
-      dispatch(setPhysicianData(inputs));
-      // TODO: Also handle fetch / asynch storage here
+      registerPhysician(inputs, tokenData);
+    }
+  };
+
+  const registerPhysician = async (inputs, tokenData) => {
+    try {
+      let response = await fetch("https://www.carebit.xyz/physician", {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokenData.access_token,
+        },
+        body: JSON.stringify({
+          ...inputs,
+          caregiveeID: tokenData.caregiveeId,
+        }),
+      });
+      const json = await response.json();
+      dispatch(setPhysicianData(json.cgvee));
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -98,10 +119,10 @@ export default function PhysicianInfoScreen({ navigation }) {
             placeholder="Physician's Name"
             iconName="account-outline"
             label="Physician's Name*"
-            error={errors.physicianName}
-            onChangeText={(text) => handleChange(text, "physicianName")}
+            error={errors.physName}
+            onChangeText={(text) => handleChange(text, "physName")}
             onFocus={() => {
-              handleError(null, "physicianName");
+              handleError(null, "physName");
             }}
           />
           <CustomTextInput
@@ -109,22 +130,22 @@ export default function PhysicianInfoScreen({ navigation }) {
             iconName="phone-outline"
             label="Physician's Number*"
             keyboardType="number-pad"
-            error={errors.physicianPhone}
+            error={errors.physPhone}
             onChangeText={(text) =>
-              handleChange(text.replace(/[^0-9]+/g, ""), "physicianPhone")
+              handleChange(text.replace(/[^0-9]+/g, ""), "physPhone")
             }
             onFocus={() => {
-              handleError(null, "physicianPhone");
+              handleError(null, "physPhone");
             }}
           />
           <CustomTextInput
             placeholder="e.g. 111 Lane Road, STE. 120"
             //iconName="phone-outline"
             label="Physician's Street Address"
-            error={errors.physicianStreet}
-            onChangeText={(text) => handleChange(text, "physicianStreet")}
+            error={errors.physStreet}
+            onChangeText={(text) => handleChange(text, "physStreet")}
             onFocus={() => {
-              handleError(null, "physicianStreet");
+              handleError(null, "physStreet");
             }}
           />
 
@@ -132,10 +153,10 @@ export default function PhysicianInfoScreen({ navigation }) {
             placeholder="e.g. London"
             //iconName="phone-outline"
             label="City"
-            error={errors.physicianCity}
-            onChangeText={(text) => handleChange(text, "physicianCity")}
+            error={errors.physCity}
+            onChangeText={(text) => handleChange(text, "physCity")}
             onFocus={() => {
-              handleError(null, "physicianCity");
+              handleError(null, "physCity");
             }}
           />
           <View style={{ flexDirection: "row" }}>
@@ -144,10 +165,10 @@ export default function PhysicianInfoScreen({ navigation }) {
                 placeholder="e.g. Florida"
                 //iconName="phone-outline"
                 label="State"
-                error={errors.physicianState}
-                onChangeText={(text) => handleChange(text, "physicianState")}
+                error={errors.physState}
+                onChangeText={(text) => handleChange(text, "physState")}
                 onFocus={() => {
-                  handleError(null, "physicianState");
+                  handleError(null, "physState");
                 }}
               />
             </View>
@@ -157,10 +178,10 @@ export default function PhysicianInfoScreen({ navigation }) {
                 //iconName="phone-outline"
                 label="Zipcode"
                 keyboardType="number-pad"
-                error={errors.physicianZipCode}
-                onChangeText={(text) => handleChange(text, "physicianZipCode")}
+                error={errors.physZipCode}
+                onChangeText={(text) => handleChange(text, "physZipCode")}
                 onFocus={() => {
-                  handleError(null, "physicianZipCode");
+                  handleError(null, "physZipCode");
                 }}
               />
             </View>
@@ -174,7 +195,9 @@ export default function PhysicianInfoScreen({ navigation }) {
                 marginBottom: 30,
               },
             ]}
-            onPress={validate}
+            onPress={() => {
+              validate(tokenData);
+            }}
           >
             <Text style={GlobalStyle.ButtonText}>Create Account</Text>
           </TouchableOpacity>

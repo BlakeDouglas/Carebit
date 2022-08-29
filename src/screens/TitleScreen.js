@@ -12,6 +12,8 @@ import GlobalStyle from "../utils/GlobalStyle";
 
 import React from "react";
 
+import * as Linking from "expo-linking";
+
 export default function TitleScreen({ navigation }) {
   const createAccountButtonHandler = () => {
     navigation.navigate("RoleSelectScreen");

@@ -12,7 +12,6 @@ import AuthenticationScreen from "./src/screens/AuthenticationScreen";
 import GiveeSettingsScreen from "./src/screens/GiveeSettingsScreen";
 import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
-
 import { Provider, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
 import { useFonts } from "expo-font";
@@ -50,14 +49,12 @@ const App = () => {
 
 const RootNavigation = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const physicianData = useSelector((state) => state.Reducers.physicianData);
-  console.log(tokenData);
-  // TODO: Issue is as follows: tokendata.type is null on login
+  const physData = useSelector((state) => state.Reducers.physData);
   return (
     <NavigationContainer>
       {tokenData.access_token === "" ? (
         <AuthStack />
-      ) : (tokenData.type === "caregivee" && !physicianData.physicianName) ||
+      ) : (tokenData.type === "caregivee" && !physData.physName) ||
         !tokenData.caregiveeId ? (
         <MiddleStack />
       ) : (
@@ -68,9 +65,9 @@ const RootNavigation = () => {
 };
 
 // Stack of screens to handle little things between authentication and the home screen,
-// like physician data, first-time instructions, etc
+// like phys data, first-time instructions, etc
 const MiddleStack = () => {
-  const physicianData = useSelector((state) => state.Reducers.physicianData);
+  const physData = useSelector((state) => state.Reducers.physData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const authData = useSelector((state) => state.Reducers.authData);
   return (
@@ -82,16 +79,16 @@ const MiddleStack = () => {
           title: "",
         }}
       >
-        {tokenData.type === "caregivee" && !physicianData.physicianName && (
-          <Stack.Screen
-            name="PhysicianInfoScreen"
-            component={PhysicianInfoScreen}
-          />
-        )}
         {!tokenData.caregiveeId && (
           <Stack.Screen
             name="AuthenticationScreen"
             component={AuthenticationScreen}
+          />
+        )}
+        {tokenData.type === "caregivee" && !physData.physName && (
+          <Stack.Screen
+            name="PhysicianInfoScreen"
+            component={PhysicianInfoScreen}
           />
         )}
       </Stack.Group>
