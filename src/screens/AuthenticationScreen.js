@@ -30,11 +30,15 @@ export default function AuthenticationScreen({ navigation }) {
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId: "238QS3",
-      scopes: ["activity", "sleep"],
+      scopes: ["activity", "sleep", "temperature"],
+      redirectUri: "exp://127.0.0.1:19000/--/callback",
+
+      /* TODO:
       redirectUri: makeRedirectUri({
         scheme: "carebit",
         path: "callback",
-      }),
+      }),*/
+
       usePKCE: false,
       extraParams: { prompt: "login" },
     },
@@ -52,11 +56,6 @@ export default function AuthenticationScreen({ navigation }) {
         },
         body: JSON.stringify({ userID: tokenData.userId, authCode: code }),
       });
-      console.log("POST to https://www.carebit.xyz/caregivee/create");
-      console.log("Authorization: 'Bearer " + tokenData.access_token + "'");
-      console.log("authCode: " + code);
-      console.log("userId: " + tokenData.userId);
-      console.log("----------Response---------- \n" + (await response.text()));
       const json = await response.json();
       dispatch(setTokenData({ ...tokenData, ...json }));
     } catch (error) {

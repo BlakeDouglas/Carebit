@@ -1,8 +1,9 @@
 {
   "expo": {
     "name": "Carebit",
-    "slug": "Carebit",
+    "slug": "carebit",
     "scheme": "carebit",
+    "owner": "masspwnser",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/appicon.png",

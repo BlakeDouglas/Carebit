@@ -81,13 +81,15 @@ const MiddleStack = () => {
           title: "",
         }}
       >
+        {/* TODO: Switch back */}
         {tokenData.type !== "caregiver" && !tokenData.caregiveeId && (
           <Stack.Screen
             name="AuthenticationScreen"
             component={AuthenticationScreen}
           />
         )}
-        {tokenData.type !== "caregiver" && !physData.physName && (
+
+        {tokenData.type !== "caregiver" && !physData.physName && false && (
           <Stack.Screen
             name="PhysicianInfoScreen"
             component={PhysicianInfoScreen}
