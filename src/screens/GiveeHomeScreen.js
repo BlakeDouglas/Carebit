@@ -12,7 +12,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 
-export default function GiveeHomeScreen() {
+export default function GiveeHomeScreen({ navigation }) {
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
