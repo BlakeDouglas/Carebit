@@ -89,7 +89,7 @@ const MiddleStack = () => {
           />
         )}
 
-        {tokenData.type !== "caregiver" && !physData.physName && false && (
+        {tokenData.type !== "caregiver" && !physData.physName && (
           <Stack.Screen
             name="PhysicianInfoScreen"
             component={PhysicianInfoScreen}

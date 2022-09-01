@@ -70,7 +70,6 @@ export default function PhysicianInfoScreen({ navigation }) {
   };
 
   const registerPhysician = async (inputs, tokenData) => {
-    /* TODO: Switch back
     try {
       let response = await fetch("https://www.carebit.xyz/physician", {
         method: "PUT",
@@ -89,8 +88,6 @@ export default function PhysicianInfoScreen({ navigation }) {
     } catch (error) {
       console.log(error);
     }
-    */
-    dispatch(setPhysicianData({ physName: "placeholder" }));
   };
 
   const handleChange = (text, input) => {
