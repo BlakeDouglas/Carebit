@@ -11,6 +11,7 @@ import {
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import EStyleSheet from "react-native-extended-stylesheet";
 
 const MyStatusBar = ({ backgroundColor, ...props }) => (
@@ -20,30 +21,32 @@ const MyStatusBar = ({ backgroundColor, ...props }) => (
     </SafeAreaView>
   </View>
 );
+export default function GiverHomeScreen(tokenData) {
+  // BAD FUNCTION, DO NOT USE OUTSIDE OF DEMO
+  const fetchData = async (inputs, tokenData) => {
+    try {
+      let response = await fetch(
+        "https://api.fitbit.com/1/user/B4QY3P/profile.json",
+        {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+          body: JSON.stringify({
+            ...inputs,
+            caregiveeID: tokenData.caregiveeId,
+          }),
+        }
+      );
+      const json = await response.json();
+      dispatch(setPhysicianData(json.cgvee));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-const refreshToken = (tokenData) => {
-  fetch("https://api.fitbit.com/oauth2/token", {
-    method: "POST",
-    headers: {
-      Authorization:
-        "Basic MjM4UVMzOjYzZTJlNWNjY2M2OWY2ZThmMTk4Yjg2ZDYyYjUyYzE5",
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: JSON.stringify({
-      grant_type: "refresh_token",
-      refresh_token: tokenData.refresh_token,
-    }),
-  })
-    .then((response) => response.json())
-    .then((json) => {
-      console.log(JSON.stringify(json));
-    })
-    .catch((error) => {
-      console.log("Got error: " + error);
-    });
-};
-
-export default function GiverHomeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.sBar}>

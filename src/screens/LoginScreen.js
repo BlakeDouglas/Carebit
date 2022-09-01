@@ -7,13 +7,14 @@ import {
   Keyboard,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import CustomTextInput from "../utils/CustomTextInput";
 import { setTokenData, setUserData } from "../redux/actions";
 
 export default function LoginScreen() {
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
 
   const [inputs, setInputs] = useState({
@@ -98,6 +99,28 @@ export default function LoginScreen() {
     }
   };
 
+  // TODO: Implement
+  const connectCaregivee = async (tokenData) => {
+    try {
+      let response = await fetch(
+        "https://www.carebit.xyz/acceptCaregiverRequest",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            caregiver: tokenData.caregiverId,
+            caregivee: "B4QY3P",
+          }),
+        }
+      );
+      fetchUserData(tokenData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}

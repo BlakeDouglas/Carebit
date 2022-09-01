@@ -5,15 +5,18 @@ import {
   View,
   Button,
   ImageBackground,
+  LogBox,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useAuthRequest } from "expo-auth-session";
+import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
 import * as Linking from "expo-linking";
 import GlobalStyle from "../utils/GlobalStyle";
 
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setTokenData } from "../redux/actions";
+
+LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 
 export default function AuthenticationScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -28,8 +31,12 @@ export default function AuthenticationScreen({ navigation }) {
     {
       clientId: "238QS3",
       scopes: ["activity", "sleep"],
-      redirectUri: Linking.createURL("carebit"),
+      redirectUri: makeRedirectUri({
+        scheme: "carebit",
+        path: "callback",
+      }),
       usePKCE: false,
+      extraParams: { prompt: "login" },
     },
     discovery
   );
@@ -45,6 +52,11 @@ export default function AuthenticationScreen({ navigation }) {
         },
         body: JSON.stringify({ userID: tokenData.userId, authCode: code }),
       });
+      console.log("POST to https://www.carebit.xyz/caregivee/create");
+      console.log("Authorization: 'Bearer " + tokenData.access_token + "'");
+      console.log("authCode: " + code);
+      console.log("userId: " + tokenData.userId);
+      console.log("----------Response---------- \n" + (await response.text()));
       const json = await response.json();
       dispatch(setTokenData({ ...tokenData, ...json }));
     } catch (error) {
