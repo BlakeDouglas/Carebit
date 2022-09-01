@@ -6,473 +6,751 @@ import {
   StatusBar,
   View,
   Switch,
-  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import EStyleSheet from "react-native-extended-stylesheet";
+import moment from "moment";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
-const MyStatusBar = ({ backgroundColor, ...props }) => (
-  <View style={[styles.statusBar, { backgroundColor }]}>
-    <SafeAreaView>
-      <StatusBar translucent backgroundColor={backgroundColor} {...props} />
-    </SafeAreaView>
-  </View>
-);
-export default function GiverHomeScreen(tokenData) {
-  // BAD FUNCTION, DO NOT USE OUTSIDE OF DEMO
-  const fetchData = async (inputs, tokenData) => {
-    try {
-      let response = await fetch(
-        "https://api.fitbit.com/1/user/B4QY3P/profile.json",
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-          body: JSON.stringify({
-            ...inputs,
-            caregiveeID: tokenData.caregiveeId,
-          }),
-        }
-      );
-      const json = await response.json();
-      dispatch(setPhysicianData(json.cgvee));
-    } catch (error) {
+const fetchFitbitData = (tokenData) => {
+  refreshToken(tokenData);
+  fetch("https://api.fitbit.com/1/user/-/profile.json", {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + tokenData.access_token,
+    },
+  })
+    .then((response) => response.json())
+    .then((json) => {
+      console.log("FETCH GOT: " + JSON.stringify(json));
+    })
+    .catch((error) => {
       console.log(error);
-    }
-  };
+    });
+};
 
+const refreshToken = (tokenData) => {
+  fetch("https://api.fitbit.com/oauth2/token", {
+    method: "POST",
+    headers: {
+      Authorization:
+        "Basic MjM4UVMzOjYzZTJlNWNjY2M2OWY2ZThmMTk4Yjg2ZDYyYjUyYzE5",
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: JSON.stringify({
+      grant_type: "refresh_token",
+      refresh_token: tokenData.refresh_token,
+    }),
+  })
+    .then((response) => response.json())
+    .then((json) => {
+      console.log(JSON.stringify(json));
+    })
+    .catch((error) => {
+      console.log("Got error: " + error);
+    });
+};
+
+let date = moment().format("dddd, MMM D");
+
+export default function GiverHomeScreen() {
   return (
-    <View style={styles.container}>
-      <View style={styles.sBar}>
-        <MyStatusBar backgroundColor="dodgerblue" barStyle="light-content" />
-      </View>
-      <View style={styles.mainWrapper}>
-        {/*=====================Top Container=================================*/}
-        <SafeAreaView style={styles.topContainer}>
-          {/* last Sync Container*/}
-          <View style={styles.topContainerContent}>
-            {/* Settings Button*/}
-            <TouchableOpacity>
-              <Image
-                source={require("../../assets/images/settings/settings.png")}
-              />
-            </TouchableOpacity>
-
-            {/* last Sync Information*/}
-            <View style={styles.lastSyncContainer}>
-              <Text style={[styles.h3, styles.syncText]}> Carebit</Text>
-              <Text style={[styles.h4, styles.syncText]}>
-                Last Sync 15 mins ago
-              </Text>
-            </View>
-
-            {/* Messages / Chat Button*/}
-            <TouchableOpacity>
-              <Image
-                source={require("../../assets/images/readMessage/readMessage.png")}
-              />
-            </TouchableOpacity>
-          </View>
-
-          {/*Alerts Container*/}
-          <View style={styles.alertsContainer}>
-            <Text style={styles.h4}> 0 Alerts Today</Text>
-            <Text style={[styles.h4, styles.viewhistory]}> View History</Text>
-          </View>
-
-          {/*Greetings Container*/}
-          <View style={styles.greetingsContainer}>
-            <View style={styles.greetingsContainerContent}>
-              <Text style={styles.h4}> Hello Name</Text>
-              <Text style={styles.h2}> Some other text goes in here</Text>
-            </View>
-          </View>
+    <SafeAreaView
+      style={{ height: "100%", width: "100%", backgroundColor: "whitesmoke" }}
+    >
+      <SafeAreaView
+        style={{
+          height: "6%",
+          flexDirection: "row",
+          width: "100%",
+          alignItems: "center",
+          backgroundColor: "white",
+        }}
+      >
+        <Text
+          style={{
+            color: "gray",
+            fontWeight: "bold",
+            marginRight: "44%",
+            marginLeft: "5%",
+          }}
+        >
+          0 Alerts Today
+        </Text>
+        <Text
+          style={{ color: "dodgerblue", fontWeight: "bold", marginRight: "5%" }}
+        >
+          View History
+        </Text>
+      </SafeAreaView>
+      <SafeAreaView
+        style={{
+          width: "100%",
+          height: "8%",
+          marginTop: "3%",
+        }}
+      >
+        <Text style={styles.helloText}>Hello Name</Text>
+        <Text style={styles.caregiveeText}>Your caregivee is Pam</Text>
+      </SafeAreaView>
+      <SafeAreaView
+        style={{
+          marginTop: "3%",
+          marginBottom: "3%",
+          borderBottomColor: "lightgray",
+          borderBottomWidth: 1,
+        }}
+      ></SafeAreaView>
+      <SafeAreaView style={{ flexDirection: "row", justifyContent: "center" }}>
+        <Text style={styles.lastActivityText}>Last Recorded Activity</Text>
+        <Text style={styles.smallText}>14 mins ago</Text>
+      </SafeAreaView>
+      <SafeAreaView style={{ height: "18%", width: "100%", marginTop: "3%" }}>
+        <SafeAreaView
+          style={{
+            height: "25%",
+            width: "100%",
+            flexDirection: "row",
+          }}
+        >
+          <SafeAreaView
+            style={{
+              backgroundColor: "white",
+              marginLeft: "5%",
+              height: "100%",
+              width: "43%",
+              alignItems: "center",
+              flexDirection: "row",
+              borderTopLeftRadius: 8,
+              borderTopRightRadius: 8,
+              ...Platform.select({
+                ios: {
+                  shadowColor: "#000",
+                  shadowOffset: { width: 1, height: 3 },
+                  shadowOpacity: 0.6,
+                },
+                android: {
+                  elevation: 4,
+                },
+              }),
+            }}
+          >
+            <Image
+              style={{ marginLeft: "4%" }}
+              source={require("../../assets/images/heart/heart.png")}
+            />
+            <Text
+              style={{
+                color: "black",
+                fontSize: responsiveFontSize(2.25),
+                marginLeft: "5%",
+              }}
+            >
+              Heart Rate
+            </Text>
+          </SafeAreaView>
+          <SafeAreaView
+            style={{
+              backgroundColor: "white",
+              marginLeft: "4%",
+              height: "100%",
+              width: "43%",
+              alignItems: "center",
+              flexDirection: "row",
+              borderTopLeftRadius: 8,
+              borderTopRightRadius: 8,
+              ...Platform.select({
+                ios: {
+                  shadowColor: "#000",
+                  shadowOffset: { width: 1, height: 3 },
+                  shadowOpacity: 0.4,
+                },
+                android: {
+                  elevation: 4,
+                },
+              }),
+            }}
+          >
+            <Image
+              style={{ marginLeft: "4%" }}
+              source={require("../../assets/images/steps/steps.png")}
+            />
+            <Text
+              style={{
+                color: "black",
+                fontSize: responsiveFontSize(2.25),
+                marginLeft: "5%",
+              }}
+            >
+              Steps
+            </Text>
+          </SafeAreaView>
         </SafeAreaView>
 
-        {/*=================================Bottom Container=================================*/}
+        <SafeAreaView
+          style={{
+            height: "75%",
+            width: "100%",
+            flexDirection: "row",
+          }}
+        >
+          <SafeAreaView
+            style={{
+              backgroundColor: "whitesmoke",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              width: "43%",
+              marginLeft: "5%",
+              borderBottomEndRadius: 8,
+              borderBottomLeftRadius: 8,
+              ...Platform.select({
+                ios: {
+                  shadowColor: "#000",
+                  shadowOffset: { width: 1, height: 3 },
+                  shadowOpacity: 0.4,
+                },
+                android: {
+                  elevation: 4,
+                },
+              }),
+            }}
+          >
+            <SafeAreaView
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "70%",
+                width: "100%",
+              }}
+            >
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: responsiveFontSize(4.8),
+                  fontWeight: "700",
+                }}
+              >
+                74
+              </Text>
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: responsiveFontSize(2),
+                  marginLeft: "3%",
+                  fontWeight: "600",
+                }}
+              >
+                BPM
+              </Text>
+            </SafeAreaView>
+            <SafeAreaView
+              style={{
+                width: "100%",
+                height: "30%",
+                alignItems: "center",
+                justifyContent: "flex-start",
+              }}
+            >
+              <Text style={[styles.smallText, { marginLeft: "0%" }]}>
+                14 mins ago
+              </Text>
+            </SafeAreaView>
+          </SafeAreaView>
 
-        <View style={styles.contentContainer}>
-          {/*======================HeartRate & Steps Container======================*/}
-          <View style={styles.dataContainer}>
-            {/* Title for the View containing Heart rate and steps data */}
-            <View style={styles.titleContainer}>
-              <Text style={styles.h3}>Last Recorded activity</Text>
-              <Text style={styles.h4}>Time</Text>
-            </View>
+          <SafeAreaView
+            style={{
+              backgroundColor: "whitesmoke",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              width: "43%",
+              marginLeft: "4%",
+              ...Platform.select({
+                ios: {
+                  shadowColor: "#000",
+                  shadowOffset: { width: 1, height: 3 },
+                  shadowOpacity: 0.4,
+                },
+                android: {
+                  elevation: 4,
+                },
+              }),
+              borderBottomEndRadius: 8,
+              borderBottomLeftRadius: 8,
+            }}
+          >
+            <SafeAreaView
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "70%",
+                width: "100%",
+              }}
+            >
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: responsiveFontSize(4.8),
+                  fontWeight: "700",
+                }}
+              >
+                523
+              </Text>
+            </SafeAreaView>
+            <SafeAreaView
+              style={{
+                alignItems: "center",
+                justifyContent: "flex-start",
+                height: "30%",
+                width: "100%",
+              }}
+            >
+              <Text style={[styles.smallText, { marginLeft: "0%" }]}>
+                in past hour
+              </Text>
+            </SafeAreaView>
+          </SafeAreaView>
+        </SafeAreaView>
+      </SafeAreaView>
+      <SafeAreaView
+        style={{
+          borderBottomColor: "lightgray",
+          borderBottomWidth: 1,
+          marginTop: "4%",
+          marginBottom: "3%",
+        }}
+      ></SafeAreaView>
+      <SafeAreaView
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "5%",
+        }}
+      >
+        <Text style={styles.lastActivityText}>Today</Text>
+        <Text style={styles.dateText}>{date}</Text>
+      </SafeAreaView>
+      <SafeAreaView
+        style={{
+          marginTop: "2%",
+          alignSelf: "center",
+          backgroundColor: "white",
+          marginLeft: "4%",
+          marginRight: "4%",
+          width: "90%",
+          height: "18%",
+          borderRadius: 8,
+        }}
+      >
+        <SafeAreaView
+          style={{
+            backgroundColor: "white",
+            flexDirection: "row",
+            height: "30%",
+            width: "100%",
+            alignItems: "center",
+            borderTopStartRadius: 8,
+            borderTopRightRadius: 8,
+            ...Platform.select({
+              ios: {
+                shadowColor: "#000",
+                shadowOffset: { width: 1, height: 3 },
+                shadowOpacity: 0.4,
+              },
+              android: {
+                elevation: 4,
+              },
+            }),
+          }}
+        >
+          <Image
+            style={{ marginLeft: "3%" }}
+            source={require("../../assets/images/heart/heart.png")}
+          />
+          <Text
+            style={{
+              color: "black",
+              fontSize: responsiveFontSize(2.25),
+              marginLeft: "1%",
+            }}
+          >
+            Heart Rate Summary
+          </Text>
+          <Text
+            style={{
+              color: "darkgrey",
+              fontSize: responsiveFontSize(1.8),
+              marginLeft: "28%",
+            }}
+          >
+            BPM
+          </Text>
+        </SafeAreaView>
 
-            {/* Container holding the cards with heart rate and steps*/}
-            <View style={styles.dataCardsContainer}>
-              {/* Small Card >> Heart Rate*/}
-              <View style={styles.smallCard}>
-                <View style={styles.cardTitle}>
-                  <View style={styles.title}>
-                    {/* Loading the icon Image for Heart Rate from the Assets Folder*/}
-                    <Image
-                      source={require("../../assets/images/heart/heart.png")}
-                    />
+        <SafeAreaView
+          style={{
+            backgroundColor: "whitesmoke",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            height: "70%",
+            width: "100%",
+            ...Platform.select({
+              ios: {
+                shadowColor: "#000",
+                shadowOffset: { width: 1, height: 3 },
+                shadowOpacity: 0.4,
+              },
+              android: {
+                elevation: 4,
+              },
+            }),
+            borderBottomEndRadius: 8,
+            borderBottomLeftRadius: 8,
+          }}
+        >
+          <SafeAreaView
+            style={{
+              height: "100%",
+              width: "25%",
 
-                    {/* Text for the Title*/}
-                    <Text style={styles.h2}>Heart Rate</Text>
-                  </View>
-                </View>
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                color: "black",
+                fontSize: responsiveFontSize(4.8),
+                fontWeight: "700",
+              }}
+            >
+              74
+            </Text>
+            <Text style={[styles.smallText, { marginLeft: 0, marginTop: 0 }]}>
+              min
+            </Text>
+          </SafeAreaView>
+          <SafeAreaView
+            style={{
+              alignSelf: "center",
+              borderLeftColor: "lightgray",
+              borderLeftWidth: 1.5,
+              height: "70%",
+            }}
+          ></SafeAreaView>
+          <SafeAreaView
+            style={{
+              height: "100%",
+              width: "25%",
 
-                {/* HeartRate Data from FitBit will be loaded here "74" here is just for illustration */}
-                <View style={styles.inCard}>
-                  <View style={styles.heartData}>
-                    <Text style={styles.h1}>74</Text>
-                    <Text style={styles.h4}>BPM</Text>
-                  </View>
-                  <View>
-                    <Text style={styles.h4}>15 mins ago</Text>
-                  </View>
-                </View>
-              </View>
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                color: "black",
+                fontSize: responsiveFontSize(4.8),
+                fontWeight: "700",
+              }}
+            >
+              74
+            </Text>
+            <Text style={[styles.smallText, { marginLeft: 0, marginTop: 0 }]}>
+              average
+            </Text>
+          </SafeAreaView>
+          <SafeAreaView
+            style={{
+              alignSelf: "center",
+              borderLeftColor: "lightgray",
+              borderLeftWidth: 1.5,
+              height: "70%",
+            }}
+          ></SafeAreaView>
+          <SafeAreaView
+            style={{
+              height: "100%",
+              width: "25%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                color: "black",
+                fontSize: responsiveFontSize(4.8),
+                fontWeight: "700",
+              }}
+            >
+              74
+            </Text>
+            <Text style={[styles.smallText, { marginLeft: 0, marginTop: 0 }]}>
+              max
+            </Text>
+          </SafeAreaView>
+        </SafeAreaView>
+      </SafeAreaView>
+      <SafeAreaView
+        style={{
+          height: "18%",
+          width: "100%",
+          marginTop: "5%",
+        }}
+      >
+        <SafeAreaView
+          style={{
+            height: "25%",
+            width: "100%",
+            flexDirection: "row",
+          }}
+        >
+          <SafeAreaView
+            style={{
+              backgroundColor: "white",
+              marginLeft: "5%",
+              height: "100%",
+              width: "43%",
+              alignItems: "center",
+              flexDirection: "row",
+              borderTopLeftRadius: 8,
+              borderTopRightRadius: 8,
+              ...Platform.select({
+                ios: {
+                  shadowColor: "#000",
+                  shadowOffset: { width: 1, height: 3 },
+                  shadowOpacity: 0.6,
+                },
+                android: {
+                  elevation: 4,
+                },
+              }),
+            }}
+          >
+            <Image
+              style={{ marginLeft: "4%" }}
+              source={require("../../assets/images/steps/steps.png")}
+            />
+            <Text
+              style={{
+                color: "black",
+                fontSize: responsiveFontSize(2.25),
+                marginLeft: "5%",
+              }}
+            >
+              Total Steps
+            </Text>
+          </SafeAreaView>
+          <SafeAreaView
+            style={{
+              backgroundColor: "white",
+              marginLeft: "4%",
+              height: "100%",
+              width: "43%",
+              alignItems: "center",
+              flexDirection: "row",
+              borderTopLeftRadius: 8,
+              borderTopRightRadius: 8,
+              ...Platform.select({
+                ios: {
+                  shadowColor: "#000",
+                  shadowOffset: { width: 1, height: 3 },
+                  shadowOpacity: 0.4,
+                },
+                android: {
+                  elevation: 4,
+                },
+              }),
+            }}
+          >
+            <Image
+              style={{ marginLeft: "4%" }}
+              source={require("../../assets/images/fitbit/fitbit.png")}
+            />
+            <Text
+              style={{
+                color: "black",
+                fontSize: responsiveFontSize(2.25),
+                marginLeft: "5%",
+              }}
+            >
+              Fitbit Battery
+            </Text>
+          </SafeAreaView>
+        </SafeAreaView>
 
-              {/* Small Card >> Steps*/}
-              <View style={styles.smallCard}>
-                <View style={styles.cardTitle}>
-                  <View style={styles.title}>
-                    {/* Loading the Image for Steps*/}
-                    <Image
-                      source={require("../../assets/images/steps/steps.png")}
-                    />
-                    <Text style={styles.h2}>Steps</Text>
-                  </View>
-                </View>
+        <SafeAreaView
+          style={{
+            height: "75%",
+            width: "100%",
+            flexDirection: "row",
+          }}
+        >
+          <SafeAreaView
+            style={{
+              backgroundColor: "whitesmoke",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              width: "43%",
+              marginLeft: "5%",
+              borderBottomEndRadius: 8,
+              borderBottomLeftRadius: 8,
+              ...Platform.select({
+                ios: {
+                  shadowColor: "#000",
+                  shadowOffset: { width: 1, height: 3 },
+                  shadowOpacity: 0.4,
+                },
+                android: {
+                  elevation: 4,
+                },
+              }),
+            }}
+          >
+            <SafeAreaView
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "70%",
+                width: "100%",
+              }}
+            >
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: responsiveFontSize(4.8),
+                  fontWeight: "700",
+                }}
+              >
+                80
+              </Text>
+            </SafeAreaView>
+            <SafeAreaView
+              style={{
+                height: "30%",
+                width: "100%",
+                justifyContent: "flex-start",
+                alignItems: "center",
+              }}
+            >
+              <Text style={[styles.smallText, { marginLeft: "0%" }]}>
+                today
+              </Text>
+            </SafeAreaView>
+          </SafeAreaView>
 
-                {/* Steps Data from FitBit will be loaded here "174" here is just for illustration */}
-                <View style={styles.inCard}>
-                  <Text style={styles.h1}>174</Text>
-                  <Text style={styles.h4}>15 mins ago</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-          {/*======================HeartRate & Steps Container ends here======================*/}
-
-          {/*======================Summary Container======================*/}
-          <View style={styles.summaryContainer}>
-            <View style={styles.titleContainer}>
-              <Text style={styles.h3}>Today</Text>
-              <Text style={styles.h4}>Date</Text>
-            </View>
-
-            {/* Large Card for summary data */}
-            <View style={styles.largeCardContainer}>
-              <View style={styles.largeCard}>
-                {/* Title for the large card */}
-                <View style={styles.cardTitle}>
-                  <View style={styles.title}>
-                    {/* Loading the icon image from assets folder */}
-                    <Image
-                      source={require("../../assets/images/heart/heart.png")}
-                    />
-                    <Text style={styles.h2}>Heart Rate Summary</Text>
-                  </View>
-
-                  <Text style={styles.h4}>BPM</Text>
-                </View>
-
-                {/* Summary container that holds the data inside the large card */}
-                <View style={styles.summaryDataContainer}>
-                  {/* Container for Min Heart rate */}
-                  <View style={styles.leftBoarder}>
-                    <View style={styles.inCard}>
-                      <Text style={styles.h1}>74</Text>
-                      <Text style={styles.h4}>min</Text>
-                    </View>
-                  </View>
-                  {/* Container for Avg Heart rate */}
-                  <View style={styles.leftBoarder}>
-                    <View style={styles.inCard}>
-                      <Text style={styles.h1}>74</Text>
-                      <Text style={styles.h4}>average</Text>
-                    </View>
-                  </View>
-                  {/* Container for Max Heart rate */}
-                  <View style={styles.leftBoarder}>
-                    <View style={[styles.inCard]}>
-                      <Text style={styles.h1}>74</Text>
-                      <Text style={styles.h4}>max</Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            </View>
-          </View>
-          {/*======================Summary Container ends here======================*/}
-
-          {/*======================Total steps and Battery Container======================*/}
-          <View style={styles.batteryContainer}>
-            {/* Small Container for total Steps at the bottom */}
-            <View style={styles.smallCard}>
-              <View style={styles.cardTitle}>
-                <View style={styles.title}>
-                  <Image
-                    source={require("../../assets/images/steps/steps.png")}
-                  />
-                  <Text style={styles.h2}>Total Steps</Text>
-                </View>
-              </View>
-              <View style={styles.inCard}>
-                <Text style={styles.h1}>174</Text>
-
-                <Text style={styles.h4}>15 mins ago</Text>
-              </View>
-            </View>
-
-            {/* Small Container for Battery LEvel at the bottom */}
-            <View style={styles.smallCard}>
-              <View style={styles.cardTitle}>
-                <View style={styles.title}>
-                  <Image
-                    source={require("../../assets/images/fitbit/fitbit.png")}
-                  />
-                  <Text style={styles.h2}>Fitbit Battery</Text>
-                </View>
-              </View>
-              <View style={styles.inCard}>
-                <View style={styles.batteryImage}>
-                  {/* Battery level Image, NOTE: we will compute the image to display depending on battery levels Empty, mid, full... */}
-                  <Image
-                    source={require("../../assets/images/batterymedium/batterymedium.png")}
-                  />
-                </View>
-                <Text style={styles.h4}>15 mins ago</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      </View>
-    </View>
+          <SafeAreaView
+            style={{
+              backgroundColor: "whitesmoke",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              width: "43%",
+              marginLeft: "4%",
+              ...Platform.select({
+                ios: {
+                  shadowColor: "#000",
+                  shadowOffset: { width: 1, height: 3 },
+                  shadowOpacity: 0.4,
+                },
+                android: {
+                  elevation: 4,
+                },
+              }),
+              borderBottomEndRadius: 8,
+              borderBottomLeftRadius: 8,
+            }}
+          >
+            <SafeAreaView
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "70%",
+                width: "100%",
+              }}
+            >
+              <Image
+                style={{ marginLeft: "4%" }}
+                source={require("../../assets/images/batterymedium/batterymedium.png")}
+              />
+            </SafeAreaView>
+            <SafeAreaView
+              style={{
+                height: "30%",
+                width: "100%",
+                justifyContent: "flex-start",
+                alignItems: "center",
+              }}
+            >
+              <Text style={[styles.smallText, { marginLeft: "0%" }]}>
+                medium
+              </Text>
+            </SafeAreaView>
+          </SafeAreaView>
+        </SafeAreaView>
+      </SafeAreaView>
+    </SafeAreaView>
   );
 }
 
-const styles = EStyleSheet.create({
-  //Fonts / Sizes
-  h1: {
-    fontSize: "2.5rem",
-    fontWeight: "bold",
-  },
-  h2: {
-    fontSize: "1.25rem",
-  },
-  h3: {
-    fontSize: "1.063rem",
-  },
-  h4: {
-    fontSize: "0.9375rem",
-    color: "grey",
-    fontWeight: "500",
-  },
-
-  //================================================================================================================//
-  //                                             MAIN VIEW Starts here                                              //
-  //================================================================================================================//
-
-  container: {
-    backgroundColor: "whitesmoke", // sets the background color of the main View
-    flex: 1, // This fills up the whole space .. setting flex: 0.5 would occupy 50% of the space
-    ...Platform.select({
-      // We want to set the distance for save view below the status bar.
-      android: {
-        //...platform.select choses the platform we want to apply the style to
-        paddingTop: StatusBar.currentHeight, // e.g "StatusBar.currentHeight" this method is not available for iOS devices
-      },
-    }),
-  },
-  mainWrapper: {
-    flex: 1,
-  },
-
-  //======================================Top Container======================================//
-  topContainer: {
-    justifyContent: "space-evenly",
-  },
-
-  //==========The dodger blue top container with Last sync info==========//
-  topContainerContent: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    backgroundColor: "dodgerblue",
-  },
-  lastSyncContainer: {
-    alignItems: "center",
-    justifyContent: "center", // ce
-    marginBottom: "1.5rem",
-    marginTop: "0.9375rem",
-  },
-
-  //==========The dodger blue top container with Last sync info ends here==========//
-
-  //==========Alerts Container==========//
-  alertsContainer: {
+const styles = StyleSheet.create({
+  smallCard: {
     backgroundColor: "white",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: "0.625rem",
+    marginLeft: "4%",
+    marginTop: "3%",
+    height: "100%",
+    width: "43%",
+    borderRadius: 8,
     ...Platform.select({
       ios: {
         shadowColor: "#000",
         shadowOffset: { width: 1, height: 3 },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.4,
       },
       android: {
         elevation: 4,
       },
     }),
   },
-  syncText: {
+  helloText: {
+    color: "darkgrey",
+    fontSize: responsiveFontSize(2),
     fontWeight: "bold",
-    color: "white",
+    marginLeft: "5%",
   },
-  viewhistory: {
-    color: "dodgerblue",
-    fontSize: "0.9375rem",
+  caregiveeText: {
+    color: "black",
+    fontSize: responsiveFontSize(2.7),
+    marginLeft: "5%",
+    fontWeight: "500",
+  },
+  lastActivityText: {
+    color: "black",
+    fontSize: responsiveFontSize(2.2),
+  },
+  smallText: {
+    color: "darkgrey",
+    fontSize: responsiveFontSize(1.8),
     fontWeight: "bold",
+    marginLeft: "20%",
   },
-  greetingsContainerContent: {
-    marginTop: "0.625rem",
+  pullingDataStyle: {
+    color: "black",
+    fontSize: responsiveFontSize(4.8),
+    fontWeight: "700",
   },
-  greetingsContainer: {
-    backgroundColor: "whitesmoke",
-    padding: "0.625rem",
+  dateText: {
+    color: "darkgrey",
+    fontSize: responsiveFontSize(1.8),
+    fontWeight: "bold",
+    marginLeft: "45%",
   },
-
-  //======================================Content Container======================================//
-
-  contentContainer: {
-    flex: 1,
-    justifyContent: "space-evenly",
-  },
-
-  titleContainer: {
-    padding: "0.625rem",
-    marginBottom: "0.625rem",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  title: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  largeCardContainer: {
-    margin: "0.9375rem",
-    marginTop: 0,
-  },
-  dataCardsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    marginBottom: "0.9375rem",
-  },
-  dataContainer: {
-    borderTopColor: "lightgrey",
-    borderTopWidth: 1,
-  },
-
-  heartData: {
-    flexDirection: "row",
-  },
-
-  summaryContainer: {
-    marginBottom: "0.625rem",
-    borderTopColor: "lightgrey",
-    borderTopWidth: 1,
-  },
-
-  summaryDataContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  batteryContainer: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    marginBottom: "1.5rem",
-  },
-  batteryImage: {
-    padding: "0.625rem",
-  },
-
-  //===============================Large Card and Small Card Styles===============================//
-  cardTitle: {
-    padding: "0.625rem",
-    flexDirection: "row",
-    borderBottomColor: "lightgrey",
-    justifyContent: "space-between",
-    borderBottomWidth: 1,
-    width: "100%",
-    ...Platform.select({
-      android: {
-        borderBottomWidth: 1,
-        borderBottomColor: "whitesmoke",
-      },
-      default: {
-        shadowOffset: { width: 0, height: 1 },
-        shadowRadius: 2,
-        shadowOpacity: 0.25,
-      },
-    }),
-  },
-
-  inCard: {
-    padding: "1.5rem",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  smallCard: {
-    backgroundColor: "white",
-    width: "11.25rem",
-    borderRadius: "0.625rem",
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 1, height: 2 },
-        shadowOpacity: 0.2,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-
-  largeCard: {
-    marginTop: 0,
-    backgroundColor: "white",
-    borderRadius: "0.625rem",
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 1, height: 2 },
-        shadowOpacity: 0.2,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-
-  // This container is used on the large card container to give the division line effect
-  leftBoarder: {
-    flex: 1,
-    borderRightWidth: 1,
-    borderRightColor: "whitesmoke",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  //===============================Large Card and Small Card Styles end here===============================//
 });
-
-//Here we specify our rem for resizing on smaller screens
-
-const getScreenWidth = Dimensions.get("window").width;
-EStyleSheet.build({ $rem: getScreenWidth / 25 });

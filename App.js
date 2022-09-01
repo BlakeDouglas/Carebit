@@ -110,6 +110,33 @@ const AuthStack = () => {
           title: "",
         }}
       >
+        <Stack.Screen
+          name="GiverHomeScreen"
+          component={GiverHomeScreen}
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerTitle: "Carebit",
+
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("GiverSettingsScreen")}
+                style={{ marginLeft: "5%" }}
+              >
+                <Image
+                  source={require("./assets/images/settings/settings.png")}
+                />
+              </TouchableOpacity>
+            ),
+          })}
+        />
+
         <Stack.Screen name="TitleScreen" component={TitleScreen} />
         <Stack.Screen name="RoleSelectScreen" component={RoleSelectScreen} />
         <Stack.Screen
@@ -119,6 +146,10 @@ const AuthStack = () => {
         <Stack.Screen
           name="GiveeSettingsScreen"
           component={GiveeSettingsScreen}
+        />
+        <Stack.Screen
+          name="GiverSettingsScreen"
+          component={GiverSettingsScreen}
         />
         <Stack.Screen
           name="GiveeHomeScreen"
