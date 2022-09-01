@@ -31,13 +31,10 @@ export default function AuthenticationScreen({ navigation }) {
     {
       clientId: "238QS3",
       scopes: ["activity", "sleep", "temperature"],
-      redirectUri: "exp://127.0.0.1:19000/--/callback",
-
-      /* TODO:
       redirectUri: makeRedirectUri({
         scheme: "carebit",
         path: "callback",
-      }),*/
+      }),
 
       usePKCE: false,
       extraParams: { prompt: "login" },
@@ -57,7 +54,10 @@ export default function AuthenticationScreen({ navigation }) {
         body: JSON.stringify({ userID: tokenData.userId, authCode: code }),
       });
       const json = await response.json();
-      dispatch(setTokenData({ ...tokenData, ...json }));
+
+      if (json.caregiveeId !== undefined) {
+        dispatch(setTokenData({ ...tokenData, ...json, type: "caregivee" }));
+      }
     } catch (error) {
       console.log("Caught error: " + error);
     }
