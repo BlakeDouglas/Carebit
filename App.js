@@ -11,7 +11,8 @@ import GiverHomeScreen from "./src/screens/GiverHomeScreen";
 import GiveeSettingsScreen from "./src/screens/GiveeSettingsScreen";
 import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
-
+import { Image } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { Provider, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
 import { useFonts } from "expo-font";
@@ -95,7 +96,7 @@ const AuthStack = () => {
       <Stack.Group
         screenOptions={{
           headerTransparent: true,
-          headerTintColor: "#fff",
+          //headerTintColor: "#fff",
           title: "",
         }}
       >
@@ -108,6 +109,36 @@ const AuthStack = () => {
         <Stack.Screen
           name="AccountCreationScreen"
           component={AccountCreationScreen}
+        />
+        <Stack.Screen
+          name="GiveeSettingsScreen"
+          component={GiveeSettingsScreen}
+        />
+        <Stack.Screen
+          name="GiveeHomeScreen"
+          component={GiveeHomeScreen}
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerTitle: "Carebit",
+
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("GiveeSettingsScreen")}
+                style={{ marginLeft: "5%" }}
+              >
+                <Image
+                  source={require("./assets/images/settings/settings.png")}
+                />
+              </TouchableOpacity>
+            ),
+          })}
         />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
       </Stack.Group>
