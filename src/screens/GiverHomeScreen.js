@@ -5,6 +5,7 @@ import {
   Image,
   StatusBar,
   View,
+  Dimensions,
   Switch,
 } from "react-native";
 import React, { useState } from "react";
