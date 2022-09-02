@@ -99,6 +99,10 @@ const AuthStack = () => {
           title: "",
         }}
       >
+        <Stack.Screen
+          name="GiveeSettingsScreen"
+          component={GiveeSettingsScreen}
+        />
         <Stack.Screen name="TitleScreen" component={TitleScreen} />
         <Stack.Screen name="RoleSelectScreen" component={RoleSelectScreen} />
         <Stack.Screen
