@@ -4,6 +4,7 @@ import {
   Text,
   View,
   Button,
+  Image,
   ImageBackground,
   LogBox,
 } from "react-native";
@@ -11,7 +12,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
 import * as Linking from "expo-linking";
 import GlobalStyle from "../utils/GlobalStyle";
-
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setTokenData } from "../redux/actions";
@@ -75,19 +76,59 @@ export default function AuthenticationScreen({ navigation }) {
       style={GlobalStyle.Background}
     >
       <SafeAreaView style={GlobalStyle.Container}>
-        {/* TODO: Change styling here*/}
-        <Text style={[GlobalStyle.Text, { marginTop: 30, marginBottom: 68 }]}>
-          Authentication
-        </Text>
-
-        <TouchableOpacity
-          style={GlobalStyle.Button}
-          onPress={() => {
-            promptAsync();
+        <SafeAreaView
+          style={{
+            width: "100%",
+            height: "15%",
+            flexDirection: "row",
+            marginTop: "25%",
+            alignItems: "center",
           }}
         >
-          <Text style={GlobalStyle.ButtonText}>Authenticate</Text>
-        </TouchableOpacity>
+          <Image
+            style={{ marginRight: "1%" }}
+            source={require("../../assets/images/midCheck/icons-check.png")}
+          />
+          <Text style={{ fontSize: responsiveFontSize(2.8), color: "white" }}>
+            Account Created
+          </Text>
+        </SafeAreaView>
+        <SafeAreaView
+          style={{
+            height: "15%",
+            width: "100%",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              alignSelf: "center",
+              color: "white",
+              fontSize: responsiveFontSize(2.5),
+            }}
+          >
+            To allow your Caregiver to monitor you, you'll need to link your
+            Fitbit account
+          </Text>
+        </SafeAreaView>
+        <SafeAreaView
+          style={{
+            width: "100%",
+            height: "20%",
+            marginTop: "15%",
+            justifyContent: "flex-start",
+          }}
+        >
+          <TouchableOpacity
+            style={[GlobalStyle.Button]}
+            onPress={() => {
+              promptAsync();
+            }}
+          >
+            <Text style={GlobalStyle.ButtonText}>Link Fitbit</Text>
+          </TouchableOpacity>
+        </SafeAreaView>
       </SafeAreaView>
     </ImageBackground>
   );
