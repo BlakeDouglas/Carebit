@@ -10,7 +10,7 @@ import {
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
-import GlobalStyle from "../utils/GlobalStyle";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 export default function GiveeHomeScreen({ navigation }) {
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
@@ -32,8 +32,17 @@ export default function GiveeHomeScreen({ navigation }) {
   return (
     // Main Screen Wrapper. Sets background white
     <View style={styles.mainBody}>
-      <SafeAreaView style={styles.mediumTopBody}>
-        <SafeAreaView>
+      <SafeAreaView
+        style={[
+          styles.mediumTopBody,
+          {
+            alignItems: "center",
+            height: "10%",
+            width: "100%",
+          },
+        ]}
+      >
+        <SafeAreaView style={{ marginLeft: "3%" }}>
           <Text style={styles.helloText}>Hello Testing care</Text>
           <Text style={styles.caregiverText}>Your Caregiver is Paola</Text>
         </SafeAreaView>
@@ -75,12 +84,13 @@ export default function GiveeHomeScreen({ navigation }) {
         style={{
           borderBottomColor: "lightgray",
           borderBottomWidth: 1,
-          marginTop: "8%",
+          marginTop: "7%",
+          marginBottom: "3%",
         }}
       ></SafeAreaView>
       <Text style={styles.preferencesText}>Preferences</Text>
 
-      <SafeAreaView style={[styles.bottomBody]}>
+      <SafeAreaView style={styles.bottomBody}>
         <SafeAreaView
           style={[
             styles.bottomRowBody,
@@ -215,38 +225,21 @@ export default function GiveeHomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  topBody: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    backgroundColor: "dodgerblue",
-    alignItems: "center",
-    padding: 10,
-  },
-  settingImageBody: {
-    marginLeft: 20,
-  },
   mainBody: {
-    flex: 1,
+    height: "100%",
+    width: "100%",
     backgroundColor: "whitesmoke",
   },
-  carebitSyncBody: {
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "dodgerblue",
-    marginLeft: 85,
-    marginBottom: 10,
-    marginTop: 15,
-  },
+
   mediumTopBody: {
     flexDirection: "row",
-    marginBottom: 30,
+    marginBottom: "7.8%",
   },
   callBody: {
     alignItems: "center",
-    marginLeft: 30,
+    marginLeft: "10%",
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 30,
   },
   mediumBody: {
     flexDirection: "row",
@@ -260,7 +253,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 7,
+    borderRadius: 8,
     marginRight: "2%",
   },
   chatBody: {
@@ -269,7 +262,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 7,
+    borderRadius: 8,
     marginLeft: "2%",
   },
   imagesBody: {
@@ -300,55 +293,38 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     flexDirection: "row",
-    borderRadius: 7,
+    borderRadius: 8,
   },
 
-  carebitText: {
-    color: "white",
-    fontSize: 17,
-    fontWeight: "500",
-    marginTop: 10,
-    marginBottom: 5,
-  },
-  syncText: {
-    color: "white",
-    fontSize: 15,
-    marginBottom: 10,
-  },
   helloText: {
     color: "darkgrey",
-    fontSize: 17,
+    fontSize: responsiveFontSize(2.15),
     fontWeight: "bold",
-    marginTop: 20,
-    marginBottom: 10,
-    marginLeft: 10,
   },
 
   callText: {
     color: "dodgerblue",
-    fontSize: 18,
+    fontSize: responsiveFontSize(2.25),
     fontWeight: "bold",
-    marginLeft: 5,
+    marginLeft: "2%",
   },
   caregiverText: {
     color: "black",
-    fontSize: 21,
-    marginLeft: "5%",
+    fontSize: responsiveFontSize(2.63),
     fontWeight: "500",
   },
   buttonBigText: {
-    fontSize: 18,
+    fontSize: responsiveFontSize(2.25),
     fontWeight: "500",
     marginTop: "10%",
   },
   buttonSmallText: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(2.08),
     color: "darkgrey",
     fontWeight: "500",
   },
   preferencesText: {
-    marginTop: "3%",
-    fontSize: 20,
+    fontSize: responsiveFontSize(2.5),
     fontWeight: "500",
     marginLeft: "5%",
   },
