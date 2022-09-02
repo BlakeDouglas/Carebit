@@ -111,10 +111,6 @@ const AuthStack = () => {
           component={AccountCreationScreen}
         />
         <Stack.Screen
-          name="GiveeSettingsScreen"
-          component={GiveeSettingsScreen}
-        />
-        <Stack.Screen
           name="GiveeHomeScreen"
           component={GiveeHomeScreen}
           options={({ navigation }) => ({
