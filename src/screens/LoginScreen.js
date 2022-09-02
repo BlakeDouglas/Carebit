@@ -13,7 +13,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import CustomTextInput from "../utils/CustomTextInput";
 import { setTokenData, setUserData } from "../redux/actions";
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
 

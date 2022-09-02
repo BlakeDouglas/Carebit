@@ -3,7 +3,7 @@
     "name": "Carebit",
     "slug": "carebit",
     "scheme": "carebit",
-    "owner": "masspwnser",
+    "owner": "carebit",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/appicon.png",
@@ -26,10 +26,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/appicon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.masspwnser.carebit"
     },
     "web": {
       "favicon": "./assets/appicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "17f17172-ec84-40c1-a76b-4dab0d22e4c6"
+      }
     }
   }
 }

@@ -54,7 +54,7 @@ const refreshToken = (tokenData) => {
 
 let date = moment().format("dddd, MMM D");
 
-export default function GiverHomeScreen() {
+export default function GiverHomeScreen({ navigation }) {
   return (
     <SafeAreaView
       style={{ height: "100%", width: "100%", backgroundColor: "whitesmoke" }}

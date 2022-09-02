@@ -31,7 +31,6 @@ const firebaseConfig = {
   measurementId: "G-QCBPVPX8QC",
 };
 const Stack = createStackNavigator();
-const Tab = createMaterialBottomTabNavigator();
 initializeApp(firebaseConfig);
 
 const App = () => {
@@ -110,72 +109,11 @@ const AuthStack = () => {
           title: "",
         }}
       >
-        <Stack.Screen
-          name="GiverHomeScreen"
-          component={GiverHomeScreen}
-          options={({ navigation }) => ({
-            headerTransparent: false,
-            headerTitleAlign: "center",
-            headerTitleStyle: {
-              color: "white",
-            },
-            headerStyle: {
-              backgroundColor: "dodgerblue",
-            },
-            headerTitle: "Carebit",
-
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => navigation.navigate("GiverSettingsScreen")}
-                style={{ marginLeft: "5%" }}
-              >
-                <Image
-                  source={require("./assets/images/settings/settings.png")}
-                />
-              </TouchableOpacity>
-            ),
-          })}
-        />
-
         <Stack.Screen name="TitleScreen" component={TitleScreen} />
         <Stack.Screen name="RoleSelectScreen" component={RoleSelectScreen} />
         <Stack.Screen
           name="AccountCreationScreen"
           component={AccountCreationScreen}
-        />
-        <Stack.Screen
-          name="GiveeSettingsScreen"
-          component={GiveeSettingsScreen}
-        />
-        <Stack.Screen
-          name="GiverSettingsScreen"
-          component={GiverSettingsScreen}
-        />
-        <Stack.Screen
-          name="GiveeHomeScreen"
-          component={GiveeHomeScreen}
-          options={({ navigation }) => ({
-            headerTransparent: false,
-            headerTitleAlign: "center",
-            headerTitleStyle: {
-              color: "white",
-            },
-            headerStyle: {
-              backgroundColor: "dodgerblue",
-            },
-            headerTitle: "Carebit",
-
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => navigation.navigate("GiveeSettingsScreen")}
-                style={{ marginLeft: "5%" }}
-              >
-                <Image
-                  source={require("./assets/images/settings/settings.png")}
-                />
-              </TouchableOpacity>
-            ),
-          })}
         />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
       </Stack.Group>
@@ -186,27 +124,51 @@ const AuthStack = () => {
 const HomeStack = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   return (
-    <Tab.Navigator>
-      <Tab.Group
+    <Stack.Navigator>
+      <Stack.Group
         screenOptions={{
-          headerShown: false,
+          headerTransparent: true,
           title: "",
         }}
       >
-        <Tab.Screen
+        <Stack.Screen
           name="HomeScreen"
           component={
             tokenData.type === "caregivee" ? GiveeHomeScreen : GiverHomeScreen
           }
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerTitle: "Carebit",
+
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("SettingsScreen")}
+                style={{ marginLeft: "5%" }}
+              >
+                <Image
+                  source={require("./assets/images/settings/settings.png")}
+                />
+              </TouchableOpacity>
+            ),
+          })}
         />
-        <Tab.Screen
+        <Stack.Screen
           name="SettingsScreen"
           component={
-            tokenData.type === "caregivee" ? GiveeHomeScreen : GiverHomeScreen
+            tokenData.type === "caregivee"
+              ? GiveeSettingsScreen
+              : GiverSettingsScreen
           }
         />
-      </Tab.Group>
-    </Tab.Navigator>
+      </Stack.Group>
+    </Stack.Navigator>
   );
 };
 

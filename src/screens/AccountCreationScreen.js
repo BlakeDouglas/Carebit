@@ -109,10 +109,7 @@ export default function AccountCreationScreen({ navigation, route }) {
           dispatch(setUserData({ ...output, password: undefined }));
           dispatch(setTokenData({ ...tokenData, ...json }));
         } else {
-          handleError(
-            "The email could not be registered. It may already exist.",
-            "email"
-          );
+          handleError(" Email already exists", "email");
         }
       })
       .catch((error) => {
