@@ -29,26 +29,34 @@ export default function TitleScreen({ navigation }) {
       style={GlobalStyle.Background}
     >
       <SafeAreaView style={GlobalStyle.Container}>
-        <Text style={[GlobalStyle.Subtitle, { marginTop: "25%" }]}>
-          Welcome to
-        </Text>
+        <Text style={GlobalStyle.Subtitle}>Welcome to</Text>
         <Text style={GlobalStyle.Title}>Carebit</Text>
-        <Text style={[GlobalStyle.Text, { marginTop: 30, marginBottom: 68 }]}>
-          Carebit uses Fitbit devices to monitor the heart rate and activity of
-          you or your loved one {"\n\n"}If you or your loved one's Fitbit is not
-          set up, visit{" "}
-          <Text
-            onPress={() => Linking.openURL("https://www.fitbit.com/start")}
-            style={[
-              GlobalStyle.Text,
-              {
-                textDecorationLine: "underline",
-              },
-            ]}
-          >
-            fitbit.com/start
+        <SafeAreaView
+          style={{
+            height: "35%",
+            width: "100%",
+            marginTop: "5%",
+            justifyContent: "center",
+            marginBottom: "5%",
+          }}
+        >
+          <Text style={GlobalStyle.Text}>
+            Carebit uses Fitbit devices to monitor the heart rate and activity
+            of you or your loved one {"\n\n"}If you or your loved one's Fitbit
+            is not set up, visit{" "}
+            <Text
+              onPress={() => Linking.openURL("https://www.fitbit.com/start")}
+              style={[
+                GlobalStyle.Text,
+                {
+                  textDecorationLine: "underline",
+                },
+              ]}
+            >
+              fitbit.com/start
+            </Text>
           </Text>
-        </Text>
+        </SafeAreaView>
 
         <TouchableOpacity
           style={GlobalStyle.Button}
