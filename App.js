@@ -12,11 +12,13 @@ import AuthenticationScreen from "./src/screens/AuthenticationScreen";
 import GiveeSettingsScreen from "./src/screens/GiveeSettingsScreen";
 import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
+import RequestScreen from "./src/screens/RequestScreen";
 import { Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Provider, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
 import { useFonts } from "expo-font";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -66,6 +68,51 @@ const RootNavigation = () => {
   );
 };
 
+const AuthStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Group
+        screenOptions={{
+          headerTransparent: true,
+          //headerTintColor: "#fff",
+          title: "",
+        }}
+      >
+        <Stack.Screen
+          name="RequestScreen"
+          component={RequestScreen}
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerTitle: "Incoming Requests",
+
+            headerRight: () => (
+              <Icon
+                /*onPress={() => navigation.navigate("SettingsScreen")}*/
+                style={{ fontSize: 32, color: "white", marginRight: 20 }}
+                name={"account-plus-outline"}
+              />
+            ),
+          })}
+        />
+        <Stack.Screen name="TitleScreen" component={TitleScreen} />
+        <Stack.Screen name="RoleSelectScreen" component={RoleSelectScreen} />
+        <Stack.Screen
+          name="AccountCreationScreen"
+          component={AccountCreationScreen}
+        />
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      </Stack.Group>
+    </Stack.Navigator>
+  );
+};
+
 // Stack of screens to handle little things between authentication and the home screen,
 // like phys data, first-time instructions, etc
 const MiddleStack = () => {
@@ -94,28 +141,6 @@ const MiddleStack = () => {
             component={PhysicianInfoScreen}
           />
         )}
-      </Stack.Group>
-    </Stack.Navigator>
-  );
-};
-
-const AuthStack = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Group
-        screenOptions={{
-          headerTransparent: true,
-          //headerTintColor: "#fff",
-          title: "",
-        }}
-      >
-        <Stack.Screen name="TitleScreen" component={TitleScreen} />
-        <Stack.Screen name="RoleSelectScreen" component={RoleSelectScreen} />
-        <Stack.Screen
-          name="AccountCreationScreen"
-          component={AccountCreationScreen}
-        />
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );
