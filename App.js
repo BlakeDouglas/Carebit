@@ -13,6 +13,7 @@ import GiveeSettingsScreen from "./src/screens/GiveeSettingsScreen";
 import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
 import RequestScreen from "./src/screens/RequestScreen";
+import AddScreen from "./src/screens/AddScreen";
 import { Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Provider, useSelector } from "react-redux";
@@ -78,6 +79,29 @@ const AuthStack = () => {
           title: "",
         }}
       >
+        <Stack.Screen
+          name="RequestScreen"
+          component={RequestScreen}
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerTitle: "Incoming Requests",
+
+            headerRight: () => (
+              <Icon
+                onPress={() => navigation.navigate("AddScreen")}
+                style={{ fontSize: 32, color: "white", marginRight: 20 }}
+                name={"account-plus-outline"}
+              />
+            ),
+          })}
+        />
         <Stack.Screen name="TitleScreen" component={TitleScreen} />
         <Stack.Screen name="RoleSelectScreen" component={RoleSelectScreen} />
         <Stack.Screen
@@ -168,29 +192,7 @@ const HomeStack = () => {
               : GiverSettingsScreen
           }
         />
-        <Stack.Screen
-          name="RequestScreen"
-          component={RequestScreen}
-          options={({ navigation }) => ({
-            headerTransparent: false,
-            headerTitleAlign: "center",
-            headerTitleStyle: {
-              color: "white",
-            },
-            headerStyle: {
-              backgroundColor: "dodgerblue",
-            },
-            headerTitle: "Incoming Requests",
-
-            headerRight: () => (
-              <Icon
-                /*onPress={() => navigation.navigate("SettingsScreen")}*/
-                style={{ fontSize: 32, color: "white", marginRight: 20 }}
-                name={"account-plus-outline"}
-              />
-            ),
-          })}
-        />
+        <Stack.Screen name="AddScreen" component={AddScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );
