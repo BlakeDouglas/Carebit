@@ -26,15 +26,24 @@ export default function RoleSelectScreen({ navigation }) {
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >
-      <SafeAreaView style={[GlobalStyle.Container, { marginTop: 120 }]}>
+      <SafeAreaView style={GlobalStyle.Container}>
         <Text style={GlobalStyle.Subtitle}>Choose Your</Text>
         <Text style={GlobalStyle.Title}>Role</Text>
-        <Text style={[GlobalStyle.Text, { marginTop: 35, marginBottom: 75 }]}>
-          To create your account, let us know if you're giving care or are being
-          cared for
-        </Text>
+        <SafeAreaView
+          style={{
+            height: "25%",
+            width: "100%",
+            justifyContent: "center",
+            marginBottom: "5%",
+          }}
+        >
+          <Text style={GlobalStyle.Text}>
+            To create your account, let us know if you're giving care or are
+            being cared for
+          </Text>
+        </SafeAreaView>
         <TouchableOpacity
-          style={[GlobalStyle.Button, { marginBottom: 12 }]}
+          style={[GlobalStyle.Button, { marginBottom: "4%" }]}
           onPress={caregiverCreateAccountButtonHandler}
         >
           <Text style={GlobalStyle.ButtonText}>I'm Caregiving</Text>

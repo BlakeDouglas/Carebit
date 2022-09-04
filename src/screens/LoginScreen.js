@@ -128,41 +128,48 @@ export default function LoginScreen({ navigation }) {
       style={GlobalStyle.Background}
     >
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <SafeAreaView style={[GlobalStyle.Container, { marginTop: "25%" }]}>
-          <Text style={[GlobalStyle.Title, { marginBottom: 20 }]}>
-            Log into Carebit
-          </Text>
-          <CustomTextInput
-            placeholder="Enter your email address"
-            iconName="email-outline"
-            label="Email"
-            keyboardType="email-address"
-            error={errors.email}
-            onChangeText={(text) => handleChange(text, "email")}
-            onFocus={() => {
-              handleError(null, "email");
+        <SafeAreaView style={GlobalStyle.Container}>
+          <Text style={GlobalStyle.Title}>Log into Carebit</Text>
+          <SafeAreaView
+            style={{
+              height: "40%",
+              marginTop: "12%",
+              justifyContent: "space-evenly",
             }}
-          />
-          <CustomTextInput
-            placeholder="Enter your password"
-            iconName="lock-outline"
-            label="Password"
-            error={errors.password}
-            onChangeText={(text) => handleChange(text, "password")}
-            onFocus={() => {
-              handleError(null, "password");
-            }}
-            password
-          />
-          <TouchableOpacity
-            style={[
-              GlobalStyle.Button,
-              { backgroundColor: "rgba(255, 255, 255, .2)", marginTop: 20 },
-            ]}
-            onPress={validate}
           >
-            <Text style={GlobalStyle.ButtonText}>Log In</Text>
-          </TouchableOpacity>
+            <CustomTextInput
+              placeholder="Enter your email address"
+              iconName="email-outline"
+              label="Email"
+              keyboardType="email-address"
+              error={errors.email}
+              onChangeText={(text) => handleChange(text, "email")}
+              onFocus={() => {
+                handleError(null, "email");
+              }}
+            />
+            <CustomTextInput
+              placeholder="Enter your password"
+              iconName="lock-outline"
+              label="Password"
+              error={errors.password}
+              onChangeText={(text) => handleChange(text, "password")}
+              onFocus={() => {
+                handleError(null, "password");
+              }}
+              password
+            />
+
+            <TouchableOpacity
+              style={[
+                GlobalStyle.Button,
+                { backgroundColor: "rgba(255, 255, 255, .2)", marginTop: 20 },
+              ]}
+              onPress={validate}
+            >
+              <Text style={GlobalStyle.ButtonText}>Log In</Text>
+            </TouchableOpacity>
+          </SafeAreaView>
         </SafeAreaView>
       </TouchableWithoutFeedback>
     </ImageBackground>

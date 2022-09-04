@@ -1,14 +1,18 @@
 import { StyleSheet } from "react-native";
-
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 export default StyleSheet.create({
   Title: {
-    fontSize: 55,
+    fontSize: responsiveFontSize(6.95),
     fontFamily: "RobotoBold",
     color: "white",
   },
-  Subtitle: { fontSize: 50, color: "white" },
-  Text: { fontSize: 20, color: "white" },
-  ButtonText: { fontSize: 20, color: "white", fontWeight: "bold" },
+  Subtitle: { fontSize: responsiveFontSize(6.3), color: "white" },
+  Text: { fontSize: responsiveFontSize(2.51), color: "white" },
+  ButtonText: {
+    fontSize: responsiveFontSize(2.51),
+    color: "white",
+    fontWeight: "bold",
+  },
   Button: {
     alignItems: "center",
     justifyContent: "center",
@@ -29,17 +33,17 @@ export default StyleSheet.create({
     fontWeight: "bold",
   },
   Subtitle2: {
-    fontSize: 35,
+    fontSize: responsiveFontSize(4.4),
     color: "white",
-    marginBottom: 20,
   },
   Background: {
     flex: 1,
   },
   Container: {
     flex: 1,
-    marginLeft: 40,
-    marginRight: 45,
+    marginLeft: "12%",
+    marginRight: "12%",
+    marginTop: "30%",
   },
   HeaderText: {
     flex: 1,
