@@ -8,9 +8,9 @@ import {
   Switch,
   Alert,
   Button,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import Modal from "react-native-modal";
