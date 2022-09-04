@@ -14,11 +14,12 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import Modal from "react-native-modal";
+import call from "react-native-phone-call";
+
 export default function GiveeHomeScreen({ navigation }) {
   const [isModal1Visible, setModal1Visible] = useState(false);
   const [isModal2Visible, setModal2Visible] = useState(false);
   const [isModal3Visible, setModal3Visible] = useState(false);
-
   const toggleModal1 = () => {
     setModal1Visible(!isModal1Visible);
   };
@@ -32,7 +33,6 @@ export default function GiveeHomeScreen({ navigation }) {
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
-
   const toggleSwitchSleep = () => {
     toggleSleep();
     toggleModal1();
@@ -56,6 +56,10 @@ export default function GiveeHomeScreen({ navigation }) {
     setIsEnabledMonitor(!isEnabledMonitor);
   };
 
+  const args = {
+    number: "4077777777",
+    prompt: true,
+  };
   useEffect(() => {
     StatusBar.setBarStyle("light-content");
   }, []);
@@ -79,6 +83,7 @@ export default function GiveeHomeScreen({ navigation }) {
             backgroundColor: "white",
             borderRadius: 8,
             alignItems: "center",
+            justifyContent: "space-evenly",
           }}
         >
           <SafeAreaView
@@ -86,11 +91,11 @@ export default function GiveeHomeScreen({ navigation }) {
               alignItems: "center",
               width: "90%",
               height: "60%",
+              justifyContent: "space-evenly",
             }}
           >
             <Text
               style={{
-                marginTop: "10%",
                 fontWeight: "bold",
                 fontSize: responsiveFontSize(2.2),
               }}
@@ -101,7 +106,6 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 fontSize: responsiveFontSize(1.8),
                 fontWeight: "400",
-                marginTop: "7%",
                 textAlign: "center",
               }}
             >
@@ -193,6 +197,7 @@ export default function GiveeHomeScreen({ navigation }) {
             backgroundColor: "white",
             borderRadius: 8,
             alignItems: "center",
+            justifyContent: "space-evenly",
           }}
         >
           <SafeAreaView
@@ -200,11 +205,11 @@ export default function GiveeHomeScreen({ navigation }) {
               alignItems: "center",
               width: "90%",
               height: "60%",
+              justifyContent: "space-evenly",
             }}
           >
             <Text
               style={{
-                marginTop: "10%",
                 fontWeight: "bold",
                 fontSize: responsiveFontSize(2.2),
               }}
@@ -215,7 +220,7 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 fontSize: responsiveFontSize(1.8),
                 fontWeight: "400",
-                marginTop: "7%",
+
                 textAlign: "center",
               }}
             >
@@ -307,6 +312,7 @@ export default function GiveeHomeScreen({ navigation }) {
             backgroundColor: "white",
             borderRadius: 8,
             alignItems: "center",
+            justifyContent: "space-evenly",
           }}
         >
           <SafeAreaView
@@ -314,11 +320,11 @@ export default function GiveeHomeScreen({ navigation }) {
               alignItems: "center",
               width: "90%",
               height: "60%",
+              justifyContent: "space-evenly",
             }}
           >
             <Text
               style={{
-                marginTop: "10%",
                 fontWeight: "bold",
                 fontSize: responsiveFontSize(2.2),
               }}
@@ -329,7 +335,7 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 fontSize: responsiveFontSize(1.8),
                 fontWeight: "400",
-                marginTop: "7%",
+
                 textAlign: "center",
               }}
             >
@@ -387,7 +393,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 style={{ alignItems: "center", justifyContent: "center" }}
                 onPress={() => {
                   toggleModal3();
-                  setIsEnabledMonitor((isEnabledonitor) => true);
+                  setIsEnabledMonitor((isEnabledMonitor) => true);
                 }}
               >
                 <Text
@@ -420,7 +426,12 @@ export default function GiveeHomeScreen({ navigation }) {
           <Text style={styles.caregiverText}>Your Caregiver is Paola</Text>
         </SafeAreaView>
 
-        <TouchableOpacity style={styles.callBody}>
+        <TouchableOpacity
+          style={styles.callBody}
+          onPress={() => {
+            call(args).catch(console.error);
+          }}
+        >
           <Image
             source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
           />
