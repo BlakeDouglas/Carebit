@@ -6,24 +6,59 @@ import {
   StatusBar,
   View,
   Switch,
+  Alert,
+  Button,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import Modal from "react-native-modal";
+import call from "react-native-phone-call";
 
 export default function GiveeHomeScreen({ navigation }) {
+  const [isModal1Visible, setModal1Visible] = useState(false);
+  const [isModal2Visible, setModal2Visible] = useState(false);
+  const [isModal3Visible, setModal3Visible] = useState(false);
+  const toggleModal1 = () => {
+    setModal1Visible(!isModal1Visible);
+  };
+  const toggleModal2 = () => {
+    setModal2Visible(!isModal2Visible);
+  };
+  const toggleModal3 = () => {
+    setModal3Visible(!isModal3Visible);
+  };
+
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
   const toggleSwitchSleep = () => {
-    setIsEnabledSleep((previousState) => !previousState);
+    toggleSleep();
+    toggleModal1();
   };
   const toggleSwitchDisturb = () => {
-    setIsEnabledDisturb((previousState) => !previousState);
+    toggleDisturb();
+    toggleModal2();
   };
   const toggleSwitchMonitor = () => {
-    setIsEnabledMonitor((previousState) => !previousState);
+    toggleMonitor();
+    toggleModal3();
+  };
+
+  const toggleSleep = () => {
+    setIsEnabledSleep(!isEnabledSleep);
+  };
+  const toggleDisturb = () => {
+    setIsEnabledDisturb(!isEnabledDisturb);
+  };
+  const toggleMonitor = () => {
+    setIsEnabledMonitor(!isEnabledMonitor);
+  };
+
+  const args = {
+    number: "4077777777",
+    prompt: true,
   };
   useEffect(() => {
     StatusBar.setBarStyle("light-content");
@@ -32,6 +67,350 @@ export default function GiveeHomeScreen({ navigation }) {
   return (
     // Main Screen Wrapper. Sets background white
     <View style={styles.mainBody}>
+      <Modal
+        isVisible={isModal1Visible}
+        backdropOpacity={0.5}
+        useNativeDriverForBackdrop={true}
+        hideModalContentWhileAnimating={true}
+        animationIn={"fadeIn"}
+        animationOut={"fadeOut"}
+      >
+        <View
+          style={{
+            alignSelf: "center",
+            height: "30%",
+            width: "70%",
+            backgroundColor: "white",
+            borderRadius: 8,
+            alignItems: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <SafeAreaView
+            style={{
+              alignItems: "center",
+              width: "90%",
+              height: "60%",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: responsiveFontSize(2.2),
+              }}
+            >
+              Sleep Mode
+            </Text>
+            <Text
+              style={{
+                fontSize: responsiveFontSize(1.8),
+                fontWeight: "400",
+                textAlign: "center",
+              }}
+            >
+              Turning on Sleep Mode will inform Pam that you are going to sleep.
+              They will not receive alerts.
+            </Text>
+          </SafeAreaView>
+          <SafeAreaView
+            style={{
+              height: "40%",
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <SafeAreaView
+              style={{
+                height: "50%",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                borderTopColor: "rgba(128, 128, 128, .2)",
+                borderTopWidth: 1,
+              }}
+            >
+              <TouchableOpacity
+                style={{ alignItems: "center", justifyContent: "center" }}
+                onPress={() => {
+                  toggleModal1();
+                  setIsEnabledSleep((isEnabledSleep) => true);
+                }}
+              >
+                <Text
+                  style={{
+                    color: "dodgerblue",
+                    fontSize: responsiveFontSize(2),
+                    fontWeight: "bold",
+                  }}
+                >
+                  Turn Sleep Mode On
+                </Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+            <SafeAreaView
+              style={{
+                height: "50%",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                borderTopColor: "rgba(128, 128, 128, .2)",
+                borderTopWidth: 1,
+              }}
+            >
+              <TouchableOpacity
+                style={{ alignItems: "center", justifyContent: "center" }}
+                onPress={() => {
+                  toggleModal1();
+                  setIsEnabledSleep((isEnabledSleep) => false);
+                }}
+              >
+                <Text
+                  style={{
+                    color: "dodgerblue",
+                    fontSize: responsiveFontSize(2),
+                    fontWeight: "bold",
+                  }}
+                >
+                  Keep Sleep Mode Off
+                </Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+          </SafeAreaView>
+        </View>
+      </Modal>
+
+      <Modal
+        isVisible={isModal2Visible}
+        backdropOpacity={0.5}
+        useNativeDriverForBackdrop={true}
+        hideModalContentWhileAnimating={true}
+        animationIn={"fadeIn"}
+        animationOut={"fadeOut"}
+      >
+        <View
+          style={{
+            alignSelf: "center",
+            height: "30%",
+            width: "70%",
+            backgroundColor: "white",
+            borderRadius: 8,
+            alignItems: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <SafeAreaView
+            style={{
+              alignItems: "center",
+              width: "90%",
+              height: "60%",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: responsiveFontSize(2.2),
+              }}
+            >
+              Do Not Disturb
+            </Text>
+            <Text
+              style={{
+                fontSize: responsiveFontSize(1.8),
+                fontWeight: "400",
+
+                textAlign: "center",
+              }}
+            >
+              Turning on Do Not Disturb will inform Pam that you do not want to
+              be called. They will not receive alerts.
+            </Text>
+          </SafeAreaView>
+          <SafeAreaView
+            style={{
+              height: "40%",
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <SafeAreaView
+              style={{
+                height: "50%",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                borderTopColor: "rgba(128, 128, 128, .2)",
+                borderTopWidth: 1,
+              }}
+            >
+              <TouchableOpacity
+                style={{ alignItems: "center", justifyContent: "center" }}
+                onPress={() => {
+                  toggleModal2();
+                  setIsEnabledDisturb((isEnabledDisturb) => true);
+                }}
+              >
+                <Text
+                  style={{
+                    color: "dodgerblue",
+                    fontSize: responsiveFontSize(2),
+                    fontWeight: "bold",
+                  }}
+                >
+                  Turn Do Not Disturb On
+                </Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+            <SafeAreaView
+              style={{
+                height: "50%",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                borderTopColor: "rgba(128, 128, 128, .2)",
+                borderTopWidth: 1,
+              }}
+            >
+              <TouchableOpacity
+                style={{ alignItems: "center", justifyContent: "center" }}
+                onPress={() => {
+                  toggleModal2();
+                  setIsEnabledDisturb((isEnabledDisturb) => false);
+                }}
+              >
+                <Text
+                  style={{
+                    color: "dodgerblue",
+                    fontSize: responsiveFontSize(2),
+                    fontWeight: "bold",
+                  }}
+                >
+                  Keep Do Not Disturb Off
+                </Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+          </SafeAreaView>
+        </View>
+      </Modal>
+
+      <Modal
+        isVisible={isModal3Visible}
+        backdropOpacity={0.5}
+        useNativeDriverForBackdrop={true}
+        hideModalContentWhileAnimating={true}
+        animationIn={"fadeIn"}
+        animationOut={"fadeOut"}
+      >
+        <View
+          style={{
+            alignSelf: "center",
+            height: "30%",
+            width: "70%",
+            backgroundColor: "white",
+            borderRadius: 8,
+            alignItems: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <SafeAreaView
+            style={{
+              alignItems: "center",
+              width: "90%",
+              height: "60%",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: responsiveFontSize(2.2),
+              }}
+            >
+              Monitoring
+            </Text>
+            <Text
+              style={{
+                fontSize: responsiveFontSize(1.8),
+                fontWeight: "400",
+
+                textAlign: "center",
+              }}
+            >
+              Pauing Monitoring will prevent Pam from receiving any of your
+              health data, including alerts.
+            </Text>
+          </SafeAreaView>
+          <SafeAreaView
+            style={{
+              height: "40%",
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <SafeAreaView
+              style={{
+                height: "50%",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                borderTopColor: "rgba(128, 128, 128, .2)",
+                borderTopWidth: 1,
+              }}
+            >
+              <TouchableOpacity
+                style={{ alignItems: "center", justifyContent: "center" }}
+                onPress={() => {
+                  toggleModal3();
+                  setIsEnabledMonitor((isEnabledMonitor) => false);
+                }}
+              >
+                <Text
+                  style={{
+                    color: "red",
+                    fontSize: responsiveFontSize(2),
+                    fontWeight: "bold",
+                  }}
+                >
+                  Pause Monitoring
+                </Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+            <SafeAreaView
+              style={{
+                height: "50%",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                borderTopColor: "rgba(128, 128, 128, .2)",
+                borderTopWidth: 1,
+              }}
+            >
+              <TouchableOpacity
+                style={{ alignItems: "center", justifyContent: "center" }}
+                onPress={() => {
+                  toggleModal3();
+                  setIsEnabledMonitor((isEnabledMonitor) => true);
+                }}
+              >
+                <Text
+                  style={{
+                    color: "dodgerblue",
+                    fontSize: responsiveFontSize(2),
+                    fontWeight: "bold",
+                  }}
+                >
+                  Keep Monitoring
+                </Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+          </SafeAreaView>
+        </View>
+      </Modal>
+
       <SafeAreaView
         style={[
           styles.mediumTopBody,
@@ -47,7 +426,12 @@ export default function GiveeHomeScreen({ navigation }) {
           <Text style={styles.caregiverText}>Your Caregiver is Paola</Text>
         </SafeAreaView>
 
-        <TouchableOpacity style={styles.callBody}>
+        <TouchableOpacity
+          style={styles.callBody}
+          onPress={() => {
+            call(args).catch(console.error);
+          }}
+        >
           <Image
             source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
           />
@@ -147,7 +531,7 @@ export default function GiveeHomeScreen({ navigation }) {
             trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
             thumbColor={isEnabledSleep ? "white" : "white"}
             style={styles.switchBody}
-            onValueChange={toggleSwitchSleep}
+            onValueChange={!isEnabledSleep ? toggleSwitchSleep : toggleSleep}
             value={isEnabledSleep}
           />
         </SafeAreaView>
@@ -181,7 +565,9 @@ export default function GiveeHomeScreen({ navigation }) {
             trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
             thumbColor={isEnabledDisturb ? "white" : "white"}
             style={styles.switchBodyDisturb}
-            onValueChange={toggleSwitchDisturb}
+            onValueChange={
+              !isEnabledDisturb ? toggleSwitchDisturb : toggleDisturb
+            }
             value={isEnabledDisturb}
           />
         </SafeAreaView>
@@ -215,7 +601,9 @@ export default function GiveeHomeScreen({ navigation }) {
             trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
             thumbColor={isEnabledMonitor ? "white" : "white"}
             style={styles.switchBodyMonitoring}
-            onValueChange={toggleSwitchMonitor}
+            onValueChange={
+              isEnabledMonitor ? toggleSwitchMonitor : toggleMonitor
+            }
             value={isEnabledMonitor}
           />
         </SafeAreaView>
