@@ -193,7 +193,7 @@ const HomeStack = () => {
             ),
             headerRight: () => (
               <TouchableOpacity
-                onPress={() => navigation.navigate("GiverHomeScreen")}
+                onPress={() => navigation.navigate("HomeScreen")}
                 style={{ marginRight: "7%" }}
               >
                 <Text

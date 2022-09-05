@@ -16,7 +16,9 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 export default function ChatScreen({ navigation }) {
   const userData = useSelector((state) => state.Reducers.userData);
   console.log(userData.firstName);
-
+  const logOutButtonHandler = () => {
+    navigation.navigate("TitleScreen");
+  };
   return (
     // Header Container
     <SafeAreaView style={{ flex: 1 }}>
@@ -39,9 +41,9 @@ export default function ChatScreen({ navigation }) {
         />
         <SafeAreaView style={{ marginLeft: "5%" }}>
           <Text style={{ fontSize: responsiveFontSize(2.8) }}>
-            Mamtaj Akter
+            {userData.firstName} {userData.lastName}
           </Text>
-          <Text style={{ fontSize: responsiveFontSize(2.3) }}>
+          <Text style={{ fontSize: responsiveFontSize(2.1) }}>
             mamtajakter@gmail.com
           </Text>
         </SafeAreaView>
@@ -89,6 +91,7 @@ export default function ChatScreen({ navigation }) {
       >
         <TouchableOpacity
           style={{ alignItems: "center", justifyContent: "center" }}
+          onPress={logOutButtonHandler}
         >
           <Text
             style={{

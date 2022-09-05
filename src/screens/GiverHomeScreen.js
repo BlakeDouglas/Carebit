@@ -11,8 +11,10 @@ import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import moment from "moment";
+import { Provider, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import call from "react-native-phone-call";
+import { useDrawerStatus } from "@react-navigation/drawer";
 
 const args = {
   number: "4077777777",
@@ -61,6 +63,7 @@ const refreshToken = (tokenData) => {
 let date = moment().format("dddd, MMM D");
 
 export default function GiverHomeScreen({ navigation }) {
+  const userData = useSelector((state) => state.Reducers.userData);
   return (
     <SafeAreaView
       style={{ height: "100%", width: "100%", backgroundColor: "whitesmoke" }}
@@ -100,7 +103,7 @@ export default function GiverHomeScreen({ navigation }) {
         }}
       >
         <SafeAreaView>
-          <Text style={styles.helloText}>Hello Name</Text>
+          <Text style={styles.helloText}>Hello {userData.firstName}</Text>
           <Text style={styles.caregiveeText}>Your caregivee is Pam</Text>
         </SafeAreaView>
 
