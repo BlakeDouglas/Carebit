@@ -206,6 +206,29 @@ const HomeStack = () => {
           })}
         />
         <Stack.Screen name="AddScreen" component={AddScreen} />
+        <Stack.Screen
+          name="RequestScreen"
+          component={RequestScreen}
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerTitle: "Incoming Requests",
+
+            headerRight: () => (
+              <Icon
+                onPress={() => navigation.navigate("AddScreen")}
+                style={{ fontSize: 32, color: "white", marginRight: 20 }}
+                name={"account-plus-outline"}
+              />
+            ),
+          })}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );
