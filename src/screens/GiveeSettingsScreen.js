@@ -41,7 +41,7 @@ export default function ChatScreen({ navigation }) {
         />
         <SafeAreaView style={{ marginLeft: "5%" }}>
           <Text style={{ fontSize: responsiveFontSize(2.8), width: "100%" }}>
-            {userData.firstName}
+            Pam Wisniewski{userData.firstName}
           </Text>
           <Text style={{ fontSize: responsiveFontSize(2.1) }}>
             pamelawisniewski@gmail.com

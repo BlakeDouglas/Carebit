@@ -44,10 +44,10 @@ export default function ChatScreen({ navigation }) {
         />
         <SafeAreaView style={{ marginLeft: "5%" }}>
           <Text style={{ fontSize: responsiveFontSize(2.8) }}>
-            {userData.firstName} {userData.lastName}
+            Mamtaj Akter{userData.firstName} {userData.lastName}
           </Text>
           <Text style={{ fontSize: responsiveFontSize(2.1) }}>
-            {userData.email}
+            Mamtaj@gmail.com{userData.email}
           </Text>
         </SafeAreaView>
       </SafeAreaView>
@@ -83,8 +83,20 @@ export default function ChatScreen({ navigation }) {
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Custom Alert Settings</Text>
-        <TouchableOpacity onPress={customAlertButtonHandler}>
+        <TouchableOpacity
+          onPress={customAlertButtonHandler}
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "row",
+          }}
+        >
           <Text style={styles.BoxSub}>Off</Text>
+          <Image
+            borderColor={"red"}
+            style={{ height: 15, width: 15, marginLeft: "1%" }}
+            source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
+          />
         </TouchableOpacity>
       </SafeAreaView>
       <SafeAreaView
