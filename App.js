@@ -14,6 +14,7 @@ import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
 import RequestScreen from "./src/screens/RequestScreen";
 import AddScreen from "./src/screens/AddScreen";
+import CustomNotificationScreen from "./src/screens/CustomNotificationScreen";
 import { Image, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Provider, useSelector } from "react-redux";
@@ -23,6 +24,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { Title } from "react-native-paper";
 const firebaseConfig = {
   apiKey: "AIzaSyAu69cdb30ONSKMcrIrL7P4YT0ghQoNEdg",
   authDomain: "carebit-48f39.firebaseapp.com",
@@ -168,6 +170,46 @@ const HomeStack = () => {
               ? GiveeSettingsScreen
               : GiverSettingsScreen
           }
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerTitle: "Alert Settings",
+
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("HomeScreen")}
+                style={{ marginLeft: "7%" }}
+              >
+                <Text
+                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
+                >
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("HomeScreen")}
+                style={{ marginRight: "7%" }}
+              >
+                <Text
+                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
+                >
+                  Done
+                </Text>
+              </TouchableOpacity>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="CustomNotification"
+          component={CustomNotificationScreen}
           options={({ navigation }) => ({
             headerTransparent: false,
             headerTitleAlign: "center",

@@ -19,6 +19,9 @@ export default function ChatScreen({ navigation }) {
   const logOutButtonHandler = () => {
     navigation.navigate("TitleScreen");
   };
+  const customAlertButtonHandler = () => {
+    navigation.navigate("CustomNotification");
+  };
   return (
     // Header Container
     <SafeAreaView style={{ flex: 1 }}>
@@ -44,7 +47,7 @@ export default function ChatScreen({ navigation }) {
             {userData.firstName} {userData.lastName}
           </Text>
           <Text style={{ fontSize: responsiveFontSize(2.1) }}>
-            mamtajakter@gmail.com
+            {userData.email}
           </Text>
         </SafeAreaView>
       </SafeAreaView>
@@ -80,7 +83,9 @@ export default function ChatScreen({ navigation }) {
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Custom Alert Settings</Text>
-        <Text style={styles.BoxSub}>Off</Text>
+        <TouchableOpacity onPress={customAlertButtonHandler}>
+          <Text style={styles.BoxSub}>Off</Text>
+        </TouchableOpacity>
       </SafeAreaView>
       <SafeAreaView
         style={{
