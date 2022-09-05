@@ -4,12 +4,14 @@ import {
   Text,
   Linking,
   View,
+  Image,
   ImageBackground,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { React } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { Provider, useSelector } from "react-redux";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 export default function ChatScreen({ navigation }) {
   const userData = useSelector((state) => state.Reducers.userData);
@@ -17,73 +19,125 @@ export default function ChatScreen({ navigation }) {
 
   return (
     // Header Container
-    <SafeAreaView style={{ flex: 1, backgroundColor: "dodgerblue" }}>
-      {/* Holds all header elements */}
-      <View
+    <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView
         style={{
-          flexDirection: "row",
+          marginTop: "8%",
+          height: "15%",
           width: "100%",
-          height: "5%",
+          borderTopColor: "lightgray",
+          borderTopWidth: 1,
+          borderBottomColor: "lightgray",
+          borderBottomWidth: 1,
+          alignItems: "center",
+          flexDirection: "row",
+        }}
+      >
+        <Image
+          style={{ height: 85, width: 85, marginLeft: "6%" }}
+          source={require("../../assets/images/avatar/DefaultAvatar.png")}
+        />
+        <SafeAreaView style={{ marginLeft: "5%" }}>
+          <Text style={{ fontSize: responsiveFontSize(2.8) }}>
+            Mamtaj Akter
+          </Text>
+          <Text style={{ fontSize: responsiveFontSize(2.3) }}>
+            mamtajakter@gmail.com
+          </Text>
+        </SafeAreaView>
+      </SafeAreaView>
+      <SafeAreaView style={styles.TitleContainer}>
+        <Text style={styles.Title}>CAREGIVEE</Text>
+      </SafeAreaView>
+      <SafeAreaView></SafeAreaView>
+      <SafeAreaView style={styles.Box}>
+        <Text style={styles.BoxTitle}>Pam</Text>
+        <Text style={styles.BoxSub}>PamWisniewski@gmail.com</Text>
+      </SafeAreaView>
+      <SafeAreaView style={styles.Box}>
+        <Text style={styles.BoxTitle}>Phone</Text>
+        <Text style={styles.BoxSub}>(407) 777-7777</Text>
+      </SafeAreaView>
+      <SafeAreaView style={styles.TitleContainer}>
+        <Text style={styles.Title}>PHYSICIAN INFO</Text>
+      </SafeAreaView>
+      <SafeAreaView style={styles.Box}>
+        <Text style={styles.BoxTitle}>Dr. Doctor</Text>
+        <Text style={styles.BoxSub}>RealDoctor@gmail.com</Text>
+      </SafeAreaView>
+      <SafeAreaView style={styles.Box}>
+        <Text style={styles.BoxTitle}>Phone</Text>
+        <Text style={styles.BoxSub}>(407) 894-5656</Text>
+      </SafeAreaView>
+      <SafeAreaView style={styles.TitleContainer}>
+        <Text style={styles.Title}>Alerts</Text>
+      </SafeAreaView>
+      <SafeAreaView style={styles.Box}>
+        <Text style={styles.BoxTitle}>Activity Level</Text>
+        <Text style={styles.BoxSub}>Active</Text>
+      </SafeAreaView>
+      <SafeAreaView style={styles.Box}>
+        <Text style={styles.BoxTitle}>Custom Alert Settings</Text>
+        <Text style={styles.BoxSub}>Off</Text>
+      </SafeAreaView>
+      <SafeAreaView
+        style={{
+          flex: 1,
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        {/* Replace for a button */}
-        <Text
-          style={{
-            marginLeft: "3%",
-            color: "white",
-            fontSize: 16,
-          }}
+        <TouchableOpacity
+          style={{ alignItems: "center", justifyContent: "center" }}
         >
-          HI
-        </Text>
-
-        <Text style={GlobalStyle.HeaderText}>Alert Settings</Text>
-
-        {/* Replace for a button */}
-        <Text
-          style={{
-            textAlign: "right",
-            marginRight: "3%",
-            color: "white",
-            fontSize: 16,
-          }}
-        >
-          HI
-        </Text>
-      </View>
-      {/* Background Container for whole screen */}
-      <SafeAreaView
-        style={{
-          marginTop: "4%",
-          height: "100%",
-          backgroundColor: "whitesmoke",
-        }}
-      >
-        <Text
-          style={[
-            GlobalStyle.SettingsText,
-            {
-              marginTop: "20%",
-            },
-          ]}
-        >
-          Caregiver
-        </Text>
-        {/* Container for Caregiver Info */}
-        <SafeAreaView
-          style={[GlobalStyle.SettingsContainer, { marginBottom: "10%" }]}
-        >
-          <Text>Hello {userData.firstName}</Text>
-        </SafeAreaView>
-
-        <Text style={GlobalStyle.SettingsText}>Caregivee</Text>
-        {/* Container for Caregivee Info */}
-        <SafeAreaView style={GlobalStyle.SettingsContainer}>
-          <Text>Hello {userData.firstName}</Text>
-        </SafeAreaView>
+          <Text
+            style={{
+              color: "red",
+              fontSize: responsiveFontSize(2.5),
+              fontWeight: "bold",
+            }}
+          >
+            Log Out
+          </Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  Box: {
+    height: "7%",
+    width: "100%",
+    backgroundColor: "white",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderTopColor: "rgba(128,128,128,.1)",
+    borderTopWidth: 1,
+    borderBottomColor: "rgba(128,128,128,.1)",
+    borderBottomWidth: 1,
+  },
+  Title: {
+    fontSize: responsiveFontSize(1.9),
+    color: "gray",
+    fontWeight: "500",
+  },
+  TitleContainer: {
+    marginTop: "5%",
+    width: "100%",
+    justifyContent: "center",
+    height: "5%",
+    marginLeft: "4%",
+  },
+  BoxTitle: {
+    fontSize: responsiveFontSize(2.2),
+    fontWeight: "600",
+    marginLeft: "4%",
+  },
+  BoxSub: {
+    fontSize: responsiveFontSize(2.2),
+    marginRight: "4%",
+    color: "rgba(128,128,128,.8)",
+  },
+});

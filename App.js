@@ -14,13 +14,13 @@ import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
 import RequestScreen from "./src/screens/RequestScreen";
 import AddScreen from "./src/screens/AddScreen";
-import { Image } from "react-native";
+import { Image, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Provider, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
 import { useFonts } from "expo-font";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 const firebaseConfig = {
@@ -79,29 +79,6 @@ const AuthStack = () => {
           title: "",
         }}
       >
-        <Stack.Screen
-          name="RequestScreen"
-          component={RequestScreen}
-          options={({ navigation }) => ({
-            headerTransparent: false,
-            headerTitleAlign: "center",
-            headerTitleStyle: {
-              color: "white",
-            },
-            headerStyle: {
-              backgroundColor: "dodgerblue",
-            },
-            headerTitle: "Incoming Requests",
-
-            headerRight: () => (
-              <Icon
-                onPress={() => navigation.navigate("AddScreen")}
-                style={{ fontSize: 32, color: "white", marginRight: 20 }}
-                name={"account-plus-outline"}
-              />
-            ),
-          })}
-        />
         <Stack.Screen name="TitleScreen" component={TitleScreen} />
         <Stack.Screen name="RoleSelectScreen" component={RoleSelectScreen} />
         <Stack.Screen
@@ -191,6 +168,42 @@ const HomeStack = () => {
               ? GiveeSettingsScreen
               : GiverSettingsScreen
           }
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerTitle: "Alert Settings",
+
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("HomeScreen")}
+                style={{ marginLeft: "7%" }}
+              >
+                <Text
+                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
+                >
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("GiverHomeScreen")}
+                style={{ marginRight: "7%" }}
+              >
+                <Text
+                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
+                >
+                  Done
+                </Text>
+              </TouchableOpacity>
+            ),
+          })}
         />
         <Stack.Screen name="AddScreen" component={AddScreen} />
       </Stack.Group>

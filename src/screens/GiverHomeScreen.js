@@ -12,6 +12,12 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import moment from "moment";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import call from "react-native-phone-call";
+
+const args = {
+  number: "4077777777",
+  prompt: true,
+};
 
 const fetchFitbitData = (tokenData) => {
   refreshToken(tokenData);
@@ -89,10 +95,26 @@ export default function GiverHomeScreen({ navigation }) {
           width: "100%",
           height: "8%",
           marginTop: "3%",
+          flexDirection: "row",
+          alignItems: "center",
         }}
       >
-        <Text style={styles.helloText}>Hello Name</Text>
-        <Text style={styles.caregiveeText}>Your caregivee is Pam</Text>
+        <SafeAreaView>
+          <Text style={styles.helloText}>Hello Name</Text>
+          <Text style={styles.caregiveeText}>Your caregivee is Pam</Text>
+        </SafeAreaView>
+
+        <TouchableOpacity
+          style={styles.callBody}
+          onPress={() => {
+            call(args).catch(console.error);
+          }}
+        >
+          <Image
+            source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
+          />
+          <Text style={styles.callText}>Call Paola</Text>
+        </TouchableOpacity>
       </SafeAreaView>
       <SafeAreaView
         style={{
@@ -752,5 +774,17 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(1.8),
     fontWeight: "bold",
     marginLeft: "45%",
+  },
+  callBody: {
+    alignItems: "center",
+    marginLeft: "10%",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  callText: {
+    color: "dodgerblue",
+    fontSize: responsiveFontSize(2.25),
+    fontWeight: "bold",
+    marginLeft: "2%",
   },
 });

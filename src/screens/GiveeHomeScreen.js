@@ -418,6 +418,7 @@ export default function GiveeHomeScreen({ navigation }) {
             alignItems: "center",
             height: "10%",
             width: "100%",
+            flexDirection: "row",
           },
         ]}
       >

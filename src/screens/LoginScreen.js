@@ -12,6 +12,7 @@ import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import CustomTextInput from "../utils/CustomTextInput";
 import { setTokenData, setUserData } from "../redux/actions";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function LoginScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -127,12 +128,12 @@ export default function LoginScreen({ navigation }) {
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <KeyboardAwareScrollView style={{ flex: 1 }}>
         <SafeAreaView style={GlobalStyle.Container}>
           <Text style={GlobalStyle.Title}>Log into Carebit</Text>
           <SafeAreaView
             style={{
-              height: "40%",
+              height: "60%",
               marginTop: "12%",
               justifyContent: "space-evenly",
             }}
@@ -171,7 +172,7 @@ export default function LoginScreen({ navigation }) {
             </TouchableOpacity>
           </SafeAreaView>
         </SafeAreaView>
-      </TouchableWithoutFeedback>
+      </KeyboardAwareScrollView>
     </ImageBackground>
   );
 }
