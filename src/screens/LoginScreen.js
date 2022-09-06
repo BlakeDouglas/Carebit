@@ -94,7 +94,7 @@ export default function LoginScreen({ navigation }) {
         },
       });
       const json = await response.json();
-      dispatch(setUserData(json));
+      dispatch(setUserData(json.user));
     } catch (error) {
       console.log("Caught error: " + error);
     }
