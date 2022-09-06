@@ -6,6 +6,7 @@ import {
   Button,
   Image,
   ImageBackground,
+  Alert,
   LogBox,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -58,6 +59,14 @@ export default function AuthenticationScreen({ navigation }) {
 
       if (json.caregiveeId !== undefined) {
         dispatch(setTokenData({ ...tokenData, ...json, type: "caregivee" }));
+      }
+
+      if (tokenData.caregiveeId === null) {
+        Alert.alert(
+          "Error",
+          "The Fitbit account is already associated with a Carebit user.\nPlease try again with a different Fitbit account.",
+          [{ text: "Ok", onPress: () => {}, style: "cancel" }]
+        );
       }
     } catch (error) {
       console.log("Caught error: " + error);
