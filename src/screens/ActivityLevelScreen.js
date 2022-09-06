@@ -8,9 +8,14 @@ import {
   ScrollView,
   Platform,
   View,
+  Image,
   KeyboardAvoidingView,
+  TouchableOpacity,
 } from "react-native";
-import { responsiveFontSize } from "react-native-responsive-dimensions";
+import {
+  responsiveFontSize,
+  responsiveWidth,
+} from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 
 export default function AccountCreationScreen({ navigation, route }) {
@@ -19,7 +24,12 @@ export default function AccountCreationScreen({ navigation, route }) {
       source={require("../../assets/images/background-hearts.imageset/background02.png")} // Edit me if you find a better image~!
       style={GlobalStyle.Background}
     >
-      <SafeAreaView style={GlobalStyle.Container}>
+      <SafeAreaView
+        style={[
+          GlobalStyle.Container,
+          { marginLeft: "10%", marginRight: "10%" },
+        ]}
+      >
         <Text style={GlobalStyle.Subtitle}>Activity Level</Text>
         <SafeAreaView style={styles.TextBox}>
           <Text style={styles.DescriptiveText}>
@@ -28,14 +38,50 @@ export default function AccountCreationScreen({ navigation, route }) {
         </SafeAreaView>
         <SafeAreaView
           style={{
-            backgroundColor: "green",
             width: "100%",
-            height: "75%",
-            justifyContent: "center",
+            height: "80%",
+            justifyContent: "flex-start",
             alignItems: "center",
           }}
         >
-          <SafeAreaView style={styles.InnerContainers}></SafeAreaView>
+          <TouchableOpacity style={styles.InnerContainers}>
+            <SafeAreaView>
+              <Text style={styles.InnerTitle}>Active</Text>
+              <Text style={styles.InnerText}>Living an action life</Text>
+            </SafeAreaView>
+            <Image
+              style={{ height: 15, width: 15, marginRight: "5%" }}
+              source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.InnerContainers}>
+            <SafeAreaView>
+              <Text style={styles.InnerTitle}>Sedentary</Text>
+              <Text style={styles.InnerText}>
+                Not active, but not homebound
+              </Text>
+            </SafeAreaView>
+            <Image
+              style={{ height: 15, width: 15, marginRight: "5%" }}
+              source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.InnerContainers}>
+            <SafeAreaView>
+              <Text style={styles.InnerTitle}>Homebound</Text>
+              <Text style={styles.InnerText}>Not able to leave home</Text>
+            </SafeAreaView>
+
+            <Image
+              style={{
+                height: 15,
+                width: 15,
+                marginRight: "5%",
+              }}
+              source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
+            />
+          </TouchableOpacity>
         </SafeAreaView>
       </SafeAreaView>
     </ImageBackground>
@@ -43,7 +89,7 @@ export default function AccountCreationScreen({ navigation, route }) {
 }
 const styles = StyleSheet.create({
   TextBox: {
-    height: "20%",
+    height: "15%",
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
@@ -54,14 +100,36 @@ const styles = StyleSheet.create({
     color: "white",
   },
   InnerContainers: {
-    marginTop: "8%",
+    flexDirection: "row",
+    marginTop: "7%",
+    backgroundColor: "white",
     height: "15%",
     width: "100%",
-    borderTopColor: "lightgray",
-    borderTopWidth: 1,
-    borderBottomColor: "lightgray",
-    borderBottomWidth: 1,
+    borderRadius: 8,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 1, height: 3 },
+        shadowOpacity: 0.4,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+    justifyContent: "space-between",
     alignItems: "center",
-    flexDirection: "row",
+  },
+  InnerTitle: {
+    marginLeft: "6%",
+    color: "black",
+    fontWeight: "600",
+    fontSize: responsiveFontSize(2.4),
+  },
+  InnerText: {
+    marginLeft: "6%",
+    marginTop: "2%",
+    color: "darkgray",
+    fontWeight: "400",
+    fontSize: responsiveFontSize(2.2),
   },
 });
