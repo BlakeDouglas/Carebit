@@ -8,10 +8,12 @@ import {
   Switch,
   FlatList,
   Alert,
+  ImageBackground,
 } from "react-native";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -70,12 +72,13 @@ const data_temp = [
 
 const RequestScreen = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
 
   const [DATA, setDATA] = useState(data_temp);
 
   const onPressDelete = (item) => {
     Alert.alert(
-      "Delete the request from\n" + item.fname + " " + item.lname,
+      "Delete the request from\n" + item.firstName + " " + item.lastName,
       "",
       [
         { text: "Cancel", onPress: () => {}, style: "cancel" },
@@ -90,7 +93,30 @@ const RequestScreen = ({ navigation }) => {
     );
   };
 
-  const onPressAdd = (id) => {};
+  const onPressAdd = (item) => {
+    const typeOfRequester =
+      tokenData.type === "caregivee" ? "caregiver" : "caregivee";
+    const fullName = item.firstName + " " + item.lastName;
+    Alert.alert(
+      "Allow " + fullName + " to be your " + typeOfRequester + "?",
+      typeOfRequester === "caregivee"
+        ? "As a caregiver, you intend to provide care to " +
+            fullName +
+            " by accessing their Fitbit data."
+        : "As a caregivee, you will allow " +
+            fullName +
+            " to access your Fitbit data.",
+      [
+        { text: "Cancel", onPress: () => {}, style: "cancel" },
+        {
+          text: "Allow",
+          onPress: () => {
+            // TODO: Implement adding
+          },
+        },
+      ]
+    );
+  };
 
   const renderItem = ({ item }) => {
     return (
@@ -105,14 +131,21 @@ const RequestScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.mainBody}>
-      <FlatList
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        extraData={selectedId}
-      />
-    </SafeAreaView>
+    <ImageBackground
+      source={require("../../assets/images/background-hearts.imageset/background01.png")}
+      resizeMode="cover"
+      style={GlobalStyle.Background}
+    >
+      <SafeAreaView style={styles.mainBody}>
+        <FlatList
+          data={DATA}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          extraData={selectedId}
+          ListEmptyComponent={Empty}
+        />
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
@@ -123,7 +156,7 @@ const Item = ({ item, onPressDelete, onPressAdd }) => (
         onPressDelete(item);
       }}
       style={{ fontSize: 32, color: "red" }}
-      name={"minus-circle"}
+      name={"close-circle"}
     />
     <View>
       <Text style={styles.name}>
@@ -143,14 +176,18 @@ const Item = ({ item, onPressDelete, onPressAdd }) => (
 );
 
 const Empty = () => {
-  return <View style={styles.empty}></View>;
+  return (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.emptyText}>Your inbox is empty</Text>
+      <Text style={styles.emptyText}>...</Text>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
   mainBody: {
     height: "100%",
     width: "100%",
-    backgroundColor: "whitesmoke",
   },
   item: {
     padding: "3%",
@@ -158,10 +195,11 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 20,
     marginTop: "5%",
-    borderColor: "gray",
-    borderWidth: 4,
+    borderColor: "lightgray",
+    borderWidth: 3,
     justifyContent: "space-between",
     flexDirection: "row",
+    alignItems: "center",
   },
   name: {
     color: "black",
@@ -178,6 +216,14 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: responsiveFontSize(1.8),
     alignSelf: "center",
+  },
+  emptyText: {
+    color: "white",
+    fontSize: responsiveFontSize(3.5),
+    alignSelf: "center",
+  },
+  emptyContainer: {
+    paddingTop: "5%",
   },
 });
 
