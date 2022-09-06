@@ -13,6 +13,7 @@ import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { setPhysicianData } from "../redux/actions";
 import { useSelector, useDispatch } from "react-redux";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 export default function PhysicianInfoScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -105,102 +106,113 @@ export default function PhysicianInfoScreen({ navigation }) {
       style={GlobalStyle.Background}
     >
       <KeyboardAwareScrollView>
-        <View style={GlobalStyle.Inner}>
-          <Text
-            style={[
-              GlobalStyle.Subtitle,
-              { marginTop: 70, fontSize: 40, marginBottom: 30 },
-            ]}
-          >
-            Physician Contact
-          </Text>
+        <View
+          style={[
+            GlobalStyle.Container,
+            {
+              marginLeft: "5%",
+              marginRight: "5%",
+            },
+          ]}
+        >
+          <View style={{ width: "100%" }}>
+            <Text
+              style={[
+                GlobalStyle.Subtitle,
+                { fontSize: responsiveFontSize(5.1) },
+              ]}
+            >
+              Physician Contact
+            </Text>
+          </View>
+          <View style={{ marginTop: "10%", width: "100%" }}>
+            <CustomTextInput
+              placeholder="Physician's Name"
+              iconName="account-outline"
+              label="Physician's Name*"
+              error={errors.physName}
+              onChangeText={(text) => handleChange(text, "physName")}
+              onFocus={() => {
+                handleError(null, "physName");
+              }}
+            />
+            <CustomTextInput
+              placeholder="(XXX) XXX-XXXX"
+              iconName="phone-outline"
+              label="Physician's Number*"
+              keyboardType="number-pad"
+              error={errors.physPhone}
+              onChangeText={(text) =>
+                handleChange(text.replace(/[^0-9]+/g, ""), "physPhone")
+              }
+              onFocus={() => {
+                handleError(null, "physPhone");
+              }}
+            />
+            <CustomTextInput
+              placeholder="e.g. 111 Lane Road, STE. 120"
+              //iconName="phone-outline"
+              label="Physician's Street Address"
+              error={errors.physStreet}
+              onChangeText={(text) => handleChange(text, "physStreet")}
+              onFocus={() => {
+                handleError(null, "physStreet");
+              }}
+            />
 
-          <CustomTextInput
-            placeholder="Physician's Name"
-            iconName="account-outline"
-            label="Physician's Name*"
-            error={errors.physName}
-            onChangeText={(text) => handleChange(text, "physName")}
-            onFocus={() => {
-              handleError(null, "physName");
-            }}
-          />
-          <CustomTextInput
-            placeholder="(XXX) XXX-XXXX"
-            iconName="phone-outline"
-            label="Physician's Number*"
-            keyboardType="number-pad"
-            error={errors.physPhone}
-            onChangeText={(text) =>
-              handleChange(text.replace(/[^0-9]+/g, ""), "physPhone")
-            }
-            onFocus={() => {
-              handleError(null, "physPhone");
-            }}
-          />
-          <CustomTextInput
-            placeholder="e.g. 111 Lane Road, STE. 120"
-            //iconName="phone-outline"
-            label="Physician's Street Address"
-            error={errors.physStreet}
-            onChangeText={(text) => handleChange(text, "physStreet")}
-            onFocus={() => {
-              handleError(null, "physStreet");
-            }}
-          />
-
-          <CustomTextInput
-            placeholder="e.g. London"
-            //iconName="phone-outline"
-            label="City"
-            error={errors.physCity}
-            onChangeText={(text) => handleChange(text, "physCity")}
-            onFocus={() => {
-              handleError(null, "physCity");
-            }}
-          />
-          <View style={{ flexDirection: "row" }}>
-            <View style={[GlobalStyle.Background]}>
-              <CustomTextInput
-                placeholder="e.g. Florida"
-                //iconName="phone-outline"
-                label="State"
-                error={errors.physState}
-                onChangeText={(text) => handleChange(text, "physState")}
-                onFocus={() => {
-                  handleError(null, "physState");
-                }}
-              />
+            <CustomTextInput
+              placeholder="e.g. London"
+              //iconName="phone-outline"
+              label="City"
+              error={errors.physCity}
+              onChangeText={(text) => handleChange(text, "physCity")}
+              onFocus={() => {
+                handleError(null, "physCity");
+              }}
+            />
+            <View style={{ flexDirection: "row" }}>
+              <View style={[GlobalStyle.Background]}>
+                <CustomTextInput
+                  placeholder="e.g. Florida"
+                  //iconName="phone-outline"
+                  label="State"
+                  error={errors.physState}
+                  onChangeText={(text) => handleChange(text, "physState")}
+                  onFocus={() => {
+                    handleError(null, "physState");
+                  }}
+                />
+              </View>
+              <View style={[GlobalStyle.Background]}>
+                <CustomTextInput
+                  placeholder="e.g. 90210"
+                  //iconName="phone-outline"
+                  label="Zipcode"
+                  keyboardType="number-pad"
+                  error={errors.physZipCode}
+                  onChangeText={(text) => handleChange(text, "physZipCode")}
+                  onFocus={() => {
+                    handleError(null, "physZipCode");
+                  }}
+                />
+              </View>
             </View>
-            <View style={[GlobalStyle.Background]}>
-              <CustomTextInput
-                placeholder="e.g. 90210"
-                //iconName="phone-outline"
-                label="Zipcode"
-                keyboardType="number-pad"
-                error={errors.physZipCode}
-                onChangeText={(text) => handleChange(text, "physZipCode")}
-                onFocus={() => {
-                  handleError(null, "physZipCode");
+            <View style={{ width: "100%", marginTop: "4%" }}>
+              <TouchableOpacity
+                style={[
+                  GlobalStyle.Button,
+                  {
+                    backgroundColor: "rgba(255, 255, 255, .2)",
+                  },
+                ]}
+                onPress={() => {
+                  validate(tokenData);
                 }}
-              />
+              >
+                <Text style={GlobalStyle.ButtonText}>Create Account</Text>
+              </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity
-            style={[
-              GlobalStyle.Button,
-              {
-                backgroundColor: "rgba(255, 255, 255, .2)",
-                marginTop: 15,
-                marginBottom: 30,
-              },
-            ]}
-            onPress={() => {
-              validate(tokenData);
-            }}
-          >
-            <Text style={GlobalStyle.ButtonText}>Create Account</Text>
-          </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
     </ImageBackground>

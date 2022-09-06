@@ -10,7 +10,6 @@ import {
 import React, { useEffect, useState, useCallback } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { Provider, useSelector } from "react-redux";
-import { GiftedChat } from "react-native-gifted-chat";
 import { getDatabase, get, set } from "firebase/database";
 export default function ChatScreen({ navigation }) {
   const userData = useSelector((state) => state.Reducers.userData);
