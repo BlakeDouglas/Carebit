@@ -4,6 +4,7 @@ import {
   View,
   Keyboard,
   ImageBackground,
+  Platform,
 } from "react-native";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -47,22 +48,6 @@ export default function PhysicianInfoScreen({ navigation }) {
       )
     ) {
       handleError(" Invalid phone number", "physPhone");
-      valid = false;
-    }
-    if (!inputs.physStreet) {
-      handleError(requiredText, "physStreet");
-      valid = false;
-    }
-    if (!inputs.physCity) {
-      handleError(requiredText, "physCity");
-      valid = false;
-    }
-    if (!inputs.physState) {
-      handleError(requiredText, "physState");
-      valid = false;
-    }
-    if (!inputs.physZipCode) {
-      handleError(requiredText, "physZipCode");
       valid = false;
     }
     if (valid) {
@@ -110,6 +95,7 @@ export default function PhysicianInfoScreen({ navigation }) {
           style={[
             GlobalStyle.Container,
             {
+              marginTop: Platform.OS === "ios" ? "25%" : "8%",
               marginLeft: "5%",
               marginRight: "5%",
             },
@@ -125,7 +111,12 @@ export default function PhysicianInfoScreen({ navigation }) {
               Physician Contact
             </Text>
           </View>
-          <View style={{ marginTop: "10%", width: "100%" }}>
+          <View
+            style={{
+              marginTop: Platform.OS === "ios" ? "10%" : "4%",
+              width: "100%",
+            }}
+          >
             <CustomTextInput
               placeholder="Physician's Name"
               iconName="account-outline"

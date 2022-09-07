@@ -16,15 +16,14 @@ const CustomTextInput = ({
   const [isFocused, setIsFocused] = useState(false);
   const [hidePassword, setHidePassword] = useState(password);
   return (
-    <View style={{ marginBottom: 15 }}>
+    <View style={{ marginBottom: "4%" }}>
       <View style={{ flexDirection: "row" }}>
         <Text style={style.label}>{label}</Text>
         {error && (
           <Text
             style={{
               color: "red",
-              fontSize: 15,
-              marginBottom: 5,
+              fontSize: responsiveFontSize(1.9),
               fontFamily: "RobotoBold",
             }}
           >
@@ -89,7 +88,7 @@ const style = StyleSheet.create({
     height: 55,
     backgroundColor: "transparent",
     flexDirection: "row",
-    paddingHorizontal: 15,
+    paddingHorizontal: "3%",
     borderWidth: 1.5,
     alignItems: "center",
   },
