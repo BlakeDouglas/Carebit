@@ -64,6 +64,25 @@ export default function GiveeHomeScreen({ navigation }) {
     StatusBar.setBarStyle("light-content");
   }, []);
 
+  const fetchFitbitData = (tokenData) => {
+    refreshToken(tokenData);
+    fetch("https://api.fitbit.com/1/user/-/profile.json", {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + tokenData.access_token,
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log("FETCH GOT: " + JSON.stringify(json));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
+  fetchFitbitData(tokenData);
+
   return (
     // Main Screen Wrapper. Sets background white
     <View style={styles.mainBody}>

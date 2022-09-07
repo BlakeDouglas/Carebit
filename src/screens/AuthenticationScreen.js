@@ -59,15 +59,11 @@ export default function AuthenticationScreen({ navigation }) {
 
       if (json.caregiveeId !== undefined) {
         dispatch(setTokenData({ ...tokenData, ...json, type: "caregivee" }));
-      }
-
-      if (tokenData.caregiveeId === null) {
-        Alert.alert(
-          "Error",
-          "The Fitbit account is already associated with a Carebit user.\nPlease try again with a different Fitbit account.",
-          [{ text: "Ok", onPress: () => {}, style: "cancel" }]
-        );
-      }
+        console.log(JSON.stringify(tokenData));
+      } else
+        Alert.alert("Error", json.error, [
+          { text: "Ok", onPress: () => {}, style: "cancel" },
+        ]);
     } catch (error) {
       console.log("Caught error: " + error);
     }

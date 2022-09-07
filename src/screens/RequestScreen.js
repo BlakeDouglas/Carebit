@@ -111,11 +111,36 @@ const RequestScreen = ({ navigation }) => {
         {
           text: "Allow",
           onPress: () => {
-            // TODO: Implement adding
+            // TODO: Implement adding using connectCaregivee (or whatever austin makes)
           },
         },
       ]
     );
+  };
+
+  // Might not be necessary, depending on the changes austin makes
+  const connectCaregivee = async (tokenData) => {
+    try {
+      let response = await fetch(
+        "https://www.carebit.xyz/acceptCaregiverRequest",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+
+          // TODO: The body needs an overhaul with conditions. Also, fix DATA so it has caregiveeId
+          body: JSON.stringify({
+            caregiver: tokenData.caregiverId,
+            caregivee: DATA.caregiveeId,
+          }),
+        }
+      );
+      fetchUserData(tokenData);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const renderItem = ({ item }) => {

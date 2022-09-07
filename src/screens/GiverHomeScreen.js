@@ -21,45 +21,6 @@ const args = {
   prompt: true,
 };
 
-const fetchFitbitData = (tokenData) => {
-  refreshToken(tokenData);
-  fetch("https://api.fitbit.com/1/user/-/profile.json", {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + tokenData.access_token,
-    },
-  })
-    .then((response) => response.json())
-    .then((json) => {
-      console.log("FETCH GOT: " + JSON.stringify(json));
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
-
-const refreshToken = (tokenData) => {
-  fetch("https://api.fitbit.com/oauth2/token", {
-    method: "POST",
-    headers: {
-      Authorization:
-        "Basic MjM4UVMzOjYzZTJlNWNjY2M2OWY2ZThmMTk4Yjg2ZDYyYjUyYzE5",
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: JSON.stringify({
-      grant_type: "refresh_token",
-      refresh_token: tokenData.refresh_token,
-    }),
-  })
-    .then((response) => response.json())
-    .then((json) => {
-      console.log(JSON.stringify(json));
-    })
-    .catch((error) => {
-      console.log("Got error: " + error);
-    });
-};
-
 let date = moment().format("dddd, MMM D");
 
 export default function GiverHomeScreen({ navigation }) {

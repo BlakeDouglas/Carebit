@@ -99,29 +99,6 @@ export default function LoginScreen({ navigation }) {
       console.log("Caught error: " + error);
     }
   };
-
-  // TODO: Implement
-  const connectCaregivee = async (tokenData) => {
-    try {
-      let response = await fetch(
-        "https://www.carebit.xyz/acceptCaregiverRequest",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            caregiver: tokenData.caregiverId,
-            caregivee: "B4QY3P",
-          }),
-        }
-      );
-      fetchUserData(tokenData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
