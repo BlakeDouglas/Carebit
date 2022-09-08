@@ -118,39 +118,13 @@ const RequestScreen = ({ navigation }) => {
     );
   };
 
-  // Might not be necessary, depending on the changes austin makes
-  const connectCaregivee = async (tokenData) => {
-    try {
-      let response = await fetch(
-        "https://www.carebit.xyz/acceptCaregiverRequest",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-
-          // TODO: The body needs an overhaul with conditions. Also, fix DATA so it has caregiveeId
-          body: JSON.stringify({
-            caregiver: tokenData.caregiverId,
-            caregivee: DATA.caregiveeId,
-          }),
-        }
-      );
-      fetchUserData(tokenData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const renderItem = ({ item }) => {
+    const backgroundColor = item.id === selectedId ? "gray" : "lightgray";
     return (
       <Item
         item={item}
         onPress={() => setSelectedId(item.id)}
-        backgroundColor={{ backgroundColor: "dodgerblue" }}
-        onPressDelete={onPressDelete}
-        onPressAdd={onPressAdd}
+        backgroundColor={{ backgroundColor }}
       />
     );
   };
@@ -161,77 +135,40 @@ const RequestScreen = ({ navigation }) => {
       resizeMode="cover"
       style={GlobalStyle.Background}
     >
-      <SafeAreaView style={styles.mainBody}>
-        <SafeAreaView
-          style={{
-            alignSelf: "center",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "10%",
-            width: "90%",
-            marginTop: "10%",
+      <FlatList
+        data={DATA}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        extraData={selectedId}
+        ListEmptyComponent={Empty}
+      />
+      <View style={styles.bottomBar}>
+        <TouchableOpacity
+          style={styles.bottomButton}
+          onPress={() => {
+            onPressAdd(DATA.filter((iter) => iter.id === selectedId)[0]);
           }}
         >
-          <Text style={{ fontSize: responsiveFontSize(4.3), color: "white" }}>
-            All Incoming Requests
-          </Text>
-        </SafeAreaView>
-        <FlatList
-          data={DATA}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          extraData={selectedId}
-          ListEmptyComponent={Empty}
-        />
-      </SafeAreaView>
+          <Text>Accept</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.bottomButton}
+          onPress={() =>
+            onPressDelete(DATA.filter((iter) => iter.id === selectedId)[0])
+          }
+        >
+          <Text>Reject</Text>
+        </TouchableOpacity>
+      </View>
     </ImageBackground>
   );
 };
 
-const Item = ({ item, onPressDelete, onPressAdd }) => (
-  <View style={styles.item}>
-    <View style={{ marginBottom: "3%" }}>
-      <Text style={styles.name}>
-        {item.firstName} {item.lastName}
-      </Text>
-      <Text style={styles.phone}>{item.phone}</Text>
-    </View>
-    <View
-      style={{
-        flexDirection: "row",
-        alignSelf: "center",
-      }}
-    >
-      <TouchableOpacity
-        onPress={() => {
-          onPressAdd(item);
-        }}
-        style={{
-          marginRight: "10%",
-          alignItems: "center",
-          borderRadius: 8,
-          borderColor: "gray",
-          backgroundColor: "dodgerblue",
-        }}
-      >
-        <Text style={{ fontSize: responsiveFontSize(2.5) }}>Accept</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => {
-          onPressDelete(item);
-        }}
-        style={{
-          alignItems: "center",
-          marginLeft: "10%",
-          borderRadius: 8,
-          backgroundColor: "red",
-        }}
-      >
-        <Text style={{ fontSize: responsiveFontSize(2.5) }}>Delete</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
+const Item = ({ item, onPress, backgroundColor }) => (
+  <TouchableOpacity style={[styles.item, backgroundColor]} onPress={onPress}>
+    <Text style={styles.name}>{item.firstName + " " + item.lastName}</Text>
+    <Text style={styles.phone}>{item.phone}</Text>
+  </TouchableOpacity>
 );
 
 const Empty = () => {
@@ -259,7 +196,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "white",
   },
   name: {
     color: "black",
@@ -284,6 +220,19 @@ const styles = StyleSheet.create({
   },
   emptyContainer: {
     paddingTop: "5%",
+  },
+  bottomBar: {
+    height: "10%",
+    backgroundColor: "dodgerblue",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  bottomButton: {
+    backgroundColor: "red",
+    borderColor: "black",
+    borderWidth: 2,
+    flex: 1,
   },
 });
 
