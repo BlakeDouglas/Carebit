@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 
 const data_temp = [
   {
@@ -118,39 +119,13 @@ const RequestScreen = ({ navigation }) => {
     );
   };
 
-  // Might not be necessary, depending on the changes austin makes
-  const connectCaregivee = async (tokenData) => {
-    try {
-      let response = await fetch(
-        "https://www.carebit.xyz/acceptCaregiverRequest",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-
-          // TODO: The body needs an overhaul with conditions. Also, fix DATA so it has caregiveeId
-          body: JSON.stringify({
-            caregiver: tokenData.caregiverId,
-            caregivee: DATA.caregiveeId,
-          }),
-        }
-      );
-      fetchUserData(tokenData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const renderItem = ({ item }) => {
+    const backgroundColor = item.id === selectedId ? "#f3f2f1" : "#bfb6a5";
     return (
       <Item
         item={item}
         onPress={() => setSelectedId(item.id)}
-        backgroundColor={{ backgroundColor: "dodgerblue" }}
-        onPressDelete={onPressDelete}
-        onPressAdd={onPressAdd}
+        backgroundColor={{ backgroundColor }}
       />
     );
   };
@@ -180,38 +155,41 @@ const RequestScreen = ({ navigation }) => {
           data={DATA}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
-          extraData={selectedId}
           ListEmptyComponent={Empty}
+          extraData={selectedId}
         />
+        {selectedId !== null && (
+          <View style={styles.optionsPane}>
+            <TouchableOpacity
+              style={styles.buttons}
+              onPress={() => {
+                onPressDelete(DATA.filter((iter) => iter.id === selectedId)[0]);
+              }}
+            >
+              <Text>Reject</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttons}
+              onPress={() => {
+                onPressAdd(DATA.filter((iter) => iter.id === selectedId)[0]);
+              }}
+            >
+              <Text>Accept</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </SafeAreaView>
     </ImageBackground>
   );
 };
 
-const Item = ({ item, onPressDelete, onPressAdd }) => (
-  <View style={styles.item}>
-    <Icon
-      onPress={() => {
-        onPressDelete(item);
-      }}
-      style={{ fontSize: responsiveFontSize(4), color: "red" }}
-      name={"close-circle"}
-    />
-    <View>
-      <Text style={styles.name}>
-        {item.firstName} {item.lastName}
-      </Text>
-      <Text style={styles.phone}>{item.phone}</Text>
-    </View>
-
-    <Icon
-      onPress={() => {
-        onPressAdd(item);
-      }}
-      style={{ fontSize: responsiveFontSize(4), color: "green" }}
-      name={"plus-circle"}
-    />
-  </View>
+const Item = ({ item, onPress, backgroundColor }) => (
+  <TouchableOpacity style={[styles.item, backgroundColor]} onPress={onPress}>
+    <Text style={styles.name}>
+      {item.firstName} {item.lastName}
+    </Text>
+    <Text style={styles.phone}>{item.phone}</Text>
+  </TouchableOpacity>
 );
 
 const Empty = () => {
@@ -231,14 +209,12 @@ const styles = StyleSheet.create({
   },
   item: {
     padding: "3%",
-    width: "75%",
+    width: "65%",
     alignSelf: "center",
     borderRadius: 8,
     marginTop: "5%",
     borderColor: "lightgray",
     borderWidth: 3,
-    justifyContent: "space-between",
-    flexDirection: "row",
     alignItems: "center",
     backgroundColor: "lightgray",
   },
@@ -265,6 +241,16 @@ const styles = StyleSheet.create({
   },
   emptyContainer: {
     paddingTop: "5%",
+  },
+  optionsPane: {
+    height: "8%",
+    width: "100%",
+    backgroundColor: "dodgerblue",
+    flexDirection: "row",
+  },
+  buttons: {
+    borderColor: "red",
+    borderWidth: 2,
   },
 });
 

@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { Provider, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import Modal from "react-native-modal";
 import call from "react-native-phone-call";
@@ -65,7 +66,6 @@ export default function GiveeHomeScreen({ navigation }) {
   }, []);
 
   const fetchFitbitData = (tokenData) => {
-    refreshToken(tokenData);
     fetch("https://api.fitbit.com/1/user/-/profile.json", {
       method: "GET",
       headers: {
