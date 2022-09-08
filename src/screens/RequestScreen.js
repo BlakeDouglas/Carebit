@@ -162,6 +162,20 @@ const RequestScreen = ({ navigation }) => {
       style={GlobalStyle.Background}
     >
       <SafeAreaView style={styles.mainBody}>
+        <SafeAreaView
+          style={{
+            alignSelf: "center",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "10%",
+            width: "90%",
+            marginTop: "10%",
+          }}
+        >
+          <Text style={{ fontSize: responsiveFontSize(4.3), color: "white" }}>
+            All Incoming Requests
+          </Text>
+        </SafeAreaView>
         <FlatList
           data={DATA}
           renderItem={renderItem}
@@ -180,7 +194,7 @@ const Item = ({ item, onPressDelete, onPressAdd }) => (
       onPress={() => {
         onPressDelete(item);
       }}
-      style={{ fontSize: 32, color: "red" }}
+      style={{ fontSize: responsiveFontSize(4), color: "red" }}
       name={"close-circle"}
     />
     <View>
@@ -194,7 +208,7 @@ const Item = ({ item, onPressDelete, onPressAdd }) => (
       onPress={() => {
         onPressAdd(item);
       }}
-      style={{ fontSize: 32, color: "green" }}
+      style={{ fontSize: responsiveFontSize(4), color: "green" }}
       name={"plus-circle"}
     />
   </View>
@@ -213,18 +227,20 @@ const styles = StyleSheet.create({
   mainBody: {
     height: "100%",
     width: "100%",
+    justifyContent: "space-evenly",
   },
   item: {
     padding: "3%",
-    width: "85%",
+    width: "75%",
     alignSelf: "center",
-    borderRadius: 20,
+    borderRadius: 8,
     marginTop: "5%",
     borderColor: "lightgray",
     borderWidth: 3,
     justifyContent: "space-between",
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "lightgray",
   },
   name: {
     color: "black",

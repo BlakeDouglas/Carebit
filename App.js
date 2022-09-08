@@ -1,7 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-
 import TitleScreen from "./src/screens/TitleScreen";
 import RoleSelectScreen from "./src/screens/RoleSelectScreen";
 import LoginScreen from "./src/screens/LoginScreen";
@@ -16,8 +15,7 @@ import RequestScreen from "./src/screens/RequestScreen";
 import ActivityLevelScreen from "./src/screens/ActivityLevelScreen";
 import AddScreen from "./src/screens/AddScreen";
 import CustomNotificationScreen from "./src/screens/CustomNotificationScreen";
-import { Image, Text } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { Image, Text, TouchableOpacity } from "react-native";
 import { Provider, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
 import { useFonts } from "expo-font";
@@ -25,7 +23,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { Title } from "react-native-paper";
+
 const firebaseConfig = {
   apiKey: "AIzaSyAu69cdb30ONSKMcrIrL7P4YT0ghQoNEdg",
   authDomain: "carebit-48f39.firebaseapp.com",
@@ -244,6 +242,48 @@ const HomeStack = () => {
                 >
                   Done
                 </Text>
+              </TouchableOpacity>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="RequestScreen"
+          component={RequestScreen}
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerTitle: "Friend Requests",
+
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("HomeScreen")}
+                style={{ marginLeft: "7%" }}
+              >
+                <Text
+                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
+                >
+                  Done
+                </Text>
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("AddScreen")}
+              >
+                <Image
+                  style={{
+                    width: 28,
+                    height: 28,
+                    marginRight: "8%",
+                  }}
+                  source={require("./assets/images/avatar/addUser.png")}
+                />
               </TouchableOpacity>
             ),
           })}
