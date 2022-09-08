@@ -190,27 +190,47 @@ const RequestScreen = ({ navigation }) => {
 
 const Item = ({ item, onPressDelete, onPressAdd }) => (
   <View style={styles.item}>
-    <Icon
-      onPress={() => {
-        onPressDelete(item);
-      }}
-      style={{ fontSize: responsiveFontSize(4), color: "red" }}
-      name={"close-circle"}
-    />
-    <View>
+    <View style={{ marginBottom: "3%" }}>
       <Text style={styles.name}>
         {item.firstName} {item.lastName}
       </Text>
       <Text style={styles.phone}>{item.phone}</Text>
     </View>
-
-    <Icon
-      onPress={() => {
-        onPressAdd(item);
+    <View
+      style={{
+        flexDirection: "row",
+        alignSelf: "center",
       }}
-      style={{ fontSize: responsiveFontSize(4), color: "green" }}
-      name={"plus-circle"}
-    />
+    >
+      <TouchableOpacity
+        onPress={() => {
+          onPressAdd(item);
+        }}
+        style={{
+          marginRight: "10%",
+          alignItems: "center",
+          borderRadius: 8,
+          borderColor: "gray",
+          backgroundColor: "dodgerblue",
+        }}
+      >
+        <Text style={{ fontSize: responsiveFontSize(2.5) }}>Accept</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => {
+          onPressDelete(item);
+        }}
+        style={{
+          alignItems: "center",
+          marginLeft: "10%",
+          borderRadius: 8,
+          backgroundColor: "red",
+        }}
+      >
+        <Text style={{ fontSize: responsiveFontSize(2.5) }}>Delete</Text>
+      </TouchableOpacity>
+    </View>
   </View>
 );
 
@@ -236,11 +256,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: "5%",
     borderColor: "lightgray",
-    borderWidth: 3,
+    borderWidth: 2,
     justifyContent: "space-between",
-    flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "lightgray",
+    backgroundColor: "white",
   },
   name: {
     color: "black",
