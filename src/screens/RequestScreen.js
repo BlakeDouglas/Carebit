@@ -216,7 +216,6 @@ const styles = StyleSheet.create({
     borderColor: "lightgray",
     borderWidth: 3,
     alignItems: "center",
-    backgroundColor: "lightgray",
   },
   name: {
     color: "black",
