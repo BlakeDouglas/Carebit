@@ -95,7 +95,7 @@ export default function PhysicianInfoScreen({ navigation }) {
           style={[
             GlobalStyle.Container,
             {
-              marginTop: Platform.OS === "ios" ? "25%" : "8%",
+              marginTop: Platform.OS === "ios" ? "25%" : "18%",
               marginLeft: "5%",
               marginRight: "5%",
             },
