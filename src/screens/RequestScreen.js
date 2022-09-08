@@ -120,7 +120,7 @@ const RequestScreen = ({ navigation }) => {
   };
 
   const renderItem = ({ item }) => {
-    const backgroundColor = item.id === selectedId ? "#f3f2f1" : "#bfb6a5";
+    const backgroundColor = item.id === selectedId ? "#bfb6a5" : "#f3f2f1";
     return (
       <Item
         item={item}
