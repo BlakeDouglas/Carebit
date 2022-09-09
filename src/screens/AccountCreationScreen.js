@@ -131,101 +131,103 @@ export default function AccountCreationScreen({ navigation, route }) {
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >
-      <KeyboardAwareScrollView style={{ height: "100%", width: "100%" }}>
-        <View style={GlobalStyle.Container}>
-          <View style={{ height: "18%", width: "100%", marginBottom: "5%" }}>
-            <Text style={GlobalStyle.Subtitle2}>
-              {tokenData.type.charAt(0).toUpperCase() +
-                tokenData.type.slice(1) +
-                " Registration"}
-            </Text>
-          </View>
-          <View style={{ height: "82%", width: "100%" }}>
-            <View style={{ flexDirection: "row" }}>
-              <View style={GlobalStyle.Background}>
-                <CustomTextInput
-                  placeholder="First Name"
-                  iconName="account-outline"
-                  label="Name*"
-                  error={errors.firstName}
-                  onChangeText={(text) => handleChange(text, "firstName")}
-                  onFocus={() => {
-                    handleError(null, "firstName");
-                  }}
-                />
-              </View>
-              <View style={GlobalStyle.Background}>
-                <CustomTextInput
-                  placeholder="Last Name"
-                  label="  "
-                  error={errors.lastName}
-                  onChangeText={(text) => handleChange(text, "lastName")}
-                  onFocus={() => {
-                    handleError(null, "lastName");
-                  }}
-                />
-              </View>
+      <SafeAreaView style={{ flex: 1 }}>
+        <KeyboardAwareScrollView style={{ height: "100%", width: "100%" }}>
+          <View style={GlobalStyle.Container}>
+            <View style={{ height: "18%", width: "100%", marginBottom: "5%" }}>
+              <Text style={GlobalStyle.Subtitle2}>
+                {tokenData.type.charAt(0).toUpperCase() +
+                  tokenData.type.slice(1) +
+                  " Registration"}
+              </Text>
             </View>
-            <CustomTextInput
-              placeholder="(XXX)-XXX-XXXX"
-              iconName="phone-outline"
-              label="Phone*"
-              keyboardType="number-pad"
-              error={errors.phone}
-              onChangeText={(text) =>
-                // Removes everything but numbers, so it complies with the api
-                handleChange(text.replace(/[^0-9]+/g, ""), "phone")
-              }
-              onFocus={() => {
-                handleError(null, "phone");
-              }}
-            />
+            <View style={{ height: "82%", width: "100%" }}>
+              <View style={{ flexDirection: "row" }}>
+                <View style={GlobalStyle.Background}>
+                  <CustomTextInput
+                    placeholder="First Name"
+                    iconName="account-outline"
+                    label="Name*"
+                    error={errors.firstName}
+                    onChangeText={(text) => handleChange(text, "firstName")}
+                    onFocus={() => {
+                      handleError(null, "firstName");
+                    }}
+                  />
+                </View>
+                <View style={GlobalStyle.Background}>
+                  <CustomTextInput
+                    placeholder="Last Name"
+                    label="  "
+                    error={errors.lastName}
+                    onChangeText={(text) => handleChange(text, "lastName")}
+                    onFocus={() => {
+                      handleError(null, "lastName");
+                    }}
+                  />
+                </View>
+              </View>
+              <CustomTextInput
+                placeholder="(XXX)-XXX-XXXX"
+                iconName="phone-outline"
+                label="Phone*"
+                keyboardType="number-pad"
+                error={errors.phone}
+                onChangeText={(text) =>
+                  // Removes everything but numbers, so it complies with the api
+                  handleChange(text.replace(/[^0-9]+/g, ""), "phone")
+                }
+                onFocus={() => {
+                  handleError(null, "phone");
+                }}
+              />
 
-            <CustomTextInput
-              placeholder="example@domain.com"
-              iconName="email-outline"
-              label="Email*"
-              keyboardType="email-address"
-              error={errors.email}
-              onChangeText={(text) => handleChange(text, "email")}
-              onFocus={() => {
-                handleError(null, "email");
-              }}
-            />
+              <CustomTextInput
+                placeholder="example@domain.com"
+                iconName="email-outline"
+                label="Email*"
+                keyboardType="email-address"
+                error={errors.email}
+                onChangeText={(text) => handleChange(text, "email")}
+                onFocus={() => {
+                  handleError(null, "email");
+                }}
+              />
 
-            <CustomTextInput
-              placeholder="Password"
-              iconName="lock-outline"
-              label="Password*"
-              error={errors.password}
-              onChangeText={(text) => handleChange(text, "password")}
-              onFocus={() => {
-                handleError(null, "password");
-              }}
-              password
-            />
-            <View
-              style={{
-                height: "20%",
-                marginTop: "5%",
-                justifyContent: "center",
-              }}
-            >
-              <TouchableOpacity
-                style={[
-                  GlobalStyle.Button,
-                  {
-                    backgroundColor: "rgba(255, 255, 255, .2)",
-                  },
-                ]}
-                onPress={validate}
+              <CustomTextInput
+                placeholder="Password"
+                iconName="lock-outline"
+                label="Password*"
+                error={errors.password}
+                onChangeText={(text) => handleChange(text, "password")}
+                onFocus={() => {
+                  handleError(null, "password");
+                }}
+                password
+              />
+              <View
+                style={{
+                  height: "20%",
+                  marginTop: "5%",
+                  justifyContent: "center",
+                }}
               >
-                <Text style={GlobalStyle.ButtonText}>Create Account</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    GlobalStyle.Button,
+                    {
+                      backgroundColor: "rgba(255, 255, 255, .2)",
+                    },
+                  ]}
+                  onPress={validate}
+                >
+                  <Text style={GlobalStyle.ButtonText}>Create Account</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </KeyboardAwareScrollView>
+        </KeyboardAwareScrollView>
+      </SafeAreaView>
     </ImageBackground>
   );
 }
