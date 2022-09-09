@@ -5,6 +5,7 @@ import {
   ImageBackground,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
   ScrollView,
   Platform,
   View,
@@ -18,6 +19,9 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
 import { setTokenData, setUserData } from "../redux/actions";
+import { createIconSetFromFontello } from "react-native-vector-icons";
+import fontelloConfig from "../../config.json";
+const Icon = createIconSetFromFontello(fontelloConfig);
 
 export default function AccountCreationScreen({ navigation, route }) {
   // These are the two tools of the redux state manager. Use them instead of hooks
@@ -143,11 +147,18 @@ export default function AccountCreationScreen({ navigation, route }) {
               tokenData.type.slice(1) +
               " Registration"}
           </Text>
+
           <View style={{ flexDirection: "row" }}>
+            <Image
+              source={require("../../assets/images/account-outline.png")}
+              style={{
+                width: 20,
+                height: 20,
+              }}
+            />
             <View style={GlobalStyle.Background}>
               <CustomTextInput
                 placeholder="First Name"
-                iconName="account-outline"
                 label="Name*"
                 error={errors.firstName}
                 onChangeText={(text) => handleChange(text, "firstName")}
@@ -168,9 +179,15 @@ export default function AccountCreationScreen({ navigation, route }) {
               />
             </View>
           </View>
+          <Image
+            source={require("../../assets/images/phone-outline.png")}
+            style={{
+              width: 20,
+              height: 20,
+            }}
+          />
           <CustomTextInput
             placeholder="(XXX)-XXX-XXXX"
-            iconName="phone-outline"
             label="Phone*"
             keyboardType="number-pad"
             error={errors.phone}
@@ -182,10 +199,15 @@ export default function AccountCreationScreen({ navigation, route }) {
               handleError(null, "phone");
             }}
           />
-
+          <Image
+            source={require("../../assets/images/email-outline.png")}
+            style={{
+              width: 20,
+              height: 20,
+            }}
+          />
           <CustomTextInput
             placeholder="example@domain.com"
-            iconName="email-outline"
             label="Email*"
             keyboardType="email-address"
             error={errors.email}
@@ -194,10 +216,15 @@ export default function AccountCreationScreen({ navigation, route }) {
               handleError(null, "email");
             }}
           />
-
+          <Image
+            source={require("../../assets/images/lock-outline.png")}
+            style={{
+              width: 20,
+              height: 20,
+            }}
+          />
           <CustomTextInput
             placeholder="Password"
-            iconName="lock-outline"
             label="Password*"
             error={errors.password}
             onChangeText={(text) => handleChange(text, "password")}
