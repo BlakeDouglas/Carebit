@@ -21,7 +21,7 @@ const initialState = {
     physStreet: "",
     physCity: "",
     physState: "",
-    physZipCode: "",
+    physZip: "",
   },
 };
 

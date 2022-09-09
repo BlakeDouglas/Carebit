@@ -44,28 +44,6 @@ export default function AuthenticationScreen({ navigation }) {
     discovery
   );
 
-  const fetchCaregiveeData = async (jsonTokenData) => {
-    try {
-      let url =
-        "https://www.carebit.xyz/caregivee/" + jsonTokenData.caregiveeId;
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + jsonTokenData.access_token,
-        },
-      });
-      const json = await response.json();
-      console.log(
-        "REMOVE ME (Result from fetching caregivee (Try this token)): " +
-          JSON.stringify(json)
-      );
-    } catch (error) {
-      console.log("Caught error: " + error);
-    }
-  };
-
   const makeCaregivee = async (code, tokenData) => {
     try {
       const response = await fetch("https://www.carebit.xyz/caregivee/create", {
@@ -80,11 +58,8 @@ export default function AuthenticationScreen({ navigation }) {
       const json = await response.json();
 
       if (json.caregiveeId !== undefined) {
-        console.log(
-          "REMOVE ME (Before fetching caregivee): " + JSON.stringify(tokenData)
-        );
         dispatch(setTokenData({ ...tokenData, ...json, type: "caregivee" }));
-        fetchCaregiveeData(tokenData);
+        // TODO: Some method here to get tokens
       } else
         Alert.alert("Error", json.error, [
           { text: "Ok", onPress: () => {}, style: "cancel" },

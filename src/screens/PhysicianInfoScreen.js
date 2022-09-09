@@ -26,7 +26,7 @@ export default function PhysicianInfoScreen({ navigation }) {
     physStreet: "",
     physCity: "",
     physState: "",
-    physZipCode: "",
+    physZip: "",
   });
 
   const requiredText = " Input required";
@@ -71,6 +71,7 @@ export default function PhysicianInfoScreen({ navigation }) {
         }),
       });
       const json = await response.json();
+      console.log(json.cgvee);
       dispatch(setPhysicianData(json.cgvee));
     } catch (error) {
       console.log(error);
@@ -182,10 +183,10 @@ export default function PhysicianInfoScreen({ navigation }) {
                     //iconName="phone-outline"
                     label="Zipcode"
                     keyboardType="number-pad"
-                    error={errors.physZipCode}
-                    onChangeText={(text) => handleChange(text, "physZipCode")}
+                    error={errors.physZip}
+                    onChangeText={(text) => handleChange(text, "physZip")}
                     onFocus={() => {
-                      handleError(null, "physZipCode");
+                      handleError(null, "physZip");
                     }}
                   />
                 </View>

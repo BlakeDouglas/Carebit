@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import CustomTextInput from "../utils/CustomTextInput";
-import { setTokenData, setUserData } from "../redux/actions";
+import { setPhysicianData, setTokenData, setUserData } from "../redux/actions";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function LoginScreen({ navigation }) {
@@ -70,6 +70,7 @@ export default function LoginScreen({ navigation }) {
       });
       const json = await response.json();
       if (json.access_token !== undefined) {
+        fetchPhysData(json);
         dispatch(setTokenData(json));
         fetchUserData(json);
       } else {
@@ -99,6 +100,36 @@ export default function LoginScreen({ navigation }) {
       console.log("Caught error: " + error);
     }
   };
+
+  const fetchPhysData = async (jsonTokenData) => {
+    if (!jsonTokenData.caregiveeId) return;
+    try {
+      let url =
+        "https://www.carebit.xyz/caregivee/" + jsonTokenData.caregiveeId;
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + jsonTokenData.access_token,
+        },
+      });
+      const json = await response.json();
+      dispatch(
+        setPhysicianData({
+          physName: json.caregivee.physName,
+          physPhone: json.caregivee.physPhone,
+          physStreet: json.caregivee.physStreet,
+          physCity: json.caregivee.physCity,
+          physState: json.caregivee.physState,
+          physZip: json.caregivee.physZip,
+        })
+      );
+    } catch (error) {
+      console.log("Caught error: " + error);
+    }
+  };
+
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
