@@ -3,8 +3,7 @@ import {
   ImageBackground,
   SafeAreaView,
   Text,
-  Linking,
-  View,
+  Alert,
   Pressable,
   TouchableOpacity,
 } from "react-native";
@@ -28,15 +27,35 @@ export default function LinkUsersScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const typeOfRequester =
     tokenData.type === "caregivee" ? "caregiver" : "caregivee";
+
+  const createButtonAlert = () =>
+    Alert.alert(
+      "Warning",
+      "Your Caregivee will need to sign into Fitbit from your device",
+      [
+        {
+          text: "Cancel",
+          onPress: () => {
+            console.log("Cancel Pressed");
+          },
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            console.log("OK Pressed"),
+              navigation.navigate("AuthenticationScreen");
+          },
+        },
+      ]
+    );
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background03.png")} // Edit me if you find a better image~!
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >
-      <SafeAreaView
-        style={[GlobalStyle.Container, { justifyContent: "space-evenly" }]}
-      >
+      <SafeAreaView style={GlobalStyle.Container}>
         <Text
           style={[GlobalStyle.Subtitle, { fontSize: responsiveFontSize(5.3) }]}
         >
@@ -104,9 +123,12 @@ export default function LinkUsersScreen({ navigation }) {
             <Text
               style={[GlobalStyle.Text, { fontSize: responsiveFontSize(2.3) }]}
             >
-              Proceed without Caregivee having the app SHOW ALERT
+              Proceed without your Caregivee having the app
             </Text>
-            <TouchableOpacity style={[GlobalStyle.Button, { marginTop: "8%" }]}>
+            <TouchableOpacity
+              style={[GlobalStyle.Button, { marginTop: "8%" }]}
+              onPress={createButtonAlert}
+            >
               <Text style={GlobalStyle.ButtonText}>Opt Out</Text>
             </TouchableOpacity>
           </SafeAreaView>

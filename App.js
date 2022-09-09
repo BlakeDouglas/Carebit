@@ -13,6 +13,7 @@ import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
 import RequestScreen from "./src/screens/RequestScreen";
 import ActivityLevelScreen from "./src/screens/ActivityLevelScreen";
+import LinkUsersScreen from "./src/screens/LinkUsersScreen";
 import AddScreen from "./src/screens/AddScreen";
 import CustomNotificationScreen from "./src/screens/CustomNotificationScreen";
 import { Image, Text, TouchableOpacity } from "react-native";
@@ -61,7 +62,8 @@ const RootNavigation = () => {
       {tokenData.access_token === "" ? (
         <AuthStack />
       ) : (tokenData.type !== "caregiver" && !physData.physName) ||
-        (tokenData.type !== "caregiver" && !tokenData.caregiveeId) ? (
+        (tokenData.type !== "caregiver" && !tokenData.caregiveeId) ||
+        (tokenData.type !== "caregivee" && !tokenData.caregiveeId) ? (
         <MiddleStack />
       ) : (
         <HomeStack />
@@ -106,6 +108,10 @@ const MiddleStack = () => {
           title: "",
         }}
       >
+        {tokenData.type !== "caregivee" && !tokenData.caregiveeId && (
+          <Stack.Screen name="LinkUsersScreen" component={LinkUsersScreen} />
+        )}
+
         {tokenData.type !== "caregiver" && !tokenData.caregiveeId && (
           <Stack.Screen
             name="AuthenticationScreen"
