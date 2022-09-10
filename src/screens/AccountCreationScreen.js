@@ -133,7 +133,7 @@ export default function AccountCreationScreen({ navigation, route }) {
         <StatusBar
           hidden={false}
           translucent={true}
-          backgroundColor="#000000"
+          backgroundColor="black"
         />
         <View
           style={[

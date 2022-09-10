@@ -83,7 +83,7 @@ export default function AuthenticationScreen({ navigation }) {
         <StatusBar
           hidden={false}
           translucent={true}
-          backgroundColor="#000000"
+          backgroundColor="black"
         />
         <SafeAreaView style={GlobalStyle.Container}>
           <SafeAreaView

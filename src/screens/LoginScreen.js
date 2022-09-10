@@ -142,7 +142,7 @@ export default function LoginScreen({ navigation }) {
         <StatusBar
           hidden={false}
           translucent={true}
-          backgroundColor="#000000"
+          backgroundColor="black"
         />
         <KeyboardAwareScrollView style={{ flex: 1 }}>
           <SafeAreaView style={GlobalStyle.Container}>

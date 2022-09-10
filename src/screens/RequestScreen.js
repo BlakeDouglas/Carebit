@@ -84,8 +84,8 @@ const RequestScreen = ({ navigation }) => {
         {
           text: "Continue",
           onPress: () => {
-            const filteredData = DATA.filter((iter) => iter.id !== item.id);
-            setDATA(filteredData);
+            // TODO: Delete item with id and then get
+            // TODO: Also, make the id as the flatlist id
           },
         },
       ]
@@ -145,6 +145,28 @@ const RequestScreen = ({ navigation }) => {
       />
     );
   };
+
+  const getRequests = async (tokenData) => {
+    try {
+      const response = await fetch("https://www.carebit.xyz/getRequests", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokenData.access_token,
+        },
+        body: JSON.stringify({ caregiveeID: null, caregiverID: tokenData.caregiverID }),
+      });
+      const json = await response.json();
+      console.log("GOOG: " + JSON.stringify(json));
+      setDATA(json);
+    // TODO: Fill me with useful stuff
+    } catch (error) {
+      console.log("Caught error: " + error);
+    }
+  };
+
+  getRequests(tokenData);
 
   return (
     <ImageBackground

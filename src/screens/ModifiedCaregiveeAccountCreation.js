@@ -125,7 +125,8 @@ export default function ModifiedCaregiveeAccountCreation({navigation, route}) {
   };
 
   // TODO: Replace with new method
-  const acceptCaregiverRequest = async (caregivee, caregiver) => {
+  // Or not?
+  const acceptCaregiverRequest = async (caregiveeID, caregiverID) => {
     try {
       const response = await fetch("https://www.carebit.xyz/acceptCaregiverRequest", {
         method: "POST",
@@ -133,7 +134,7 @@ export default function ModifiedCaregiveeAccountCreation({navigation, route}) {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ caregiveeID: caregivee, caregiverID: caregiver }),
+        body: JSON.stringify({ caregiveeID: caregiveeID, caregiverID: caregiverID }),
       });
       const json = await response.json();
       console.log("acceptCaregiverRequest" + JSON.stringify(json));
@@ -163,7 +164,7 @@ export default function ModifiedCaregiveeAccountCreation({navigation, route}) {
         <StatusBar
           hidden={false}
           translucent={true}
-          backgroundColor="#000000"
+          backgroundColor="dodgerblue"
         />
         <View
           style={[

@@ -13,7 +13,7 @@ export default function ChatScreen({ navigation }) {
   return (
     // Header Container
     <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar hidden={false} translucent={false} backgroundColor="black" />
+      <StatusBar hidden={false} translucent={false} backgroundColor="dodgerblue" />
       <SafeAreaView
         style={{
           marginTop: "8%",

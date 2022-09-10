@@ -12,7 +12,6 @@ import React, { useState } from "react";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import CustomTextInput from "../utils/CustomTextInput";
 
 
@@ -79,7 +78,7 @@ export default function AddScreen({ navigation }) {
         <StatusBar
           hidden={false}
           translucent={true}
-          backgroundColor="#000000"
+          backgroundColor="dodgerblue"
         />
         <ScrollView style={{ marginTop: "25%", flex: 1 }}>
           <SafeAreaView
