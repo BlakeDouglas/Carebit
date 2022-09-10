@@ -164,10 +164,26 @@ const HomeStack = () => {
             headerLeft: () => (
               <TouchableOpacity
                 onPress={() => navigation.navigate("SettingsScreen")}
-                style={{ marginLeft: "5%" }}
+                style={{ marginLeft: "8%" }}
               >
                 <Image
                   source={require("./assets/images/settings/settings.png")}
+                />
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("RequestScreen")}
+                style={{
+                  marginRight: "8%",
+                }}
+              >
+                <Image
+                  style={{
+                    height: 28,
+                    width: 28,
+                  }}
+                  source={require("./assets/images/avatar/friends.png")}
                 />
               </TouchableOpacity>
             ),
@@ -194,7 +210,7 @@ const HomeStack = () => {
             headerLeft: () => (
               <TouchableOpacity
                 onPress={() => navigation.navigate("HomeScreen")}
-                style={{ marginLeft: "7%" }}
+                style={{ marginLeft: "8%" }}
               >
                 <Text
                   style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
@@ -206,7 +222,7 @@ const HomeStack = () => {
             headerRight: () => (
               <TouchableOpacity
                 onPress={() => navigation.navigate("HomeScreen")}
-                style={{ marginRight: "7%" }}
+                style={{ marginRight: "8%" }}
               >
                 <Text
                   style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
@@ -234,7 +250,7 @@ const HomeStack = () => {
             headerLeft: () => (
               <TouchableOpacity
                 onPress={() => navigation.navigate("HomeScreen")}
-                style={{ marginLeft: "7%" }}
+                style={{ marginLeft: "8%" }}
               >
                 <Text
                   style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
@@ -246,7 +262,7 @@ const HomeStack = () => {
             headerRight: () => (
               <TouchableOpacity
                 onPress={() => navigation.navigate("HomeScreen")}
-                style={{ marginRight: "7%" }}
+                style={{ marginRight: "8%" }}
               >
                 <Text
                   style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
@@ -274,7 +290,7 @@ const HomeStack = () => {
             headerLeft: () => (
               <TouchableOpacity
                 onPress={() => navigation.navigate("HomeScreen")}
-                style={{ marginLeft: "7%" }}
+                style={{ marginLeft: "8%" }}
               >
                 <Text
                   style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
@@ -293,7 +309,7 @@ const HomeStack = () => {
                     height: 28,
                     marginRight: "8%",
                   }}
-                  source={require("./assets/images/avatar/addUser.png")}
+                  source={require("./assets/images/avatar/friends.png")}
                 />
               </TouchableOpacity>
             ),

@@ -28,11 +28,7 @@ export default function TitleScreen({ navigation }) {
       style={GlobalStyle.Background}
     >
       <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar
-          hidden={false}
-          translucent={true}
-          backgroundColor="#000000"
-        />
+        <StatusBar hidden={false} translucent={true} backgroundColor="black" />
         <SafeAreaView style={GlobalStyle.Container}>
           <Text style={GlobalStyle.Subtitle}>Welcome to</Text>
           <Text style={GlobalStyle.Title}>Carebit</Text>

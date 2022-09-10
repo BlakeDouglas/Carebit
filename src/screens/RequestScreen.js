@@ -130,7 +130,7 @@ const RequestScreen = ({ navigation }) => {
 
   return (
     <ImageBackground
-      source={require("../../assets/images/background-hearts.imageset/background01.png")}
+      source={require("../../assets/images/background-hearts.imageset/background02.png")}
       resizeMode="cover"
       style={GlobalStyle.Background}
     >
@@ -175,11 +175,19 @@ const RequestScreen = ({ navigation }) => {
               <TouchableOpacity
                 style={styles.buttons}
                 onPress={() => {
-                  onPressAdd(DATA.filter((iter) => iter.id === selectedId)[0]);
+                  onPressDelete(
+                    DATA.filter((iter) => iter.id === selectedId)[0]
+                  );
                 }}
               >
-                <Text style={{ fontSize: responsiveFontSize(2.2) }}>
-                  Accept
+                <Text
+                  style={{
+                    color: "darkred",
+                    fontWeight: "bold",
+                    fontSize: responsiveFontSize(2.5),
+                  }}
+                >
+                  Reject
                 </Text>
               </TouchableOpacity>
             </View>
@@ -193,18 +201,19 @@ const RequestScreen = ({ navigation }) => {
               }}
             >
               <TouchableOpacity
-                style={[
-                  styles.buttons,
-                  { backgroundColor: "rgba(232,20,0, .8)" },
-                ]}
+                style={[styles.buttons, {}]}
                 onPress={() => {
-                  onPressDelete(
-                    DATA.filter((iter) => iter.id === selectedId)[0]
-                  );
+                  onPressAdd(DATA.filter((iter) => iter.id === selectedId)[0]);
                 }}
               >
-                <Text style={{ fontSize: responsiveFontSize(2.2) }}>
-                  Reject
+                <Text
+                  style={{
+                    color: "green",
+                    fontWeight: "bold",
+                    fontSize: responsiveFontSize(2.5),
+                  }}
+                >
+                  Accept
                 </Text>
               </TouchableOpacity>
             </View>
@@ -287,7 +296,7 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: "2%",
     borderColor: "dodgerblue",
-    backgroundColor: "rgba(0,200,100, .5)",
+    backgroundColor: "lightgray",
     textAlign: "center",
     alignItems: "center",
     justifyContent: "center",
