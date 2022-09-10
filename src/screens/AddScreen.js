@@ -14,7 +14,6 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
 
-
 export default function AddScreen({ navigation }) {
   const handleChange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
@@ -30,27 +29,30 @@ export default function AddScreen({ navigation }) {
   const typeOfRequester =
     tokenData.type === "caregivee" ? "caregiver" : "caregivee";
 
-    const validate = () => {
-      console.log("Type: " + inputs.phone);
-      Keyboard.dismiss();
-      let valid = true;
-      if (!inputs.phone) {
-        handleError(" Input required", "phone");
-        valid = false;
-      } else if (
-        !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
-      ) {
-        handleError(" Invalid phone number", "phone");
-        valid = false;
-      }
-  
-      if (valid) {
-        request();
-      }
-    };
+  const validate = () => {
+    console.log("Type: " + inputs.phone);
+    Keyboard.dismiss();
+    let valid = true;
+    if (!inputs.phone) {
+      handleError(" Input required", "phone");
+      valid = false;
+    } else if (
+      !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
+    ) {
+      handleError(" Invalid phone number", "phone");
+      valid = false;
+    }
+
+    if (valid) {
+      request();
+    }
+  };
 
   const request = async () => {
-    const body = (tokenData.type === "caregivee") ? ({ caregiveePhone: tokenData.phone, caregiverPhone: inputs.phone}) : ({ caregiverPhone: tokenData.phone, caregiveePhone: phoneInput});
+    const body =
+      tokenData.type === "caregivee"
+        ? { caregiveePhone: tokenData.phone, caregiverPhone: inputs.phone }
+        : { caregiverPhone: tokenData.phone, caregiveePhone: phoneInput };
     try {
       const response = await fetch("https://www.carebit.xyz/createRequest", {
         method: "POST",
@@ -99,7 +101,7 @@ export default function AddScreen({ navigation }) {
 
           <SafeAreaView
             style={{
-              marginTop: "15%",
+              marginTop: "10%",
               height: "20%",
               width: "100%",
               //backgroundColor: "red",
@@ -119,8 +121,9 @@ export default function AddScreen({ navigation }) {
               height: "80%",
               width: "80%",
               alignSelf: "center",
-
-              justifyContent: "center",
+              //backgroundColor: "blue",
+              justifyContent: "flex-start",
+              marginTop: "5%",
             }}
           >
             <CustomTextInput
@@ -140,10 +143,22 @@ export default function AddScreen({ navigation }) {
                 handleError(null, "phone");
               }}
             />
-            <TouchableOpacity style={[GlobalStyle.Button, { marginTop: "8%" }]}>
-              <Text style={GlobalStyle.ButtonText} onPress={validate}>Send Request</Text>
-            </TouchableOpacity>
+            <SafeAreaView style={{}}>
+              <TouchableOpacity
+                style={[GlobalStyle.Button, { marginTop: "8%" }]}
+              >
+                <Text style={GlobalStyle.ButtonText} onPress={validate}>
+                  Send Request
+                </Text>
+              </TouchableOpacity>
+              <Text></Text>
+            </SafeAreaView>
+            <Text></Text>
+            <Text></Text>
           </SafeAreaView>
+          <Text></Text>
+          <Text></Text>
+          <Text></Text>
         </ScrollView>
       </SafeAreaView>
     </ImageBackground>
