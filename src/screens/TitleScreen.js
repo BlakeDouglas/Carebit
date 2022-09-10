@@ -6,11 +6,8 @@ import {
   ImageBackground,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
 import GlobalStyle from "../utils/GlobalStyle";
-
 import React from "react";
-
 import * as Linking from "expo-linking";
 
 export default function TitleScreen({ navigation }) {

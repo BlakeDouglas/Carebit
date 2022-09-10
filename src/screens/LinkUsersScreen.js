@@ -12,6 +12,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { useSelector, useDispatch } from "react-redux";
+import {discovery} from "./AuthenticationScreen";
+import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
 
 export default function LinkUsersScreen({ navigation }) {
   const handleChange = (text, input) => {
@@ -31,7 +33,7 @@ export default function LinkUsersScreen({ navigation }) {
   const createButtonAlert = () =>
     Alert.alert(
       "Warning",
-      "Your Caregivee will need to sign into Fitbit from your device",
+      "You will need to sign into your caregivee's Fitbit device.\nOnly continue if you know their Fitbit credentials.",
       [
         {
           text: "Cancel",
@@ -42,13 +44,31 @@ export default function LinkUsersScreen({ navigation }) {
         },
         {
           text: "OK",
-          onPress: () => {
-            console.log("OK Pressed"),
-              navigation.navigate("AuthenticationScreen");
-          },
+          onPress: promptAsync
         },
       ]
     );
+
+    const [request, response, promptAsync] = useAuthRequest(
+      {
+        clientId: "238QS3",
+        scopes: ["activity", "sleep", "temperature"],
+        redirectUri: makeRedirectUri({
+          scheme: "carebit",
+          path: "callback",
+        }),
+  
+        usePKCE: false,
+        extraParams: { prompt: "login" },
+      },
+      discovery
+    );
+  
+    React.useEffect(() => {
+      if (response?.type === "success")
+        navigation.navigate("ModifiedCaregiveeAccountCreation", {caregiverToken: tokenData, code: response.params.code})
+    }, [response]);
+
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background03.png")} // Edit me if you find a better image~!
@@ -65,7 +85,7 @@ export default function LinkUsersScreen({ navigation }) {
               { fontSize: responsiveFontSize(5.3) },
             ]}
           >
-            Connect to Caregivee
+            Connect to a Caregivee
           </Text>
           <SafeAreaView
             style={{
@@ -92,7 +112,7 @@ export default function LinkUsersScreen({ navigation }) {
                   { fontSize: responsiveFontSize(2.3) },
                 ]}
               >
-                Send request to Caregivee to begin monitoring them (recommended
+                Request a Caregivee for monitoring {"\n"}(recommended
                 method)
               </Text>
               <SafeAreaView
@@ -137,7 +157,7 @@ export default function LinkUsersScreen({ navigation }) {
                   { fontSize: responsiveFontSize(2.3) },
                 ]}
               >
-                Proceed without your Caregivee having the app
+                Proceed without your Caregivee using the app
               </Text>
               <TouchableOpacity
                 style={[GlobalStyle.Button, { marginTop: "8%" }]}

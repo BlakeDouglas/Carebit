@@ -19,15 +19,41 @@ import { setTokenData } from "../redux/actions";
 
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 
+export const discovery = {
+  authorizationEndpoint: "https://www.fitbit.com/oauth2/authorize",
+  tokenEndpoint: "https://api.fitbit.com/oauth2/token",
+  revocationEndpoint: "https://api.fitbit.com/oauth2/revoke",
+};
+
+export const makeCaregivee = async (code, tokenData) => {
+  console.log("Code: " + code + " and data: " + JSON.stringify(tokenData));
+  try {
+    const response = await fetch("https://www.carebit.xyz/caregivee/create", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + tokenData.access_token,
+      },
+      body: JSON.stringify({ userID: tokenData.userId, authCode: code }),
+    });
+    const json = await response.json();
+
+    if (json.caregiveeId !== undefined) {
+      dispatch(setTokenData({ ...tokenData, ...json, type: "caregivee" }));
+      // TODO: Some method here to get tokens
+    } else
+      Alert.alert("Error", json.error, [
+        { text: "Ok", onPress: () => {}, style: "cancel" },
+      ]);
+  } catch (error) {
+    console.log("Caught error: " + error);
+  }
+};
+
 export default function AuthenticationScreen({ navigation }) {
-  const dispatch = useDispatch();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
 
-  const discovery = {
-    authorizationEndpoint: "https://www.fitbit.com/oauth2/authorize",
-    tokenEndpoint: "https://api.fitbit.com/oauth2/token",
-    revocationEndpoint: "https://api.fitbit.com/oauth2/revoke",
-  };
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId: "238QS3",
@@ -42,31 +68,6 @@ export default function AuthenticationScreen({ navigation }) {
     },
     discovery
   );
-
-  const makeCaregivee = async (code, tokenData) => {
-    try {
-      const response = await fetch("https://www.carebit.xyz/caregivee/create", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify({ userID: tokenData.userId, authCode: code }),
-      });
-      const json = await response.json();
-
-      if (json.caregiveeId !== undefined) {
-        dispatch(setTokenData({ ...tokenData, ...json, type: "caregivee" }));
-        // TODO: Some method here to get tokens
-      } else
-        Alert.alert("Error", json.error, [
-          { text: "Ok", onPress: () => {}, style: "cancel" },
-        ]);
-    } catch (error) {
-      console.log("Caught error: " + error);
-    }
-  };
 
   React.useEffect(() => {
     if (response?.type === "success")

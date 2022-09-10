@@ -13,6 +13,7 @@ import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
 import RequestScreen from "./src/screens/RequestScreen";
 import ActivityLevelScreen from "./src/screens/ActivityLevelScreen";
+import ModifiedCaregiveeAccountCreation from "./src/screens/ModifiedCaregiveeAccountCreation";
 import LinkUsersScreen from "./src/screens/LinkUsersScreen";
 import AddScreen from "./src/screens/AddScreen";
 import CustomNotificationScreen from "./src/screens/CustomNotificationScreen";
@@ -24,7 +25,6 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-
 const firebaseConfig = {
   apiKey: "AIzaSyAu69cdb30ONSKMcrIrL7P4YT0ghQoNEdg",
   authDomain: "carebit-48f39.firebaseapp.com",
@@ -111,6 +111,8 @@ const MiddleStack = () => {
         {tokenData.type !== "caregivee" && !tokenData.caregiveeId && (
           <Stack.Screen name="LinkUsersScreen" component={LinkUsersScreen} />
         )}
+        {tokenData.type !== "caregivee" && !tokenData.caregiveeId && (
+        <Stack.Screen name="ModifiedCaregiveeAccountCreation" component={ModifiedCaregiveeAccountCreation} />)}
         {tokenData.type !== "caregivee" && (
           <Stack.Screen
             name="ActivityLevelScreen"

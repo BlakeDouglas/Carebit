@@ -109,12 +109,30 @@ const RequestScreen = ({ navigation }) => {
         { text: "Cancel", onPress: () => {}, style: "cancel" },
         {
           text: "Allow",
-          onPress: () => {
-            // TODO: Implement adding using connectCaregivee (or whatever austin makes)
-          },
+          onPress: () =>
+            acceptRequest
         },
       ]
     );
+  };
+
+  const acceptRequest = async (code, tokenData) => {
+    try {
+      const response = await fetch("https://www.carebit.xyz/acceptRequest", {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokenData.access_token,
+        },
+        body: JSON.stringify({ caregiveeId: tokenData.caregiveeId, caregiverId: caregiverId }),
+      });
+      const json = await response.json();
+      console.log(JSON.stringify(json));
+    // TODO: Fill me with useful stuff
+    } catch (error) {
+      console.log("Caught error: " + error);
+    }
   };
 
   const renderItem = ({ item }) => {
