@@ -6,6 +6,7 @@ import {
   ScrollView,
   ImageBackground,
   TouchableOpacity,
+  Keyboard,
 } from "react-native";
 import React, { useState } from "react";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
@@ -13,12 +14,14 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import CustomTextInput from "../utils/CustomTextInput";
+
+
 export default function AddScreen({ navigation }) {
   const handleChange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
   const [inputs, setInputs] = useState({
-    addUser: "",
+    phone: "",
   });
   const handleError = (errorMessage, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
@@ -27,6 +30,44 @@ export default function AddScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const typeOfRequester =
     tokenData.type === "caregivee" ? "caregiver" : "caregivee";
+
+    const validate = () => {
+      console.log("Type: " + inputs.phone);
+      Keyboard.dismiss();
+      let valid = true;
+      if (!inputs.phone) {
+        handleError(" Input required", "phone");
+        valid = false;
+      } else if (
+        !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
+      ) {
+        handleError(" Invalid phone number", "phone");
+        valid = false;
+      }
+  
+      if (valid) {
+        request();
+      }
+    };
+
+  const request = async () => {
+    const body = (tokenData.type === "caregivee") ? ({ caregiveePhone: tokenData.phone, caregiverPhone: inputs.phone}) : ({ caregiverPhone: tokenData.phone, caregiveePhone: phoneInput});
+    try {
+      const response = await fetch("https://www.carebit.xyz/createRequest", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokenData.access_token,
+        },
+        body: JSON.stringify(body),
+      });
+      const json = await response.json();
+      console.log("Add result: " + JSON.stringify(json));
+    } catch (error) {
+      console.log("Caught error: " + error);
+    }
+  };
 
   return (
     <ImageBackground
@@ -94,14 +135,14 @@ export default function AddScreen({ navigation }) {
               keyboardType="number-pad"
               error={errors.addUser}
               onChangeText={(text) =>
-                handleChange(text.replace(/[^0-9]+/g, ""), "addUser")
+                handleChange(text.replace(/[^0-9]+/g, ""), "phone")
               }
               onFocus={() => {
-                handleError(null, "addUser");
+                handleError(null, "phone");
               }}
             />
             <TouchableOpacity style={[GlobalStyle.Button, { marginTop: "8%" }]}>
-              <Text style={GlobalStyle.ButtonText}>Send Request</Text>
+              <Text style={GlobalStyle.ButtonText} onPress={validate}>Send Request</Text>
             </TouchableOpacity>
           </SafeAreaView>
         </ScrollView>

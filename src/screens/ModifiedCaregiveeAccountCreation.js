@@ -94,13 +94,13 @@ export default function ModifiedCaregiveeAccountCreation({navigation, route}) {
         const json = await response.json();
         console.log("registerShellCaregivee: "+JSON.stringify(json));
         if (json.access_token)
-          makeCaregivee(route.params.code, json.userId);
+          makeCaregivee(route.params.code, json.userID);
       } catch (error) {
         console.log("Caught error: " + error);
       }
   };
 
-  const makeCaregivee = async (code, userId) => {
+  const makeCaregivee = async (code, userID) => {
     try {
       const response = await fetch("https://www.carebit.xyz/caregivee/create", {
         method: "POST",
@@ -109,14 +109,14 @@ export default function ModifiedCaregiveeAccountCreation({navigation, route}) {
           "Content-Type": "application/json",
           Authorization: "Bearer " + tokenData.access_token,
         },
-        body: JSON.stringify({ userID: userId, authCode: code }),
+        body: JSON.stringify({ userID: userID, authCode: code }),
       });
       const json = await response.json();
 
       if (json.error)
         console.log("makeCaregivee Error: " + json.error);
-      if (json.caregiveeId)
-        acceptCaregiverRequest(json.caregiveeId, route.params.caregiverId)
+      if (json.caregiveeID)
+        acceptCaregiverRequest(json.caregiveeID, route.params.caregiverID)
 
 
     } catch (error) {
@@ -133,7 +133,7 @@ export default function ModifiedCaregiveeAccountCreation({navigation, route}) {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ caregiveeId: caregivee, caregiverId: caregiver }),
+        body: JSON.stringify({ caregiveeID: caregivee, caregiverID: caregiver }),
       });
       const json = await response.json();
       console.log("acceptCaregiverRequest" + JSON.stringify(json));

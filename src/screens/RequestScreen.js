@@ -125,7 +125,7 @@ const RequestScreen = ({ navigation }) => {
           "Content-Type": "application/json",
           Authorization: "Bearer " + tokenData.access_token,
         },
-        body: JSON.stringify({ caregiveeId: tokenData.caregiveeId, caregiverId: caregiverId }),
+        body: JSON.stringify({ caregiveeID: tokenData.caregiveeID, caregiverID: caregiverID }),
       });
       const json = await response.json();
       console.log(JSON.stringify(json));

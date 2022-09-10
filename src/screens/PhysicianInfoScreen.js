@@ -68,7 +68,7 @@ export default function PhysicianInfoScreen({ navigation }) {
         },
         body: JSON.stringify({
           ...inputs,
-          caregiveeID: tokenData.caregiveeId,
+          caregiveeID: tokenData.caregiveeID,
         }),
       });
       const json = await response.json();

@@ -70,13 +70,15 @@ export default function LoginScreen({ navigation }) {
       });
       const json = await response.json();
       if (json.access_token !== undefined) {
-        fetchPhysData(json);
         dispatch(setTokenData(json));
         fetchUserData(json);
+        if (json.type === "caregivee")
+          fetchPhysData(json);
       } else {
-        if (json.message === " Email not found")
+        if (json.message === "Email not found")
           handleError(" Email not found", "email");
-        else handleError(" Incorrect password", "password");
+        else {handleError(" Incorrect password", "password");
+      }
       }
     } catch (error) {
       console.log(error);
@@ -85,7 +87,7 @@ export default function LoginScreen({ navigation }) {
 
   const fetchUserData = async (jsonTokenData) => {
     try {
-      let url = "https://www.carebit.xyz/user/" + jsonTokenData.userId;
+      let url = "https://www.carebit.xyz/user/" + jsonTokenData.userID;
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -102,10 +104,10 @@ export default function LoginScreen({ navigation }) {
   };
 
   const fetchPhysData = async (jsonTokenData) => {
-    if (!jsonTokenData.caregiveeId) return;
+    if (!jsonTokenData.caregiveeID) return;
     try {
       let url =
-        "https://www.carebit.xyz/caregivee/" + jsonTokenData.caregiveeId;
+        "https://www.carebit.xyz/caregivee/" + jsonTokenData.caregiveeID[0];
       const response = await fetch(url, {
         method: "GET",
         headers: {

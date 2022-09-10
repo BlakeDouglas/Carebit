@@ -2,11 +2,12 @@
 const initialState = {
   tokenData: {
     access_token: "",
-    caregiveeId: null,
-    caregiverId: null,
+    caregiveeID: null,
+    caregiverID: null,
     refresh_token: "",
+    phone: "",
     type: "",
-    userId: null,
+    userID: null,
   },
   userData: {
     firstName: "",

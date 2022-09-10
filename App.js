@@ -62,8 +62,8 @@ const RootNavigation = () => {
       {tokenData.access_token === "" ? (
         <AuthStack />
       ) : (tokenData.type !== "caregiver" && !physData.physName) ||
-        (tokenData.type !== "caregiver" && !tokenData.caregiveeId) ||
-        (tokenData.type !== "caregivee" && !tokenData.caregiveeId) ? (
+        (tokenData.type !== "caregiver" && !tokenData.caregiveeID) ||
+        (tokenData.type !== "caregivee" && !tokenData.caregiveeID) ? (
         <MiddleStack />
       ) : (
         <HomeStack />
@@ -108,25 +108,24 @@ const MiddleStack = () => {
           title: "",
         }}
       >
-        {tokenData.type !== "caregivee" && !tokenData.caregiveeId && (
-          <Stack.Screen name="LinkUsersScreen" component={LinkUsersScreen} />
-        )}
-        {tokenData.type !== "caregivee" && !tokenData.caregiveeId && (
-        <Stack.Screen name="ModifiedCaregiveeAccountCreation" component={ModifiedCaregiveeAccountCreation} />)}
-        {tokenData.type !== "caregivee" && (
-          <Stack.Screen
-            name="ActivityLevelScreen"
-            component={ActivityLevelScreen}
-          />
-        )}
-        {tokenData.type !== "caregiver" && !tokenData.caregiveeId && (
+        {tokenData.type === "caregivee" && !tokenData.caregiveeID && (
           <Stack.Screen
             name="AuthenticationScreen"
             component={AuthenticationScreen}
           />
         )}
-
-        {tokenData.type !== "caregiver" && !physData.physName && (
+        {tokenData.type === "caregiver" && tokenData.caregiveeID && tokenData.caregiveeID.length === 0 && (
+          <Stack.Screen name="LinkUsersScreen" component={LinkUsersScreen} />
+        )}
+        {tokenData.type === "caregiver" && tokenData.caregiveeID && tokenData.caregiveeID.length === 0 && (
+        <Stack.Screen name="ModifiedCaregiveeAccountCreation" component={ModifiedCaregiveeAccountCreation} />)}
+        {tokenData.type === "caregiver" && (
+          <Stack.Screen
+            name="ActivityLevelScreen"
+            component={ActivityLevelScreen}
+          />
+        )}
+        {tokenData.type === "caregivee" && !physData.physName && (
           <Stack.Screen
             name="PhysicianInfoScreen"
             component={PhysicianInfoScreen}

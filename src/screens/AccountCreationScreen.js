@@ -47,7 +47,7 @@ export default function AccountCreationScreen({ navigation, route }) {
       handleError(requiredText, "email");
       valid = false;
     } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-      handleError(requiredText, "email");
+      handleError(" Invalid email", "email");
       valid = false;
     }
 

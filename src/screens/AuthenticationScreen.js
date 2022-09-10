@@ -25,8 +25,7 @@ export const discovery = {
   revocationEndpoint: "https://api.fitbit.com/oauth2/revoke",
 };
 
-export const makeCaregivee = async (code, tokenData) => {
-  console.log("Code: " + code + " and data: " + JSON.stringify(tokenData));
+export const makeCaregivee = async (code, tokenData, dispatch) => {
   try {
     const response = await fetch("https://www.carebit.xyz/caregivee/create", {
       method: "POST",
@@ -35,13 +34,12 @@ export const makeCaregivee = async (code, tokenData) => {
         "Content-Type": "application/json",
         Authorization: "Bearer " + tokenData.access_token,
       },
-      body: JSON.stringify({ userID: tokenData.userId, authCode: code }),
+      body: JSON.stringify({ userID: tokenData.userID, authCode: code }),
     });
     const json = await response.json();
 
-    if (json.caregiveeId !== undefined) {
+    if (json.caregiveeID !== undefined) {
       dispatch(setTokenData({ ...tokenData, ...json, type: "caregivee" }));
-      // TODO: Some method here to get tokens
     } else
       Alert.alert("Error", json.error, [
         { text: "Ok", onPress: () => {}, style: "cancel" },
@@ -53,6 +51,7 @@ export const makeCaregivee = async (code, tokenData) => {
 
 export default function AuthenticationScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const dispatch = useDispatch();
 
   const [request, response, promptAsync] = useAuthRequest(
     {
@@ -71,7 +70,7 @@ export default function AuthenticationScreen({ navigation }) {
 
   React.useEffect(() => {
     if (response?.type === "success")
-      makeCaregivee(response.params.code, tokenData);
+      makeCaregivee(response.params.code, tokenData, dispatch);
   }, [response]);
 
   return (
