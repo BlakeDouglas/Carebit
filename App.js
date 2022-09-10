@@ -111,7 +111,12 @@ const MiddleStack = () => {
         {tokenData.type !== "caregivee" && !tokenData.caregiveeId && (
           <Stack.Screen name="LinkUsersScreen" component={LinkUsersScreen} />
         )}
-
+        {tokenData.type !== "caregivee" && (
+          <Stack.Screen
+            name="ActivityLevelScreen"
+            component={ActivityLevelScreen}
+          />
+        )}
         {tokenData.type !== "caregiver" && !tokenData.caregiveeId && (
           <Stack.Screen
             name="AuthenticationScreen"

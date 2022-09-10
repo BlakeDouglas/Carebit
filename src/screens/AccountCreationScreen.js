@@ -3,12 +3,10 @@ import {
   Text,
   SafeAreaView,
   ImageBackground,
-  TouchableWithoutFeedback,
   Keyboard,
-  ScrollView,
+  StatusBar,
   Platform,
   View,
-  KeyboardAvoidingView,
 } from "react-native";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -128,10 +126,15 @@ export default function AccountCreationScreen({ navigation, route }) {
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background03.png")} // Edit me if you find a better image~!
-      resizeMode="stretch"
+      resizeMode="cover"
       style={GlobalStyle.Background}
     >
       <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar
+          hidden={false}
+          translucent={true}
+          backgroundColor="#000000"
+        />
         <View
           style={[
             GlobalStyle.Container,

@@ -2,12 +2,11 @@ import {
   StyleSheet,
   SafeAreaView,
   Text,
-  View,
-  Button,
   Image,
   ImageBackground,
   Alert,
   LogBox,
+  StatusBar,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
@@ -77,62 +76,69 @@ export default function AuthenticationScreen({ navigation }) {
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background01.png")} // Edit me if you find a better image~!
-      resizeMode="stretch"
+      resizeMode="cover"
       style={GlobalStyle.Background}
     >
-      <SafeAreaView style={GlobalStyle.Container}>
-        <SafeAreaView
-          style={{
-            width: "100%",
-            height: "15%",
-            flexDirection: "row",
-            marginTop: "25%",
-            alignItems: "center",
-          }}
-        >
-          <Image
-            style={{ marginRight: "1%" }}
-            source={require("../../assets/images/midCheck/icons-check.png")}
-          />
-          <Text style={{ fontSize: responsiveFontSize(2.8), color: "white" }}>
-            Account Created
-          </Text>
-        </SafeAreaView>
-        <SafeAreaView
-          style={{
-            height: "15%",
-            width: "100%",
-            justifyContent: "flex-end",
-            alignItems: "center",
-          }}
-        >
-          <Text
+      <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar
+          hidden={false}
+          translucent={true}
+          backgroundColor="#000000"
+        />
+        <SafeAreaView style={GlobalStyle.Container}>
+          <SafeAreaView
             style={{
-              alignSelf: "center",
-              color: "white",
-              fontSize: responsiveFontSize(2.5),
+              width: "100%",
+              height: "15%",
+              flexDirection: "row",
+              marginTop: "25%",
+              alignItems: "center",
             }}
           >
-            To allow your Caregiver to monitor you, you'll need to link your
-            Fitbit account
-          </Text>
-        </SafeAreaView>
-        <SafeAreaView
-          style={{
-            width: "100%",
-            height: "20%",
-            marginTop: "15%",
-            justifyContent: "flex-start",
-          }}
-        >
-          <TouchableOpacity
-            style={[GlobalStyle.Button]}
-            onPress={() => {
-              promptAsync();
+            <Image
+              style={{ marginRight: "1%" }}
+              source={require("../../assets/images/midCheck/icons-check.png")}
+            />
+            <Text style={{ fontSize: responsiveFontSize(2.8), color: "white" }}>
+              Account Created
+            </Text>
+          </SafeAreaView>
+          <SafeAreaView
+            style={{
+              height: "15%",
+              width: "100%",
+              justifyContent: "flex-end",
+              alignItems: "center",
             }}
           >
-            <Text style={GlobalStyle.ButtonText}>Link Fitbit</Text>
-          </TouchableOpacity>
+            <Text
+              style={{
+                alignSelf: "center",
+                color: "white",
+                fontSize: responsiveFontSize(2.5),
+              }}
+            >
+              To allow your Caregiver to monitor you, you'll need to link your
+              Fitbit account
+            </Text>
+          </SafeAreaView>
+          <SafeAreaView
+            style={{
+              width: "100%",
+              height: "20%",
+              marginTop: "15%",
+              justifyContent: "flex-start",
+            }}
+          >
+            <TouchableOpacity
+              style={[GlobalStyle.Button]}
+              onPress={() => {
+                promptAsync();
+              }}
+            >
+              <Text style={GlobalStyle.ButtonText}>Link Fitbit</Text>
+            </TouchableOpacity>
+          </SafeAreaView>
         </SafeAreaView>
       </SafeAreaView>
     </ImageBackground>

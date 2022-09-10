@@ -2,10 +2,8 @@ import {
   StyleSheet,
   Text,
   SafeAreaView,
-  Image,
   StatusBar,
   View,
-  Switch,
   FlatList,
   Alert,
   ImageBackground,
@@ -137,6 +135,11 @@ const RequestScreen = ({ navigation }) => {
       style={GlobalStyle.Background}
     >
       <SafeAreaView style={styles.mainBody}>
+        <StatusBar
+          hidden={false}
+          translucent={true}
+          backgroundColor="dodgerblue"
+        />
         <SafeAreaView
           style={{
             alignSelf: "center",

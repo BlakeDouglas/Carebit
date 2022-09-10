@@ -4,6 +4,7 @@ import {
   Text,
   Switch,
   TextInput,
+  StatusBar,
 } from "react-native";
 import React, { useState } from "react";
 
@@ -36,6 +37,7 @@ export default function CustomNotificationScreen({ navigation }) {
   };
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar hidden={false} translucent={false} backgroundColor="#000000" />
       <KeyboardAwareScrollView style={{ height: "100%", width: "100%" }}>
         <SafeAreaView style={[styles.Box, { marginTop: "3%" }]}>
           <Text style={[styles.Title, { margin: "4%" }]}>

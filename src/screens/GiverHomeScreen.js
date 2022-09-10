@@ -1,12 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  SafeAreaView,
-  Image,
-  StatusBar,
-  View,
-  Switch,
-} from "react-native";
+import { StyleSheet, Text, SafeAreaView, Image, StatusBar } from "react-native";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
@@ -29,6 +21,11 @@ export default function GiverHomeScreen({ navigation }) {
     <SafeAreaView
       style={{ height: "100%", width: "100%", backgroundColor: "whitesmoke" }}
     >
+      <StatusBar
+        hidden={false}
+        translucent={false}
+        backgroundColor="dodgerblue"
+      />
       <SafeAreaView
         style={{
           height: "6%",

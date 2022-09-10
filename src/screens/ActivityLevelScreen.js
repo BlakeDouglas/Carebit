@@ -3,13 +3,9 @@ import {
   Text,
   SafeAreaView,
   ImageBackground,
-  TouchableWithoutFeedback,
-  Keyboard,
-  ScrollView,
   Platform,
-  View,
+  StatusBar,
   Image,
-  KeyboardAvoidingView,
   TouchableOpacity,
 } from "react-native";
 import {
@@ -22,66 +18,75 @@ export default function AccountCreationScreen({ navigation, route }) {
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")} // Edit me if you find a better image~!
+      resizeMode={"cover"}
       style={GlobalStyle.Background}
     >
-      <SafeAreaView
-        style={[
-          GlobalStyle.Container,
-          { marginLeft: "10%", marginRight: "10%" },
-        ]}
-      >
-        <Text style={GlobalStyle.Subtitle}>Activity Level</Text>
-        <SafeAreaView style={styles.TextBox}>
-          <Text style={styles.DescriptiveText}>
-            Choose the usual level of activity for your Caregivee
-          </Text>
-        </SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar
+          hidden={false}
+          translucent={true}
+          backgroundColor="#000000"
+        />
+
         <SafeAreaView
-          style={{
-            width: "100%",
-            height: "80%",
-            justifyContent: "flex-start",
-            alignItems: "center",
-          }}
+          style={[
+            GlobalStyle.Container,
+            { marginLeft: "10%", marginRight: "10%" },
+          ]}
         >
-          <TouchableOpacity style={styles.InnerContainers}>
-            <SafeAreaView>
-              <Text style={styles.InnerTitle}>Active</Text>
-              <Text style={styles.InnerText}>Living an action life</Text>
-            </SafeAreaView>
-            <Image
-              style={{ height: 15, width: 15, marginRight: "5%" }}
-              source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
-            />
-          </TouchableOpacity>
+          <Text style={GlobalStyle.Subtitle}>Activity Level</Text>
+          <SafeAreaView style={styles.TextBox}>
+            <Text style={styles.DescriptiveText}>
+              Choose the usual level of activity for your Caregivee
+            </Text>
+          </SafeAreaView>
+          <SafeAreaView
+            style={{
+              width: "100%",
+              height: "80%",
+              justifyContent: "flex-start",
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity style={styles.InnerContainers}>
+              <SafeAreaView>
+                <Text style={styles.InnerTitle}>Active</Text>
+                <Text style={styles.InnerText}>Living an action life</Text>
+              </SafeAreaView>
+              <Image
+                style={{ height: 15, width: 15, marginRight: "5%" }}
+                source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
+              />
+            </TouchableOpacity>
 
-          <TouchableOpacity style={styles.InnerContainers}>
-            <SafeAreaView>
-              <Text style={styles.InnerTitle}>Sedentary</Text>
-              <Text style={styles.InnerText}>
-                Not active, but not homebound
-              </Text>
-            </SafeAreaView>
-            <Image
-              style={{ height: 15, width: 15, marginRight: "5%" }}
-              source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.InnerContainers}>
-            <SafeAreaView>
-              <Text style={styles.InnerTitle}>Homebound</Text>
-              <Text style={styles.InnerText}>Not able to leave home</Text>
-            </SafeAreaView>
+            <TouchableOpacity style={styles.InnerContainers}>
+              <SafeAreaView>
+                <Text style={styles.InnerTitle}>Sedentary</Text>
+                <Text style={styles.InnerText}>
+                  Not active, but not homebound
+                </Text>
+              </SafeAreaView>
+              <Image
+                style={{ height: 15, width: 15, marginRight: "5%" }}
+                source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.InnerContainers}>
+              <SafeAreaView>
+                <Text style={styles.InnerTitle}>Homebound</Text>
+                <Text style={styles.InnerText}>Not able to leave home</Text>
+              </SafeAreaView>
 
-            <Image
-              style={{
-                height: 15,
-                width: 15,
-                marginRight: "5%",
-              }}
-              source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
-            />
-          </TouchableOpacity>
+              <Image
+                style={{
+                  height: 15,
+                  width: 15,
+                  marginRight: "5%",
+                }}
+                source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
+              />
+            </TouchableOpacity>
+          </SafeAreaView>
         </SafeAreaView>
       </SafeAreaView>
     </ImageBackground>

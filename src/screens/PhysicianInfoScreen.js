@@ -6,6 +6,7 @@ import {
   ImageBackground,
   Platform,
   SafeAreaView,
+  StatusBar,
 } from "react-native";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -93,12 +94,13 @@ export default function PhysicianInfoScreen({ navigation }) {
       style={GlobalStyle.Background}
     >
       <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar hidden={false} translucent={true} backgroundColor="black" />
         <KeyboardAwareScrollView>
           <View
             style={[
               GlobalStyle.Container,
               {
-                marginTop: Platform.OS === "ios" ? "25%" : "18%",
+                marginTop: Platform.OS === "ios" ? "25%" : "10%",
                 marginLeft: "5%",
                 marginRight: "5%",
               },

@@ -6,8 +6,6 @@ import {
   StatusBar,
   View,
   Switch,
-  Alert,
-  Button,
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
@@ -68,6 +66,11 @@ export default function GiveeHomeScreen({ navigation }) {
   return (
     // Main Screen Wrapper. Sets background white
     <View style={styles.mainBody}>
+      <StatusBar
+        hidden={false}
+        translucent={false}
+        backgroundColor="dodgerblue"
+      />
       <Modal
         isVisible={isModal1Visible}
         backdropOpacity={0.5}

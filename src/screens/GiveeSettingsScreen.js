@@ -1,15 +1,6 @@
-import {
-  StyleSheet,
-  SafeAreaView,
-  Text,
-  Linking,
-  View,
-  Image,
-  ImageBackground,
-} from "react-native";
+import { StyleSheet, SafeAreaView, Text, StatusBar, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { React } from "react";
-import GlobalStyle from "../utils/GlobalStyle";
 import { Provider, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 
@@ -22,6 +13,7 @@ export default function ChatScreen({ navigation }) {
   return (
     // Header Container
     <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar hidden={false} translucent={false} backgroundColor="black" />
       <SafeAreaView
         style={{
           marginTop: "8%",

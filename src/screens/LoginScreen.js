@@ -3,7 +3,7 @@ import {
   Text,
   SafeAreaView,
   ImageBackground,
-  TouchableWithoutFeedback,
+  StatusBar,
   Keyboard,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -133,54 +133,67 @@ export default function LoginScreen({ navigation }) {
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
-      resizeMode="stretch"
+      resizeMode="cover"
       style={GlobalStyle.Background}
     >
-      <KeyboardAwareScrollView style={{ flex: 1 }}>
-        <SafeAreaView style={GlobalStyle.Container}>
-          <Text style={GlobalStyle.Title}>Log into Carebit</Text>
-          <SafeAreaView
-            style={{
-              height: "60%",
-              marginTop: "12%",
-              justifyContent: "space-evenly",
-            }}
-          >
-            <CustomTextInput
-              placeholder="Enter your email address"
-              iconName="email-outline"
-              label="Email"
-              keyboardType="email-address"
-              error={errors.email}
-              onChangeText={(text) => handleChange(text, "email")}
-              onFocus={() => {
-                handleError(null, "email");
+      <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar
+          hidden={false}
+          translucent={true}
+          backgroundColor="#000000"
+        />
+        <KeyboardAwareScrollView style={{ flex: 1 }}>
+          <SafeAreaView style={GlobalStyle.Container}>
+            <Text style={GlobalStyle.Title}>Log into Carebit</Text>
+            <SafeAreaView
+              style={{
+                height: "60%",
+                marginTop: "12%",
+                justifyContent: "space-evenly",
               }}
-            />
-            <CustomTextInput
-              placeholder="Enter your password"
-              iconName="lock-outline"
-              label="Password"
-              error={errors.password}
-              onChangeText={(text) => handleChange(text, "password")}
-              onFocus={() => {
-                handleError(null, "password");
-              }}
-              password
-            />
-
-            <TouchableOpacity
-              style={[
-                GlobalStyle.Button,
-                { backgroundColor: "rgba(255, 255, 255, .2)", marginTop: 20 },
-              ]}
-              onPress={validate}
             >
-              <Text style={GlobalStyle.ButtonText}>Log In</Text>
-            </TouchableOpacity>
+              <CustomTextInput
+                placeholder="Enter your email address"
+                iconName="email-outline"
+                label="Email"
+                keyboardType="email-address"
+                error={errors.email}
+                onChangeText={(text) => handleChange(text, "email")}
+                onFocus={() => {
+                  handleError(null, "email");
+                }}
+              />
+              <CustomTextInput
+                placeholder="Enter your password"
+                iconName="lock-outline"
+                label="Password"
+                error={errors.password}
+                onChangeText={(text) => handleChange(text, "password")}
+                onFocus={() => {
+                  handleError(null, "password");
+                }}
+                password
+              />
+
+              <TouchableOpacity
+                style={[
+                  GlobalStyle.Button,
+                  {
+                    backgroundColor: "rgba(255, 255, 255, .2)",
+                    marginTop: "8%",
+                  },
+                ]}
+                onPress={validate}
+              >
+                <Text style={GlobalStyle.ButtonText}>Log In</Text>
+              </TouchableOpacity>
+              <Text></Text>
+            </SafeAreaView>
+            <Text></Text>
+            <Text></Text>
           </SafeAreaView>
-        </SafeAreaView>
-      </KeyboardAwareScrollView>
+        </KeyboardAwareScrollView>
+      </SafeAreaView>
     </ImageBackground>
   );
 }
