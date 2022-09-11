@@ -14,7 +14,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
 
-export default function AddScreen({ navigation }) {
+export default function AddScreen({ navigation: {goBack} }) {
   const handleChange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
@@ -30,7 +30,6 @@ export default function AddScreen({ navigation }) {
     tokenData.type === "caregivee" ? "caregiver" : "caregivee";
 
   const validate = () => {
-    console.log("Type: " + inputs.phone);
     Keyboard.dismiss();
     let valid = true;
     if (!inputs.phone) {
@@ -52,7 +51,7 @@ export default function AddScreen({ navigation }) {
     const body =
       tokenData.type === "caregivee"
         ? { caregiveePhone: tokenData.phone, caregiverPhone: inputs.phone }
-        : { caregiverPhone: tokenData.phone, caregiveePhone: phoneInput };
+        : { caregiverPhone: tokenData.phone, caregiveePhone: inputs.phone };
     try {
       const response = await fetch("https://www.carebit.xyz/createRequest", {
         method: "POST",
@@ -64,7 +63,18 @@ export default function AddScreen({ navigation }) {
         body: JSON.stringify(body),
       });
       const json = await response.json();
-      console.log("Add result: " + JSON.stringify(json));
+      console.log("MAKING REQUEST WITH BODY: " + JSON.stringify(body));
+      console.log("Request result: " + JSON.stringify(json));
+      if (!json.request)
+      {
+        //TODO: Errors go here
+        // Also, get austin to make a 2-way request turn into an accept
+      } else {
+        // TODO: Happy success signs go here.
+
+        // Then go back to previous screen
+        goBack();
+      }
     } catch (error) {
       console.log("Caught error: " + error);
     }

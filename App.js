@@ -61,9 +61,9 @@ const RootNavigation = () => {
     <NavigationContainer>
       {tokenData.access_token === "" ? (
         <AuthStack />
-      ) : (tokenData.type !== "caregiver" && !physData.physName) ||
-        (tokenData.type !== "caregiver" && !tokenData.caregiveeID) ||
-        (tokenData.type !== "caregivee" && !tokenData.caregiveeID) ? (
+      ) : (tokenData.type === "caregivee" && !physData.physName) ||
+        (tokenData.type === "caregivee" && !tokenData.caregiveeID) ||
+        (tokenData.type === "caregiver" && !tokenData.caregiveeID) ? (
         <MiddleStack />
       ) : (
         <HomeStack />
@@ -119,6 +119,7 @@ const MiddleStack = () => {
         )}
         {tokenData.type === "caregiver" && tokenData.caregiveeID && tokenData.caregiveeID.length === 0 && (
         <Stack.Screen name="ModifiedCaregiveeAccountCreation" component={ModifiedCaregiveeAccountCreation} />)}
+        {/* TODO: Add activity level data storage */}
         {tokenData.type === "caregiver" && (
           <Stack.Screen
             name="ActivityLevelScreen"

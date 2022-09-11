@@ -7,7 +7,6 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 export default function ChatScreen({ navigation }) {
   const userData = useSelector((state) => state.Reducers.userData);
-  console.log(userData.firstName);
   const logOutButtonHandler = () => {
     navigation.navigate("TitleScreen");
   };
@@ -37,10 +36,10 @@ export default function ChatScreen({ navigation }) {
         />
         <SafeAreaView style={{ marginLeft: "5%" }}>
           <Text style={{ fontSize: responsiveFontSize(2.8) }}>
-            Mamtaj Akter{userData.firstName} {userData.lastName}
+            {userData.firstName} {userData.lastName}
           </Text>
           <Text style={{ fontSize: responsiveFontSize(2.1) }}>
-            Mamtaj@gmail.com{userData.email}
+            {userData.email}
           </Text>
         </SafeAreaView>
       </SafeAreaView>
@@ -50,6 +49,7 @@ export default function ChatScreen({ navigation }) {
       <SafeAreaView></SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Pam</Text>
+        {/* TODO: Add and implement caregivee info here */}
         <Text style={styles.BoxSub}>PamWisniewski@gmail.com</Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>

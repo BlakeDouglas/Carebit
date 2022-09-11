@@ -72,8 +72,6 @@ export default function LoginScreen({ navigation }) {
       if (json.access_token !== undefined) {
         dispatch(setTokenData(json));
         fetchUserData(json);
-        if (json.type === "caregivee")
-          fetchPhysData(json);
       } else {
         if (json.message === "Email not found")
           handleError(" Email not found", "email");
@@ -97,36 +95,22 @@ export default function LoginScreen({ navigation }) {
         },
       });
       const json = await response.json();
-      dispatch(setUserData(json.user));
-    } catch (error) {
-      console.log("Caught error: " + error);
-    }
-  };
-
-  const fetchPhysData = async (jsonTokenData) => {
-    if (!jsonTokenData.caregiveeID) return;
-    try {
-      let url =
-        "https://www.carebit.xyz/caregivee/" + jsonTokenData.caregiveeID[0];
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + jsonTokenData.access_token,
-        },
-      });
-      const json = await response.json();
-      dispatch(
-        setPhysicianData({
-          physName: json.caregivee.physName,
-          physPhone: json.caregivee.physPhone,
-          physStreet: json.caregivee.physStreet,
-          physCity: json.caregivee.physCity,
-          physState: json.caregivee.physState,
-          physZip: json.caregivee.physZip,
-        })
-      );
+      dispatch(setUserData({
+        firstName: json.user.firstName,
+        lastName: json.user.lastName,
+        email: json.user.email,
+        phone: json.user.phone,
+        mobilePlatform: json.user.mobilePlatform,
+      }));
+      if (json.user.physName !== undefined)
+      dispatch(setPhysicianData({
+        physName: json.user.physName,
+        physPhone: json.user.physPhone,
+        physStreet: json.user.physStreet,
+        physCity: json.user.physCity,
+        physState: json.user.physState,
+        physZip: json.user.physZip,
+      }));
     } catch (error) {
       console.log("Caught error: " + error);
     }

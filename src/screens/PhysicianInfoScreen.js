@@ -93,7 +93,7 @@ export default function PhysicianInfoScreen({ navigation }) {
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, marginTop: 20 }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
         <KeyboardAwareScrollView>
           <View

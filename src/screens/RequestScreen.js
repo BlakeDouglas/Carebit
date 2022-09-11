@@ -17,63 +17,14 @@ import GlobalStyle from "../utils/GlobalStyle";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 
-const data_temp = [
-  {
-    id: "123",
-    firstName: "First",
-    lastName: "Galopenmere",
-    phone: "954696942",
-    email: "Galopener@gmail.com",
-  },
-  {
-    id: "204",
-    firstName: "Broseph",
-    lastName: "Galopenmere",
-    phone: "954696942",
-    email: "Galopener@gmail.com",
-  },
-  {
-    id: "22",
-    firstName: "Broseph",
-    lastName: "Galopenmere",
-    phone: "954696942",
-    email: "Galopener@gmail.com",
-  },
-  {
-    id: "23",
-    firstName: "Broseph",
-    lastName: "Galopenmere",
-    phone: "954696942",
-    email: "Galopener@gmail.com",
-  },
-  {
-    id: "24",
-    firstName: "Broseph",
-    lastName: "Galopenmere",
-    phone: "954696942",
-    email: "Galopener@gmail.com",
-  },
-  {
-    id: "25",
-    firstName: "Broseph",
-    lastName: "Galopenmere",
-    phone: "954696942",
-    email: "Galopener@gmail.com",
-  },
-  {
-    id: "26",
-    firstName: "Broseph",
-    lastName: "Galopenmere",
-    phone: "954696942",
-    email: "Galopener@gmail.com",
-  },
-];
-
 const RequestScreen = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
 
-  const [DATA, setDATA] = useState(data_temp);
+  // Stores only incoming requests
+  const [data, setData] = useState([]);
+  // Stores all requests
+  const [backgroundData, setBackgroundData] = useState([]);
 
   const onPressDelete = (item) => {
     Alert.alert(
@@ -84,8 +35,8 @@ const RequestScreen = ({ navigation }) => {
         {
           text: "Continue",
           onPress: () => {
-            // TODO: Delete item with id and then get
-            // TODO: Also, make the id as the flatlist id
+            rejectRequest(tokenData, item.requestID);
+            getRequests(tokenData);
           },
         },
       ]
@@ -110,13 +61,37 @@ const RequestScreen = ({ navigation }) => {
         {
           text: "Allow",
           onPress: () =>
-            acceptRequest
+          {
+            acceptRequest(tokenData, item.caregiverID);
+            getRequests(tokenData);
+          }
         },
       ]
     );
   };
 
-  const acceptRequest = async (code, tokenData) => {
+  const rejectRequest = async (tokenData, rejectID) => {
+    try {
+      const response = await fetch("https://www.carebit.xyz/deleteRequest/" + rejectID, {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokenData.access_token,
+        },
+      });
+      const json = await response.json();
+      console.log("Result from delete: " + JSON.stringify(json));
+    } catch (error) {
+      console.log("Caught error: " + error);
+    }
+  };
+
+  const acceptRequest = async (tokenData, acceptID) => {
+    const body =
+      tokenData.type === "caregivee"
+        ? { caregiveeID: tokenData.caregiveeID, caregiverID: acceptID }
+        : { caregiverID: tokenData.caregiverID, caregiveeID: acceptID };
     try {
       const response = await fetch("https://www.carebit.xyz/acceptRequest", {
         method: "PUT",
@@ -125,48 +100,60 @@ const RequestScreen = ({ navigation }) => {
           "Content-Type": "application/json",
           Authorization: "Bearer " + tokenData.access_token,
         },
-        body: JSON.stringify({ caregiveeID: tokenData.caregiveeID, caregiverID: caregiverID }),
+        body: JSON.stringify(body),
       });
       const json = await response.json();
-      console.log(JSON.stringify(json));
-    // TODO: Fill me with useful stuff
+      if (json.request)
+      {
+        // TODO: Good case
+      } else {
+        // TODO: Bad error case
+      }
     } catch (error) {
       console.log("Caught error: " + error);
     }
   };
 
-  const renderItem = ({ item }) => {
-    const backgroundColor = item.id === selectedId ? "#bfb6a5" : "#f3f2f1";
-    return (
-      <Item
-        item={item}
-        onPress={() => setSelectedId(item.id)}
-        backgroundColor={{ backgroundColor }}
-      />
-    );
-  };
-
   const getRequests = async (tokenData) => {
+    const body =
+      tokenData.type === "caregivee"
+        ? { caregiveeID: tokenData.caregiveeID, caregiverID: null }
+        : { caregiverID: tokenData.caregiverID, caregiveeID: null };
     try {
       const response = await fetch("https://www.carebit.xyz/getRequests", {
-        method: "GET",
+        method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
           Authorization: "Bearer " + tokenData.access_token,
         },
-        body: JSON.stringify({ caregiveeID: null, caregiverID: tokenData.caregiverID }),
+        body: JSON.stringify(body),
       });
       const json = await response.json();
-      console.log("GOOG: " + JSON.stringify(json));
-      setDATA(json);
-    // TODO: Fill me with useful stuff
+
+      if (JSON.stringify(backgroundData) !== JSON.stringify(json.connections))
+        setBackgroundData(json.connections);
     } catch (error) {
       console.log("Caught error: " + error);
     }
   };
 
   getRequests(tokenData);
+
+  useEffect(() => {
+    setData(backgroundData.filter((iter) => iter.status === "Pending"));
+  },[backgroundData])
+  
+  const renderItem = ({ item }) => {
+    const backgroundColor = item.requestID === selectedId ? "#bfb6a5" : "#f3f2f1";
+    return (
+      <Item
+        item={item}
+        onPress={() => setSelectedId(item.requestID)}
+        backgroundColor={{ backgroundColor }}
+      />
+    );
+  };
 
   return (
     <ImageBackground
@@ -195,9 +182,9 @@ const RequestScreen = ({ navigation }) => {
           </Text>
         </SafeAreaView>
         <FlatList
-          data={DATA}
+          data={data}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.requestID}
           ListEmptyComponent={Empty}
           extraData={selectedId}
         />
@@ -216,7 +203,7 @@ const RequestScreen = ({ navigation }) => {
                 style={styles.buttons}
                 onPress={() => {
                   onPressDelete(
-                    DATA.filter((iter) => iter.id === selectedId)[0]
+                    data.filter((iter) => iter.requestID === selectedId)[0]
                   );
                 }}
               >
@@ -243,7 +230,7 @@ const RequestScreen = ({ navigation }) => {
               <TouchableOpacity
                 style={[styles.buttons, {}]}
                 onPress={() => {
-                  onPressAdd(DATA.filter((iter) => iter.id === selectedId)[0]);
+                  onPressAdd(data.filter((iter) => iter.requestID === selectedId)[0]);
                 }}
               >
                 <Text
