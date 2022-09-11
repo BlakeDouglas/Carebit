@@ -204,6 +204,7 @@ export default function AccountCreationScreen({ navigation, route }) {
                   iconName="email-outline"
                   label="Email*"
                   keyboardType="email-address"
+                  autoCapitalize='none'
                   error={errors.email}
                   onChangeText={(text) => handleChange(text, "email")}
                   onFocus={() => {

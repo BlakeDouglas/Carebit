@@ -18,9 +18,13 @@ export default function AccountCreationScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
 
   const setActivity = async (tokenData, level) => {
+    if (!tokenData.caregiveeID)
+    {
+      console.log("Couldn't set activity level");
+      return;
+    }
     try {
-      // TODO: Put caregiveeID in url?
-      const response = await fetch("https://www.carebit.xyz/activity/", {
+      const response = await fetch("https://www.carebit.xyz/activity/" + tokenData.caregiveeID + "/" + level, {
         method: "PUT",
         headers: {
           Accept: "application/json",

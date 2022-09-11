@@ -145,7 +145,7 @@ export default function AddScreen({ navigation: {goBack} }) {
               placeholder="(XXX) XXX-XXXX"
               iconName="phone-outline"
               keyboardType="number-pad"
-              error={errors.addUser}
+              error={errors.phone}
               onChangeText={(text) =>
                 handleChange(text.replace(/[^0-9]+/g, ""), "phone")
               }
