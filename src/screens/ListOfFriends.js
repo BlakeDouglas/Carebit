@@ -6,10 +6,11 @@ import {
   View,
   FlatList,
   Alert,
+  Image,
   ImageBackground,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
@@ -18,6 +19,57 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 
 const ListOfFriends = ({ navigation }) => {
+  const data_temp = [
+    {
+      requestID: "123",
+      firstName: "First",
+      lastName: "Galopenmere",
+      phone: "954696942",
+      email: "Galopener@gmail.com",
+    },
+    {
+      requestID: "204",
+      firstName: "Broseph",
+      lastName: "Galopenmere",
+      phone: "954696942",
+      email: "Galopener@gmail.com",
+    },
+    {
+      requestID: "22",
+      firstName: "Broseph",
+      lastName: "Galopenmere",
+      phone: "954696942",
+      email: "Galopener@gmail.com",
+    },
+    {
+      requestID: "23",
+      firstName: "Broseph",
+      lastName: "Galopenmere",
+      phone: "954696942",
+      email: "Galopener@gmail.com",
+    },
+    {
+      requestID: "24",
+      firstName: "Broseph",
+      lastName: "Galopenmere",
+      phone: "954696942",
+      email: "Galopener@gmail.com",
+    },
+    {
+      requestID: "25",
+      firstName: "Broseph",
+      lastName: "Galopenmere",
+      phone: "954696942",
+      email: "Galopener@gmail.com",
+    },
+    {
+      requestID: "26",
+      firstName: "Broseph",
+      lastName: "Galopenmere",
+      phone: "954696942",
+      email: "Galopener@gmail.com",
+    },
+  ];
   const [selectedId, setSelectedId] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const typeOfRequester =
@@ -185,84 +237,70 @@ const ListOfFriends = ({ navigation }) => {
           </Text>
         </SafeAreaView>
         <FlatList
-          data={data}
+          data={data_temp}
           renderItem={renderItem}
           keyExtractor={(item) => item.requestID}
           ListEmptyComponent={Empty}
           extraData={selectedId}
         />
-        {selectedId !== null && (
-          <View style={styles.optionsPane}>
-            <View
-              style={{
-                //backgroundColor: "green",
-                height: "100%",
-                width: "40%",
-                borderRadius: 8,
-                marginTop: "5%",
-              }}
-            >
-              <TouchableOpacity
-                style={styles.buttons}
-                onPress={() => {
-                  onPressDelete(
-                    data.filter((iter) => iter.requestID === selectedId)[0]
-                  );
-                }}
-              >
-                <Text
-                  style={{
-                    color: "darkred",
-                    fontWeight: "bold",
-                    fontSize: responsiveFontSize(2.5),
-                  }}
-                >
-                  Reject
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                //backgroundColor: "purple",
-                height: "100%",
-                width: "40%",
-                borderRadius: 8,
-                marginTop: "5%",
-              }}
-            >
-              <TouchableOpacity
-                style={[styles.buttons, {}]}
-                onPress={() => {
-                  onPressAdd(
-                    data.filter((iter) => iter.requestID === selectedId)[0]
-                  );
-                }}
-              >
-                <Text
-                  style={{
-                    color: "green",
-                    fontWeight: "bold",
-                    fontSize: responsiveFontSize(2.5),
-                  }}
-                >
-                  Accept
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
+        <View style={styles.optionsPane}></View>
       </SafeAreaView>
     </ImageBackground>
   );
 };
 
 const Item = ({ item, onPress, backgroundColor }) => (
-  <TouchableOpacity style={[styles.item, backgroundColor]} onPress={onPress}>
-    <Text style={styles.name}>
-      {item.firstName} {item.lastName}
-    </Text>
-    <Text style={styles.phone}>{item.phone}</Text>
-  </TouchableOpacity>
+  <SafeAreaView
+    style={{
+      //margin: "3%",
+      flexDirection: "row",
+      width: "65%",
+      alignSelf: "center",
+      borderRadius: 8,
+      marginTop: "5%",
+      backgroundColor: "white",
+      borderColor: "lightgray",
+      borderWidth: 3,
+    }}
+  >
+    <TouchableOpacity
+      style={{ padding: "3%", width: "80%", backgroundColor: "black" }}
+      onPress={onPress}
+    >
+      <SafeAreaView
+        style={{
+          flexDirection: "row",
+          backgroundColor: "green",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <SafeAreaView style={{ backgroundColor: "orange" }}>
+          <Text style={styles.name}>
+            {item.firstName} {item.lastName}
+          </Text>
+          <Text style={styles.phone}>{item.phone}</Text>
+        </SafeAreaView>
+      </SafeAreaView>
+    </TouchableOpacity>
+    <SafeAreaView
+      style={{
+        flexDirection: "row",
+        justifyContent: "center",
+        backgroundColor: "gray",
+        alignItems: "center",
+        flex: 1,
+        marginLeft: "3%",
+      }}
+    >
+      <TouchableOpacity
+        style={{ backgroundColor: "blue" }}
+        onPress={console.log("what is happening")}
+      >
+        <Image source={require("../../assets/images/settings/settings.png")} />
+      </TouchableOpacity>
+    </SafeAreaView>
+  </SafeAreaView>
 );
 
 const Empty = () => {
@@ -289,6 +327,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 8,
     marginTop: "5%",
+    backgroundColor: "blue",
     borderColor: "lightgray",
     borderWidth: 3,
     alignItems: "center",
@@ -307,7 +346,6 @@ const styles = StyleSheet.create({
   phone: {
     color: "black",
     fontSize: responsiveFontSize(1.8),
-    alignSelf: "center",
   },
   emptyText: {
     color: "white",
@@ -325,6 +363,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "flex-end",
+    borderTopColor: "lightgray",
+    borderTopWidth: 1,
   },
   buttons: {
     height: "100%",

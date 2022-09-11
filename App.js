@@ -25,6 +25,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import ListOfFriends from "./src/screens/ListOfFriends";
 const firebaseConfig = {
   apiKey: "AIzaSyAu69cdb30ONSKMcrIrL7P4YT0ghQoNEdg",
   authDomain: "carebit-48f39.firebaseapp.com",
@@ -117,9 +118,15 @@ const MiddleStack = () => {
         {tokenData.type === "caregiver" && !tokenData.caregiveeID && (
           <Stack.Screen name="LinkUsersScreen" component={LinkUsersScreen} />
         )}
-        {tokenData.type === "caregiver" && tokenData.caregiveeID && tokenData.caregiveeID.length === 0 && (
-        <Stack.Screen name="ModifiedCaregiveeAccountCreation" component={ModifiedCaregiveeAccountCreation} />)}
-        
+        {tokenData.type === "caregiver" &&
+          tokenData.caregiveeID &&
+          tokenData.caregiveeID.length === 0 && (
+            <Stack.Screen
+              name="ModifiedCaregiveeAccountCreation"
+              component={ModifiedCaregiveeAccountCreation}
+            />
+          )}
+
         {/* TODO: Put some real logic here, or implement elsewhere */}
         {false && (
           <Stack.Screen
@@ -278,7 +285,7 @@ const HomeStack = () => {
         />
         <Stack.Screen
           name="RequestScreen"
-          component={RequestScreen}
+          component={ListOfFriends}
           options={({ navigation }) => ({
             headerTransparent: false,
             headerTitleAlign: "center",
