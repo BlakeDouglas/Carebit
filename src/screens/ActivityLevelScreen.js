@@ -15,6 +15,28 @@ import {
 import GlobalStyle from "../utils/GlobalStyle";
 
 export default function AccountCreationScreen({ navigation, route }) {
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
+
+  const setActivity = async (tokenData, level) => {
+    try {
+      // TODO: Put caregiveeID in url?
+      const response = await fetch("https://www.carebit.xyz/activity/", {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokenData.access_token,
+        },
+      });
+      const json = await response.json();
+
+      if (json.error)
+        console.log("Error setting activity level");
+    } catch (error) {
+      console.log("Caught error: " + error);
+    }
+  };
+
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")} // Edit me if you find a better image~!
@@ -48,10 +70,10 @@ export default function AccountCreationScreen({ navigation, route }) {
               alignItems: "center",
             }}
           >
-            <TouchableOpacity style={styles.InnerContainers}>
+            <TouchableOpacity style={styles.InnerContainers} onPress={setActivity(tokenData, 3)}>
               <SafeAreaView>
                 <Text style={styles.InnerTitle}>Active</Text>
-                <Text style={styles.InnerText}>Living an action life</Text>
+                <Text style={styles.InnerText}>Living an active life</Text>
               </SafeAreaView>
               <Image
                 style={{ height: 15, width: 15, marginRight: "5%" }}
@@ -59,7 +81,7 @@ export default function AccountCreationScreen({ navigation, route }) {
               />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.InnerContainers}>
+            <TouchableOpacity style={styles.InnerContainers} onPress={setActivity(tokenData, 2)}>
               <SafeAreaView>
                 <Text style={styles.InnerTitle}>Sedentary</Text>
                 <Text style={styles.InnerText}>
@@ -71,10 +93,10 @@ export default function AccountCreationScreen({ navigation, route }) {
                 source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.InnerContainers}>
+            <TouchableOpacity style={styles.InnerContainers} onPress={setActivity(tokenData, 1)}>
               <SafeAreaView>
                 <Text style={styles.InnerTitle}>Homebound</Text>
-                <Text style={styles.InnerText}>Not able to leave home</Text>
+                <Text style={styles.InnerText}>Unable able to leave home</Text>
               </SafeAreaView>
 
               <Image

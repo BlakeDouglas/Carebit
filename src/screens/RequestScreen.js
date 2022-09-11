@@ -14,8 +14,6 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 
 const RequestScreen = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
@@ -115,6 +113,7 @@ const RequestScreen = ({ navigation }) => {
   };
 
   const getRequests = async (tokenData) => {
+    if (!tokenData.type) return;
     const body =
       tokenData.type === "caregivee"
         ? { caregiveeID: tokenData.caregiveeID, caregiverID: null }
