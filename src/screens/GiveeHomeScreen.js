@@ -343,7 +343,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 textAlign: "center",
               }}
             >
-              Pauing Monitoring will prevent Pam from receiving any of your
+              Pausing Monitoring will prevent Pam from receiving any of your
               health data, including alerts.
             </Text>
           </SafeAreaView>

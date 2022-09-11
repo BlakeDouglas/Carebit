@@ -43,11 +43,11 @@ export default function AddScreen({ navigation: {goBack} }) {
     }
 
     if (valid) {
-      request();
+      makeRequest();
     }
   };
 
-  const request = async () => {
+  const makeRequest = async () => {
     const body =
       tokenData.type === "caregivee"
         ? { caregiveePhone: tokenData.phone, caregiverPhone: inputs.phone }
@@ -68,7 +68,6 @@ export default function AddScreen({ navigation: {goBack} }) {
       if (!json.request)
       {
         //TODO: Errors go here
-        // Also, get austin to make a 2-way request turn into an accept
       } else {
         // TODO: Happy success signs go here.
 

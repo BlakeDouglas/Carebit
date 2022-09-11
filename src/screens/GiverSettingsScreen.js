@@ -5,7 +5,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { Provider, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 
-export default function ChatScreen({ navigation }) {
+export default function GiverSettingsScreen({ navigation }) {
   const userData = useSelector((state) => state.Reducers.userData);
   const logOutButtonHandler = () => {
     navigation.navigate("TitleScreen");

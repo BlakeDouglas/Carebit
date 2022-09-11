@@ -114,7 +114,7 @@ const MiddleStack = () => {
             component={AuthenticationScreen}
           />
         )}
-        {tokenData.type === "caregiver" && tokenData.caregiveeID && tokenData.caregiveeID.length === 0 && (
+        {tokenData.type === "caregiver" && !tokenData.caregiveeID && (
           <Stack.Screen name="LinkUsersScreen" component={LinkUsersScreen} />
         )}
         {tokenData.type === "caregiver" && tokenData.caregiveeID && tokenData.caregiveeID.length === 0 && (

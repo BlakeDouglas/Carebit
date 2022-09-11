@@ -63,6 +63,35 @@ export default function LinkUsersScreen({ navigation }) {
       },
       discovery
     );
+
+    const makeRequest = async () => {
+      const body =
+        tokenData.type === "caregivee"
+          ? { caregiveePhone: tokenData.phone, caregiverPhone: inputs.phone }
+          : { caregiverPhone: tokenData.phone, caregiveePhone: inputs.phone };
+      try {
+        const response = await fetch("https://www.carebit.xyz/createRequest", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+          body: JSON.stringify(body),
+        });
+        const json = await response.json();
+        console.log("MAKING REQUEST WITH BODY: " + JSON.stringify(body));
+        console.log("Request result: " + JSON.stringify(json));
+        if (!json.request)
+        {
+          //TODO: Errors go here
+        } else {
+          // TODO: Happy success signs go here.
+        }
+      } catch (error) {
+        console.log("Caught error: " + error);
+      }
+    };
   
     React.useEffect(() => {
       if (response?.type === "success")
@@ -144,6 +173,7 @@ export default function LinkUsersScreen({ navigation }) {
               </SafeAreaView>
               <TouchableOpacity
                 style={[GlobalStyle.Button, { marginTop: "5%" }]}
+                onPress={makeRequest()}
               >
                 <Text style={GlobalStyle.ButtonText}>Send Request</Text>
               </TouchableOpacity>

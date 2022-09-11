@@ -4,9 +4,9 @@ import { React } from "react";
 import { Provider, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 
-export default function ChatScreen({ navigation }) {
+export default function GiveeSettingsScreen({ navigation }) {
   const userData = useSelector((state) => state.Reducers.userData);
-  console.log(userData.firstName);
+  const physData = useSelector((state) => state.Reducers.physData);
   const logOutButtonHandler = () => {
     navigation.navigate("TitleScreen");
   };
@@ -33,10 +33,10 @@ export default function ChatScreen({ navigation }) {
         />
         <SafeAreaView style={{ marginLeft: "5%" }}>
           <Text style={{ fontSize: responsiveFontSize(2.8), width: "100%" }}>
-            Pam Wisniewski{userData.firstName}
+            {userData.firstName} {userData.lastName}
           </Text>
           <Text style={{ fontSize: responsiveFontSize(2.1) }}>
-            pamelawisniewski@gmail.com
+            {userData.email}
           </Text>
         </SafeAreaView>
       </SafeAreaView>
@@ -56,12 +56,8 @@ export default function ChatScreen({ navigation }) {
         <Text style={styles.Title}>PHYSICIAN INFO</Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
-        <Text style={styles.BoxTitle}>Dr. Doctor</Text>
-        <Text style={styles.BoxSub}>RealDoctor@gmail.com</Text>
-      </SafeAreaView>
-      <SafeAreaView style={styles.Box}>
-        <Text style={styles.BoxTitle}>Phone</Text>
-        <Text style={styles.BoxSub}>(407) 894-5656</Text>
+        <Text style={styles.BoxTitle}>{physData.physName}</Text>
+        <Text style={styles.BoxSub}>{physData.physPhone}</Text>
       </SafeAreaView>
       <SafeAreaView
         style={{
