@@ -18,7 +18,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 
-const ListOfFriends = ({ navigation }) => {
+const ListOfFriendsScreen = ({ navigation }) => {
   const data_temp = [
     {
       requestID: "123",
@@ -412,4 +412,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ListOfFriends;
+export default ListOfFriendsScreen;

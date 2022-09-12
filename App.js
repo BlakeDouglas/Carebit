@@ -25,7 +25,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import ListOfFriends from "./src/screens/ListOfFriends";
+import ListOfFriendsScreen from "./src/screens/ListOfFriendsScreen";
 const firebaseConfig = {
   apiKey: "AIzaSyAu69cdb30ONSKMcrIrL7P4YT0ghQoNEdg",
   authDomain: "carebit-48f39.firebaseapp.com",
@@ -286,7 +286,7 @@ const HomeStack = () => {
         />
         <Stack.Screen
           name="RequestScreen"
-          component={ListOfFriends}
+          component={RequestScreen}
           options={({ navigation }) => ({
             headerTransparent: false,
             headerTitleAlign: "center",

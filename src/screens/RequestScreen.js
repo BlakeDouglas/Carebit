@@ -58,11 +58,10 @@ const RequestScreen = ({ navigation }) => {
         { text: "Cancel", onPress: () => {}, style: "cancel" },
         {
           text: "Allow",
-          onPress: () =>
-          {
+          onPress: () => {
             acceptRequest(tokenData, item.caregiverID);
             getRequests(tokenData);
-          }
+          },
         },
       ]
     );
@@ -70,14 +69,17 @@ const RequestScreen = ({ navigation }) => {
 
   const rejectRequest = async (tokenData, rejectID) => {
     try {
-      const response = await fetch("https://www.carebit.xyz/deleteRequest/" + rejectID, {
-        method: "DELETE",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-      });
+      const response = await fetch(
+        "https://www.carebit.xyz/deleteRequest/" + rejectID,
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+        }
+      );
       const json = await response.json();
       console.log("Result from delete: " + JSON.stringify(json));
     } catch (error) {
@@ -101,8 +103,7 @@ const RequestScreen = ({ navigation }) => {
         body: JSON.stringify(body),
       });
       const json = await response.json();
-      if (json.request)
-      {
+      if (json.request) {
         // TODO: Good case
       } else {
         // TODO: Bad error case
@@ -141,10 +142,11 @@ const RequestScreen = ({ navigation }) => {
 
   useEffect(() => {
     setData(backgroundData.filter((iter) => iter.status === "Pending"));
-  },[backgroundData])
-  
+  }, [backgroundData]);
+
   const renderItem = ({ item }) => {
-    const backgroundColor = item.requestID === selectedId ? "#bfb6a5" : "#f3f2f1";
+    const backgroundColor =
+      item.requestID === selectedId ? "#bfb6a5" : "#f3f2f1";
     return (
       <Item
         item={item}
@@ -187,8 +189,9 @@ const RequestScreen = ({ navigation }) => {
           ListEmptyComponent={Empty}
           extraData={selectedId}
         />
-        {selectedId !== null && (
-          <View style={styles.optionsPane}>
+
+        <View style={styles.optionsPane}>
+          {selectedId !== null && (
             <View
               style={{
                 //backgroundColor: "green",
@@ -217,6 +220,8 @@ const RequestScreen = ({ navigation }) => {
                 </Text>
               </TouchableOpacity>
             </View>
+          )}
+          {selectedId !== null && (
             <View
               style={{
                 //backgroundColor: "purple",
@@ -229,7 +234,9 @@ const RequestScreen = ({ navigation }) => {
               <TouchableOpacity
                 style={[styles.buttons, {}]}
                 onPress={() => {
-                  onPressAdd(data.filter((iter) => iter.requestID === selectedId)[0]);
+                  onPressAdd(
+                    data.filter((iter) => iter.requestID === selectedId)[0]
+                  );
                 }}
               >
                 <Text
@@ -243,8 +250,8 @@ const RequestScreen = ({ navigation }) => {
                 </Text>
               </TouchableOpacity>
             </View>
-          </View>
-        )}
+          )}
+        </View>
       </SafeAreaView>
     </ImageBackground>
   );
