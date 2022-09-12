@@ -1,5 +1,4 @@
-import * as AuthSession from "expo-auth-session";
-import { getDefaultReturnUrl, makeRedirectUri } from "expo-auth-session";
+
 import * as Linking from "expo-linking";
 import { encode as btoa } from "base-64";
 import Moment from 'moment'
@@ -28,7 +27,7 @@ export async function getCode() {
         "&response_type=code" +
         `&scope=${encodeURIComponent(
             "activity profile settings heartrate"
-        )}`; 
+        )}`;
 
     //AuthSession.startAsync() was returning {type : "dismiss"} before the browser opened seems like a bug on their end 
     // but WebBrowser.openAuthSessionAsync() works fine in fetching the return url that we save in result
@@ -38,9 +37,9 @@ export async function getCode() {
     let code = getParam("code", result.url);
 
     //Send the code to exchange with Token
-    
-    
- 
+
+
+
     return code;
 };
 
