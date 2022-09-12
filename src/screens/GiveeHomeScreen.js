@@ -5,6 +5,7 @@ import {
   Image,
   StatusBar,
   View,
+  ScrollView,
   Switch,
   TouchableOpacity,
 } from "react-native";
@@ -71,6 +72,7 @@ export default function GiveeHomeScreen({ navigation }) {
         translucent={false}
         backgroundColor="dodgerblue"
       />
+
       <Modal
         isVisible={isModal1Visible}
         backdropOpacity={0.5}
@@ -414,204 +416,213 @@ export default function GiveeHomeScreen({ navigation }) {
           </SafeAreaView>
         </View>
       </Modal>
-
-      <SafeAreaView
-        style={[
-          styles.mediumTopBody,
-          {
-            alignItems: "center",
-            height: "10%",
-            width: "100%",
-            flexDirection: "row",
-          },
-        ]}
-      >
-        <SafeAreaView style={{ marginLeft: "3%" }}>
-          <Text style={styles.helloText}>Hello Testing care</Text>
-          <Text style={styles.caregiverText}>Your Caregiver is Paola</Text>
-        </SafeAreaView>
-
-        <TouchableOpacity
-          style={styles.callBody}
-          onPress={() => {
-            call(args).catch(console.error);
-          }}
-        >
-          <Image
-            source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
-          />
-          <Text style={styles.callText}>Call Paola</Text>
-        </TouchableOpacity>
-      </SafeAreaView>
-      <SafeAreaView style={styles.mediumBody}>
-        <SafeAreaView style={styles.alertBody}>
-          <TouchableOpacity
-            style={{ alignItems: "center", justifyContent: "center" }}
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }}>
+          <SafeAreaView
+            style={[
+              styles.mediumTopBody,
+              {
+                marginTop: "4%",
+                //backgroundColor: "red",
+                alignItems: "center",
+                height: "15%",
+                width: "100%",
+                justifyContent: "space-evenly",
+                flexDirection: "row",
+              },
+            ]}
           >
-            <Image
-              style={styles.imagesBody}
-              source={require("../../assets/images/icons-alert-big-color.imageset/icons-alert-big-color.png")}
-            />
-            <Text style={styles.buttonBigText}>Alerts</Text>
-            <Text style={styles.buttonSmallText}>0 Today</Text>
-          </TouchableOpacity>
-        </SafeAreaView>
-        <SafeAreaView style={styles.chatBody}>
-          <TouchableOpacity
-            style={{ alignItems: "center", justifyContent: "center" }}
-          >
-            <Image
-              style={styles.imagesBody}
-              source={require("../../assets/images/icons-caregivee-message.imageset/icons-caregivee-message.png")}
-            />
-            <Text style={styles.buttonBigText}>Quick Chat</Text>
-            <Text style={styles.buttonSmallText}>0 New</Text>
-          </TouchableOpacity>
-        </SafeAreaView>
-      </SafeAreaView>
-      <SafeAreaView
-        style={{
-          borderBottomColor: "lightgray",
-          borderBottomWidth: 1,
-          marginTop: "7%",
-          marginBottom: "3%",
-        }}
-      ></SafeAreaView>
-      <Text style={styles.preferencesText}>Preferences</Text>
+            <SafeAreaView>
+              <Text style={styles.helloText}>Hello Testing care</Text>
+              <Text style={styles.caregiverText}>Your Caregiver is Paola</Text>
+            </SafeAreaView>
 
-      <SafeAreaView style={styles.bottomBody}>
-        <SafeAreaView
-          style={[
-            styles.bottomRowBody,
-            isEnabledSleep
-              ? {
-                  ...Platform.select({
-                    ios: {
-                      shadowColor: "blue",
-                      shadowOffset: { width: 4, height: 10 },
-                      shadowOpacity: 0.4,
-                    },
-                    android: {
-                      elevation: 4,
-                    },
-                  }),
-                }
-              : {},
-            isEnabledSleep
-              ? { backgroundColor: "black" }
-              : { backgroundColor: "white" },
-          ]}
-        >
-          {isEnabledSleep ? (
-            <Image
+            <TouchableOpacity
+              style={styles.callBody}
+              onPress={() => {
+                call(args).catch(console.error);
+              }}
+            >
+              <Image
+                source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
+              />
+              <Text style={styles.callText}>Call Paola</Text>
+            </TouchableOpacity>
+          </SafeAreaView>
+
+          <SafeAreaView style={styles.mediumBody}>
+            <SafeAreaView style={styles.alertBody}>
+              <TouchableOpacity
+                style={{ alignItems: "center", justifyContent: "center" }}
+              >
+                <Image
+                  style={styles.imagesBody}
+                  source={require("../../assets/images/icons-alert-big-color.imageset/icons-alert-big-color.png")}
+                />
+                <Text style={styles.buttonBigText}>Alerts</Text>
+                <Text style={styles.buttonSmallText}>0 Today</Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+            <SafeAreaView style={styles.chatBody}>
+              <TouchableOpacity
+                style={{ alignItems: "center", justifyContent: "center" }}
+              >
+                <Image
+                  style={styles.imagesBody}
+                  source={require("../../assets/images/icons-caregivee-message.imageset/icons-caregivee-message.png")}
+                />
+                <Text style={styles.buttonBigText}>Quick Chat</Text>
+                <Text style={styles.buttonSmallText}>0 New</Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+          </SafeAreaView>
+          <SafeAreaView
+            style={{
+              borderBottomColor: "lightgray",
+              borderBottomWidth: 1,
+              marginTop: "7%",
+              marginBottom: "3%",
+            }}
+          ></SafeAreaView>
+          <Text style={styles.preferencesText}>Preferences</Text>
+
+          <SafeAreaView style={[styles.bottomBody]}>
+            <SafeAreaView
               style={[
-                styles.imagesBody,
-                { marginLeft: "5%", marginRight: "5%" },
-              ]}
-              source={require("../../assets/images/icons-caregivee-sleep-on.imageset/icons-caregivee-sleep-on.png")}
-            />
-          ) : (
-            <Image
-              style={[
-                styles.imagesBody,
-                { marginLeft: "5%", marginRight: "5%" },
-              ]}
-              source={require("../../assets/images/icons-caregivee-sleep-off.imageset/icons-caregivee-sleep-off.png")}
-            />
-          )}
-          <SafeAreaView>
-            <Text
-              style={[
-                styles.buttonBigText,
-                isEnabledSleep ? { color: "white" } : { color: "black" },
+                styles.bottomRowBody,
+                isEnabledSleep
+                  ? {
+                      ...Platform.select({
+                        ios: {
+                          shadowColor: "blue",
+                          shadowOffset: { width: 4, height: 10 },
+                          shadowOpacity: 0.4,
+                        },
+                        android: {
+                          elevation: 4,
+                        },
+                      }),
+                    }
+                  : {},
+                isEnabledSleep
+                  ? { backgroundColor: "black" }
+                  : { backgroundColor: "white" },
               ]}
             >
-              Sleep Mode
-            </Text>
-            <Text style={styles.buttonSmallText}>
-              {isEnabledSleep ? "On" : "Off"}
-            </Text>
+              {isEnabledSleep ? (
+                <Image
+                  style={[
+                    styles.imagesBody,
+                    { marginLeft: "5%", marginRight: "5%" },
+                  ]}
+                  source={require("../../assets/images/icons-caregivee-sleep-on.imageset/icons-caregivee-sleep-on.png")}
+                />
+              ) : (
+                <Image
+                  style={[
+                    styles.imagesBody,
+                    { marginLeft: "5%", marginRight: "5%" },
+                  ]}
+                  source={require("../../assets/images/icons-caregivee-sleep-off.imageset/icons-caregivee-sleep-off.png")}
+                />
+              )}
+              <SafeAreaView>
+                <Text
+                  style={[
+                    styles.buttonBigText,
+                    isEnabledSleep ? { color: "white" } : { color: "black" },
+                  ]}
+                >
+                  Sleep Mode
+                </Text>
+                <Text style={styles.buttonSmallText}>
+                  {isEnabledSleep ? "On" : "Off"}
+                </Text>
+              </SafeAreaView>
+              <Switch
+                trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
+                thumbColor={isEnabledSleep ? "white" : "white"}
+                style={styles.switchBody}
+                onValueChange={
+                  !isEnabledSleep ? toggleSwitchSleep : toggleSleep
+                }
+                value={isEnabledSleep}
+              />
+            </SafeAreaView>
+
+            <SafeAreaView style={styles.bottomRowBody}>
+              {isEnabledDisturb ? (
+                <Image
+                  style={[
+                    styles.imagesBody,
+                    { marginLeft: "5%", marginRight: "5%" },
+                  ]}
+                  source={require("../../assets/images/icons-caregivee-dnd-on.imageset/icons-caregivee-dnd-on.png")}
+                />
+              ) : (
+                <Image
+                  style={[
+                    styles.imagesBody,
+                    { marginLeft: "5%", marginRight: "5%" },
+                  ]}
+                  source={require("../../assets/images/icons-caregivee-dnd-off.imageset/icons-caregivee-dnd-off.png")}
+                />
+              )}
+
+              <SafeAreaView>
+                <Text style={styles.buttonBigText}>Do Not Disturb</Text>
+                <Text style={styles.buttonSmallText}>
+                  {isEnabledDisturb ? "On" : "Off"}
+                </Text>
+              </SafeAreaView>
+              <Switch
+                trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
+                thumbColor={isEnabledDisturb ? "white" : "white"}
+                style={styles.switchBodyDisturb}
+                onValueChange={
+                  !isEnabledDisturb ? toggleSwitchDisturb : toggleDisturb
+                }
+                value={isEnabledDisturb}
+              />
+            </SafeAreaView>
+
+            <SafeAreaView style={styles.bottomRowBody}>
+              {isEnabledMonitor ? (
+                <Image
+                  style={[
+                    styles.imagesBody,
+                    { marginLeft: "5%", marginRight: "5%" },
+                  ]}
+                  source={require("../../assets/images/icons-caregivee-monitor-on.imageset/icons-caregivee-monitor-on.png")}
+                />
+              ) : (
+                <Image
+                  style={[
+                    styles.imagesBody,
+                    { marginLeft: "5%", marginRight: "5%" },
+                  ]}
+                  source={require("../../assets/images/icons-caregivee-monitor-off.imageset/icons-caregivee-monitor-off.png")}
+                />
+              )}
+
+              <SafeAreaView>
+                <Text style={styles.buttonBigText}>Monitoring</Text>
+                <Text style={styles.buttonSmallText}>
+                  {isEnabledMonitor ? "Active" : "Paused"}
+                </Text>
+              </SafeAreaView>
+              <Switch
+                trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
+                thumbColor={isEnabledMonitor ? "white" : "white"}
+                style={styles.switchBodyMonitoring}
+                onValueChange={
+                  isEnabledMonitor ? toggleSwitchMonitor : toggleMonitor
+                }
+                value={isEnabledMonitor}
+              />
+            </SafeAreaView>
           </SafeAreaView>
-          <Switch
-            trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
-            thumbColor={isEnabledSleep ? "white" : "white"}
-            style={styles.switchBody}
-            onValueChange={!isEnabledSleep ? toggleSwitchSleep : toggleSleep}
-            value={isEnabledSleep}
-          />
-        </SafeAreaView>
-
-        <SafeAreaView style={styles.bottomRowBody}>
-          {isEnabledDisturb ? (
-            <Image
-              style={[
-                styles.imagesBody,
-                { marginLeft: "5%", marginRight: "5%" },
-              ]}
-              source={require("../../assets/images/icons-caregivee-dnd-on.imageset/icons-caregivee-dnd-on.png")}
-            />
-          ) : (
-            <Image
-              style={[
-                styles.imagesBody,
-                { marginLeft: "5%", marginRight: "5%" },
-              ]}
-              source={require("../../assets/images/icons-caregivee-dnd-off.imageset/icons-caregivee-dnd-off.png")}
-            />
-          )}
-
-          <SafeAreaView>
-            <Text style={styles.buttonBigText}>Do Not Disturb</Text>
-            <Text style={styles.buttonSmallText}>
-              {isEnabledDisturb ? "On" : "Off"}
-            </Text>
-          </SafeAreaView>
-          <Switch
-            trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
-            thumbColor={isEnabledDisturb ? "white" : "white"}
-            style={styles.switchBodyDisturb}
-            onValueChange={
-              !isEnabledDisturb ? toggleSwitchDisturb : toggleDisturb
-            }
-            value={isEnabledDisturb}
-          />
-        </SafeAreaView>
-
-        <SafeAreaView style={styles.bottomRowBody}>
-          {isEnabledMonitor ? (
-            <Image
-              style={[
-                styles.imagesBody,
-                { marginLeft: "5%", marginRight: "5%" },
-              ]}
-              source={require("../../assets/images/icons-caregivee-monitor-on.imageset/icons-caregivee-monitor-on.png")}
-            />
-          ) : (
-            <Image
-              style={[
-                styles.imagesBody,
-                { marginLeft: "5%", marginRight: "5%" },
-              ]}
-              source={require("../../assets/images/icons-caregivee-monitor-off.imageset/icons-caregivee-monitor-off.png")}
-            />
-          )}
-
-          <SafeAreaView>
-            <Text style={styles.buttonBigText}>Monitoring</Text>
-            <Text style={styles.buttonSmallText}>
-              {isEnabledMonitor ? "Active" : "Paused"}
-            </Text>
-          </SafeAreaView>
-          <Switch
-            trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
-            thumbColor={isEnabledMonitor ? "white" : "white"}
-            style={styles.switchBodyMonitoring}
-            onValueChange={
-              isEnabledMonitor ? toggleSwitchMonitor : toggleMonitor
-            }
-            value={isEnabledMonitor}
-          />
-        </SafeAreaView>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
@@ -630,7 +641,7 @@ const styles = StyleSheet.create({
   },
   callBody: {
     alignItems: "center",
-    marginLeft: "10%",
+    //marginLeft: "10%",
     flexDirection: "row",
     justifyContent: "center",
   },
@@ -638,7 +649,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    height: "20%",
+    height: "33%",
   },
   alertBody: {
     width: "43%",
@@ -675,7 +686,8 @@ const styles = StyleSheet.create({
     transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
   },
   bottomBody: {
-    flex: 1,
+    height: "90%",
+    width: "100%",
     justifyContent: "space-evenly",
     alignItems: "center",
   },
@@ -692,7 +704,7 @@ const styles = StyleSheet.create({
   helloText: {
     color: "darkgrey",
     fontSize: responsiveFontSize(2.15),
-    fontWeight: "bold",
+    //fontWeight: "bold",
   },
 
   callText: {
@@ -705,6 +717,7 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: responsiveFontSize(2.63),
     fontWeight: "500",
+    marginTop: "4%",
   },
   buttonBigText: {
     fontSize: responsiveFontSize(2.25),
