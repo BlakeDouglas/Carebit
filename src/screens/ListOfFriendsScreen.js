@@ -16,7 +16,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 
 const ListOfFriendsScreen = ({ navigation }) => {
   const data_temp = [
@@ -120,52 +119,6 @@ const ListOfFriendsScreen = ({ navigation }) => {
     );
   };
 
-  const rejectRequest = async (tokenData, rejectID) => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/deleteRequest/" + rejectID,
-        {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
-      );
-      const json = await response.json();
-      console.log("Result from delete: " + JSON.stringify(json));
-    } catch (error) {
-      console.log("Caught error: " + error);
-    }
-  };
-
-  const acceptRequest = async (tokenData, acceptID) => {
-    const body =
-      tokenData.type === "caregivee"
-        ? { caregiveeID: tokenData.caregiveeID, caregiverID: acceptID }
-        : { caregiverID: tokenData.caregiverID, caregiveeID: acceptID };
-    try {
-      const response = await fetch("https://www.carebit.xyz/acceptRequest", {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify(body),
-      });
-      const json = await response.json();
-      if (json.request) {
-        // TODO: Good case
-      } else {
-        // TODO: Bad error case
-      }
-    } catch (error) {
-      console.log("Caught error: " + error);
-    }
-  };
-
   const getRequests = async (tokenData) => {
     const body =
       tokenData.type === "caregivee"
@@ -190,10 +143,10 @@ const ListOfFriendsScreen = ({ navigation }) => {
     }
   };
 
-  getRequests(tokenData);
+  //getRequests(tokenData);
 
   useEffect(() => {
-    setData(backgroundData.filter((iter) => iter.status === "Pending"));
+    setData(backgroundData.filter((iter) => iter.status === "Accepted"));
   }, [backgroundData]);
 
   const renderItem = ({ item }) => {

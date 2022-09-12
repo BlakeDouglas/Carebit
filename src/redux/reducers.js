@@ -4,7 +4,6 @@ const initialState = {
     access_token: "",
     caregiveeID: null,
     caregiverID: null,
-    refresh_token: "",
     phone: "",
     type: "",
     userID: null,

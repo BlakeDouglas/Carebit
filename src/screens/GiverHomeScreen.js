@@ -7,7 +7,6 @@ import { Provider, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import call from "react-native-phone-call";
 import { useDrawerStatus } from "@react-navigation/drawer";
-import { getAuthToken, getCode } from "../../server.js";
 import * as WebBrowser from "expo-web-browser";
 
 const args = {
@@ -25,42 +24,81 @@ export default function GiverHomeScreen({ navigation }) {
   const [HeartMax, setHeartMax] = useState(0);
   const [HeartMin, setHearMin] = useState(0);
   const [HeartAvg, setHeartAvg] = useState(0);
-  const [accessTokenw, setAccessToken] = useState(null);
+  const [fitbitAccessToken, setFitbitAccessToken] = useState(null);
   const userData = useSelector((state) => state.Reducers.userData);
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedID = 1;
+
+  const refreshFitbitAccessToken = async () =>{
+    const caregiveeID = (tokenData.type === "caregiver") ? tokenData.caregiveeID[selectedID].caregiveeID : tokenData.caregiverID[selectedID].caregiverID;
+    try {
+      const response = await fetch("https://www.carebit.xyz/refreshFitbitToken/" + caregiveeID, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokenData.access_token,
+        },
+      });
+      const json = await response.json();
+      if (json.access_token)
+        setFitbitAccessToken(json.access_token);
+      else
+        console.log(json.error);
+    } catch (error) {
+      console.log("Caught error: " + error);
+    }
+  };
+  const fetchFitbitAccessToken = async () => {
+  const caregiveeID = (tokenData.type === "caregiver") ? tokenData.caregiveeID[selectedID].caregiveeID : tokenData.caregiverID[selectedID].caregiverID;
+    try {
+      const response = await fetch("https://www.carebit.xyz/getFitbitToken/" + caregiveeID, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokenData.access_token,
+        },
+      });
+      const json = await response.json();
+      setFitbitAccessToken(json.fitbitToken);
+    } catch (error) {
+      console.log("Caught error: " + error);
+    }
+  };
 
 
-  async function fetchData() {
-    //check if we have an access token if not get it from getAuthToken(); 
-    //TODO: check if the Token is almost expired to get refresh token
-
-    if (accessTokenw == null) {
-      let { accessToken } = await getAuthToken();
-      setAccessToken(accessToken)
+  const fetchData = async () => {
+    if (!fitbitAccessToken) {
+      // Seems that refresh has a cooldown. Switch this on if u get invalid token
+      // await refreshFitbitAccessToken();
+      
+      await fetchFitbitAccessToken();
+      console.log(fitbitAccessToken);
     } else {
-      console.log(accessTokenw)
       let date_today = moment().format('YYYY[-]MM[-]DD')
       //Get HeartRate
-      //TODO: Get proper permissions for the correct endpoint to display heartRate
-      let heartResponse = await fetch(`https://api.fitbit.com/1/user/-/activities/heart/date/2019-01-01/1d/1min/time/08:00/08:30.json`, {
+      let heartResponse = await fetch(`https://api.fitbit.com/1/user/-/activities/heart/date/${date_today}/1d.json`, {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + accessTokenw
+          'Authorization': 'Bearer ' + fitbitAccessToken
         }
       })
       let heart = await heartResponse.json();
-      console.log(heart)
+      console.log(heart);
+
 
       //Get Steps
       let stepsResponse = await fetch(`https://api.fitbit.com/1/user/-/activities/date/${date_today}.json`, {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + accessTokenw
+          'Authorization': 'Bearer ' + fitbitAccessToken
         }
       })
       let json = await stepsResponse.json();
-      setSteps(json.summary.steps)
+      console.log(json);
 
       //Get Battery
       //TODO: implement levels for different battery icons. getBatteryIcon(level) 
@@ -68,20 +106,18 @@ export default function GiverHomeScreen({ navigation }) {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + accessTokenw
+          'Authorization': 'Bearer ' + fitbitAccessToken
         }
       })
-
-
       let battery = await deviceResponse.json();
-      console.log(battery)
-
-
+      console.log(battery);
     }
-
   }
-  //TODO: useEffect
-  fetchData()
+
+  useEffect(() => {
+    fetchData();
+  }, [fitbitAccessToken]);
+
   return (
     <SafeAreaView
       style={{ height: "100%", width: "100%", backgroundColor: "whitesmoke" }}
@@ -137,7 +173,7 @@ export default function GiverHomeScreen({ navigation }) {
           }}
         >
           <Image
-            source={require("../.../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
+            source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
           />
 
           <Text style={styles.callText}>Call Paola</Text>

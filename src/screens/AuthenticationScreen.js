@@ -56,7 +56,7 @@ export default function AuthenticationScreen({ navigation }) {
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId: "238QS3",
-      scopes: ["activity", "sleep", "temperature"],
+      scopes: ["activity", "heartrate", "location", "nutrition", "profile", "settings", "sleep", "social", "weight", "oxygen_saturation", "respiratory_rate", "temperature"],
       redirectUri: makeRedirectUri({
         scheme: "carebit",
         path: "callback",
