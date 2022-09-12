@@ -13,29 +13,33 @@ import {
   responsiveWidth,
 } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
-
+import { useSelector } from "react-redux";
 export default function AccountCreationScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
 
   const setActivity = async (tokenData, level) => {
-    if (!tokenData.caregiveeID)
-    {
+    if (!tokenData.caregiveeID) {
       console.log("Couldn't set activity level");
       return;
     }
     try {
-      const response = await fetch("https://www.carebit.xyz/activity/" + tokenData.caregiveeID + "/" + level, {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-      });
+      const response = await fetch(
+        "https://www.carebit.xyz/activity/" +
+          tokenData.caregiveeID +
+          "/" +
+          level,
+        {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+        }
+      );
       const json = await response.json();
 
-      if (json.error)
-        console.log("Error setting activity level");
+      if (json.error) console.log("Error setting activity level");
     } catch (error) {
       console.log("Caught error: " + error);
     }
@@ -48,11 +52,7 @@ export default function AccountCreationScreen({ navigation, route }) {
       style={GlobalStyle.Background}
     >
       <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar
-          hidden={false}
-          translucent={true}
-          backgroundColor="black"
-        />
+        <StatusBar hidden={false} translucent={true} backgroundColor="black" />
 
         <SafeAreaView
           style={[
@@ -74,7 +74,10 @@ export default function AccountCreationScreen({ navigation, route }) {
               alignItems: "center",
             }}
           >
-            <TouchableOpacity style={styles.InnerContainers} onPress={setActivity(tokenData, 3)}>
+            <TouchableOpacity
+              style={styles.InnerContainers}
+              onPress={setActivity(tokenData, 3)}
+            >
               <SafeAreaView>
                 <Text style={styles.InnerTitle}>Active</Text>
                 <Text style={styles.InnerText}>Living an active life</Text>
@@ -85,7 +88,10 @@ export default function AccountCreationScreen({ navigation, route }) {
               />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.InnerContainers} onPress={setActivity(tokenData, 2)}>
+            <TouchableOpacity
+              style={styles.InnerContainers}
+              onPress={setActivity(tokenData, 2)}
+            >
               <SafeAreaView>
                 <Text style={styles.InnerTitle}>Sedentary</Text>
                 <Text style={styles.InnerText}>
@@ -97,7 +103,10 @@ export default function AccountCreationScreen({ navigation, route }) {
                 source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.InnerContainers} onPress={setActivity(tokenData, 1)}>
+            <TouchableOpacity
+              style={styles.InnerContainers}
+              onPress={setActivity(tokenData, 1)}
+            >
               <SafeAreaView>
                 <Text style={styles.InnerTitle}>Homebound</Text>
                 <Text style={styles.InnerText}>Unable able to leave home</Text>

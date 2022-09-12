@@ -5,12 +5,12 @@ import {
   StatusBar,
   View,
   FlatList,
-  Alert,
   Image,
+  Alert,
   ImageBackground,
-  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
@@ -243,63 +243,94 @@ const ListOfFriends = ({ navigation }) => {
           ListEmptyComponent={Empty}
           extraData={selectedId}
         />
-        <View style={styles.optionsPane}></View>
+        <View style={styles.optionsPane}>
+          {selectedId !== null && (
+            <View
+              style={{
+                //backgroundColor: "green",
+                height: "100%",
+                width: "40%",
+                borderRadius: 8,
+                marginTop: "5%",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+
+                  height: "100%",
+                  width: "100%",
+                  //backgroundColor: "blue",
+                  borderRadius: 8,
+                }}
+                onPress={() => {
+                  onPressDelete(
+                    data.filter((iter) => iter.requestID === selectedId)[0]
+                  );
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: "white",
+                    fontWeight: "bold",
+                    fontSize: responsiveFontSize(3),
+                  }}
+                >
+                  Set Default
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {selectedId !== null && (
+            <View
+              style={{
+                // backgroundColor: "purple",
+                height: "100%",
+                width: "40%",
+                borderRadius: 8,
+                marginTop: "5%",
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100%",
+                  width: "100%",
+                  //  backgroundColor: "blue",
+                  borderRadius: 8,
+                }}
+                onPress={() => {
+                  onPressAdd(
+                    data.filter((iter) => iter.requestID === selectedId)[0]
+                  );
+                }}
+              >
+                <Image
+                  style={{ height: 40, width: 40 }}
+                  source={require("../../assets/images/settings/settings.png")}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
       </SafeAreaView>
     </ImageBackground>
   );
 };
 
 const Item = ({ item, onPress, backgroundColor }) => (
-  <SafeAreaView
-    style={{
-      //margin: "3%",
-      flexDirection: "row",
-      width: "65%",
-      alignSelf: "center",
-      borderRadius: 8,
-      marginTop: "5%",
-      backgroundColor: "white",
-      borderColor: "lightgray",
-      borderWidth: 3,
-    }}
-  >
-    <TouchableOpacity
-      style={{ padding: "3%", width: "80%", backgroundColor: "black" }}
-      onPress={onPress}
-    >
-      <SafeAreaView
-        style={{
-          flexDirection: "row",
-          backgroundColor: "green",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <SafeAreaView style={{ backgroundColor: "orange" }}>
-          <Text style={styles.name}>
-            {item.firstName} {item.lastName}
-          </Text>
-          <Text style={styles.phone}>{item.phone}</Text>
-        </SafeAreaView>
-      </SafeAreaView>
+  <SafeAreaView style={{ flex: 1 }}>
+    <TouchableOpacity style={[styles.item, backgroundColor]} onPress={onPress}>
+      <Text style={styles.name}>
+        {item.firstName} {item.lastName}
+      </Text>
+      <Text style={styles.phone}>{item.phone}</Text>
     </TouchableOpacity>
-    <SafeAreaView
-      style={{
-        flexDirection: "row",
-        justifyContent: "center",
-        backgroundColor: "gray",
-        alignItems: "center",
-        flex: 1,
-        marginLeft: "3%",
-      }}
-    >
-      <TouchableOpacity
-        style={{ backgroundColor: "blue" }}
-        onPress={console.log("what is happening")}
-      >
-        <Image source={require("../../assets/images/settings/settings.png")} />
-      </TouchableOpacity>
-    </SafeAreaView>
   </SafeAreaView>
 );
 
@@ -346,6 +377,7 @@ const styles = StyleSheet.create({
   phone: {
     color: "black",
     fontSize: responsiveFontSize(1.8),
+    alignSelf: "center",
   },
   emptyText: {
     color: "white",
@@ -359,10 +391,10 @@ const styles = StyleSheet.create({
     height: "8%",
     marginBottom: "2%",
     width: "100%",
-    backgroundColor: "transparent",
+    // backgroundColor: "black",
     flexDirection: "row",
     justifyContent: "space-evenly",
-    alignItems: "flex-end",
+    alignItems: "center",
     borderTopColor: "lightgray",
     borderTopWidth: 1,
   },

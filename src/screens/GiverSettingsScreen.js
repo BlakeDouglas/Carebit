@@ -13,10 +13,18 @@ export default function GiverSettingsScreen({ navigation }) {
   const customAlertButtonHandler = () => {
     navigation.navigate("CustomNotification");
   };
+
+  const activityButtonHandler = () => {
+    navigation.navigate("ActivityLevel");
+  };
   return (
     // Header Container
     <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar hidden={false} translucent={false} backgroundColor="dodgerblue" />
+      <StatusBar
+        hidden={false}
+        translucent={false}
+        backgroundColor="dodgerblue"
+      />
       <SafeAreaView
         style={{
           marginTop: "8%",
@@ -72,7 +80,20 @@ export default function GiverSettingsScreen({ navigation }) {
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Activity Level</Text>
-        <Text style={styles.BoxSub}>Active</Text>
+        <TouchableOpacity
+          onPress={activityButtonHandler}
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "row",
+          }}
+        >
+          <Text style={styles.BoxSub}>Active</Text>
+          <Image
+            style={{ height: 15, width: 15, marginLeft: "1%" }}
+            source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
+          />
+        </TouchableOpacity>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Custom Alert Settings</Text>
@@ -86,7 +107,6 @@ export default function GiverSettingsScreen({ navigation }) {
         >
           <Text style={styles.BoxSub}>Off</Text>
           <Image
-            borderColor={"red"}
             style={{ height: 15, width: 15, marginLeft: "1%" }}
             source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
           />

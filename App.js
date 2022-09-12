@@ -199,6 +199,7 @@ const HomeStack = () => {
             ),
           })}
         />
+        <Stack.Screen name="ActivityLevel" component={ActivityLevelScreen} />
         <Stack.Screen
           name="SettingsScreen"
           component={
