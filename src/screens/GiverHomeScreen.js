@@ -7,6 +7,8 @@ import { Provider, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import call from "react-native-phone-call";
 import { useDrawerStatus } from "@react-navigation/drawer";
+import { getAuthToken, getCode } from "../../server.js";
+import * as WebBrowser from "expo-web-browser";
 
 const args = {
   number: "4077777777",
@@ -15,8 +17,71 @@ const args = {
 
 let date = moment().format("dddd, MMM D");
 
+
+
 export default function GiverHomeScreen({ navigation }) {
+  const [steps, setSteps] = useState(0);
+  const [heart, setHeart] = useState(0);
+  const [HeartMax, setHeartMax] = useState(0);
+  const [HeartMin, setHearMin] = useState(0);
+  const [HeartAvg, setHeartAvg] = useState(0);
+  const [accessTokenw, setAccessToken] = useState(null);
   const userData = useSelector((state) => state.Reducers.userData);
+
+
+  async function fetchData() {
+    //check if we have an access token if not get it from getAuthToken(); 
+    //TODO: check if the Token is almost expired to get refresh token
+
+    if (accessTokenw == null) {
+      let { accessToken } = await getAuthToken();
+      setAccessToken(accessToken)
+    } else {
+      console.log(accessTokenw)
+      let date_today = moment().format('YYYY[-]MM[-]DD')
+      //Get HeartRate
+      //TODO: Get proper permissions for the correct endpoint to display heartRate
+      let heartResponse = await fetch(`https://api.fitbit.com/1/user/-/activities/heart/date/2019-01-01/1d/1min/time/08:00/08:30.json`, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + accessTokenw
+        }
+      })
+      let heart = await heartResponse.json();
+      console.log(heart)
+
+      //Get Steps
+      let stepsResponse = await fetch(`https://api.fitbit.com/1/user/-/activities/date/${date_today}.json`, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + accessTokenw
+        }
+      })
+      let json = await stepsResponse.json();
+      setSteps(json.summary.steps)
+
+      //Get Battery
+      //TODO: implement levels for different battery icons. getBatteryIcon(level) 
+      let deviceResponse = await fetch(`https://api.fitbit.com/1/user/-/devices.json`, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + accessTokenw
+        }
+      })
+
+
+      let battery = await deviceResponse.json();
+      console.log(battery)
+
+
+    }
+
+  }
+  //TODO: useEffect
+  fetchData()
   return (
     <SafeAreaView
       style={{ height: "100%", width: "100%", backgroundColor: "whitesmoke" }}
@@ -72,8 +137,9 @@ export default function GiverHomeScreen({ navigation }) {
           }}
         >
           <Image
-            source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
+            source={require("../.../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
           />
+
           <Text style={styles.callText}>Call Paola</Text>
         </TouchableOpacity>
       </SafeAreaView>
@@ -216,7 +282,7 @@ export default function GiverHomeScreen({ navigation }) {
                   fontWeight: "700",
                 }}
               >
-                74
+                {heart}
               </Text>
               <Text
                 style={{
@@ -281,7 +347,7 @@ export default function GiverHomeScreen({ navigation }) {
                   fontWeight: "700",
                 }}
               >
-                523
+                {steps}
               </Text>
             </SafeAreaView>
             <SafeAreaView
@@ -412,7 +478,7 @@ export default function GiverHomeScreen({ navigation }) {
                 fontWeight: "700",
               }}
             >
-              74
+              {HeartMin}
             </Text>
             <Text style={[styles.smallText, { marginLeft: 0, marginTop: 0 }]}>
               min
@@ -442,7 +508,7 @@ export default function GiverHomeScreen({ navigation }) {
                 fontWeight: "700",
               }}
             >
-              74
+              {HeartAvg}
             </Text>
             <Text style={[styles.smallText, { marginLeft: 0, marginTop: 0 }]}>
               average
@@ -471,7 +537,7 @@ export default function GiverHomeScreen({ navigation }) {
                 fontWeight: "700",
               }}
             >
-              74
+              {HeartMax}
             </Text>
             <Text style={[styles.smallText, { marginLeft: 0, marginTop: 0 }]}>
               max
@@ -612,7 +678,7 @@ export default function GiverHomeScreen({ navigation }) {
                   fontWeight: "700",
                 }}
               >
-                80
+                {steps}
               </Text>
             </SafeAreaView>
             <SafeAreaView
