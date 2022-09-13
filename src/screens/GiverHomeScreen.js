@@ -19,21 +19,12 @@ let date = moment().format("dddd, MMM D");
 
 
 export default function GiverHomeScreen({ navigation }) {
-<<<<<<< HEAD
-  const [steps, setSteps] = useState("null");
-  const [heart, setHeart] = useState("null");
-  const [HeartMax, setHeartMax] = useState("null");
-  const [HeartMin, setHearMin] = useState("null");
-  const [HeartAvg, setHeartAvg] = useState("null");
-  const [accessTokenw, setAccessToken] = useState(null);
-=======
   const [steps, setSteps] = useState(0);
-  const [heart, setHeart] = useState(0);
+  const [heart, setHeart] = useState(null);
   const [HeartMax, setHeartMax] = useState(0);
   const [HeartMin, setHearMin] = useState(0);
   const [HeartAvg, setHeartAvg] = useState(0);
   const [fitbitAccessToken, setFitbitAccessToken] = useState(null);
->>>>>>> e662a4ee14676fdfa4486d1e8e40ed7d6a879379
   const userData = useSelector((state) => state.Reducers.userData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedID = 1;
