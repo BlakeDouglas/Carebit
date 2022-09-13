@@ -191,16 +191,16 @@ const RequestScreen = ({ navigation }) => {
         />
 
         <View style={styles.optionsPane}>
-          {selectedId !== null && (
-            <View
-              style={{
-                //backgroundColor: "green",
-                height: "100%",
-                width: "40%",
-                borderRadius: 8,
-                marginTop: "5%",
-              }}
-            >
+          <View
+            style={{
+              //backgroundColor: "green",
+              height: "100%",
+              width: "40%",
+              borderRadius: 8,
+              marginTop: "5%",
+            }}
+          >
+            {selectedId !== null && (
               <TouchableOpacity
                 style={styles.buttons}
                 onPress={() => {
@@ -213,24 +213,25 @@ const RequestScreen = ({ navigation }) => {
                   style={{
                     color: "darkred",
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(2.5),
+                    fontSize: responsiveFontSize(2.8),
                   }}
                 >
                   Reject
                 </Text>
               </TouchableOpacity>
-            </View>
-          )}
-          {selectedId !== null && (
-            <View
-              style={{
-                //backgroundColor: "purple",
-                height: "100%",
-                width: "40%",
-                borderRadius: 8,
-                marginTop: "5%",
-              }}
-            >
+            )}
+          </View>
+
+          <View
+            style={{
+              //backgroundColor: "purple",
+              height: "100%",
+              width: "40%",
+              borderRadius: 8,
+              marginTop: "5%",
+            }}
+          >
+            {selectedId !== null && (
               <TouchableOpacity
                 style={[styles.buttons, {}]}
                 onPress={() => {
@@ -243,14 +244,14 @@ const RequestScreen = ({ navigation }) => {
                   style={{
                     color: "green",
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(2.5),
+                    fontSize: responsiveFontSize(2.8),
                   }}
                 >
                   Accept
                 </Text>
               </TouchableOpacity>
-            </View>
-          )}
+            )}
+          </View>
         </View>
       </SafeAreaView>
     </ImageBackground>
@@ -323,13 +324,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "flex-end",
+    borderTopColor: "lightgray",
+    borderTopWidth: 2,
   },
   buttons: {
     height: "100%",
     width: "100%",
     marginTop: "2%",
-    borderColor: "dodgerblue",
-    backgroundColor: "lightgray",
+    borderColor: "transparent",
+    backgroundColor: "transparent",
     textAlign: "center",
     alignItems: "center",
     justifyContent: "center",
