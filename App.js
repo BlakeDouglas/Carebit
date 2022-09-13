@@ -63,8 +63,7 @@ const RootNavigation = () => {
       {tokenData.access_token === "" ? (
         <AuthStack />
       ) : (tokenData.type === "caregivee" && !physData.physName) ||
-        (tokenData.type === "caregivee" && !tokenData.caregiveeID) ||
-        (tokenData.type === "caregiver" && !tokenData.caregiveeID) ? (
+        !tokenData.caregiveeID ? (
         <MiddleStack />
       ) : (
         <HomeStack />
@@ -109,7 +108,7 @@ const MiddleStack = () => {
           title: "",
         }}
       >
-        {tokenData.type === "caregivee" && !tokenData.caregiveeID && (
+        {tokenData.type !== "caregiver" && !tokenData.caregiveeID && (
           <Stack.Screen
             name="AuthenticationScreen"
             component={AuthenticationScreen}

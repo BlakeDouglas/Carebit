@@ -12,21 +12,23 @@ import React, { useEffect, useState, useCallback } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { useSelector, useDispatch } from "react-redux";
-import {discovery} from "./AuthenticationScreen";
+import { discovery } from "./AuthenticationScreen";
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
+import { setTokenData } from "../redux/actions";
 
 export default function LinkUsersScreen({ navigation }) {
   const handleChange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
   const [inputs, setInputs] = useState({
-    addUser: "",
+    phone: "",
   });
   const handleError = (errorMessage, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
   const [errors, setErrors] = useState({});
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const dispatch = useDispatch();
   const typeOfRequester =
     tokenData.type === "caregivee" ? "caregiver" : "caregivee";
 
@@ -44,59 +46,87 @@ export default function LinkUsersScreen({ navigation }) {
         },
         {
           text: "OK",
-          onPress: promptAsync
+          onPress: promptAsync,
         },
       ]
     );
 
-    const [request, response, promptAsync] = useAuthRequest(
-      {
-        clientId: "238QS3",
-        scopes: ["activity", "sleep", "temperature"],
-        redirectUri: makeRedirectUri({
-          scheme: "carebit",
-          path: "callback",
-        }),
-  
-        usePKCE: false,
-        extraParams: { prompt: "login" },
-      },
-      discovery
-    );
+  const [request, response, promptAsync] = useAuthRequest(
+    {
+      clientId: "238QS3",
+      scopes: ["activity", "sleep", "temperature"],
+      redirectUri: makeRedirectUri({
+        scheme: "carebit",
+        path: "callback",
+      }),
 
-    const makeRequest = async () => {
-      const body =
-        tokenData.type === "caregivee"
-          ? { caregiveePhone: tokenData.phone, caregiverPhone: inputs.phone }
-          : { caregiverPhone: tokenData.phone, caregiveePhone: inputs.phone };
-      try {
-        const response = await fetch("https://www.carebit.xyz/createRequest", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-          body: JSON.stringify(body),
-        });
-        const json = await response.json();
-        console.log("MAKING REQUEST WITH BODY: " + JSON.stringify(body));
-        console.log("Request result: " + JSON.stringify(json));
-        if (!json.request)
-        {
-          //TODO: Errors go here
-        } else {
-          // TODO: Happy success signs go here.
-        }
-      } catch (error) {
-        console.log("Caught error: " + error);
-      }
-    };
-  
-    React.useEffect(() => {
-      if (response?.type === "success")
-        navigation.navigate("ModifiedCaregiveeAccountCreation", {caregiverToken: tokenData, code: response.params.code})
-    }, [response]);
+      usePKCE: false,
+      extraParams: { prompt: "login" },
+    },
+    discovery
+  );
+
+  const makeRequest = async () => {
+    if (!tokenData.phone || !inputs.phone) return;
+    const body =
+      tokenData.type === "caregivee"
+        ? { caregiveePhone: tokenData.phone, caregiverPhone: inputs.phone }
+        : { caregiverPhone: tokenData.phone, caregiveePhone: inputs.phone };
+    try {
+      const response = await fetch("https://www.carebit.xyz/createRequest", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokenData.access_token,
+        },
+        body: JSON.stringify(body),
+      });
+      const json = await response.json();
+      console.log(json);
+      if (json.request)
+        dispatch(setTokenData({ ...tokenData, caregiveeID: [json.request] }));
+
+      getRequests(tokenData);
+    } catch (error) {
+      console.log("Caught error: " + error);
+    }
+  };
+
+  /* Shouldn't be necessary. Fetches 
+  const getRequests = async (tokenData) => {
+    if (!tokenData.type) return;
+    const body =
+      tokenData.type === "caregivee"
+        ? { caregiveeID: tokenData.caregiveeID, caregiverID: null }
+        : { caregiverID: tokenData.caregiverID, caregiveeID: null };
+    try {
+      const response = await fetch("https://www.carebit.xyz/getRequests", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokenData.access_token,
+        },
+        body: JSON.stringify(body),
+      });
+      const json = await response.json();
+      dispatch(
+        setTokenData({ ...tokenData, caregiveeID: [json.connections[0]] })
+      );
+    } catch (error) {
+      console.log("Caught error: " + error);
+    }
+  };
+  */
+
+  React.useEffect(() => {
+    if (response?.type === "success")
+      navigation.navigate("ModifiedCaregiveeAccountCreation", {
+        caregiverToken: tokenData,
+        code: response.params.code,
+      });
+  }, [response]);
 
   return (
     <ImageBackground
@@ -141,8 +171,7 @@ export default function LinkUsersScreen({ navigation }) {
                   { fontSize: responsiveFontSize(2.3) },
                 ]}
               >
-                Request a Caregivee for monitoring {"\n"}(recommended
-                method)
+                Request a Caregivee for monitoring {"\n"}(recommended method)
               </Text>
               <SafeAreaView
                 style={{
@@ -162,18 +191,20 @@ export default function LinkUsersScreen({ navigation }) {
                   placeholder="(XXX) XXX-XXXX"
                   iconName="phone-outline"
                   keyboardType="number-pad"
-                  error={errors.addUser}
+                  error={errors.phone}
                   onChangeText={(text) =>
-                    handleChange(text.replace(/[^0-9]+/g, ""), "addUser")
+                    handleChange(text.replace(/[^0-9]+/g, ""), "phone")
                   }
                   onFocus={() => {
-                    handleError(null, "addUser");
+                    handleError(null, "phone");
                   }}
                 />
               </SafeAreaView>
               <TouchableOpacity
                 style={[GlobalStyle.Button, { marginTop: "5%" }]}
-                onPress={makeRequest()}
+                onPress={() => {
+                  makeRequest();
+                }}
               >
                 <Text style={GlobalStyle.ButtonText}>Send Request</Text>
               </TouchableOpacity>

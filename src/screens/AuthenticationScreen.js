@@ -56,7 +56,20 @@ export default function AuthenticationScreen({ navigation }) {
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId: "238QS3",
-      scopes: ["activity", "heartrate", "location", "nutrition", "profile", "settings", "sleep", "social", "weight", "oxygen_saturation", "respiratory_rate", "temperature"],
+      scopes: [
+        "activity",
+        "heartrate",
+        "location",
+        "nutrition",
+        "profile",
+        "settings",
+        "sleep",
+        "social",
+        "weight",
+        "oxygen_saturation",
+        "respiratory_rate",
+        "temperature",
+      ],
       redirectUri: makeRedirectUri({
         scheme: "carebit",
         path: "callback",
@@ -80,11 +93,7 @@ export default function AuthenticationScreen({ navigation }) {
       style={GlobalStyle.Background}
     >
       <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar
-          hidden={false}
-          translucent={true}
-          backgroundColor="black"
-        />
+        <StatusBar hidden={false} translucent={true} backgroundColor="black" />
         <SafeAreaView style={GlobalStyle.Container}>
           <SafeAreaView
             style={{

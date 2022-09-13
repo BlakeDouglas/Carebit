@@ -104,7 +104,7 @@ const RequestScreen = ({ navigation }) => {
       });
       const json = await response.json();
       if (json.request) {
-        // TODO: Good case
+        getRequests(tokenData);
       } else {
         // TODO: Bad error case
       }

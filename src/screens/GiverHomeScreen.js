@@ -16,8 +16,6 @@ const args = {
 
 let date = moment().format("dddd, MMM D");
 
-
-
 export default function GiverHomeScreen({ navigation }) {
   const [steps, setSteps] = useState(0);
   const [heart, setHeart] = useState(null);
@@ -27,39 +25,45 @@ export default function GiverHomeScreen({ navigation }) {
   const [fitbitAccessToken, setFitbitAccessToken] = useState(null);
   const userData = useSelector((state) => state.Reducers.userData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const selectedID = 1;
+  const selectedID = 0;
 
-  const refreshFitbitAccessToken = async () =>{
-    const caregiveeID = (tokenData.type === "caregiver") ? tokenData.caregiveeID[selectedID].caregiveeID : tokenData.caregiverID[selectedID].caregiverID;
+  const refreshFitbitAccessToken = async () => {
+    const caregiveeID = tokenData.caregiveeID[selectedID].caregiveeID;
     try {
-      const response = await fetch("https://www.carebit.xyz/refreshFitbitToken/" + caregiveeID, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-      });
+      const response = await fetch(
+        "https://www.carebit.xyz/refreshFitbitToken/" + caregiveeID,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+        }
+      );
       const json = await response.json();
-      if (json.access_token)
-        setFitbitAccessToken(json.access_token);
-      else
-        console.log(json.error);
+      if (json.access_token) setFitbitAccessToken(json.access_token);
+      else console.log(json.error);
     } catch (error) {
       console.log("Caught error: " + error);
     }
   };
   const fetchFitbitAccessToken = async () => {
-  const caregiveeID = (tokenData.type === "caregiver") ? tokenData.caregiveeID[selectedID].caregiveeID : tokenData.caregiverID[selectedID].caregiverID;
     try {
-      const response = await fetch("https://www.carebit.xyz/getFitbitToken/" + caregiveeID, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-      });
+      console.log(tokenData);
+      const caregiveeID = tokenData.caregiveeID[selectedID].caregiveeID;
+
+      const response = await fetch(
+        "https://www.carebit.xyz/getFitbitToken/" + caregiveeID,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+        }
+      );
       const json = await response.json();
       setFitbitAccessToken(json.fitbitToken);
     } catch (error) {
@@ -67,52 +71,72 @@ export default function GiverHomeScreen({ navigation }) {
     }
   };
 
-
   const fetchData = async () => {
     if (!fitbitAccessToken) {
       // Seems that refresh has a cooldown. Switch this on if u get invalid token
       // await refreshFitbitAccessToken();
-      
+
       await fetchFitbitAccessToken();
-      console.log(fitbitAccessToken);
     } else {
-      let date_today = moment().format('YYYY[-]MM[-]DD')
+      let date_today = moment().format("YYYY[-]MM[-]DD");
       //Get HeartRate
-      let heartResponse = await fetch(`https://api.fitbit.com/1/user/-/activities/heart/date/${date_today}/1d.json`, {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + fitbitAccessToken
+      let heartResponse = await fetch(
+        "https://api.fitbit.com/1/user/-/activities/heart/date/" +
+          date_today +
+          "/1d.json",
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + fitbitAccessToken,
+          },
         }
-      })
+      );
       let heart = await heartResponse.json();
+      if (heart.errors) {
+        console.log(
+          "Error fetching heart. Refresh is recommended, but first confirm."
+        );
+        // await refreshFitbitAccessToken();
+        return;
+      }
+      console.log("Response from heart:");
       console.log(heart);
 
-
       //Get Steps
-      let stepsResponse = await fetch(`https://api.fitbit.com/1/user/-/activities/date/${date_today}.json`, {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + fitbitAccessToken
+      let stepsResponse = await fetch(
+        "https://api.fitbit.com/1/user/-/activities/date/" +
+          date_today +
+          ".json",
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + fitbitAccessToken,
+          },
         }
-      })
+      );
       let json = await stepsResponse.json();
+      console.log("Response from activities:");
       console.log(json);
 
       //Get Battery
-      //TODO: implement levels for different battery icons. getBatteryIcon(level) 
-      let deviceResponse = await fetch(`https://api.fitbit.com/1/user/-/devices.json`, {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + fitbitAccessToken
+      //TODO: implement levels for different battery icons. getBatteryIcon(level)
+      let deviceResponse = await fetch(
+        "https://api.fitbit.com/1/user/-/devices.json",
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + fitbitAccessToken,
+          },
         }
-      })
+      );
       let battery = await deviceResponse.json();
+      console.log("Response from devices:");
       console.log(battery);
     }
-  }
+  };
 
   useEffect(() => {
     fetchData();
