@@ -829,7 +829,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: "5%",
     flexDirection: "row",
-    borderRadius: 6,
+    borderRadius: 5,
   },
 
   helloText: {
