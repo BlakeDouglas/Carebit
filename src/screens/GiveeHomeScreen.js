@@ -8,6 +8,7 @@ import {
   ScrollView,
   Switch,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import React, { useState } from "react";
 import { useEffect } from "react";
@@ -424,10 +425,10 @@ export default function GiveeHomeScreen({ navigation }) {
           <SafeAreaView style={{}}>
             <Text
               style={{
-                marginTop: "12%",
+                marginTop: Platform.OS === "ios" ? "12%" : "5%",
                 marginLeft: "4%",
                 color: "darkgrey",
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.9),
               }}
             >
               Hello Testing Care
@@ -438,13 +439,13 @@ export default function GiveeHomeScreen({ navigation }) {
                 fontSize: responsiveFontSize(2.4),
                 fontWeight: "500",
                 marginLeft: "4%",
-                marginTop: "4%",
+                marginTop: Platform.OS === "ios" ? "4%" : 0,
               }}
             >
               Your Caregiver is Paola
             </Text>
           </SafeAreaView>
-          <SafeAreaView style={{}}>
+          <SafeAreaView>
             <TouchableOpacity
               style={styles.callBody}
               onPress={() => {
@@ -465,7 +466,7 @@ export default function GiveeHomeScreen({ navigation }) {
             //backgroundColor: "red",
             justifyContent: "space-evenly",
             alignItems: "center",
-            marginTop: "8%",
+            marginTop: Platform.OS === "ios" ? "8%" : "5%",
           }}
         >
           <SafeAreaView
@@ -529,7 +530,7 @@ export default function GiveeHomeScreen({ navigation }) {
           style={{
             borderBottomColor: "lightgray",
             borderBottomWidth: 1,
-            marginTop: "7%",
+            marginTop: Platform.OS === "ios" ? "7%" : "5%",
           }}
         ></SafeAreaView>
 
@@ -780,7 +781,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     marginRight: "4%",
-    marginTop: "6%",
+    marginTop: Platform.OS == "ios" ? "10%" : "5%",
     justifyContent: "center",
   },
   mediumBody: {
@@ -804,13 +805,13 @@ const styles = StyleSheet.create({
   imagesBody: {
     width: 45,
     height: 45,
-    marginTop: "10%",
+    marginTop: Platform.OS === "ios" ? "10%" : "8%",
     marginHorizontal: "16%",
   },
   imagesBody2: {
     width: 45,
     height: 45,
-    marginVertical: "10%",
+    marginVertical: Platform.OS === "ios" ? "10%" : "8%",
   },
   switchBody: {
     transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
@@ -876,7 +877,6 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(2.3),
     fontWeight: "500",
     marginLeft: "4%",
-    marginTop: "5%",
-    marginBottom: "1%",
+    marginTop: Platform.OS === "ios" ? "5%" : "3%",
   },
 });
