@@ -7,6 +7,7 @@ const initialState = {
     phone: "",
     type: "",
     userID: null,
+    selected: 0,
   },
   userData: {
     firstName: "",

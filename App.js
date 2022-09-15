@@ -17,7 +17,7 @@ import ModifiedCaregiveeAccountCreation from "./src/screens/ModifiedCaregiveeAcc
 import LinkUsersScreen from "./src/screens/LinkUsersScreen";
 import AddScreen from "./src/screens/AddScreen";
 import CustomNotificationScreen from "./src/screens/CustomNotificationScreen";
-import { Image, Text, TouchableOpacity } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { Provider, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
 import { useFonts } from "expo-font";
@@ -181,20 +181,31 @@ const HomeStack = () => {
               </TouchableOpacity>
             ),
             headerRight: () => (
-              <TouchableOpacity
-                onPress={() => navigation.navigate("RequestScreen")}
-                style={{
-                  marginRight: "8%",
-                }}
-              >
-                <Image
-                  style={{
-                    height: 28,
-                    width: 28,
-                  }}
-                  source={require("./assets/images/avatar/friends.png")}
-                />
-              </TouchableOpacity>
+              <View style={{ flexDirection: "row", marginRight: "8%" }}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("RequestScreen")}
+                >
+                  <Image
+                    style={{
+                      height: 28,
+                      width: 28,
+                    }}
+                    source={require("./assets/images/avatar/friends.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("ListOfFriendsScreen")}
+                  style={{ marginLeft: "8%" }}
+                >
+                  <Image
+                    style={{
+                      height: 28,
+                      width: 28,
+                    }}
+                    source={require("./assets/images/avatar/friends.png")}
+                  />
+                </TouchableOpacity>
+              </View>
             ),
           })}
         />
@@ -321,6 +332,37 @@ const HomeStack = () => {
                   }}
                   source={require("./assets/images/avatar/friends.png")}
                 />
+              </TouchableOpacity>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="ListOfFriendsScreen"
+          component={ListOfFriendsScreen}
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerTitle:
+              tokenData.type === "caregiver"
+                ? "Linked Caregivees"
+                : "Linked Caregiver",
+
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("HomeScreen")}
+                style={{ marginLeft: "8%" }}
+              >
+                <Text
+                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
+                >
+                  Done
+                </Text>
               </TouchableOpacity>
             ),
           })}

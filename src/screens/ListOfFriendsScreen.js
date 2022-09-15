@@ -16,61 +16,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { setTokenData } from "../redux/actions";
 
 const ListOfFriendsScreen = ({ navigation }) => {
-  const data_temp = [
-    {
-      requestID: "123",
-      firstName: "First",
-      lastName: "Galopenmere",
-      phone: "954696942",
-      email: "Galopener@gmail.com",
-    },
-    {
-      requestID: "204",
-      firstName: "Broseph",
-      lastName: "Galopenmere",
-      phone: "954696942",
-      email: "Galopener@gmail.com",
-    },
-    {
-      requestID: "22",
-      firstName: "Broseph",
-      lastName: "Galopenmere",
-      phone: "954696942",
-      email: "Galopener@gmail.com",
-    },
-    {
-      requestID: "23",
-      firstName: "Broseph",
-      lastName: "Galopenmere",
-      phone: "954696942",
-      email: "Galopener@gmail.com",
-    },
-    {
-      requestID: "24",
-      firstName: "Broseph",
-      lastName: "Galopenmere",
-      phone: "954696942",
-      email: "Galopener@gmail.com",
-    },
-    {
-      requestID: "25",
-      firstName: "Broseph",
-      lastName: "Galopenmere",
-      phone: "954696942",
-      email: "Galopener@gmail.com",
-    },
-    {
-      requestID: "26",
-      firstName: "Broseph",
-      lastName: "Galopenmere",
-      phone: "954696942",
-      email: "Galopener@gmail.com",
-    },
-  ];
   const [selectedId, setSelectedId] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const dispatch = useDispatch();
   const typeOfRequester =
     tokenData.type === "caregivee" ? "caregivee" : "caregiver";
   // Stores only incoming requests
@@ -78,44 +29,14 @@ const ListOfFriendsScreen = ({ navigation }) => {
   // Stores all requests
   const [backgroundData, setBackgroundData] = useState([]);
 
-  const onPressDelete = (item) => {
-    Alert.alert(
-      "Delete the request from\n" + item.firstName + " " + item.lastName,
-      "",
-      [
-        { text: "Cancel", onPress: () => {}, style: "cancel" },
-        {
-          text: "Continue",
-          onPress: () => {
-            rejectRequest(tokenData, item.requestID);
-            getRequests(tokenData);
-          },
-        },
-      ]
-    );
-  };
-
-  const onPressAdd = (item) => {
-    const fullName = item.firstName + " " + item.lastName;
-    Alert.alert(
-      "Allow " + fullName + " to be your " + typeOfRequester + "?",
-      typeOfRequester === "caregivee"
-        ? "As a caregiver, you intend to provide care to " +
-            fullName +
-            " by accessing their Fitbit data."
-        : "As a caregivee, you will allow " +
-            fullName +
-            " to access your Fitbit data.",
-      [
-        { text: "Cancel", onPress: () => {}, style: "cancel" },
-        {
-          text: "Allow",
-          onPress: () => {
-            acceptRequest(tokenData, item.caregiverID);
-            getRequests(tokenData);
-          },
-        },
-      ]
+  const setSelected = () => {
+    dispatch(
+      setTokenData({
+        ...tokenData,
+        selected: backgroundData.findIndex(
+          (iter) => iter.requestID === selectedId
+        ),
+      })
     );
   };
 
@@ -135,7 +56,6 @@ const ListOfFriendsScreen = ({ navigation }) => {
         body: JSON.stringify(body),
       });
       const json = await response.json();
-
       if (JSON.stringify(backgroundData) !== JSON.stringify(json.connections))
         setBackgroundData(json.connections);
     } catch (error) {
@@ -143,7 +63,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
     }
   };
 
-  //getRequests(tokenData);
+  getRequests(tokenData);
 
   useEffect(() => {
     setData(backgroundData.filter((iter) => iter.status === "Accepted"));
@@ -190,7 +110,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
           </Text>
         </SafeAreaView>
         <FlatList
-          data={data_temp}
+          data={data}
           renderItem={renderItem}
           keyExtractor={(item) => item.requestID}
           ListEmptyComponent={Empty}
@@ -219,11 +139,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
                   //backgroundColor: "blue",
                   borderRadius: 8,
                 }}
-                onPress={() => {
-                  onPressDelete(
-                    data.filter((iter) => iter.requestID === selectedId)[0]
-                  );
-                }}
+                onPress={setSelected}
               >
                 <Text
                   style={{
@@ -233,7 +149,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
                     fontSize: responsiveFontSize(3),
                   }}
                 >
-                  Set Default
+                  Select
                 </Text>
               </TouchableOpacity>
             </View>
@@ -258,9 +174,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
                   borderRadius: 8,
                 }}
                 onPress={() => {
-                  onPressAdd(
-                    data.filter((iter) => iter.requestID === selectedId)[0]
-                  );
+                  // TODO: Implement settings
                 }}
               >
                 <Image

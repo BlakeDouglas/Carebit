@@ -1,4 +1,11 @@
-import { StyleSheet, Text, SafeAreaView, Image, StatusBar } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  Image,
+  StatusBar,
+  ScrollView,
+} from "react-native";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
@@ -25,7 +32,6 @@ export default function GiverHomeScreen({ navigation }) {
   const [fitbitAccessToken, setFitbitAccessToken] = useState(null);
   const userData = useSelector((state) => state.Reducers.userData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const selectedID = 0;
 
   const refreshFitbitAccessToken = async (caregiveeID) => {
     try {
@@ -69,7 +75,7 @@ export default function GiverHomeScreen({ navigation }) {
   };
 
   const fetchData = async () => {
-    const caregiveeID = tokenData.caregiveeID[selectedID].caregiveeID;
+    const caregiveeID = tokenData.caregiveeID[tokenData.selected].caregiveeID;
     if (!fitbitAccessToken) {
       // Seems that refresh has a cooldown. Switch this on if u get invalid token
       // await refreshFitbitAccessToken();
