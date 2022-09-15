@@ -25,20 +25,15 @@ let date = moment().format("dddd, MMM D");
 
 export default function GiverHomeScreen({ navigation }) {
   const [steps, setSteps] = useState(0);
-  const [heart, setHeart] = useState(0);
+  const [HeartBPM, setHeart] = useState(0);
   const [HeartMax, setHeartMax] = useState(0);
-  const [HeartMin, setHearMin] = useState(0);
+  const [HeartMin, setHeartMin] = useState(0);
   const [HeartAvg, setHeartAvg] = useState(0);
   const [fitbitAccessToken, setFitbitAccessToken] = useState(null);
   const userData = useSelector((state) => state.Reducers.userData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const selectedID = 1;
 
-  const refreshFitbitAccessToken = async () => {
-    const caregiveeID =
-      tokenData.type === "caregiver"
-        ? tokenData.caregiveeID[selectedID].caregiveeID
-        : tokenData.caregiverID[selectedID].caregiverID;
+  const refreshFitbitAccessToken = async (caregiveeID) => {
     try {
       const response = await fetch(
         "https://www.carebit.xyz/refreshFitbitToken/" + caregiveeID,
@@ -53,16 +48,12 @@ export default function GiverHomeScreen({ navigation }) {
       );
       const json = await response.json();
       if (json.access_token) setFitbitAccessToken(json.access_token);
-      else console.log(json.error);
+      else console.log("Refreshing error: " + json.error);
     } catch (error) {
       console.log("Caught error: " + error);
     }
   };
-  const fetchFitbitAccessToken = async () => {
-    const caregiveeID =
-      tokenData.type === "caregiver"
-        ? tokenData.caregiveeID[selectedID].caregiveeID
-        : tokenData.caregiverID[selectedID].caregiverID;
+  const fetchFitbitAccessToken = async (caregiveeID) => {
     try {
       const response = await fetch(
         "https://www.carebit.xyz/getFitbitToken/" + caregiveeID,
@@ -76,24 +67,28 @@ export default function GiverHomeScreen({ navigation }) {
         }
       );
       const json = await response.json();
-      setFitbitAccessToken(json.fitbitToken);
+      if (!json.error) setFitbitAccessToken(json.fitbitToken);
+      else console.log("Error: " + json.error);
     } catch (error) {
       console.log("Caught error: " + error);
     }
   };
 
   const fetchData = async () => {
+    const caregiveeID = tokenData.caregiveeID[tokenData.selected].caregiveeID;
     if (!fitbitAccessToken) {
       // Seems that refresh has a cooldown. Switch this on if u get invalid token
       // await refreshFitbitAccessToken();
-
-      await fetchFitbitAccessToken();
-      console.log(fitbitAccessToken);
+      await fetchFitbitAccessToken(caregiveeID);
     } else {
       let date_today = moment().format("YYYY[-]MM[-]DD");
       //Get HeartRate
       let heartResponse = await fetch(
-        `https://api.fitbit.com/1/user/-/activities/heart/date/${date_today}/1d.json`,
+        "https://api.fitbit.com/1/user/" +
+          caregiveeID +
+          "/activities/heart/date/" +
+          date_today +
+          "/1d.json",
         {
           headers: {
             Accept: "application/json",
@@ -102,15 +97,26 @@ export default function GiverHomeScreen({ navigation }) {
           },
         }
       );
-      let heart2 = await heartResponse.json();
-      //setHeart((heart) => heart2.heartRateZones);
-      console.log("----------------------------------------------------------");
-      console.log(heart2);
-      console.log("----------------------------------------------------------");
+      let heart = await heartResponse.json();
+
+      // Checks for expired token
+      if (heart.errors) {
+        console.log("Refreshing ");
+        await refreshFitbitAccessToken(caregiveeID);
+        return;
+      }
+
+      setHeartAvg(heart["activities-heart"][0].value.restingHeartRate);
+      setHeartMax(heart["activities-heart"][0].value.heartRateZones[3].max);
+      setHeartMin(heart["activities-heart"][0].value.heartRateZones[0].min);
 
       //Get Steps
       let stepsResponse = await fetch(
-        `https://api.fitbit.com/1/user/-/activities/date/${date_today}.json`,
+        "https://api.fitbit.com/1/user/" +
+          caregiveeID +
+          "/activities/tracker/steps/date/" +
+          date_today +
+          "/1d.json",
         {
           headers: {
             Accept: "application/json",
@@ -120,12 +126,12 @@ export default function GiverHomeScreen({ navigation }) {
         }
       );
       let json = await stepsResponse.json();
-      console.log(json);
-
+      setSteps(json["activities-tracker-steps"][0].value);
+      console.log("Steps: " + steps);
       //Get Battery
       //TODO: implement levels for different battery icons. getBatteryIcon(level)
       let deviceResponse = await fetch(
-        `https://api.fitbit.com/1/user/-/devices.json`,
+        "https://api.fitbit.com/1/user/-/devices.json",
         {
           headers: {
             Accept: "application/json",
@@ -135,6 +141,7 @@ export default function GiverHomeScreen({ navigation }) {
         }
       );
       let battery = await deviceResponse.json();
+      console.log("Response from devices:");
       console.log(battery);
     }
   };
@@ -145,6 +152,11 @@ export default function GiverHomeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar
+        hidden={false}
+        translucent={false}
+        backgroundColor="dodgerblue"
+      />
       <ScrollView style={{ flex: 1 }}>
         <SafeAreaView
           style={{
@@ -153,12 +165,12 @@ export default function GiverHomeScreen({ navigation }) {
             justifyContent: "space-between",
           }}
         >
-          <TouchableOpacity style={{ marginLeft: "6%" }}>
+          <TouchableOpacity style={{ marginLeft: "8%" }}>
             <Text
               style={{
                 color: "gray",
                 fontWeight: "bold",
-                marginVertical: "14%",
+                marginVertical: "10%",
                 justifyContent: "center",
               }}
             >
@@ -167,7 +179,7 @@ export default function GiverHomeScreen({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             style={{
-              marginRight: "6%",
+              marginRight: "8%",
               //backgroundColor: "red",
               alignItems: "flex-end",
               justifyContent: "center",
@@ -177,7 +189,7 @@ export default function GiverHomeScreen({ navigation }) {
               style={{
                 color: "dodgerblue",
                 fontWeight: "bold",
-                marginVertical: "14%",
+                marginVertical: "10%",
               }}
             >
               View History
@@ -195,7 +207,7 @@ export default function GiverHomeScreen({ navigation }) {
           <SafeAreaView>
             <Text
               style={{
-                marginTop: "8%",
+                marginTop: Platform.OS == "ios" ? "10%" : "5%",
                 marginLeft: "4%",
                 color: "darkgrey",
                 fontSize: responsiveFontSize(1.8),
@@ -209,7 +221,6 @@ export default function GiverHomeScreen({ navigation }) {
                 fontSize: responsiveFontSize(2.4),
                 fontWeight: "500",
                 marginLeft: "4%",
-                marginTop: "2%",
               }}
             >
               Your Caregivee is Paola
@@ -233,7 +244,7 @@ export default function GiverHomeScreen({ navigation }) {
           style={{
             borderBottomColor: "lightgray",
             borderBottomWidth: 1,
-            marginTop: "5%",
+            marginTop: Platform.OS == "ios" ? "4%" : "3%",
           }}
         ></SafeAreaView>
 
@@ -248,7 +259,7 @@ export default function GiverHomeScreen({ navigation }) {
             style={{
               color: "black",
               fontSize: responsiveFontSize(2.2),
-              marginTop: "4%",
+              marginTop: Platform.OS == "ios" ? "4%" : "2%",
               marginLeft: "4%",
             }}
           >
@@ -259,7 +270,7 @@ export default function GiverHomeScreen({ navigation }) {
             style={{
               color: "darkgrey",
               fontSize: responsiveFontSize(1.8),
-              marginTop: "4%",
+              marginTop: Platform.OS == "ios" ? "4%" : "2%",
               marginRight: "4%",
             }}
           >
@@ -267,7 +278,7 @@ export default function GiverHomeScreen({ navigation }) {
           </Text>
         </SafeAreaView>
 
-        <SafeAreaView style={{ marginTop: "3%" }}>
+        <SafeAreaView style={{ marginTop: Platform.OS == "ios" ? "4%" : "2%" }}>
           <SafeAreaView
             style={{
               flexDirection: "row",
@@ -382,7 +393,7 @@ export default function GiverHomeScreen({ navigation }) {
                   justifyContent: "center",
                   alignItems: "center",
                   width: "100%",
-                  marginVertical: "8%",
+                  marginVertical: Platform.OS === "ios" ? "8%" : "5%",
                 }}
               >
                 <Text
@@ -408,7 +419,7 @@ export default function GiverHomeScreen({ navigation }) {
               <SafeAreaView
                 style={{
                   width: "100%",
-                  marginBottom: "8%",
+                  marginBottom: "5%",
                   alignItems: "center",
                   justifyContent: "flex-start",
                 }}
@@ -443,7 +454,7 @@ export default function GiverHomeScreen({ navigation }) {
                   justifyContent: "center",
                   alignItems: "center",
                   width: "100%",
-                  marginVertical: "8%",
+                  marginVertical: Platform.OS === "ios" ? "8%" : "5%",
                 }}
               >
                 <Text
@@ -459,7 +470,7 @@ export default function GiverHomeScreen({ navigation }) {
               <SafeAreaView
                 style={{
                   width: "100%",
-                  marginBottom: "8%",
+                  marginBottom: "5%",
                   alignItems: "center",
                   justifyContent: "flex-start",
                 }}
@@ -473,7 +484,7 @@ export default function GiverHomeScreen({ navigation }) {
           style={{
             borderBottomColor: "lightgray",
             borderBottomWidth: 1,
-            marginTop: "5%",
+            marginTop: Platform.OS == "ios" ? "5%" : "3%",
           }}
         ></SafeAreaView>
         <SafeAreaView
@@ -487,7 +498,7 @@ export default function GiverHomeScreen({ navigation }) {
             style={{
               color: "black",
               fontSize: responsiveFontSize(2.2),
-              marginTop: "2%",
+              marginTop: Platform.OS == "ios" ? "5%" : "2%",
               marginLeft: "4%",
             }}
           >
@@ -498,7 +509,7 @@ export default function GiverHomeScreen({ navigation }) {
             style={{
               color: "darkgrey",
               fontSize: responsiveFontSize(1.8),
-              marginTop: "2%",
+              marginTop: Platform.OS == "ios" ? "5%" : "2%",
               marginRight: "4%",
             }}
           >
@@ -508,7 +519,7 @@ export default function GiverHomeScreen({ navigation }) {
 
         <SafeAreaView
           style={{
-            marginTop: "3%",
+            marginTop: Platform.OS == "ios" ? "5%" : "2%",
             alignSelf: "center",
             backgroundColor: "white",
             alignSelf: "center",
@@ -602,13 +613,18 @@ export default function GiverHomeScreen({ navigation }) {
                   color: "black",
                   fontSize: responsiveFontSize(4.8),
                   fontWeight: "700",
-                  marginTop: "8%",
+                  marginTop: Platform.OS == "ios" ? "8%" : "5%",
                   // marginBottom: "2%",
                 }}
               >
                 0
               </Text>
-              <Text style={[styles.smallText, { marginBottom: "10%" }]}>
+              <Text
+                style={[
+                  styles.smallText,
+                  { marginBottom: Platform.OS == "ios" ? "8%" : "5%" },
+                ]}
+              >
                 min
               </Text>
             </SafeAreaView>
@@ -633,13 +649,18 @@ export default function GiverHomeScreen({ navigation }) {
                   color: "black",
                   fontSize: responsiveFontSize(4.8),
                   fontWeight: "700",
-                  marginTop: "8%",
+                  marginTop: Platform.OS == "ios" ? "8%" : "5%",
                   // marginBottom: "2%",
                 }}
               >
                 0
               </Text>
-              <Text style={[styles.smallText, { marginBottom: "10%" }]}>
+              <Text
+                style={[
+                  styles.smallText,
+                  { marginBottom: Platform.OS == "ios" ? "8%" : "5%" },
+                ]}
+              >
                 average
               </Text>
             </SafeAreaView>
@@ -664,20 +685,27 @@ export default function GiverHomeScreen({ navigation }) {
                   color: "black",
                   fontSize: responsiveFontSize(4.8),
                   fontWeight: "700",
-                  marginTop: "8%",
+                  marginTop: Platform.OS == "ios" ? "8%" : "5%",
                   // marginBottom: "2%",
                 }}
               >
                 0
               </Text>
-              <Text style={[styles.smallText, { marginBottom: "10%" }]}>
+              <Text
+                style={[
+                  styles.smallText,
+                  { marginBottom: Platform.OS == "ios" ? "8%" : "5%" },
+                ]}
+              >
                 max
               </Text>
             </SafeAreaView>
           </SafeAreaView>
         </SafeAreaView>
 
-        <SafeAreaView style={{ marginTop: "6%" }}>
+        <SafeAreaView
+          style={{ marginTop: Platform.OS === "ios" ? "6%" : "4%" }}
+        >
           <SafeAreaView
             style={{
               flexDirection: "row",
@@ -751,7 +779,7 @@ export default function GiverHomeScreen({ navigation }) {
                   color: "black",
                   fontSize: responsiveFontSize(2.25),
                   marginLeft: "5%",
-                  marginVertical: "3%",
+                  marginVertical: Platform.OS == "ios" ? "5%" : "3%",
                 }}
               >
                 Fitbit Battery
@@ -792,7 +820,7 @@ export default function GiverHomeScreen({ navigation }) {
                   justifyContent: "center",
                   alignItems: "center",
                   width: "100%",
-                  marginVertical: "8%",
+                  marginVertical: Platform.OS === "ios" ? "8%" : "5%",
                 }}
               >
                 <Text
@@ -808,7 +836,7 @@ export default function GiverHomeScreen({ navigation }) {
               <SafeAreaView
                 style={{
                   width: "100%",
-                  marginBottom: "8%",
+                  marginBottom: Platform.OS == "ios" ? "8%" : "5%",
                   alignItems: "center",
                   justifyContent: "flex-start",
                 }}
@@ -843,18 +871,18 @@ export default function GiverHomeScreen({ navigation }) {
                   justifyContent: "center",
                   alignItems: "center",
                   width: "100%",
-                  marginVertical: "8%",
+                  marginVertical: Platform.OS === "ios" ? "14%" : "12%",
                 }}
               >
                 <Image
-                  style={{ marginLeft: "4%" }}
+                  style={{ alignSelf: "center" }}
                   source={require("../../assets/images/batterymedium/batterymedium.png")}
                 />
               </SafeAreaView>
               <SafeAreaView
                 style={{
                   width: "100%",
-                  marginBottom: "8%",
+                  marginBottom: Platform.OS == "ios" ? "8%" : "5%",
                   alignItems: "center",
                   justifyContent: "flex-start",
                 }}
@@ -864,36 +892,13 @@ export default function GiverHomeScreen({ navigation }) {
             </SafeAreaView>
           </SafeAreaView>
         </SafeAreaView>
+        <Text></Text>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  smallCard: {
-    backgroundColor: "white",
-    marginLeft: "4%",
-    marginTop: "3%",
-    height: "100%",
-    width: "43%",
-    borderRadius: 5,
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 1, height: 3 },
-        shadowOpacity: 0.4,
-      },
-      android: {
-        elevation: 6,
-      },
-    }),
-  },
-  helloText: {
-    color: "darkgrey",
-    fontSize: responsiveFontSize(2),
-    fontWeight: "bold",
-    marginLeft: "5%",
-  },
   caregiveeText: {
     color: "black",
     fontSize: responsiveFontSize(2.7),
@@ -919,7 +924,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     marginRight: "4%",
-    marginTop: "6%",
+    marginTop: Platform.OS == "ios" ? "10%" : "5%",
     justifyContent: "center",
   },
   callText: {
