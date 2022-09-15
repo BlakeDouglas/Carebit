@@ -909,11 +909,6 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(1.8),
     fontWeight: "bold",
   },
-  pullingDataStyle: {
-    color: "black",
-    fontSize: responsiveFontSize(4.8),
-    fontWeight: "700",
-  },
   dateText: {
     color: "darkgrey",
     fontSize: responsiveFontSize(1.8),
