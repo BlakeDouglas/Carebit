@@ -5,6 +5,7 @@ import {
   Image,
   StatusBar,
   ScrollView,
+  RefreshControl,
 } from "react-native";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -32,6 +33,15 @@ export default function GiverHomeScreen({ navigation }) {
   const [fitbitAccessToken, setFitbitAccessToken] = useState(null);
   const userData = useSelector((state) => state.Reducers.userData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+
+  const [refreshing, setRefreshing] = React.useState(false);
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
 
   const refreshFitbitAccessToken = async (caregiveeID) => {
     try {
@@ -157,7 +167,12 @@ export default function GiverHomeScreen({ navigation }) {
         translucent={false}
         backgroundColor="dodgerblue"
       />
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <SafeAreaView
           style={{
             backgroundColor: "white",

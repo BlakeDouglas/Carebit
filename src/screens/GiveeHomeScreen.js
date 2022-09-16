@@ -9,6 +9,7 @@ import {
   Switch,
   TouchableOpacity,
   Platform,
+  RefreshControl,
 } from "react-native";
 import React, { useState } from "react";
 import { useEffect } from "react";
@@ -56,6 +57,15 @@ export default function GiveeHomeScreen({ navigation }) {
   const toggleMonitor = () => {
     setIsEnabledMonitor(!isEnabledMonitor);
   };
+
+  const [refreshing, setRefreshing] = React.useState(false);
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
 
   const args = {
     number: "4077777777",
@@ -413,7 +423,12 @@ export default function GiveeHomeScreen({ navigation }) {
         </View>
       </Modal>
 
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <SafeAreaView
           style={{
             flexDirection: "row",
