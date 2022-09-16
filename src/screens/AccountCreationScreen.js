@@ -106,8 +106,12 @@ export default function AccountCreationScreen({ navigation, route }) {
         if (json.access_token !== undefined) {
           dispatch(setUserData({ ...output, password: undefined }));
           dispatch(setTokenData({ ...tokenData, ...json }));
+        } else if (json.error === "Phone number already exists.") {
+          handleError(" Phone Number already exists", "phone");
+          console.log(json.error);
         } else {
-          handleError(" Email already exists", "email");
+          handleError(" Invalid email", "email");
+          console.log(json.error);
         }
       })
       .catch((error) => {
@@ -130,11 +134,7 @@ export default function AccountCreationScreen({ navigation, route }) {
       style={GlobalStyle.Background}
     >
       <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar
-          hidden={false}
-          translucent={true}
-          backgroundColor="black"
-        />
+        <StatusBar hidden={false} translucent={true} backgroundColor="black" />
         <View
           style={[
             GlobalStyle.Container,
@@ -204,7 +204,7 @@ export default function AccountCreationScreen({ navigation, route }) {
                   iconName="email-outline"
                   label="Email*"
                   keyboardType="email-address"
-                  autoCapitalize='none'
+                  autoCapitalize="none"
                   error={errors.email}
                   onChangeText={(text) => handleChange(text, "email")}
                   onFocus={() => {
