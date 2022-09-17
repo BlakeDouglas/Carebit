@@ -39,7 +39,7 @@ export default function ModifiedCaregiveeAccountCreation({navigation, route}) {
   const [errors, setErrors] = useState({});
 
   // Checks for formatting in text fields
-  const validate = () => {
+  const validate = async () => {
     Keyboard.dismiss();
     let valid = true;
     if (!inputs.email) {
@@ -71,7 +71,7 @@ export default function ModifiedCaregiveeAccountCreation({navigation, route}) {
     }
 
     if (valid) {
-      registerShellCaregivee();
+      await registerShellCaregivee();
     }
   };
 
@@ -94,7 +94,7 @@ export default function ModifiedCaregiveeAccountCreation({navigation, route}) {
         const json = await response.json();
         console.log("registerShellCaregivee: "+JSON.stringify(json));
         if (json.access_token)
-          makeCaregivee(route.params.code, json.userID);
+          await makeCaregivee(route.params.code, json.userID);
       } catch (error) {
         console.log("Caught error: " + error);
       }
@@ -116,7 +116,7 @@ export default function ModifiedCaregiveeAccountCreation({navigation, route}) {
       if (json.error)
         console.log("makeCaregivee Error: " + json.error);
       if (json.caregiveeID)
-        acceptCaregiverRequest(json.caregiveeID, route.params.caregiverID)
+        await acceptCaregiverRequest(json.caregiveeID, route.params.caregiverID)
 
 
     } catch (error) {

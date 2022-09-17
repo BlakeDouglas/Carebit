@@ -122,8 +122,7 @@ const MiddleStack = () => {
           <Stack.Screen name="LinkUsersScreen" component={LinkUsersScreen} />
         )}
         {tokenData.type === "caregiver" &&
-          tokenData.caregiveeID &&
-          tokenData.caregiveeID.length === 0 && (
+          tokenData.caregiveeID === null && (
             <Stack.Screen
               name="ModifiedCaregiveeAccountCreation"
               component={ModifiedCaregiveeAccountCreation}

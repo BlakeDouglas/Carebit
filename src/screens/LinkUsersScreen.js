@@ -54,7 +54,20 @@ export default function LinkUsersScreen({ navigation }) {
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId: "238QS3",
-      scopes: ["activity", "sleep", "temperature"],
+      scopes: [
+        "activity",
+        "heartrate",
+        "location",
+        "nutrition",
+        "profile",
+        "settings",
+        "sleep",
+        "social",
+        "weight",
+        "oxygen_saturation",
+        "respiratory_rate",
+        "temperature",
+      ],
       redirectUri: makeRedirectUri({
         scheme: "carebit",
         path: "callback",
@@ -69,7 +82,7 @@ export default function LinkUsersScreen({ navigation }) {
   const makeRequest = async () => {
     if (!tokenData.phone || !inputs.phone) return;
     const body =
-      tokenData.type === "caregivee"
+      tokenData.type !== "caregiver"
         ? { caregiveePhone: tokenData.phone, caregiverPhone: inputs.phone }
         : { caregiverPhone: tokenData.phone, caregiveePhone: inputs.phone };
     try {
@@ -121,11 +134,12 @@ export default function LinkUsersScreen({ navigation }) {
   */
 
   React.useEffect(() => {
-    if (response?.type === "success")
+    if (response?.type === "success") {
       navigation.navigate("ModifiedCaregiveeAccountCreation", {
         caregiverToken: tokenData,
         code: response.params.code,
       });
+    }
   }, [response]);
 
   return (

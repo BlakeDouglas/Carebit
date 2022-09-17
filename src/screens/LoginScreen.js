@@ -70,7 +70,7 @@ export default function LoginScreen({ navigation }) {
       });
       const json = await response.json();
       if (json.access_token !== undefined) {
-        dispatch(setTokenData(json));
+        dispatch(setTokenData({...json, selected: 0}));
         fetchUserData(json);
       } else {
         if (json.message === "Email not found")
