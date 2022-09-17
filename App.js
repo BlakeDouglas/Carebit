@@ -1,32 +1,35 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import TitleScreen from "./src/screens/TitleScreen";
-import RoleSelectScreen from "./src/screens/RoleSelectScreen";
-import LoginScreen from "./src/screens/LoginScreen";
 import AccountCreationScreen from "./src/screens/AccountCreationScreen";
-import GiveeHomeScreen from "./src/screens/GiveeHomeScreen";
-import GiverHomeScreen from "./src/screens/GiverHomeScreen";
+import ActivityLevelScreen from "./src/screens/ActivityLevelScreen";
+import AddScreen from "./src/screens/AddScreen";
 import AuthenticationScreen from "./src/screens/AuthenticationScreen";
+import CustomNotificationScreen from "./src/screens/CustomNotificationScreen";
+import GiveeHomeScreen from "./src/screens/GiveeHomeScreen";
 import GiveeSettingsScreen from "./src/screens/GiveeSettingsScreen";
+import GiverHomeScreen from "./src/screens/GiverHomeScreen";
 import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
+import LinkUsersScreen from "./src/screens/LinkUsersScreen";
+import ListOfFriendsScreen from "./src/screens/ListOfFriendsScreen";
+import LoginScreen from "./src/screens/LoginScreen";
+import ModifiedCaregiveeAccountCreation from "./src/screens/ModifiedCaregiveeAccountCreation";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
 import RequestScreen from "./src/screens/RequestScreen";
-import ActivityLevelScreen from "./src/screens/ActivityLevelScreen";
-import ModifiedCaregiveeAccountCreation from "./src/screens/ModifiedCaregiveeAccountCreation";
-import LinkUsersScreen from "./src/screens/LinkUsersScreen";
-import AddScreen from "./src/screens/AddScreen";
-import CustomNotificationScreen from "./src/screens/CustomNotificationScreen";
+import RoleSelectScreen from "./src/screens/RoleSelectScreen";
+import SettingsOverviewScreen from "./src/screens/SettingsOverviewScreen";
+import TitleScreen from "./src/screens/TitleScreen";
+
 import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
 import { Provider, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
 import { useFonts } from "expo-font";
 import * as React from "react";
 import { Menu, Divider, Provider as Provider2 } from "react-native-paper";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import ListOfFriendsScreen from "./src/screens/ListOfFriendsScreen";
+
 const firebaseConfig = {
   apiKey: "AIzaSyAu69cdb30ONSKMcrIrL7P4YT0ghQoNEdg",
   authDomain: "carebit-48f39.firebaseapp.com",
@@ -214,7 +217,15 @@ const HomeStack = () => {
                       onPress={() => (
                         closeMenu(), navigation.navigate("ListOfFriendsScreen")
                       )}
-                      title="Care List"
+                      titleStyle={{
+                        color: "black",
+                        fontSize: responsiveFontSize(1.9),
+                      }}
+                      title={
+                        tokenData.type === "caregivee"
+                          ? "My Caregivers"
+                          : "My Caregivees"
+                      }
                     />
                     <Divider />
                     <Menu.Item
@@ -222,7 +233,11 @@ const HomeStack = () => {
                       onPress={() => (
                         closeMenu(), navigation.navigate("RequestScreen")
                       )}
-                      title="Care Requests"
+                      titleStyle={{
+                        color: "black",
+                        fontSize: responsiveFontSize(1.9),
+                      }}
+                      title="Requests"
                     />
                     <Divider />
                     <Menu.Item
@@ -230,7 +245,15 @@ const HomeStack = () => {
                       onPress={() => (
                         closeMenu(), navigation.navigate("AddScreen")
                       )}
-                      title="Add Users"
+                      titleStyle={{
+                        color: "black",
+                        fontSize: responsiveFontSize(1.9),
+                      }}
+                      title={
+                        tokenData.type === "caregivee"
+                          ? "Add Caregiver"
+                          : "Add Caregivee"
+                      }
                     />
                   </Menu>
                 </View>
@@ -369,7 +392,7 @@ const HomeStack = () => {
                     height: 28,
                     marginRight: "8%",
                   }}
-                  source={require("./assets/images/avatar/friends.png")}
+                  source={require("./assets/images/avatar/addUser.png")}
                 />
               </TouchableOpacity>
             ),
