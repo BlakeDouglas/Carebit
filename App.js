@@ -273,6 +273,46 @@ const HomeStack = () => {
         />
         <Stack.Screen name="ActivityLevel" component={ActivityLevelScreen} />
         <Stack.Screen
+          name="SettingsOverview"
+          component={SettingsOverviewScreen}
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerTitle: "Alert Settings",
+
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("HomeScreen")}
+                style={{ marginLeft: "8%" }}
+              >
+                <Text
+                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
+                >
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("HomeScreen")}
+                style={{ marginRight: "8%" }}
+              >
+                <Text
+                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
+                >
+                  Done
+                </Text>
+              </TouchableOpacity>
+            ),
+          })}
+        />
+        <Stack.Screen
           name="SettingsScreen"
           component={
             tokenData.type === "caregivee"
