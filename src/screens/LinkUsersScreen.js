@@ -6,6 +6,8 @@ import {
   Alert,
   StatusBar,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import CustomTextInput from "../utils/CustomTextInput";
 import React, { useEffect, useState, useCallback } from "react";
@@ -50,6 +52,24 @@ export default function LinkUsersScreen({ navigation }) {
         },
       ]
     );
+
+  const validate = () => {
+    Keyboard.dismiss();
+    let valid = true;
+    if (!inputs.phone) {
+      handleError(" Input required", "phone");
+      valid = false;
+    } else if (
+      !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
+    ) {
+      handleError(" Invalid phone number", "phone");
+      valid = false;
+    }
+
+    if (valid) {
+      makeRequest();
+    }
+  };
 
   const [request, response, promptAsync] = useAuthRequest(
     {
@@ -148,102 +168,105 @@ export default function LinkUsersScreen({ navigation }) {
       resizeMode="cover"
       style={GlobalStyle.Background}
     >
-      <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar hidden={false} translucent={true} backgroundColor="black" />
-
-        <SafeAreaView style={[GlobalStyle.Container, { marginTop: "20%" }]}>
-          <Text
-            style={[
-              GlobalStyle.Subtitle,
-              { fontSize: responsiveFontSize(5.3) },
-            ]}
-          >
-            Connect to a Caregivee
-          </Text>
-          <SafeAreaView
-            style={{
-              height: "75%",
-              width: "100%",
-              marginTop: "10%",
-              justifyContent: "center",
-
-              //backgroundColor: "green",
-            }}
-          >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <StatusBar
+            hidden={false}
+            translucent={true}
+            backgroundColor="black"
+          />
+          <SafeAreaView style={[GlobalStyle.Container, { marginTop: "20%" }]}>
+            <Text
+              style={[
+                GlobalStyle.Subtitle,
+                { fontSize: responsiveFontSize(5.3) },
+              ]}
+            >
+              Connect to a Caregivee
+            </Text>
             <SafeAreaView
               style={{
-                height: "50%",
+                height: "75%",
                 width: "100%",
-                alignSelf: "center",
-                //backgroundColor: "blue",
+                marginTop: "10%",
                 justifyContent: "center",
+
+                //backgroundColor: "green",
               }}
             >
-              <Text
-                style={[
-                  GlobalStyle.Text,
-                  { fontSize: responsiveFontSize(2.3) },
-                ]}
-              >
-                Request a Caregivee for monitoring {"\n"}(recommended method)
-              </Text>
               <SafeAreaView
                 style={{
-                  alignSelf: "center",
+                  height: "50%",
                   width: "100%",
+                  alignSelf: "center",
                   //backgroundColor: "blue",
                   justifyContent: "center",
-                  marginTop: "5%",
                 }}
               >
-                <CustomTextInput
-                  label={
-                    typeOfRequester === "caregivee"
-                      ? "Caregivee's Phone Number"
-                      : "Caregiver's Phone Number"
-                  }
-                  placeholder="(XXX) XXX-XXXX"
-                  iconName="phone-outline"
-                  keyboardType="number-pad"
-                  error={errors.phone}
-                  onChangeText={(text) =>
-                    handleChange(text.replace(/[^0-9]+/g, ""), "phone")
-                  }
-                  onFocus={() => {
-                    handleError(null, "phone");
+                <Text
+                  style={[
+                    GlobalStyle.Text,
+                    { fontSize: responsiveFontSize(2.3) },
+                  ]}
+                >
+                  Request a Caregivee for monitoring {"\n"}(recommended method)
+                </Text>
+                <SafeAreaView
+                  style={{
+                    alignSelf: "center",
+                    width: "100%",
+                    //backgroundColor: "blue",
+                    justifyContent: "center",
+                    marginTop: "5%",
                   }}
-                />
+                >
+                  <CustomTextInput
+                    label={
+                      typeOfRequester === "caregivee"
+                        ? "Caregivee's Phone Number"
+                        : "Caregiver's Phone Number"
+                    }
+                    placeholder="(XXX) XXX-XXXX"
+                    iconName="phone-outline"
+                    keyboardType="number-pad"
+                    error={errors.phone}
+                    onChangeText={(text) =>
+                      handleChange(text.replace(/[^0-9]+/g, ""), "phone")
+                    }
+                    onFocus={() => {
+                      handleError(null, "phone");
+                    }}
+                  />
+                </SafeAreaView>
+                <TouchableOpacity
+                  style={[GlobalStyle.Button, { marginTop: "5%" }]}
+                  onPress={validate}
+                >
+                  <Text style={GlobalStyle.ButtonText}>Send Request</Text>
+                </TouchableOpacity>
               </SafeAreaView>
-              <TouchableOpacity
-                style={[GlobalStyle.Button, { marginTop: "5%" }]}
-                onPress={() => {
-                  makeRequest();
-                }}
+              <SafeAreaView
+                style={{ flex: 1, marginTop: "20%", alignItems: "center" }}
               >
-                <Text style={GlobalStyle.ButtonText}>Send Request</Text>
-              </TouchableOpacity>
-            </SafeAreaView>
-            <SafeAreaView
-              style={{ flex: 1, marginTop: "20%", alignItems: "center" }}
-            >
-              <Text
-                style={[
-                  GlobalStyle.Text,
-                  { fontSize: responsiveFontSize(2.3) },
-                ]}
-              >
-                Proceed without your Caregivee using the app
-              </Text>
-              <TouchableOpacity
-                style={[GlobalStyle.Button, { marginTop: "8%" }]}
-                onPress={createButtonAlert}
-              >
-                <Text style={GlobalStyle.ButtonText}>Opt Out</Text>
-              </TouchableOpacity>
+                <Text
+                  style={[
+                    GlobalStyle.Text,
+                    { fontSize: responsiveFontSize(2.3) },
+                  ]}
+                >
+                  Proceed without your Caregivee using the app
+                </Text>
+                <TouchableOpacity
+                  style={[GlobalStyle.Button, { marginTop: "8%" }]}
+                  onPress={createButtonAlert}
+                >
+                  <Text style={GlobalStyle.ButtonText}>Opt Out</Text>
+                </TouchableOpacity>
+              </SafeAreaView>
             </SafeAreaView>
           </SafeAreaView>
         </SafeAreaView>
-      </SafeAreaView>
+      </TouchableWithoutFeedback>
     </ImageBackground>
   );
 }

@@ -7,6 +7,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState } from "react";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
@@ -38,7 +39,7 @@ export default function AddScreen({ navigation: { goBack } }) {
     } else if (
       !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
     ) {
-      handleError(" Invalid phone number", "phone");
+      handleError(" Invalid", "phone");
       valid = false;
     }
 
@@ -84,18 +85,21 @@ export default function AddScreen({ navigation: { goBack } }) {
       resizeMode="cover"
       style={GlobalStyle.Background}
     >
-      <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar
-          hidden={false}
-          translucent={true}
-          backgroundColor="transparent"
-        />
-        <ScrollView style={{ marginTop: "25%", flex: 1 }}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <StatusBar
+            hidden={false}
+            translucent={true}
+            backgroundColor="transparent"
+          />
+
           <SafeAreaView
             style={{
               height: "20%",
               alignSelf: "center",
               width: "100%",
+
+              justifyContent: "flex-end",
               //backgroundColor: "blue",
               alignItems: "center",
             }}
@@ -109,7 +113,6 @@ export default function AddScreen({ navigation: { goBack } }) {
 
           <SafeAreaView
             style={{
-              marginTop: "10%",
               height: "20%",
               width: "90%",
               //backgroundColor: "red",
@@ -159,16 +162,10 @@ export default function AddScreen({ navigation: { goBack } }) {
                   Send Request
                 </Text>
               </TouchableOpacity>
-              <Text></Text>
             </SafeAreaView>
-            <Text></Text>
-            <Text></Text>
           </SafeAreaView>
-          <Text></Text>
-          <Text></Text>
-          <Text></Text>
-        </ScrollView>
-      </SafeAreaView>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
     </ImageBackground>
   );
 }

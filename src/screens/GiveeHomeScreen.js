@@ -66,7 +66,7 @@ export default function GiveeHomeScreen({ navigation }) {
     setRefreshing(true);
     wait(1000).then(() => setRefreshing(false));
   }, []);
-
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
   const args = {
     number: tokenData.caregiverID[tokenData.selected].phone,
     prompt: true,

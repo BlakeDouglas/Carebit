@@ -18,11 +18,6 @@ import call from "react-native-phone-call";
 import { useDrawerStatus } from "@react-navigation/drawer";
 import * as WebBrowser from "expo-web-browser";
 
-const args = {
-  number: tokenData.caregiveeID[tokenData.selected].phone,
-  prompt: true,
-};
-
 let date = moment().format("dddd, MMM D");
 
 export default function GiverHomeScreen({ navigation }) {
@@ -35,6 +30,10 @@ export default function GiverHomeScreen({ navigation }) {
   const userData = useSelector((state) => state.Reducers.userData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
 
+  const args = {
+    number: tokenData.caregiveeID[tokenData.selected].phone,
+    prompt: true,
+  };
   const [refreshing, setRefreshing] = React.useState(false);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));

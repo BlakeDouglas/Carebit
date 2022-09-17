@@ -53,58 +53,57 @@ export default function SettingsOverviewScreen({ navigation }) {
         ) : null}
       </SafeAreaView>
       {userData.type === "caregiver" ? (
-        <SafeAreaView style={styles.Box2}>
-          <SafeAreaView style={[styles.Box]}>
-            <Text style={styles.BoxTitle}>Dr. Pam</Text>
-            {/* TODO: Add and implement caregivee info here */}
-            <Text style={styles.BoxSub}>DrDoctor@gmail.com</Text>
-          </SafeAreaView>
-          <SafeAreaView style={styles.Box}>
+        <SafeAreaView style={styles.Box3}>
+          <SafeAreaView style={styles.Box4}>
             <Text style={styles.BoxTitle}>Phone</Text>
             <Text style={styles.BoxSub}>(407) 777-7777</Text>
           </SafeAreaView>
         </SafeAreaView>
       ) : null}
 
-      <SafeAreaView style={styles.TitleContainer}>
-        <Text style={styles.Title}>ALERTS</Text>
-      </SafeAreaView>
-      <SafeAreaView style={styles.Box2}>
-        <SafeAreaView style={styles.Box}>
-          <Text style={styles.BoxTitle}>Activity Level</Text>
-          <TouchableOpacity
-            onPress={activityButtonHandler}
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "row",
-            }}
-          >
-            <Text style={styles.BoxSub}>Active</Text>
-            <Image
-              style={{ height: 15, width: 15, marginLeft: "1%" }}
-              source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
-            />
-          </TouchableOpacity>
+      {userData.type === "caregiver" ? (
+        <SafeAreaView style={styles.TitleContainer}>
+          <Text style={styles.Title}>ALERTS</Text>
         </SafeAreaView>
-        <SafeAreaView style={styles.Box}>
-          <Text style={styles.BoxTitle}>Custom Alert Settings</Text>
-          <TouchableOpacity
-            onPress={customAlertButtonHandler}
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "row",
-            }}
-          >
-            <Text style={styles.BoxSub}>Off</Text>
-            <Image
-              style={{ height: 15, width: 15, marginLeft: "1%" }}
-              source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
-            />
-          </TouchableOpacity>
+      ) : null}
+      {userData.type === "caregiver" ? (
+        <SafeAreaView style={styles.Box2}>
+          <SafeAreaView style={styles.Box}>
+            <Text style={styles.BoxTitle}>Activity Level</Text>
+            <TouchableOpacity
+              onPress={activityButtonHandler}
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "row",
+              }}
+            >
+              <Text style={styles.BoxSub}>Active</Text>
+              <Image
+                style={{ height: 15, width: 15, marginLeft: "1%" }}
+                source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
+              />
+            </TouchableOpacity>
+          </SafeAreaView>
+          <SafeAreaView style={styles.Box}>
+            <Text style={styles.BoxTitle}>Custom Alert Settings</Text>
+            <TouchableOpacity
+              onPress={customAlertButtonHandler}
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "row",
+              }}
+            >
+              <Text style={styles.BoxSub}>Off</Text>
+              <Image
+                style={{ height: 15, width: 15, marginLeft: "1%" }}
+                source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
+              />
+            </TouchableOpacity>
+          </SafeAreaView>
         </SafeAreaView>
-      </SafeAreaView>
+      ) : null}
       <SafeAreaView
         style={{
           flex: 1,
@@ -146,6 +145,16 @@ const styles = StyleSheet.create({
   },
   Box2: {
     height: "14%",
+    width: "100%",
+    backgroundColor: "white",
+  },
+  Box3: {
+    height: "7%",
+    width: "100%",
+    backgroundColor: "white",
+  },
+  Box2: {
+    height: "100%",
     width: "100%",
     backgroundColor: "white",
   },

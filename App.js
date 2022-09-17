@@ -121,13 +121,12 @@ const MiddleStack = () => {
         {tokenData.type === "caregiver" && !tokenData.caregiveeID && (
           <Stack.Screen name="LinkUsersScreen" component={LinkUsersScreen} />
         )}
-        {tokenData.type === "caregiver" &&
-          tokenData.caregiveeID === null && (
-            <Stack.Screen
-              name="ModifiedCaregiveeAccountCreation"
-              component={ModifiedCaregiveeAccountCreation}
-            />
-          )}
+        {tokenData.type === "caregiver" && tokenData.caregiveeID === null && (
+          <Stack.Screen
+            name="ModifiedCaregiveeAccountCreation"
+            component={ModifiedCaregiveeAccountCreation}
+          />
+        )}
 
         {/* TODO: Put some real logic here, or implement elsewhere */}
         {false && (
@@ -260,7 +259,10 @@ const HomeStack = () => {
             ),
             headerRight: () => (
               <TouchableOpacity
-                onPress={() => navigation.navigate("SettingsScreen")}
+                onPress={() => [
+                  closeMenu(),
+                  navigation.navigate("SettingsScreen"),
+                ]}
                 style={{ marginRight: "8%" }}
               >
                 <Image
