@@ -20,7 +20,7 @@ export default function SettingsOverviewScreen({ navigation }) {
   };
   return (
     // Header Container
-    <SafeAreaView style={{ flex: 1, marginTop: "5%" }}>
+    <SafeAreaView style={{ flex: 1, marginTop: "2%" }}>
       <StatusBar
         hidden={false}
         translucent={false}
@@ -33,73 +33,77 @@ export default function SettingsOverviewScreen({ navigation }) {
         </Text>
       </SafeAreaView>
 
-      <SafeAreaView style={styles.Box}>
-        <Text style={styles.BoxTitle}>Pam</Text>
-        {/* TODO: Add and implement caregivee info here */}
-        <Text style={styles.BoxSub}>PamWisniewski@gmail.com</Text>
-      </SafeAreaView>
-      <SafeAreaView style={styles.Box}>
-        <Text style={styles.BoxTitle}>Phone</Text>
-        <Text style={styles.BoxSub}>(407) 777-7777</Text>
+      <SafeAreaView style={styles.Box2}>
+        <SafeAreaView style={[styles.Box]}>
+          <Text style={styles.BoxTitle}>Pam</Text>
+          {/* TODO: Add and implement caregivee info here */}
+          <Text style={styles.BoxSub}>PamWisniewski@gmail.com</Text>
+        </SafeAreaView>
+        <SafeAreaView style={styles.Box}>
+          <Text style={styles.BoxTitle}>Phone</Text>
+          <Text style={styles.BoxSub}>(407) 777-7777</Text>
+        </SafeAreaView>
       </SafeAreaView>
 
       <SafeAreaView style={[styles.TitleContainer]}>
         {userData.type === "caregiver" ? (
-          <SafeAreaView style={{ marginTop: "5%" }}>
+          <SafeAreaView>
             <Text style={styles.Title}>PHYSICIAN INFO</Text>
           </SafeAreaView>
         ) : null}
       </SafeAreaView>
       {userData.type === "caregiver" ? (
-        <SafeAreaView style={styles.Box}>
-          <SafeAreaView>
-            <Text style={styles.BoxTitle}>Dr. Doctor</Text>
-            <Text style={styles.BoxSub}>RealDoctor@gmail.com</Text>
+        <SafeAreaView style={styles.Box2}>
+          <SafeAreaView style={[styles.Box]}>
+            <Text style={styles.BoxTitle}>Dr. Pam</Text>
+            {/* TODO: Add and implement caregivee info here */}
+            <Text style={styles.BoxSub}>DrDoctor@gmail.com</Text>
           </SafeAreaView>
-
           <SafeAreaView style={styles.Box}>
             <Text style={styles.BoxTitle}>Phone</Text>
-            <Text style={styles.BoxSub}>(407) 894-5656</Text>
+            <Text style={styles.BoxSub}>(407) 777-7777</Text>
           </SafeAreaView>
         </SafeAreaView>
       ) : null}
 
       <SafeAreaView style={styles.TitleContainer}>
-        <Text style={styles.Title}>Alerts</Text>
+        <Text style={styles.Title}>ALERTS</Text>
       </SafeAreaView>
-      <SafeAreaView style={styles.Box}>
-        <Text style={styles.BoxTitle}>Activity Level</Text>
-        <TouchableOpacity
-          onPress={activityButtonHandler}
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "row",
-          }}
-        >
-          <Text style={styles.BoxSub}>Active</Text>
-          <Image
-            style={{ height: 15, width: 15, marginLeft: "1%" }}
-            source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
-          />
-        </TouchableOpacity>
-      </SafeAreaView>
-      <SafeAreaView style={styles.Box}>
-        <Text style={styles.BoxTitle}>Custom Alert Settings</Text>
-        <TouchableOpacity
-          onPress={customAlertButtonHandler}
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "row",
-          }}
-        >
-          <Text style={styles.BoxSub}>Off</Text>
-          <Image
-            style={{ height: 15, width: 15, marginLeft: "1%" }}
-            source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
-          />
-        </TouchableOpacity>
+      <SafeAreaView style={styles.Box2}>
+        <SafeAreaView style={styles.Box}>
+          <Text style={styles.BoxTitle}>Activity Level</Text>
+          <TouchableOpacity
+            onPress={activityButtonHandler}
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "row",
+            }}
+          >
+            <Text style={styles.BoxSub}>Active</Text>
+            <Image
+              style={{ height: 15, width: 15, marginLeft: "1%" }}
+              source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
+            />
+          </TouchableOpacity>
+        </SafeAreaView>
+        <SafeAreaView style={styles.Box}>
+          <Text style={styles.BoxTitle}>Custom Alert Settings</Text>
+          <TouchableOpacity
+            onPress={customAlertButtonHandler}
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "row",
+            }}
+          >
+            <Text style={styles.BoxSub}>Off</Text>
+            <Image
+              style={{ height: 15, width: 15, marginLeft: "1%" }}
+              source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
+            />
+          </TouchableOpacity>
+        </SafeAreaView>
       </SafeAreaView>
       <SafeAreaView
         style={{
@@ -129,7 +133,7 @@ export default function SettingsOverviewScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   Box: {
-    height: "7%",
+    height: "50%",
     width: "100%",
     backgroundColor: "white",
     flexDirection: "row",
@@ -140,6 +144,11 @@ const styles = StyleSheet.create({
     borderBottomColor: "rgba(128,128,128,.1)",
     borderBottomWidth: 1,
   },
+  Box2: {
+    height: "14%",
+    width: "100%",
+    backgroundColor: "white",
+  },
   Title: {
     fontSize: responsiveFontSize(1.9),
     color: "gray",
@@ -149,6 +158,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     height: "5%",
+    marginVertical: "1%",
     marginLeft: "4%",
   },
   BoxTitle: {

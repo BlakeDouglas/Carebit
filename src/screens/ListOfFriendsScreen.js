@@ -174,7 +174,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
                   borderRadius: 8,
                 }}
                 onPress={() => {
-                  // TODO: Implement settings
+                  navigation.navigate("SettingsOverview");
                 }}
               >
                 <Image
