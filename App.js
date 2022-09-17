@@ -1,6 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import TitleScreen from "./src/screens/TitleScreen";
 import RoleSelectScreen from "./src/screens/RoleSelectScreen";
 import LoginScreen from "./src/screens/LoginScreen";
@@ -17,10 +16,12 @@ import ModifiedCaregiveeAccountCreation from "./src/screens/ModifiedCaregiveeAcc
 import LinkUsersScreen from "./src/screens/LinkUsersScreen";
 import AddScreen from "./src/screens/AddScreen";
 import CustomNotificationScreen from "./src/screens/CustomNotificationScreen";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
 import { Provider, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
 import { useFonts } from "expo-font";
+import * as React from "react";
+import { Menu, Divider, Provider as Provider2 } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 // Import the functions you need from the SDKs you need
@@ -146,6 +147,11 @@ const MiddleStack = () => {
 
 const HomeStack = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const [visible, setVisible] = React.useState(false);
+
+  const openMenu = () => setVisible(true);
+
+  const closeMenu = () => setVisible(false);
   return (
     <Stack.Navigator>
       <Stack.Group
@@ -171,41 +177,74 @@ const HomeStack = () => {
             headerTitle: "Carebit",
 
             headerLeft: () => (
+              <Provider2>
+                <View
+                  style={{
+                    marginTop: Platform.OS === "ios" ? "7%" : "12%",
+                    marginLeft: "8%",
+                    //alignItems: "flex-end",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Menu
+                    visible={visible}
+                    onDismiss={closeMenu}
+                    anchor={
+                      <TouchableOpacity
+                        style={{
+                          alignSelf: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                        onPress={openMenu}
+                      >
+                        <Image
+                          style={{
+                            height: 28,
+                            width: 28,
+                            alignSelf: "center",
+                          }}
+                          source={require("./assets/images/moreIcon/moreIcon.png")}
+                        />
+                      </TouchableOpacity>
+                    }
+                  >
+                    <Menu.Item
+                      leadingIcon={require("./assets/images/avatar/userList.png")}
+                      onPress={() => (
+                        closeMenu(), navigation.navigate("ListOfFriendsScreen")
+                      )}
+                      title="Care List"
+                    />
+                    <Divider />
+                    <Menu.Item
+                      leadingIcon={require("./assets/images/avatar/outline_people_outline_white_24dp.png")}
+                      onPress={() => (
+                        closeMenu(), navigation.navigate("RequestScreen")
+                      )}
+                      title="Care Requests"
+                    />
+                    <Divider />
+                    <Menu.Item
+                      leadingIcon={require("./assets/images/avatar/addUser.png")}
+                      onPress={() => (
+                        closeMenu(), navigation.navigate("AddScreen")
+                      )}
+                      title="Add Users"
+                    />
+                  </Menu>
+                </View>
+              </Provider2>
+            ),
+            headerRight: () => (
               <TouchableOpacity
                 onPress={() => navigation.navigate("SettingsScreen")}
-                style={{ marginLeft: "8%" }}
+                style={{ marginRight: "8%" }}
               >
                 <Image
                   source={require("./assets/images/settings/settings.png")}
                 />
               </TouchableOpacity>
-            ),
-            headerRight: () => (
-              <View style={{ flexDirection: "row", marginRight: "8%" }}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("RequestScreen")}
-                >
-                  <Image
-                    style={{
-                      height: 28,
-                      width: 28,
-                    }}
-                    source={require("./assets/images/avatar/friends.png")}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("ListOfFriendsScreen")}
-                  style={{ marginLeft: "8%" }}
-                >
-                  <Image
-                    style={{
-                      height: 28,
-                      width: 28,
-                    }}
-                    source={require("./assets/images/avatar/friends.png")}
-                  />
-                </TouchableOpacity>
-              </View>
             ),
           })}
         />

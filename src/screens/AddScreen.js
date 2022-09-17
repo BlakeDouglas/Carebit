@@ -14,7 +14,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
 
-export default function AddScreen({ navigation: {goBack} }) {
+export default function AddScreen({ navigation: { goBack } }) {
   const handleChange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
@@ -65,8 +65,7 @@ export default function AddScreen({ navigation: {goBack} }) {
       const json = await response.json();
       console.log("MAKING REQUEST WITH BODY: " + JSON.stringify(body));
       console.log("Request result: " + JSON.stringify(json));
-      if (!json.request)
-      {
+      if (!json.request) {
         //TODO: Errors go here
       } else {
         // TODO: Happy success signs go here.
@@ -89,7 +88,7 @@ export default function AddScreen({ navigation: {goBack} }) {
         <StatusBar
           hidden={false}
           translucent={true}
-          backgroundColor="dodgerblue"
+          backgroundColor="transparent"
         />
         <ScrollView style={{ marginTop: "25%", flex: 1 }}>
           <SafeAreaView
@@ -112,7 +111,7 @@ export default function AddScreen({ navigation: {goBack} }) {
             style={{
               marginTop: "10%",
               height: "20%",
-              width: "100%",
+              width: "90%",
               //backgroundColor: "red",
               alignItems: "center",
               alignSelf: "center",

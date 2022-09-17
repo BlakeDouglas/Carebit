@@ -6,6 +6,7 @@ import {
   StatusBar,
   ScrollView,
   RefreshControl,
+  Platform,
 } from "react-native";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -40,7 +41,7 @@ export default function GiverHomeScreen({ navigation }) {
   };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
+    wait(1000).then(() => setRefreshing(false));
   }, []);
 
   const refreshFitbitAccessToken = async (caregiveeID) => {
@@ -185,7 +186,7 @@ export default function GiverHomeScreen({ navigation }) {
               style={{
                 color: "gray",
                 fontWeight: "bold",
-                marginVertical: "10%",
+                marginVertical: Platform.OS === "ios" ? "10%" : "8%",
                 justifyContent: "center",
               }}
             >
@@ -204,7 +205,7 @@ export default function GiverHomeScreen({ navigation }) {
               style={{
                 color: "dodgerblue",
                 fontWeight: "bold",
-                marginVertical: "10%",
+                marginVertical: Platform.OS === "ios" ? "10%" : "8%",
               }}
             >
               View History
@@ -222,7 +223,7 @@ export default function GiverHomeScreen({ navigation }) {
           <SafeAreaView>
             <Text
               style={{
-                marginTop: Platform.OS == "ios" ? "10%" : "5%",
+                marginTop: Platform.OS == "ios" ? "10%" : "4%",
                 marginLeft: "4%",
                 color: "darkgrey",
                 fontSize: responsiveFontSize(1.8),
@@ -408,7 +409,7 @@ export default function GiverHomeScreen({ navigation }) {
                   justifyContent: "center",
                   alignItems: "center",
                   width: "100%",
-                  marginVertical: Platform.OS === "ios" ? "8%" : "5%",
+                  marginVertical: Platform.OS === "ios" ? "8%" : "0%",
                 }}
               >
                 <Text
@@ -434,7 +435,7 @@ export default function GiverHomeScreen({ navigation }) {
               <SafeAreaView
                 style={{
                   width: "100%",
-                  marginBottom: "5%",
+                  marginBottom: Platform.OS === "ios" ? "5%" : "3%",
                   alignItems: "center",
                   justifyContent: "flex-start",
                 }}
@@ -469,7 +470,7 @@ export default function GiverHomeScreen({ navigation }) {
                   justifyContent: "center",
                   alignItems: "center",
                   width: "100%",
-                  marginVertical: Platform.OS === "ios" ? "8%" : "5%",
+                  marginVertical: Platform.OS === "ios" ? "8%" : "0%",
                 }}
               >
                 <Text
@@ -485,7 +486,7 @@ export default function GiverHomeScreen({ navigation }) {
               <SafeAreaView
                 style={{
                   width: "100%",
-                  marginBottom: "5%",
+                  marginBottom: Platform.OS === "ios" ? "5%" : "3%",
                   alignItems: "center",
                   justifyContent: "flex-start",
                 }}
@@ -628,7 +629,7 @@ export default function GiverHomeScreen({ navigation }) {
                   color: "black",
                   fontSize: responsiveFontSize(4.8),
                   fontWeight: "700",
-                  marginTop: Platform.OS == "ios" ? "8%" : "5%",
+                  marginTop: Platform.OS == "ios" ? "8%" : "0%",
                   // marginBottom: "2%",
                 }}
               >
@@ -637,7 +638,7 @@ export default function GiverHomeScreen({ navigation }) {
               <Text
                 style={[
                   styles.smallText,
-                  { marginBottom: Platform.OS == "ios" ? "8%" : "5%" },
+                  { marginBottom: Platform.OS == "ios" ? "8%" : "0%" },
                 ]}
               >
                 min
@@ -664,7 +665,7 @@ export default function GiverHomeScreen({ navigation }) {
                   color: "black",
                   fontSize: responsiveFontSize(4.8),
                   fontWeight: "700",
-                  marginTop: Platform.OS == "ios" ? "8%" : "5%",
+                  marginTop: Platform.OS == "ios" ? "8%" : "0%",
                   // marginBottom: "2%",
                 }}
               >
@@ -673,7 +674,7 @@ export default function GiverHomeScreen({ navigation }) {
               <Text
                 style={[
                   styles.smallText,
-                  { marginBottom: Platform.OS == "ios" ? "8%" : "5%" },
+                  { marginBottom: Platform.OS == "ios" ? "8%" : "0%" },
                 ]}
               >
                 average
@@ -700,7 +701,7 @@ export default function GiverHomeScreen({ navigation }) {
                   color: "black",
                   fontSize: responsiveFontSize(4.8),
                   fontWeight: "700",
-                  marginTop: Platform.OS == "ios" ? "8%" : "5%",
+                  marginTop: Platform.OS == "ios" ? "8%" : "0%",
                   // marginBottom: "2%",
                 }}
               >
@@ -709,7 +710,7 @@ export default function GiverHomeScreen({ navigation }) {
               <Text
                 style={[
                   styles.smallText,
-                  { marginBottom: Platform.OS == "ios" ? "8%" : "5%" },
+                  { marginBottom: Platform.OS == "ios" ? "8%" : "0%" },
                 ]}
               >
                 max
@@ -794,7 +795,7 @@ export default function GiverHomeScreen({ navigation }) {
                   color: "black",
                   fontSize: responsiveFontSize(2.25),
                   marginLeft: "5%",
-                  marginVertical: Platform.OS == "ios" ? "5%" : "3%",
+                  marginVertical: "3%",
                 }}
               >
                 Fitbit Battery
@@ -835,7 +836,7 @@ export default function GiverHomeScreen({ navigation }) {
                   justifyContent: "center",
                   alignItems: "center",
                   width: "100%",
-                  marginVertical: Platform.OS === "ios" ? "8%" : "5%",
+                  marginVertical: Platform.OS === "ios" ? "8%" : "0%",
                 }}
               >
                 <Text
@@ -851,7 +852,7 @@ export default function GiverHomeScreen({ navigation }) {
               <SafeAreaView
                 style={{
                   width: "100%",
-                  marginBottom: Platform.OS == "ios" ? "8%" : "5%",
+                  marginBottom: Platform.OS == "ios" ? "8%" : "0%",
                   alignItems: "center",
                   justifyContent: "flex-start",
                 }}
@@ -897,7 +898,7 @@ export default function GiverHomeScreen({ navigation }) {
               <SafeAreaView
                 style={{
                   width: "100%",
-                  marginBottom: Platform.OS == "ios" ? "8%" : "5%",
+                  marginBottom: Platform.OS == "ios" ? "8%" : "0%",
                   alignItems: "center",
                   justifyContent: "flex-start",
                 }}

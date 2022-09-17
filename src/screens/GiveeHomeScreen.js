@@ -64,7 +64,7 @@ export default function GiveeHomeScreen({ navigation }) {
   };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
+    wait(1000).then(() => setRefreshing(false));
   }, []);
 
   const args = {
