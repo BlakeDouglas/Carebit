@@ -7,6 +7,7 @@ import {
   ScrollView,
   RefreshControl,
   Platform,
+  useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -31,7 +32,7 @@ export default function GiverHomeScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
 
   const args = {
-    number: tokenData.caregiveeID[tokenData.selected].phone,
+    number: 1,
     prompt: true,
   };
   const [refreshing, setRefreshing] = React.useState(false);
@@ -160,161 +161,440 @@ export default function GiverHomeScreen({ navigation }) {
     fetchData();
   }, [fitbitAccessToken]);
 
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ height: windowHeight, width: windowWidth }}>
       <StatusBar
         hidden={false}
         translucent={false}
         backgroundColor="dodgerblue"
       />
       <ScrollView
-        style={{ flex: 1 }}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
         <SafeAreaView
           style={{
-            backgroundColor: "white",
-            flexDirection: "row",
-            justifyContent: "space-between",
+            height: windowHeight,
+            width: windowWidth,
           }}
         >
-          <TouchableOpacity style={{ marginLeft: "8%" }}>
-            <Text
+          <SafeAreaView
+            style={{
+              backgroundColor: "white",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              height: "6%",
+              width: "100%",
+            }}
+          >
+            <TouchableOpacity style={{ marginLeft: "8%" }}>
+              <Text
+                style={{
+                  color: "gray",
+                  fontWeight: "bold",
+                  //marginVertical: Platform.OS === "ios" ? "10%" : "8%",
+                  justifyContent: "center",
+                }}
+              >
+                0 Alerts Today
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               style={{
-                color: "gray",
-                fontWeight: "bold",
-                marginVertical: Platform.OS === "ios" ? "10%" : "8%",
+                marginRight: "8%",
+                //backgroundColor: "red",
+                alignItems: "flex-end",
                 justifyContent: "center",
               }}
             >
-              0 Alerts Today
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+              <Text
+                style={{
+                  color: "dodgerblue",
+                  fontWeight: "bold",
+                  //marginVertical: Platform.OS === "ios" ? "1%" : "8%",
+                }}
+              >
+                View History
+              </Text>
+            </TouchableOpacity>
+          </SafeAreaView>
+          <SafeAreaView
             style={{
-              marginRight: "8%",
-              //backgroundColor: "red",
-              alignItems: "flex-end",
+              flexDirection: "row",
               justifyContent: "center",
+              alignItems: "center",
+              //backgroundColor: "green",
+              height: "9%",
+              width: "100%",
+            }}
+          >
+            <SafeAreaView
+              style={{
+                justifyContent: "center",
+
+                //backgroundColor: "blue",
+                height: "80%",
+                width: "60%",
+              }}
+            >
+              <Text
+                style={{
+                  //marginTop: "10%",
+                  //marginLeft: "4%",
+                  color: "darkgrey",
+                  fontSize: responsiveFontSize(1.8),
+                }}
+              >
+                Hello Testing Care
+              </Text>
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: responsiveFontSize(2.4),
+                  fontWeight: "500",
+                  //marginLeft: "4%",
+                }}
+              >
+                Your Caregivee is Paola
+              </Text>
+            </SafeAreaView>
+            <SafeAreaView
+              style={{
+                //marginTop: "4%",
+                //backgroundColor: "red",
+                width: "32%",
+                height: "80%",
+                justifyContent: "center",
+                alignItems: "flex-end",
+              }}
+            >
+              <TouchableOpacity
+                style={styles.callBody}
+                onPress={() => {
+                  call(args).catch(console.error);
+                }}
+              >
+                <Image
+                  source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
+                />
+                <Text style={styles.callText}>Call Paola</Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+          </SafeAreaView>
+          <SafeAreaView
+            style={{
+              borderBottomColor: "lightgray",
+              borderBottomWidth: 1,
+            }}
+          ></SafeAreaView>
+
+          <SafeAreaView
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+              alignSelf: "center",
+              height: "5%",
+              width: "92%",
+              //backgroundColor: "red",
             }}
           >
             <Text
               style={{
-                color: "dodgerblue",
-                fontWeight: "bold",
-                marginVertical: Platform.OS === "ios" ? "10%" : "8%",
+                color: "black",
+                fontSize: responsiveFontSize(2.2),
               }}
             >
-              View History
+              Last Recorded Activity
             </Text>
-          </TouchableOpacity>
-        </SafeAreaView>
-        <SafeAreaView
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            backgroundColor: "whitesmoke",
-          }}
-        >
-          <SafeAreaView>
+
             <Text
               style={{
-                marginTop: Platform.OS == "ios" ? "10%" : "4%",
-                marginLeft: "4%",
                 color: "darkgrey",
                 fontSize: responsiveFontSize(1.8),
               }}
             >
-              Hello Testing Care
+              14 mins ago
             </Text>
-            <Text
+          </SafeAreaView>
+
+          <SafeAreaView style={{ marginTop: "4%", height: "17%" }}>
+            <SafeAreaView
               style={{
-                color: "black",
-                fontSize: responsiveFontSize(2.4),
-                fontWeight: "500",
-                marginLeft: "4%",
+                flexDirection: "row",
+                //backgroundColor: "red",
+                justifyContent: "space-evenly",
+                height: "25%",
+                width: "100%",
               }}
             >
-              Your Caregivee is Paola
-            </Text>
-          </SafeAreaView>
-          <SafeAreaView>
-            <TouchableOpacity
-              style={styles.callBody}
-              onPress={() => {
-                call(args).catch(console.error);
+              <SafeAreaView
+                style={{
+                  backgroundColor: "white",
+                  height: "100%",
+                  width: "43%",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  borderTopLeftRadius: 5,
+                  borderTopRightRadius: 5,
+                  ...Platform.select({
+                    ios: {
+                      shadowColor: "#000",
+                      shadowOffset: { width: 1, height: 3 },
+                      shadowOpacity: 0.6,
+                    },
+                    android: {
+                      elevation: 6,
+                    },
+                  }),
+                }}
+              >
+                <Image
+                  style={[styles.images, { marginLeft: "4%" }]}
+                  source={require("../../assets/images/heart/heart.png")}
+                />
+                <Text
+                  style={{
+                    color: "black",
+                    fontSize: responsiveFontSize(2.25),
+                    marginLeft: "5%",
+                  }}
+                >
+                  Heart Rate
+                </Text>
+              </SafeAreaView>
+
+              <SafeAreaView
+                style={{
+                  backgroundColor: "white",
+                  width: "43%",
+                  height: "100%",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  borderTopLeftRadius: 5,
+                  borderTopRightRadius: 5,
+                  ...Platform.select({
+                    ios: {
+                      shadowColor: "#000",
+                      shadowOffset: { width: 1, height: 3 },
+                      shadowOpacity: 0.6,
+                    },
+                    android: {
+                      elevation: 6,
+                    },
+                  }),
+                }}
+              >
+                <Image
+                  style={[styles.images, { marginLeft: "4%" }]}
+                  source={require("../../assets/images/steps/steps.png")}
+                />
+                <Text
+                  style={{
+                    color: "black",
+                    fontSize: responsiveFontSize(2.25),
+                    marginLeft: "5%",
+                    //marginVertical: "3%",
+                  }}
+                >
+                  Steps
+                </Text>
+              </SafeAreaView>
+            </SafeAreaView>
+
+            <SafeAreaView
+              style={{
+                width: "100%",
+                height: "75%",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                //backgroundColor: "green",
               }}
             >
-              <Image
-                source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
-              />
-              <Text style={styles.callText}>Call Paola</Text>
-            </TouchableOpacity>
+              <SafeAreaView
+                style={{
+                  backgroundColor: "whitesmoke",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "43%",
+                  height: "100%",
+                  borderBottomEndRadius: 5,
+                  borderBottomLeftRadius: 5,
+                  ...Platform.select({
+                    ios: {
+                      shadowColor: "#000",
+                      shadowOffset: { width: 1, height: 3 },
+                      shadowOpacity: 0.4,
+                    },
+                    android: {
+                      elevation: 6,
+                    },
+                  }),
+                }}
+              >
+                <SafeAreaView
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "70%",
+                    //backgroundColor: "blue",
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "black",
+                      fontSize: responsiveFontSize(4.8),
+                      fontWeight: "700",
+                    }}
+                  >
+                    0
+                  </Text>
+                  <Text
+                    style={{
+                      color: "black",
+                      fontSize: responsiveFontSize(2),
+                      marginLeft: "3%",
+                      fontWeight: "600",
+                    }}
+                  >
+                    BPM
+                  </Text>
+                </SafeAreaView>
+                <SafeAreaView
+                  style={{
+                    width: "100%",
+                    height: "30%",
+                    //backgroundColor: "red",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <Text style={styles.smallText}>14 mins ago</Text>
+                </SafeAreaView>
+              </SafeAreaView>
+
+              <SafeAreaView
+                style={{
+                  backgroundColor: "whitesmoke",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100%",
+                  width: "43%",
+                  borderBottomEndRadius: 5,
+                  borderBottomLeftRadius: 5,
+                  ...Platform.select({
+                    ios: {
+                      shadowColor: "#000",
+                      shadowOffset: { width: 1, height: 3 },
+                      shadowOpacity: 0.4,
+                    },
+                    android: {
+                      elevation: 6,
+                    },
+                  }),
+                }}
+              >
+                <SafeAreaView
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "70%",
+                    width: "100%",
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "black",
+                      fontSize: responsiveFontSize(4.8),
+                      fontWeight: "700",
+                    }}
+                  >
+                    0
+                  </Text>
+                </SafeAreaView>
+                <SafeAreaView
+                  style={{
+                    width: "100%",
+                    height: "30%",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <Text style={styles.smallText}>in past hour</Text>
+                </SafeAreaView>
+              </SafeAreaView>
+            </SafeAreaView>
           </SafeAreaView>
-        </SafeAreaView>
-        <SafeAreaView
-          style={{
-            borderBottomColor: "lightgray",
-            borderBottomWidth: 1,
-            marginTop: Platform.OS == "ios" ? "4%" : "3%",
-          }}
-        ></SafeAreaView>
-
-        <SafeAreaView
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Text
+          <SafeAreaView
             style={{
-              color: "black",
-              fontSize: responsiveFontSize(2.2),
-              marginTop: Platform.OS == "ios" ? "4%" : "2%",
-              marginLeft: "4%",
+              borderBottomColor: "lightgray",
+              borderBottomWidth: 1,
+              marginTop: "5%",
             }}
-          >
-            Last Recorded Activity
-          </Text>
-
-          <Text
-            style={{
-              color: "darkgrey",
-              fontSize: responsiveFontSize(1.8),
-              marginTop: Platform.OS == "ios" ? "4%" : "2%",
-              marginRight: "4%",
-            }}
-          >
-            14 mins ago
-          </Text>
-        </SafeAreaView>
-
-        <SafeAreaView style={{ marginTop: Platform.OS == "ios" ? "4%" : "2%" }}>
+          ></SafeAreaView>
           <SafeAreaView
             style={{
               flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
               //backgroundColor: "red",
-              justifyContent: "space-evenly",
+              height: "6%",
+            }}
+          >
+            <Text
+              style={{
+                color: "black",
+                fontSize: responsiveFontSize(2.2),
+
+                marginLeft: "4%",
+              }}
+            >
+              Today
+            </Text>
+
+            <Text
+              style={{
+                color: "darkgrey",
+                fontSize: responsiveFontSize(1.8),
+                marginRight: "4%",
+              }}
+            >
+              {date}
+            </Text>
+          </SafeAreaView>
+
+          <SafeAreaView
+            style={{
+              alignSelf: "center",
+              height: "17%",
+              backgroundColor: "whitesmoke",
+              alignSelf: "center",
+              width: "92%",
+              borderRadius: 5,
             }}
           >
             <SafeAreaView
               style={{
                 backgroundColor: "white",
-
-                width: "43%",
-                alignItems: "center",
                 flexDirection: "row",
-                borderTopLeftRadius: 5,
+                width: "100%",
+                height: "30%",
+                alignItems: "center",
+                borderTopStartRadius: 5,
                 borderTopRightRadius: 5,
                 ...Platform.select({
                   ios: {
                     shadowColor: "#000",
                     shadowOffset: { width: 1, height: 3 },
-                    shadowOpacity: 0.6,
+                    shadowOpacity: 0.4,
                   },
                   android: {
                     elevation: 6,
@@ -326,131 +606,45 @@ export default function GiverHomeScreen({ navigation }) {
                 style={[styles.images, { marginLeft: "4%" }]}
                 source={require("../../assets/images/heart/heart.png")}
               />
-              <Text
-                style={{
-                  color: "black",
-                  fontSize: responsiveFontSize(2.25),
-                  marginLeft: "5%",
-                  marginVertical: "3%",
-                }}
-              >
-                Heart Rate
-              </Text>
-            </SafeAreaView>
-
-            <SafeAreaView
-              style={{
-                backgroundColor: "white",
-                width: "43%",
-                alignItems: "center",
-                flexDirection: "row",
-                borderTopLeftRadius: 5,
-                borderTopRightRadius: 5,
-                ...Platform.select({
-                  ios: {
-                    shadowColor: "#000",
-                    shadowOffset: { width: 1, height: 3 },
-                    shadowOpacity: 0.6,
-                  },
-                  android: {
-                    elevation: 6,
-                  },
-                }),
-              }}
-            >
-              <Image
-                style={[styles.images, { marginLeft: "4%" }]}
-                source={require("../../assets/images/steps/steps.png")}
-              />
-              <Text
-                style={{
-                  color: "black",
-                  fontSize: responsiveFontSize(2.25),
-                  marginLeft: "5%",
-                  marginVertical: "3%",
-                }}
-              >
-                Steps
-              </Text>
-            </SafeAreaView>
-          </SafeAreaView>
-
-          <SafeAreaView
-            style={{
-              width: "100%",
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-            }}
-          >
-            <SafeAreaView
-              style={{
-                backgroundColor: "whitesmoke",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "43%",
-                borderBottomEndRadius: 5,
-                borderBottomLeftRadius: 5,
-                ...Platform.select({
-                  ios: {
-                    shadowColor: "#000",
-                    shadowOffset: { width: 1, height: 3 },
-                    shadowOpacity: 0.4,
-                  },
-                  android: {
-                    elevation: 6,
-                  },
-                }),
-              }}
-            >
               <SafeAreaView
                 style={{
                   flexDirection: "row",
-                  justifyContent: "center",
+                  //backgroundColor: "red",
+                  height: "100%",
+                  width: "90%",
                   alignItems: "center",
-                  width: "100%",
-                  marginVertical: Platform.OS === "ios" ? "8%" : "0%",
+                  justifyContent: "space-between",
                 }}
               >
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(4.8),
-                    fontWeight: "700",
+                    fontSize: responsiveFontSize(2.25),
+                    marginLeft: "3%",
+                    //marginVertical: "3%",
                   }}
                 >
-                  0
+                  Heart Rate Summary
                 </Text>
                 <Text
                   style={{
-                    color: "black",
-                    fontSize: responsiveFontSize(2),
-                    marginLeft: "3%",
-                    fontWeight: "600",
+                    color: "darkgrey",
+                    fontSize: responsiveFontSize(1.8),
+                    marginRight: "5%",
                   }}
                 >
                   BPM
                 </Text>
               </SafeAreaView>
-              <SafeAreaView
-                style={{
-                  width: "100%",
-                  marginBottom: Platform.OS === "ios" ? "5%" : "3%",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                }}
-              >
-                <Text style={styles.smallText}>14 mins ago</Text>
-              </SafeAreaView>
             </SafeAreaView>
 
             <SafeAreaView
               style={{
                 backgroundColor: "whitesmoke",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "43%",
-                borderBottomEndRadius: 5,
-                borderBottomLeftRadius: 5,
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                height: "70%",
+                width: "100%",
                 ...Platform.select({
                   ios: {
                     shadowColor: "#000",
@@ -461,453 +655,362 @@ export default function GiverHomeScreen({ navigation }) {
                     elevation: 6,
                   },
                 }),
+                borderBottomEndRadius: 5,
+                borderBottomLeftRadius: 5,
               }}
             >
               <SafeAreaView
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
+                  width: "25%",
+                  height: "100%",
                   alignItems: "center",
-                  width: "100%",
-                  marginVertical: Platform.OS === "ios" ? "8%" : "0%",
+                  justifyContent: "center",
+                  // backgroundColor: "green",
+                  flexDirection: "column",
                 }}
               >
-                <Text
+                <SafeAreaView
                   style={{
-                    color: "black",
-                    fontSize: responsiveFontSize(4.8),
-                    fontWeight: "700",
+                    height: "70%",
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  0
-                </Text>
+                  <Text
+                    style={{
+                      color: "black",
+                      fontSize: responsiveFontSize(4.8),
+                      fontWeight: "700",
+                    }}
+                  >
+                    0
+                  </Text>
+                </SafeAreaView>
+
+                <SafeAreaView
+                  style={{
+                    width: "100%",
+                    height: "30%",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    // backgroundColor: "yellow",
+                  }}
+                >
+                  <Text style={[styles.smallText]}>min</Text>
+                </SafeAreaView>
               </SafeAreaView>
               <SafeAreaView
                 style={{
-                  width: "100%",
-                  marginBottom: Platform.OS === "ios" ? "5%" : "3%",
+                  alignSelf: "center",
+                  borderLeftColor: "lightgray",
+                  borderLeftWidth: 1.5,
+                  height: "70%",
+                }}
+              ></SafeAreaView>
+              <SafeAreaView
+                style={{
+                  width: "25%",
+                  height: "100%",
                   alignItems: "center",
-                  justifyContent: "flex-start",
+                  justifyContent: "center",
+                  // backgroundColor: "green",
+                  flexDirection: "column",
                 }}
               >
-                <Text style={styles.smallText}>in past hour</Text>
+                <SafeAreaView
+                  style={{
+                    height: "70%",
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "black",
+                      fontSize: responsiveFontSize(4.8),
+                      fontWeight: "700",
+                    }}
+                  >
+                    0
+                  </Text>
+                </SafeAreaView>
+
+                <SafeAreaView
+                  style={{
+                    width: "100%",
+                    height: "30%",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    //backgroundColor: "yellow",
+                  }}
+                >
+                  <Text style={[styles.smallText]}>avg</Text>
+                </SafeAreaView>
+              </SafeAreaView>
+              <SafeAreaView
+                style={{
+                  alignSelf: "center",
+                  borderLeftColor: "lightgray",
+                  borderLeftWidth: 1.5,
+                  height: "70%",
+                }}
+              ></SafeAreaView>
+              <SafeAreaView
+                style={{
+                  width: "25%",
+                  height: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  //backgroundColor: "green",
+                  flexDirection: "column",
+                }}
+              >
+                <SafeAreaView
+                  style={{
+                    height: "70%",
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "black",
+                      fontSize: responsiveFontSize(4.8),
+                      fontWeight: "700",
+                    }}
+                  >
+                    0
+                  </Text>
+                </SafeAreaView>
+
+                <SafeAreaView
+                  style={{
+                    width: "100%",
+                    height: "30%",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    // backgroundColor: "yellow",
+                  }}
+                >
+                  <Text style={[styles.smallText]}>max</Text>
+                </SafeAreaView>
               </SafeAreaView>
             </SafeAreaView>
           </SafeAreaView>
-        </SafeAreaView>
-        <SafeAreaView
-          style={{
-            borderBottomColor: "lightgray",
-            borderBottomWidth: 1,
-            marginTop: Platform.OS == "ios" ? "5%" : "3%",
-          }}
-        ></SafeAreaView>
-        <SafeAreaView
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Text
-            style={{
-              color: "black",
-              fontSize: responsiveFontSize(2.2),
-              marginTop: Platform.OS == "ios" ? "5%" : "2%",
-              marginLeft: "4%",
-            }}
-          >
-            Today
-          </Text>
-
-          <Text
-            style={{
-              color: "darkgrey",
-              fontSize: responsiveFontSize(1.8),
-              marginTop: Platform.OS == "ios" ? "5%" : "2%",
-              marginRight: "4%",
-            }}
-          >
-            {date}
-          </Text>
-        </SafeAreaView>
-
-        <SafeAreaView
-          style={{
-            marginTop: Platform.OS == "ios" ? "5%" : "2%",
-            alignSelf: "center",
-            backgroundColor: "white",
-            alignSelf: "center",
-            width: "92%",
-            borderRadius: 5,
-          }}
-        >
-          <SafeAreaView
-            style={{
-              backgroundColor: "white",
-              flexDirection: "row",
-              width: "100%",
-              alignItems: "center",
-              borderTopStartRadius: 5,
-              borderTopRightRadius: 5,
-              ...Platform.select({
-                ios: {
-                  shadowColor: "#000",
-                  shadowOffset: { width: 1, height: 3 },
-                  shadowOpacity: 0.4,
-                },
-                android: {
-                  elevation: 6,
-                },
-              }),
-            }}
-          >
-            <Image
-              style={[styles.images, { marginLeft: "4%" }]}
-              source={require("../../assets/images/heart/heart.png")}
-            />
+          <SafeAreaView style={{ marginTop: "6%", height: "17%" }}>
             <SafeAreaView
               style={{
                 flexDirection: "row",
                 //backgroundColor: "red",
-                width: "90%",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text
-                style={{
-                  color: "black",
-                  fontSize: responsiveFontSize(2.25),
-                  marginLeft: "3%",
-                  marginVertical: "3%",
-                }}
-              >
-                Heart Rate Summary
-              </Text>
-              <Text
-                style={{
-                  color: "darkgrey",
-                  fontSize: responsiveFontSize(1.8),
-                  marginRight: "5%",
-                }}
-              >
-                BPM
-              </Text>
-            </SafeAreaView>
-          </SafeAreaView>
-          <SafeAreaView
-            style={{
-              backgroundColor: "whitesmoke",
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              width: "100%",
-              ...Platform.select({
-                ios: {
-                  shadowColor: "#000",
-                  shadowOffset: { width: 1, height: 3 },
-                  shadowOpacity: 0.4,
-                },
-                android: {
-                  elevation: 6,
-                },
-              }),
-              borderBottomEndRadius: 5,
-              borderBottomLeftRadius: 5,
-            }}
-          >
-            <SafeAreaView
-              style={{
-                width: "25%",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text
-                style={{
-                  color: "black",
-                  fontSize: responsiveFontSize(4.8),
-                  fontWeight: "700",
-                  marginTop: Platform.OS == "ios" ? "8%" : "0%",
-                  // marginBottom: "2%",
-                }}
-              >
-                0
-              </Text>
-              <Text
-                style={[
-                  styles.smallText,
-                  { marginBottom: Platform.OS == "ios" ? "8%" : "0%" },
-                ]}
-              >
-                min
-              </Text>
-            </SafeAreaView>
-            <SafeAreaView
-              style={{
-                alignSelf: "center",
-                borderLeftColor: "lightgray",
-                borderLeftWidth: 1.5,
-                height: "70%",
-              }}
-            ></SafeAreaView>
-
-            <SafeAreaView
-              style={{
-                width: "25%",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text
-                style={{
-                  color: "black",
-                  fontSize: responsiveFontSize(4.8),
-                  fontWeight: "700",
-                  marginTop: Platform.OS == "ios" ? "8%" : "0%",
-                  // marginBottom: "2%",
-                }}
-              >
-                0
-              </Text>
-              <Text
-                style={[
-                  styles.smallText,
-                  { marginBottom: Platform.OS == "ios" ? "8%" : "0%" },
-                ]}
-              >
-                average
-              </Text>
-            </SafeAreaView>
-            <SafeAreaView
-              style={{
-                alignSelf: "center",
-                borderLeftColor: "lightgray",
-                borderLeftWidth: 1.5,
-                height: "70%",
-              }}
-            ></SafeAreaView>
-
-            <SafeAreaView
-              style={{
-                width: "25%",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text
-                style={{
-                  color: "black",
-                  fontSize: responsiveFontSize(4.8),
-                  fontWeight: "700",
-                  marginTop: Platform.OS == "ios" ? "8%" : "0%",
-                  // marginBottom: "2%",
-                }}
-              >
-                0
-              </Text>
-              <Text
-                style={[
-                  styles.smallText,
-                  { marginBottom: Platform.OS == "ios" ? "8%" : "0%" },
-                ]}
-              >
-                max
-              </Text>
-            </SafeAreaView>
-          </SafeAreaView>
-        </SafeAreaView>
-
-        <SafeAreaView
-          style={{ marginTop: Platform.OS === "ios" ? "6%" : "4%" }}
-        >
-          <SafeAreaView
-            style={{
-              flexDirection: "row",
-              //backgroundColor: "red",
-              justifyContent: "space-evenly",
-            }}
-          >
-            <SafeAreaView
-              style={{
-                backgroundColor: "white",
-
-                width: "43%",
-                alignItems: "center",
-                flexDirection: "row",
-                borderTopLeftRadius: 5,
-                borderTopRightRadius: 5,
-                ...Platform.select({
-                  ios: {
-                    shadowColor: "#000",
-                    shadowOffset: { width: 1, height: 3 },
-                    shadowOpacity: 0.6,
-                  },
-                  android: {
-                    elevation: 6,
-                  },
-                }),
-              }}
-            >
-              <Image
-                style={[styles.images, { marginLeft: "4%" }]}
-                source={require("../../assets/images/steps/steps.png")}
-              />
-              <Text
-                style={{
-                  color: "black",
-                  fontSize: responsiveFontSize(2.25),
-                  marginLeft: "5%",
-                  marginVertical: "3%",
-                }}
-              >
-                Total Steps
-              </Text>
-            </SafeAreaView>
-
-            <SafeAreaView
-              style={{
-                backgroundColor: "white",
-                width: "43%",
-                alignItems: "center",
-                flexDirection: "row",
-                borderTopLeftRadius: 5,
-                borderTopRightRadius: 5,
-                ...Platform.select({
-                  ios: {
-                    shadowColor: "#000",
-                    shadowOffset: { width: 1, height: 3 },
-                    shadowOpacity: 0.6,
-                  },
-                  android: {
-                    elevation: 6,
-                  },
-                }),
-              }}
-            >
-              <Image
-                style={[styles.images, { marginLeft: "4%" }]}
-                source={require("../../assets/images/fitbit/fitbit.png")}
-              />
-              <Text
-                style={{
-                  color: "black",
-                  fontSize: responsiveFontSize(2.25),
-                  marginLeft: "5%",
-                  marginVertical: "3%",
-                }}
-              >
-                Fitbit Battery
-              </Text>
-            </SafeAreaView>
-          </SafeAreaView>
-
-          <SafeAreaView
-            style={{
-              width: "100%",
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-            }}
-          >
-            <SafeAreaView
-              style={{
-                backgroundColor: "whitesmoke",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "43%",
-                borderBottomEndRadius: 5,
-                borderBottomLeftRadius: 5,
-                ...Platform.select({
-                  ios: {
-                    shadowColor: "#000",
-                    shadowOffset: { width: 1, height: 3 },
-                    shadowOpacity: 0.4,
-                  },
-                  android: {
-                    elevation: 6,
-                  },
-                }),
+                justifyContent: "space-evenly",
+                height: "25%",
+                width: "100%",
               }}
             >
               <SafeAreaView
                 style={{
+                  backgroundColor: "white",
+                  height: "100%",
+                  width: "43%",
+                  alignItems: "center",
                   flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "100%",
-                  marginVertical: Platform.OS === "ios" ? "8%" : "0%",
-                }}
-              >
-                <Text
-                  style={{
-                    color: "black",
-                    fontSize: responsiveFontSize(4.8),
-                    fontWeight: "700",
-                  }}
-                >
-                  0
-                </Text>
-              </SafeAreaView>
-              <SafeAreaView
-                style={{
-                  width: "100%",
-                  marginBottom: Platform.OS == "ios" ? "8%" : "0%",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                }}
-              >
-                <Text style={styles.smallText}>today</Text>
-              </SafeAreaView>
-            </SafeAreaView>
-
-            <SafeAreaView
-              style={{
-                backgroundColor: "whitesmoke",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "43%",
-                borderBottomEndRadius: 5,
-                borderBottomLeftRadius: 5,
-                ...Platform.select({
-                  ios: {
-                    shadowColor: "#000",
-                    shadowOffset: { width: 1, height: 3 },
-                    shadowOpacity: 0.4,
-                  },
-                  android: {
-                    elevation: 6,
-                  },
-                }),
-              }}
-            >
-              <SafeAreaView
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "100%",
-                  marginVertical: Platform.OS === "ios" ? "14%" : "12%",
+                  borderTopLeftRadius: 5,
+                  borderTopRightRadius: 5,
+                  ...Platform.select({
+                    ios: {
+                      shadowColor: "#000",
+                      shadowOffset: { width: 1, height: 3 },
+                      shadowOpacity: 0.6,
+                    },
+                    android: {
+                      elevation: 6,
+                    },
+                  }),
                 }}
               >
                 <Image
-                  style={{ alignSelf: "center" }}
-                  source={require("../../assets/images/batterymedium/batterymedium.png")}
+                  style={[styles.images, { marginLeft: "4%" }]}
+                  source={require("../../assets/images/heart/heart.png")}
                 />
+                <Text
+                  style={{
+                    color: "black",
+                    fontSize: responsiveFontSize(2.25),
+                    marginLeft: "5%",
+                  }}
+                >
+                  Heart Rate
+                </Text>
               </SafeAreaView>
+
               <SafeAreaView
                 style={{
-                  width: "100%",
-                  marginBottom: Platform.OS == "ios" ? "8%" : "0%",
+                  backgroundColor: "white",
+                  width: "43%",
+                  height: "100%",
                   alignItems: "center",
-                  justifyContent: "flex-start",
+                  flexDirection: "row",
+                  borderTopLeftRadius: 5,
+                  borderTopRightRadius: 5,
+                  ...Platform.select({
+                    ios: {
+                      shadowColor: "#000",
+                      shadowOffset: { width: 1, height: 3 },
+                      shadowOpacity: 0.6,
+                    },
+                    android: {
+                      elevation: 6,
+                    },
+                  }),
                 }}
               >
-                <Text style={styles.smallText}>medium</Text>
+                <Image
+                  style={[styles.images, { marginLeft: "4%" }]}
+                  source={require("../../assets/images/steps/steps.png")}
+                />
+                <Text
+                  style={{
+                    color: "black",
+                    fontSize: responsiveFontSize(2.25),
+                    marginLeft: "5%",
+                    //marginVertical: "3%",
+                  }}
+                >
+                  Steps
+                </Text>
+              </SafeAreaView>
+            </SafeAreaView>
+
+            <SafeAreaView
+              style={{
+                width: "100%",
+                height: "75%",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                //backgroundColor: "green",
+              }}
+            >
+              <SafeAreaView
+                style={{
+                  backgroundColor: "whitesmoke",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "43%",
+                  height: "100%",
+                  borderBottomEndRadius: 5,
+                  borderBottomLeftRadius: 5,
+                  ...Platform.select({
+                    ios: {
+                      shadowColor: "#000",
+                      shadowOffset: { width: 1, height: 3 },
+                      shadowOpacity: 0.4,
+                    },
+                    android: {
+                      elevation: 6,
+                    },
+                  }),
+                }}
+              >
+                <SafeAreaView
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "70%",
+                    //backgroundColor: "blue",
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "black",
+                      fontSize: responsiveFontSize(4.8),
+                      fontWeight: "700",
+                    }}
+                  >
+                    0
+                  </Text>
+                  <Text
+                    style={{
+                      color: "black",
+                      fontSize: responsiveFontSize(2),
+                      marginLeft: "3%",
+                      fontWeight: "600",
+                    }}
+                  >
+                    BPM
+                  </Text>
+                </SafeAreaView>
+                <SafeAreaView
+                  style={{
+                    width: "100%",
+                    height: "30%",
+                    //backgroundColor: "red",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <Text style={styles.smallText}>14 mins ago</Text>
+                </SafeAreaView>
+              </SafeAreaView>
+
+              <SafeAreaView
+                style={{
+                  backgroundColor: "whitesmoke",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100%",
+                  width: "43%",
+                  borderBottomEndRadius: 5,
+                  borderBottomLeftRadius: 5,
+                  ...Platform.select({
+                    ios: {
+                      shadowColor: "#000",
+                      shadowOffset: { width: 1, height: 3 },
+                      shadowOpacity: 0.4,
+                    },
+                    android: {
+                      elevation: 6,
+                    },
+                  }),
+                }}
+              >
+                <SafeAreaView
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "70%",
+                    width: "100%",
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "black",
+                      fontSize: responsiveFontSize(4.8),
+                      fontWeight: "700",
+                    }}
+                  >
+                    0
+                  </Text>
+                </SafeAreaView>
+                <SafeAreaView
+                  style={{
+                    width: "100%",
+                    height: "30%",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <Text style={styles.smallText}>in past hour</Text>
+                </SafeAreaView>
               </SafeAreaView>
             </SafeAreaView>
           </SafeAreaView>
         </SafeAreaView>
-        <Text></Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -938,8 +1041,8 @@ const styles = StyleSheet.create({
   callBody: {
     alignItems: "center",
     flexDirection: "row",
-    marginRight: "4%",
-    marginTop: Platform.OS == "ios" ? "10%" : "5%",
+    //marginRight: "4%",
+    //marginTop: Platform.OS == "ios" ? "10%" : "5%",
     justifyContent: "center",
   },
   callText: {
