@@ -13,7 +13,7 @@ import { Provider, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 export default function SettingsOverviewScreen({ route, navigation }) {
-  const selectedUser = route.params;
+  const selectedUser = route.params.user;
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const logOutButtonHandler = () => {
     navigation.navigate("TitleScreen");
@@ -164,7 +164,7 @@ export default function SettingsOverviewScreen({ route, navigation }) {
       >
         <TouchableOpacity
           style={{ alignItems: "center", justifyContent: "center" }}
-          onPress={onPressDelete(tokenData)}
+          onPress={onPressDelete(selectedUser)}
         >
           <Text
             style={{
