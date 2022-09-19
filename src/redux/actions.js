@@ -24,3 +24,11 @@ export const setPhysicianData = (physData) => {
     });
   };
 };
+
+export const resetData = () => {
+  return async (dispatch) => {
+    dispatch({
+      type: "RESET_DATA",
+    });
+  };
+};

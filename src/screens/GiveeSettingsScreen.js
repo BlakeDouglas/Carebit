@@ -1,19 +1,25 @@
 import { StyleSheet, SafeAreaView, Text, StatusBar, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { React } from "react";
-import { Provider, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { resetData } from "../redux/actions";
 
 export default function GiveeSettingsScreen({ navigation }) {
   const userData = useSelector((state) => state.Reducers.userData);
   const physData = useSelector((state) => state.Reducers.physData);
+  const dispatch = useDispatch();
   const logOutButtonHandler = () => {
-    navigation.navigate("TitleScreen");
+    dispatch(resetData());
   };
   return (
     // Header Container
     <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar hidden={false} translucent={false} backgroundColor="dodgerblue" />
+      <StatusBar
+        hidden={false}
+        translucent={false}
+        backgroundColor="dodgerblue"
+      />
       <SafeAreaView
         style={{
           marginTop: "8%",

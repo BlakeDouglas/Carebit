@@ -35,6 +35,8 @@ export default (state = initialState, action) => {
       return { ...state, tokenData: action.payload };
     case "SET_PHYSICIAN_DATA":
       return { ...state, physData: action.payload };
+    case "RESET_DATA":
+      return initialState;
     default:
       return state;
   }

@@ -2,13 +2,16 @@ import { StyleSheet, SafeAreaView, Text, Image, StatusBar } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { React } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
-import { Provider, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { resetData } from "../redux/actions";
 
 export default function GiverSettingsScreen({ navigation }) {
   const userData = useSelector((state) => state.Reducers.userData);
+  const dispatch = useDispatch();
   const logOutButtonHandler = () => {
-    navigation.navigate("TitleScreen");
+    dispatch(resetData());
+    // TODO Remove
   };
   const customAlertButtonHandler = () => {
     navigation.navigate("CustomNotification");
