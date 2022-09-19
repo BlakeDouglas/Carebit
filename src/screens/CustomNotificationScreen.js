@@ -7,6 +7,8 @@ import {
   StatusBar,
 } from "react-native";
 import React, { useState } from "react";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import SelectDropdown from "react-native-select-dropdown";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 export default function CustomNotificationScreen({ navigation }) {
@@ -34,6 +36,75 @@ export default function CustomNotificationScreen({ navigation }) {
   const toggleBattery = () => {
     setIsBattery(!isBattery);
   };
+
+  const heartLimits = [
+    "25",
+    "26",
+    "27",
+    "28",
+    "29",
+    "30",
+    "31",
+    "32",
+    "33",
+    "34",
+    "35",
+    "36",
+    "37",
+    "38",
+    "39",
+    "40",
+    "41",
+    "42",
+    "43",
+    "44",
+    "45",
+    "46",
+    "47",
+    "48",
+    "49",
+    "50",
+    "51",
+    "52",
+    "53",
+    "54",
+    "55",
+    "56",
+    "57",
+    "58",
+    "59",
+    "60",
+    "61",
+    "62",
+    "63",
+    "64",
+    "65",
+    "66",
+    "67",
+    "68",
+    "69",
+    "70",
+    "71",
+    "72",
+    "73",
+    "74",
+    "75",
+    "76",
+    "77",
+    "78",
+    "79",
+    "80",
+    "81",
+    "82",
+    "83",
+    "84",
+    "85",
+    "86",
+    "87",
+    "88",
+    "89",
+    "90",
+  ];
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar
@@ -61,7 +132,7 @@ export default function CustomNotificationScreen({ navigation }) {
               : "Turn on to use Activity Levels instead of custom thresholds to trigger alerts"}
           </Text>
         </SafeAreaView>
-        {isCustom && (
+        {isCustom ? (
           <SafeAreaView style={[styles.Box, { marginTop: "5%" }]}>
             <Text style={styles.Title}>Heart Rate Alerts</Text>
             <Switch
@@ -72,8 +143,44 @@ export default function CustomNotificationScreen({ navigation }) {
               value={isHrAlerts}
             />
           </SafeAreaView>
-        )}
-        {isHrAlerts && isCustom && (
+        ) : null}
+        {isHrAlerts && isCustom ? (
+          <SafeAreaView style={styles.Box}>
+            <Text style={styles.Title}>Low Heart Rate</Text>
+
+            <SelectDropdown
+              renderDropdownIcon={(isOpened) => {
+                return (
+                  <FontAwesome
+                    name={isOpened ? "chevron-up" : "chevron-down"}
+                    color={"rgba(128,128,128,.7)"}
+                    size={15}
+                  />
+                );
+              }}
+              dropdownIconPosition={"right"}
+              defaultButtonText={"0 BPM"}
+              disableAutoScroll={true}
+              selectedRowStyle={{ backgroundColor: "lightgray" }}
+              buttonStyle={styles.downButtonStyle}
+              buttonTextStyle={{
+                color: "rgba(128,128,128,.9)",
+                fontSize: responsiveFontSize(2.2),
+              }}
+              data={heartLimits}
+              onSelect={(selectedItem, index) => {
+                console.log(selectedItem, index);
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                return selectedItem + " BPM";
+              }}
+              rowTextForSelection={(item, index) => {
+                return item;
+              }}
+            />
+          </SafeAreaView>
+        ) : null}
+        {isHrAlerts && isCustom ? (
           <SafeAreaView style={styles.Box}>
             <Text style={styles.Title}>High Heart Rate</Text>
             <TextInput
@@ -83,8 +190,8 @@ export default function CustomNotificationScreen({ navigation }) {
               keyboardType="number-pad"
             ></TextInput>
           </SafeAreaView>
-        )}
-        {isCustom && (
+        ) : null}
+        {isCustom ? (
           <SafeAreaView style={[styles.Box, { marginTop: "10%" }]}>
             <Text style={styles.Title}>No Activity Alerts</Text>
             <Switch
@@ -95,8 +202,8 @@ export default function CustomNotificationScreen({ navigation }) {
               value={isActivityAlerts}
             />
           </SafeAreaView>
-        )}
-        {isActivityAlerts && isCustom && (
+        ) : null}
+        {isActivityAlerts && isCustom ? (
           <SafeAreaView style={styles.Box}>
             <Text style={styles.Title}>Time Without Heart Rate</Text>
             <TextInput
@@ -106,8 +213,8 @@ export default function CustomNotificationScreen({ navigation }) {
               keyboardType="number-pad"
             ></TextInput>
           </SafeAreaView>
-        )}
-        {isActivityAlerts && isCustom && (
+        ) : null}
+        {isActivityAlerts && isCustom ? (
           <SafeAreaView style={styles.Box}>
             <Text style={styles.Title}>Time Without Steps</Text>
             <TextInput
@@ -117,9 +224,9 @@ export default function CustomNotificationScreen({ navigation }) {
               keyboardType="number-pad"
             ></TextInput>
           </SafeAreaView>
-        )}
+        ) : null}
 
-        {isCustom && (
+        {isCustom ? (
           <SafeAreaView style={[styles.Box, { marginTop: "10%" }]}>
             <Text style={styles.Title}>Wandering Alerts</Text>
             <Switch
@@ -130,8 +237,8 @@ export default function CustomNotificationScreen({ navigation }) {
               value={isWandering}
             />
           </SafeAreaView>
-        )}
-        {isWandering && isCustom && (
+        ) : null}
+        {isWandering && isCustom ? (
           <SafeAreaView style={styles.Box}>
             <Text style={styles.Title}>Max Steps in an Hour</Text>
             <TextInput
@@ -141,8 +248,8 @@ export default function CustomNotificationScreen({ navigation }) {
               keyboardType="number-pad"
             ></TextInput>
           </SafeAreaView>
-        )}
-        {isCustom && (
+        ) : null}
+        {isCustom ? (
           <SafeAreaView>
             <SafeAreaView style={[styles.Box, { marginTop: "10%" }]}>
               <Text style={styles.Title}>No Sync Alerts</Text>
@@ -161,9 +268,9 @@ export default function CustomNotificationScreen({ navigation }) {
               </Text>
             </SafeAreaView>
           </SafeAreaView>
-        )}
+        ) : null}
 
-        {isCustom && (
+        {isCustom ? (
           <SafeAreaView>
             <SafeAreaView style={[styles.Box, { marginTop: "10%" }]}>
               <Text style={styles.Title}>Empty Battery Alerts</Text>
@@ -181,7 +288,7 @@ export default function CustomNotificationScreen({ navigation }) {
               </Text>
             </SafeAreaView>
           </SafeAreaView>
-        )}
+        ) : null}
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
@@ -217,5 +324,10 @@ const styles = StyleSheet.create({
     marginRight: "3%",
     color: "black",
     fontSize: responsiveFontSize(2.2),
+  },
+  downButtonStyle: {
+    height: "100%",
+    width: "29.9%",
+    backgroundColor: "white",
   },
 });

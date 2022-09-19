@@ -174,7 +174,10 @@ const ListOfFriendsScreen = ({ navigation }) => {
                   borderRadius: 8,
                 }}
                 onPress={() => {
-                  navigation.navigate("SettingsOverview");
+                  const user = data.filter(
+                    (iter) => iter.requestID === selectedId
+                  )[0];
+                  navigation.navigate("SettingsOverview", { user });
                 }}
               >
                 <Image

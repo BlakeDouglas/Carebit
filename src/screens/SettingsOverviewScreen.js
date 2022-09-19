@@ -1,13 +1,20 @@
-import { StyleSheet, SafeAreaView, Text, Image, StatusBar } from "react-native";
+import {
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  Image,
+  StatusBar,
+  Alert,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { React } from "react";
+import React, { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { Provider, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 
-export default function SettingsOverviewScreen({ navigation }) {
-  const userData = useSelector((state) => state.Reducers.tokenData);
-
+export default function SettingsOverviewScreen({ route, navigation }) {
+  const selectedUser = route.params;
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
   const logOutButtonHandler = () => {
     navigation.navigate("TitleScreen");
   };
@@ -18,6 +25,50 @@ export default function SettingsOverviewScreen({ navigation }) {
   const activityButtonHandler = () => {
     navigation.navigate("ActivityLevel");
   };
+
+  const rejectRequest = async (tokenData, rejectID) => {
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/deleteRequest/" + rejectID,
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+        }
+      );
+      const json = await response.json();
+      console.log("Result from delete: " + JSON.stringify(json));
+    } catch (error) {
+      console.log("Caught error: " + error);
+    }
+  };
+
+  const onPressDelete = (item) => {
+    Alert.alert(
+      "Remove " +
+        item.firstName +
+        " " +
+        item.lastName +
+        " as a " +
+        item.type +
+        "?",
+      "",
+      [
+        { text: "Cancel", onPress: () => {}, style: "cancel" },
+        {
+          text: "Continue",
+          onPress: () => {
+            rejectRequest(tokenData, item.requestID);
+          },
+        },
+      ]
+    );
+  };
+
+  console.log(selectedUser);
   return (
     // Header Container
     <SafeAreaView style={{ flex: 1, marginTop: "2%" }}>
@@ -29,7 +80,7 @@ export default function SettingsOverviewScreen({ navigation }) {
 
       <SafeAreaView style={styles.TitleContainer}>
         <Text style={styles.Title}>
-          {userData.type === "caregivee" ? "CAREGIVER" : "CAREGIVEE"}
+          {tokenData.type === "caregivee" ? "CAREGIVER" : "CAREGIVEE"}
         </Text>
       </SafeAreaView>
 
@@ -46,13 +97,13 @@ export default function SettingsOverviewScreen({ navigation }) {
       </SafeAreaView>
 
       <SafeAreaView style={[styles.TitleContainer]}>
-        {userData.type === "caregiver" ? (
+        {tokenData.type === "caregiver" ? (
           <SafeAreaView>
             <Text style={styles.Title}>PHYSICIAN INFO</Text>
           </SafeAreaView>
         ) : null}
       </SafeAreaView>
-      {userData.type === "caregiver" ? (
+      {tokenData.type === "caregiver" ? (
         <SafeAreaView style={styles.Box3}>
           <SafeAreaView style={styles.Box4}>
             <Text style={styles.BoxTitle}>Phone</Text>
@@ -61,12 +112,12 @@ export default function SettingsOverviewScreen({ navigation }) {
         </SafeAreaView>
       ) : null}
 
-      {userData.type === "caregiver" ? (
+      {tokenData.type === "caregiver" ? (
         <SafeAreaView style={styles.TitleContainer}>
           <Text style={styles.Title}>ALERTS</Text>
         </SafeAreaView>
       ) : null}
-      {userData.type === "caregiver" ? (
+      {tokenData.type === "caregiver" ? (
         <SafeAreaView style={styles.Box2}>
           <SafeAreaView style={styles.Box}>
             <Text style={styles.BoxTitle}>Activity Level</Text>
@@ -113,7 +164,7 @@ export default function SettingsOverviewScreen({ navigation }) {
       >
         <TouchableOpacity
           style={{ alignItems: "center", justifyContent: "center" }}
-          onPress={logOutButtonHandler}
+          onPress={onPressDelete(tokenData)}
         >
           <Text
             style={{
@@ -122,7 +173,7 @@ export default function SettingsOverviewScreen({ navigation }) {
               fontWeight: "bold",
             }}
           >
-            Delete {userData.type === "caregivee" ? "Caregiver" : "Caregivee"}
+            Delete {tokenData.type === "caregivee" ? "Caregiver" : "Caregivee"}
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
@@ -153,7 +204,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "white",
   },
-  Box2: {
+  Box4: {
     height: "100%",
     width: "100%",
     backgroundColor: "white",
