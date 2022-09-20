@@ -5,14 +5,16 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { resetData } from "../redux/actions";
+import * as SecureStore from "expo-secure-store";
 
 export default function GiverSettingsScreen({ navigation }) {
   const userData = useSelector((state) => state.Reducers.userData);
   const dispatch = useDispatch();
-  const logOutButtonHandler = () => {
+  const logOutButtonHandler = async () => {
+    await SecureStore.deleteItemAsync("carebitcredentials");
     dispatch(resetData());
-    // TODO Remove
   };
+
   const customAlertButtonHandler = () => {
     navigation.navigate("CustomNotification");
   };

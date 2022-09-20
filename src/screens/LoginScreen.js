@@ -13,6 +13,72 @@ import GlobalStyle from "../utils/GlobalStyle";
 import CustomTextInput from "../utils/CustomTextInput";
 import { setPhysicianData, setTokenData, setUserData } from "../redux/actions";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import * as SecureStore from "expo-secure-store";
+
+export const login = async (email, password) => {
+  const body = JSON.stringify({ email, password });
+  try {
+    let response = await fetch("https://www.carebit.xyz/login", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: body,
+    });
+    const json = await response.json();
+    if (json.access_token !== undefined) {
+      dispatch(setTokenData({ ...json, selected: 0 }));
+      fetchUserData(json);
+      await SecureStore.setItemAsync("carebitcredentials", body);
+    } else {
+      if (json.message === "Email not found")
+        handleError(" Email not found", "email");
+      else {
+        handleError(" Incorrect password", "password");
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const fetchUserData = async (jsonTokenData) => {
+  try {
+    let url = "https://www.carebit.xyz/user/" + jsonTokenData.userID;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + jsonTokenData.access_token,
+      },
+    });
+    const json = await response.json();
+    dispatch(
+      setUserData({
+        firstName: json.user.firstName,
+        lastName: json.user.lastName,
+        email: json.user.email,
+        phone: json.user.phone,
+        mobilePlatform: json.user.mobilePlatform,
+      })
+    );
+    if (json.user.physName !== undefined)
+      dispatch(
+        setPhysicianData({
+          physName: json.user.physName,
+          physPhone: json.user.physPhone,
+          physStreet: json.user.physStreet,
+          physCity: json.user.physCity,
+          physState: json.user.physState,
+          physZip: json.user.physZip,
+        })
+      );
+  } catch (error) {
+    console.log("Caught error: " + error);
+  }
+};
 
 export default function LoginScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -51,68 +117,7 @@ export default function LoginScreen({ navigation }) {
     }
 
     if (valid === true) {
-      login();
-    }
-  };
-
-  const login = async () => {
-    try {
-      let response = await fetch("https://www.carebit.xyz/login", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: inputs.email,
-          password: inputs.password,
-        }),
-      });
-      const json = await response.json();
-      if (json.access_token !== undefined) {
-        dispatch(setTokenData({...json, selected: 0}));
-        fetchUserData(json);
-      } else {
-        if (json.message === "Email not found")
-          handleError(" Email not found", "email");
-        else {handleError(" Incorrect password", "password");
-      }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetchUserData = async (jsonTokenData) => {
-    try {
-      let url = "https://www.carebit.xyz/user/" + jsonTokenData.userID;
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + jsonTokenData.access_token,
-        },
-      });
-      const json = await response.json();
-      dispatch(setUserData({
-        firstName: json.user.firstName,
-        lastName: json.user.lastName,
-        email: json.user.email,
-        phone: json.user.phone,
-        mobilePlatform: json.user.mobilePlatform,
-      }));
-      if (json.user.physName !== undefined)
-      dispatch(setPhysicianData({
-        physName: json.user.physName,
-        physPhone: json.user.physPhone,
-        physStreet: json.user.physStreet,
-        physCity: json.user.physCity,
-        physState: json.user.physState,
-        physZip: json.user.physZip,
-      }));
-    } catch (error) {
-      console.log("Caught error: " + error);
+      login(inputs.email, inputs.password);
     }
   };
 
@@ -123,11 +128,7 @@ export default function LoginScreen({ navigation }) {
       style={GlobalStyle.Background}
     >
       <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar
-          hidden={false}
-          translucent={true}
-          backgroundColor="black"
-        />
+        <StatusBar hidden={false} translucent={true} backgroundColor="black" />
         <KeyboardAwareScrollView style={{ flex: 1 }}>
           <SafeAreaView style={GlobalStyle.Container}>
             <Text style={GlobalStyle.Title}>Log into Carebit</Text>
@@ -143,7 +144,7 @@ export default function LoginScreen({ navigation }) {
                 iconName="email-outline"
                 label="Email"
                 keyboardType="email-address"
-                autoCapitalize='none'
+                autoCapitalize="none"
                 error={errors.email}
                 onChangeText={(text) => handleChange(text, "email")}
                 onFocus={() => {

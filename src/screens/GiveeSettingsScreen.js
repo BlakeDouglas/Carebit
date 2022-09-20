@@ -4,12 +4,14 @@ import { React } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { resetData } from "../redux/actions";
+import * as SecureStore from "expo-secure-store";
 
 export default function GiveeSettingsScreen({ navigation }) {
   const userData = useSelector((state) => state.Reducers.userData);
   const physData = useSelector((state) => state.Reducers.physData);
   const dispatch = useDispatch();
-  const logOutButtonHandler = () => {
+  const logOutButtonHandler = async () => {
+    await SecureStore.deleteItemAsync("carebitcredentials");
     dispatch(resetData());
   };
   return (

@@ -7,8 +7,10 @@ import {
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import GlobalStyle from "../utils/GlobalStyle";
-import React from "react";
+import React, { useEffect } from "react";
 import * as Linking from "expo-linking";
+import * as SecureStore from "expo-secure-store";
+import { login, fetchUserData } from "./LoginScreen";
 
 export default function TitleScreen({ navigation }) {
   const createAccountButtonHandler = () => {
@@ -16,6 +18,23 @@ export default function TitleScreen({ navigation }) {
   };
   const loginButtonHandler = () => {
     navigation.navigate("LoginScreen");
+  };
+
+  useEffect(() => {
+    fetchCredentials();
+  }, []);
+
+  const fetchCredentials = async (key) => {
+    try {
+      const credentials = await SecureStore.getItemAsync("carebitcredentials");
+      if (credentials) {
+        const json = JSON.parse(credentials);
+        login(json.email, json.password);
+        // TODO: ^ Check to make sure this works
+      }
+    } catch (error) {
+      console.log("Error accessing credentials: ", error);
+    }
   };
 
   return (

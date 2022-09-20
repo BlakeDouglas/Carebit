@@ -16,6 +16,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
 import { setTokenData, setUserData } from "../redux/actions";
+import * as SecureStore from "expo-secure-store";
 
 export default function AccountCreationScreen({ navigation, route }) {
   // These are the two tools of the redux state manager. Use them instead of hooks
@@ -87,36 +88,40 @@ export default function AccountCreationScreen({ navigation, route }) {
     }
   };
 
-  const register = () => {
+  const register = async () => {
     const output = {
       ...inputs,
       type: tokenData.type,
       mobilePlatform: Platform.OS,
     };
-    fetch("https://www.carebit.xyz/user", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(output),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        if (json.access_token !== undefined) {
-          dispatch(setUserData({ ...output, password: undefined }));
-          dispatch(setTokenData({ ...tokenData, ...json, selected: 0 }));
-        } else if (json.error === "Phone number already exists.") {
-          handleError(" Phone Number already exists", "phone");
-          console.log(json.error);
-        } else {
-          handleError(" Invalid email", "email");
-          console.log(json.error);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
+    const body = {
+      email: inputs.email,
+      password: inputs.password,
+    };
+    try {
+      let response = await fetch("https://www.carebit.xyz/user", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(output),
       });
+      const json = await response.json();
+      if (json.access_token !== undefined) {
+        dispatch(setUserData({ ...output, password: undefined }));
+        dispatch(setTokenData({ ...tokenData, ...json, selected: 0 }));
+        await SecureStore.setItemAsync("carebitcredentials", body);
+      } else if (json.error === "Phone number already exists.") {
+        handleError(" Phone Number already exists", "phone");
+        console.log(json.error);
+      } else {
+        handleError(" Invalid email", "email");
+        console.log(json.error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleChange = (text, input) => {
