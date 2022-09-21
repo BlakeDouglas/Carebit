@@ -59,8 +59,6 @@ export default function CustomNotificationScreen({ route, navigation }) {
     thresholdsAPI("GET");
   }, []);
 
-  // TODO: BIG SET DEFAULTS IN LIST
-
   const thresholdsAPI = async (type, newJson) => {
     if (type === "PUT" && !thresholds) type = "GET";
     if (!newJson) newJson = thresholds;
@@ -83,7 +81,6 @@ export default function CustomNotificationScreen({ route, navigation }) {
       console.log("Caught error in /thresholds: " + error);
     }
   };
-  console.log(thresholds);
 
   const lowHeartLimits = range(25, 90);
   const highHeartLimits = range(90, 150);
@@ -171,7 +168,7 @@ export default function CustomNotificationScreen({ route, navigation }) {
                 );
               }}
               dropdownIconPosition={"right"}
-              defaultValue={"50"}
+              defaultValue={thresholds ? thresholds.lowHRThreshold : "N/A"}
               disableAutoScroll={true}
               //search={true}
               selectedRowStyle={{ backgroundColor: "lightgray" }}
@@ -210,7 +207,7 @@ export default function CustomNotificationScreen({ route, navigation }) {
                 );
               }}
               dropdownIconPosition={"right"}
-              defaultValue={"110"}
+              defaultValue={thresholds ? thresholds.highHRThreshold : "N/A"}
               disableAutoScroll={true}
               selectedRowStyle={{ backgroundColor: "lightgray" }}
               buttonStyle={styles.downButtonStyle}
@@ -260,7 +257,9 @@ export default function CustomNotificationScreen({ route, navigation }) {
                 );
               }}
               dropdownIconPosition={"right"}
-              defaultValue={"1"}
+              defaultValue={
+                thresholds ? thresholds.timeWithoutHRThreshold : "N/A"
+              }
               disableAutoScroll={true}
               selectedRowStyle={{ backgroundColor: "lightgray" }}
               buttonStyle={styles.downButtonStyle}
@@ -300,7 +299,9 @@ export default function CustomNotificationScreen({ route, navigation }) {
                 );
               }}
               dropdownIconPosition={"right"}
-              defaultValue={"1"}
+              defaultValue={
+                thresholds ? thresholds.timeWithoutStepsThreshold : "N/A"
+              }
               disableAutoScroll={true}
               selectedRowStyle={{ backgroundColor: "lightgray" }}
               buttonStyle={styles.downButtonStyle}
@@ -353,7 +354,7 @@ export default function CustomNotificationScreen({ route, navigation }) {
                 );
               }}
               dropdownIconPosition={"right"}
-              defaultValue={"2000"}
+              defaultValue={thresholds ? thresholds.maxSteps : "N/A"}
               disableAutoScroll={true}
               //search={true}
               selectedRowStyle={{ backgroundColor: "lightgray" }}
