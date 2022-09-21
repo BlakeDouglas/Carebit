@@ -5,16 +5,14 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { resetData } from "../redux/actions";
-import * as SecureStore from "expo-secure-store";
 
 export default function GiverSettingsScreen({ navigation }) {
   const userData = useSelector((state) => state.Reducers.userData);
   const dispatch = useDispatch();
-  const logOutButtonHandler = async () => {
-    await SecureStore.deleteItemAsync("carebitcredentials");
+  const logOutButtonHandler = () => {
     dispatch(resetData());
+    // TODO Remove
   };
-
   const customAlertButtonHandler = () => {
     navigation.navigate("CustomNotification");
   };
@@ -61,12 +59,13 @@ export default function GiverSettingsScreen({ navigation }) {
       </SafeAreaView>
       <SafeAreaView></SafeAreaView>
       <SafeAreaView style={styles.Box}>
-        <Text style={styles.BoxTitle}>Pam</Text>
-        <Text style={styles.BoxSub}>PamWisniewski@gmail.com</Text>
+        <Text style={styles.BoxTitle}>{userData.friendName}</Text>
+        {/* TODO: Add and implement caregivee info here */}
+        <Text style={styles.BoxSub}>{userData.friendEmail}</Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
-        <Text style={styles.BoxSub}>(407) 777-7777</Text>
+        <Text style={styles.BoxSub}>{userData.friendPhone}</Text>
       </SafeAreaView>
       <SafeAreaView style={styles.TitleContainer}>
         <Text style={styles.Title}>PHYSICIAN INFO</Text>

@@ -29,7 +29,7 @@ const RequestScreen = ({ navigation }) => {
       "Delete the request from\n" + item.firstName + " " + item.lastName,
       "",
       [
-        { text: "Cancel", onPress: () => {}, style: "cancel" },
+        { text: "Cancel", onPress: () => { }, style: "cancel" },
         {
           text: "Continue",
           onPress: () => {
@@ -45,26 +45,34 @@ const RequestScreen = ({ navigation }) => {
     const typeOfRequester =
       tokenData.type === "caregivee" ? "caregiver" : "caregivee";
     const fullName = item.firstName + " " + item.lastName;
+    const phone = item.phone;
+    const email = item.email;
     Alert.alert(
       "Allow " + fullName + " to be your " + typeOfRequester + "?",
       typeOfRequester === "caregivee"
         ? "As a caregiver, you intend to provide care to " +
-            fullName +
-            " by accessing their Fitbit data."
+        fullName +
+        " by accessing their Fitbit data."
         : "As a caregivee, you will allow " +
-            fullName +
-            " to access your Fitbit data.",
+        fullName +
+        " to access your Fitbit data.",
       [
-        { text: "Cancel", onPress: () => {}, style: "cancel" },
+        { text: "Cancel", onPress: () => { }, style: "cancel" },
         {
           text: "Allow",
           onPress: () => {
             acceptRequest(tokenData, item.caregiverID);
             getRequests(tokenData);
+            dispatch(setUserData({
+              friendName: item.firstName,
+              friendEmail: email,
+              friendPhone: phone,
+            }));
           },
         },
       ]
     );
+
   };
 
   const rejectRequest = async (tokenData, rejectID) => {
@@ -83,7 +91,7 @@ const RequestScreen = ({ navigation }) => {
       const json = await response.json();
       console.log("Result from delete: " + JSON.stringify(json));
     } catch (error) {
-      console.log("Caught error in /deleteRequest: " + error);
+      console.log("Caught error: " + error);
     }
   };
 
@@ -106,10 +114,10 @@ const RequestScreen = ({ navigation }) => {
       if (json.request) {
         getRequests(tokenData);
       } else {
-        // TODO: Error case goes here
+        // TODO: Bad error case
       }
     } catch (error) {
-      console.log("Caught error in /acceptRequest: " + error);
+      console.log("Caught error: " + error);
     }
   };
 
@@ -134,7 +142,7 @@ const RequestScreen = ({ navigation }) => {
       if (JSON.stringify(backgroundData) !== JSON.stringify(json.connections))
         setBackgroundData(json.connections);
     } catch (error) {
-      console.log("Caught error in /getRequests: " + error);
+      console.log("Caught error: " + error);
     }
   };
 

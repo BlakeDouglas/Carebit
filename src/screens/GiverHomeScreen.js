@@ -61,7 +61,7 @@ export default function GiverHomeScreen({ navigation }) {
       if (json.access_token) setFitbitAccessToken(json.access_token);
       else console.log("Refreshing error: " + json.error);
     } catch (error) {
-      console.log("Caught error in /refreshFitbitToken: " + error);
+      console.log("Caught error: " + error);
     }
   };
   const fetchFitbitAccessToken = async (caregiveeID) => {
@@ -81,7 +81,7 @@ export default function GiverHomeScreen({ navigation }) {
       if (!json.error) setFitbitAccessToken(json.fitbitToken);
       else console.log("Error: " + json.error);
     } catch (error) {
-      console.log("Caught error in /getFitbitToken: " + error);
+      console.log("Caught error: " + error);
     }
   };
 
@@ -96,10 +96,10 @@ export default function GiverHomeScreen({ navigation }) {
       //Get HeartRate
       let heartResponse = await fetch(
         "https://api.fitbit.com/1/user/" +
-          caregiveeID +
-          "/activities/heart/date/" +
-          date_today +
-          "/1d.json",
+        caregiveeID +
+        "/activities/heart/date/" +
+        date_today +
+        "/1d.json",
         {
           headers: {
             Accept: "application/json",
@@ -124,10 +124,10 @@ export default function GiverHomeScreen({ navigation }) {
       //Get Steps
       let stepsResponse = await fetch(
         "https://api.fitbit.com/1/user/" +
-          caregiveeID +
-          "/activities/tracker/steps/date/" +
-          date_today +
-          "/1d.json",
+        caregiveeID +
+        "/activities/tracker/steps/date/" +
+        date_today +
+        "/1d.json",
         {
           headers: {
             Accept: "application/json",
@@ -250,7 +250,7 @@ export default function GiverHomeScreen({ navigation }) {
                   fontSize: responsiveFontSize(1.8),
                 }}
               >
-                Hello Testing Care
+                Hello {userData.firstName}
               </Text>
               <Text
                 style={{
@@ -260,7 +260,7 @@ export default function GiverHomeScreen({ navigation }) {
                   //marginLeft: "4%",
                 }}
               >
-                Your Caregivee is Paola
+                Your Caregivee is {userData.friendName}
               </Text>
             </SafeAreaView>
             <SafeAreaView
@@ -282,7 +282,7 @@ export default function GiverHomeScreen({ navigation }) {
                 <Image
                   source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
                 />
-                <Text style={styles.callText}>Call Paola</Text>
+                <Text style={styles.callText}>Call {userData.friendName}</Text>
               </TouchableOpacity>
             </SafeAreaView>
           </SafeAreaView>
