@@ -15,6 +15,7 @@ import { setPhysicianData, setTokenData, setUserData } from "../redux/actions";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as SecureStore from "expo-secure-store";
 
+// The outside variable is a boolean to see if login is called within our outside LoginScreen.js
 export const login = async (email, password, dispatch, outside) => {
   const body = JSON.stringify({ email, password });
   try {

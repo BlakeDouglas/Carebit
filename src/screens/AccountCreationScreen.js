@@ -111,7 +111,10 @@ export default function AccountCreationScreen({ navigation, route }) {
       if (json.access_token !== undefined) {
         dispatch(setUserData({ ...output, password: undefined }));
         dispatch(setTokenData({ ...tokenData, ...json, selected: 0 }));
-        await SecureStore.setItemAsync("carebitcredentials", body);
+        await SecureStore.setItemAsync(
+          "carebitcredentials",
+          JSON.stringify(body)
+        );
       } else if (json.error === "Phone number already exists.") {
         handleError(" Phone Number already exists", "phone");
         console.log(json.error);
