@@ -42,7 +42,7 @@ export const login = async (email, password, dispatch, outside) => {
       }
     }
   } catch (error) {
-    console.log(error);
+    console.log("Caught error in /login: " + error);
   }
 };
 

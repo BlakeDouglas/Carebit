@@ -75,7 +75,7 @@ export default function PhysicianInfoScreen({ navigation }) {
       console.log(json.cgvee);
       dispatch(setPhysicianData(json.cgvee));
     } catch (error) {
-      console.log(error);
+      console.log("Caught error in /physician: " + error);
     }
   };
 

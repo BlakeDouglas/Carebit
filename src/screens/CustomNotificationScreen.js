@@ -11,7 +11,13 @@ import React, { useState } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import SelectDropdown from "react-native-select-dropdown";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
-export default function CustomNotificationScreen({ navigation }) {
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+
+export default function CustomNotificationScreen({ route, navigation }) {
+  const selectedUser = route.params.selectedUser;
+  const dispatch = useDispatch();
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
   const [isCustom, setIsCustom] = useState(false);
   const [isHrAlerts, setIsHrAlerts] = useState(true);
   const [isActivityAlerts, setIsActivityAlerts] = useState(true);
@@ -37,169 +43,55 @@ export default function CustomNotificationScreen({ navigation }) {
     setIsBattery(!isBattery);
   };
 
-  const lowHeartLimits = [
-    "25",
-    "26",
-    "27",
-    "28",
-    "29",
-    "30",
-    "31",
-    "32",
-    "33",
-    "34",
-    "35",
-    "36",
-    "37",
-    "38",
-    "39",
-    "40",
-    "41",
-    "42",
-    "43",
-    "44",
-    "45",
-    "46",
-    "47",
-    "48",
-    "49",
-    "50",
-    "51",
-    "52",
-    "53",
-    "54",
-    "55",
-    "56",
-    "57",
-    "58",
-    "59",
-    "60",
-    "61",
-    "62",
-    "63",
-    "64",
-    "65",
-    "66",
-    "67",
-    "68",
-    "69",
-    "70",
-    "71",
-    "72",
-    "73",
-    "74",
-    "75",
-    "76",
-    "77",
-    "78",
-    "79",
-    "80",
-    "81",
-    "82",
-    "83",
-    "84",
-    "85",
-    "86",
-    "87",
-    "88",
-    "89",
-    "90",
-  ];
-  const highHeartLimits = [
-    "90",
-    "91",
-    "92",
-    "93",
-    "94",
-    "95",
-    "96",
-    "97",
-    "98",
-    "99",
-    "100",
-    "101",
-    "102",
-    "103",
-    "104",
-    "105",
-    "106",
-    "107",
-    "108",
-    "109",
-    "110",
-    "111",
-    "112",
-    "113",
-    "114",
-    "115",
-    "116",
-    "117",
-    "118",
-    "119",
-    "120",
-    "121",
-    "122",
-    "123",
-    "124",
-    "125",
-    "126",
-    "127",
-    "128",
-    "129",
-    "130",
-    "131",
-    "132",
-    "133",
-    "134",
-    "135",
-    "136",
-    "137",
-    "138",
-    "139",
-    "140",
-    "141",
-    "142",
-    "143",
-    "144",
-    "145",
-    "146",
-    "147",
-    "148",
-    "149",
-    "150",
-  ];
-  const noActivityLimit = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "11",
-    "12",
-    "13",
-    "14",
-    "15",
-    "16",
-    "17",
-    "18",
-    "19",
-    "20",
-    "21",
-    "22",
-    "23",
-    "24",
-  ];
+  const [thresholds, setThresholds] = useState(null);
+
+  const range = (start, end) => {
+    var arr = [];
+    for (let i = start; i <= end; i++) {
+      arr.push(i);
+    }
+    return arr.map((num) => {
+      return num.toString();
+    });
+  };
+
+  useEffect(() => {
+    thresholdsAPI("GET");
+  }, []);
+
+  // TODO: BIG SET DEFAULTS IN LIST
+
+  const thresholdsAPI = async (type, newJson) => {
+    if (type === "PUT" && !thresholds) type = "GET";
+    if (!newJson) newJson = thresholds;
+    try {
+      let response = await fetch(
+        "https://www.carebit.xyz/thresholds/" + selectedUser.caregiveeID,
+        {
+          method: type,
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+          body: type === "PUT" ? JSON.stringify(newJson) : undefined,
+        }
+      );
+      const json = await response.json();
+      if (json.thresholds) setThresholds(json.thresholds);
+    } catch (error) {
+      console.log("Caught error in /thresholds: " + error);
+    }
+  };
+  console.log(thresholds);
+
+  const lowHeartLimits = range(25, 90);
+  const highHeartLimits = range(90, 150);
+  const noActivityLimit = range(1, 24);
 
   const maxSteps = [
     "500",
     "750",
-    "1000",
-    "1250",
     "1000",
     "1250",
     "1500",
@@ -289,8 +181,11 @@ export default function CustomNotificationScreen({ navigation }) {
                 fontSize: responsiveFontSize(2.2),
               }}
               data={lowHeartLimits}
-              onSelect={(selectedItem, index) => {
-                console.log(selectedItem, index);
+              onSelect={(selectedItem) => {
+                thresholdsAPI("PUT", {
+                  ...thresholds,
+                  lowHRThreshold: selectedItem,
+                });
               }}
               buttonTextAfterSelection={(selectedItem, index) => {
                 return selectedItem + " bpm";
@@ -324,8 +219,11 @@ export default function CustomNotificationScreen({ navigation }) {
                 fontSize: responsiveFontSize(2.2),
               }}
               data={highHeartLimits}
-              onSelect={(selectedItem, index) => {
-                console.log(selectedItem, index);
+              onSelect={(selectedItem) => {
+                thresholdsAPI("PUT", {
+                  ...thresholds,
+                  highHRThreshold: selectedItem,
+                });
               }}
               buttonTextAfterSelection={(selectedItem, index) => {
                 return selectedItem + " bpm";
@@ -371,8 +269,11 @@ export default function CustomNotificationScreen({ navigation }) {
                 fontSize: responsiveFontSize(2.2),
               }}
               data={noActivityLimit}
-              onSelect={(selectedItem, index) => {
-                console.log(selectedItem, index);
+              onSelect={(selectedItem) => {
+                thresholdsAPI("PUT", {
+                  ...thresholds,
+                  timeWithoutHRThreshold: selectedItem,
+                });
               }}
               buttonTextAfterSelection={(selectedItem, index) => {
                 return selectedItem > 1
@@ -408,8 +309,11 @@ export default function CustomNotificationScreen({ navigation }) {
                 fontSize: responsiveFontSize(2.2),
               }}
               data={noActivityLimit}
-              onSelect={(selectedItem, index) => {
-                console.log(selectedItem, index);
+              onSelect={(selectedItem) => {
+                thresholdsAPI("PUT", {
+                  ...thresholds,
+                  timeWithoutStepsThreshold: selectedItem,
+                });
               }}
               buttonTextAfterSelection={(selectedItem, index) => {
                 return selectedItem > 1
@@ -459,8 +363,8 @@ export default function CustomNotificationScreen({ navigation }) {
                 fontSize: responsiveFontSize(2.2),
               }}
               data={maxSteps}
-              onSelect={(selectedItem, index) => {
-                console.log(selectedItem, index);
+              onSelect={(selectedItem) => {
+                thresholdsAPI("PUT", { ...thresholds, maxSteps: selectedItem });
               }}
               buttonTextAfterSelection={(selectedItem, index) => {
                 return selectedItem + " steps";

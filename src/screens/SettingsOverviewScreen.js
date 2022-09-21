@@ -16,7 +16,7 @@ export default function SettingsOverviewScreen({ route, navigation }) {
   const selectedUser = route.params.user;
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const customAlertButtonHandler = () => {
-    navigation.navigate("CustomNotification");
+    navigation.navigate("CustomNotification", { selectedUser });
   };
 
   const activityButtonHandler = () => {

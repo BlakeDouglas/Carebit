@@ -120,7 +120,7 @@ export default function AccountCreationScreen({ navigation, route }) {
         console.log(json.error);
       }
     } catch (error) {
-      console.log(error);
+      console.log("Caught error in /user: " + error);
     }
   };
 
