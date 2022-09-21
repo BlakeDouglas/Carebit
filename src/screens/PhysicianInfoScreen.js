@@ -7,6 +7,7 @@ import {
   Platform,
   SafeAreaView,
   StatusBar,
+  useWindowDimensions,
 } from "react-native";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -87,26 +88,29 @@ export default function PhysicianInfoScreen({ navigation }) {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
 
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background03.png")}
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >
-      <SafeAreaView style={{ flex: 1, marginTop: 20 }}>
+      <SafeAreaView style={{ flex: 1 }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
         <KeyboardAwareScrollView>
           <View
             style={[
               GlobalStyle.Container,
               {
-                marginTop: Platform.OS === "ios" ? "25%" : "10%",
+                marginTop: "25%",
                 marginLeft: "5%",
                 marginRight: "5%",
+                //backgroundColor: "blue",
               },
             ]}
           >
-            <View style={{ width: "100%" }}>
+            <View style={{ height: "10%", width: "100%" }}>
               <Text
                 style={[
                   GlobalStyle.Subtitle,
@@ -118,7 +122,8 @@ export default function PhysicianInfoScreen({ navigation }) {
             </View>
             <View
               style={{
-                marginTop: Platform.OS === "ios" ? "10%" : "4%",
+                marginTop: "6%",
+                height: "80%",
                 width: "100%",
               }}
             >
@@ -207,6 +212,7 @@ export default function PhysicianInfoScreen({ navigation }) {
                 >
                   <Text style={GlobalStyle.ButtonText}>Create Account</Text>
                 </TouchableOpacity>
+                <Text></Text>
               </View>
             </View>
           </View>

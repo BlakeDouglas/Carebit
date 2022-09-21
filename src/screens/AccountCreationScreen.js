@@ -147,11 +147,21 @@ export default function AccountCreationScreen({ navigation, route }) {
           style={[
             GlobalStyle.Container,
             {
-              marginTop: "25%",
+              marginTop: "5%",
+
+              //backgroundColor: "blue",
             },
           ]}
         >
-          <View style={{ height: "15%", width: "100%" }}>
+          <View
+            style={{
+              height: "25%",
+              width: "100%",
+              //backgroundColor: "red",
+              justifyContent: "flex-end",
+              marginBottom: "5%",
+            }}
+          >
             <Text style={GlobalStyle.Subtitle2}>
               {tokenData.type.charAt(0).toUpperCase() +
                 tokenData.type.slice(1) +

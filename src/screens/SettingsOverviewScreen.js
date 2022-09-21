@@ -207,6 +207,13 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     backgroundColor: "white",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderTopColor: "rgba(128,128,128,.1)",
+    borderTopWidth: 1,
+    borderBottomColor: "rgba(128,128,128,.1)",
+    borderBottomWidth: 1,
   },
   Title: {
     fontSize: responsiveFontSize(1.9),
