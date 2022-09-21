@@ -22,7 +22,6 @@ export default function RoleSelectScreen({ navigation }) {
   };
 
   const caregiveeCreateAccountButtonHandler = () => {
-    // TODO: Make sure this works
     dispatch(setTokenData({ ...tokenData, type: "caregivee", selected: 0 }));
     navigation.navigate("AccountCreationScreen");
   };

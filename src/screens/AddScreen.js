@@ -75,7 +75,7 @@ export default function AddScreen({ navigation: { goBack } }) {
         goBack();
       }
     } catch (error) {
-      console.log("Caught error: " + error);
+      console.log("Caught error in /createRequest: " + error);
     }
   };
 

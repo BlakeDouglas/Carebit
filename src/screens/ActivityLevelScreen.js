@@ -41,7 +41,7 @@ export default function AccountCreationScreen({ navigation, route }) {
 
       if (json.error) console.log("Error setting activity level");
     } catch (error) {
-      console.log("Caught error: " + error);
+      console.log("Caught error in /activity: " + error);
     }
   };
 

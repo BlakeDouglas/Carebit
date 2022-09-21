@@ -17,7 +17,10 @@ import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
 import { setTokenData, setUserData } from "../redux/actions";
 
-export default function ModifiedCaregiveeAccountCreation({navigation, route}) {
+export default function ModifiedCaregiveeAccountCreation({
+  navigation,
+  route,
+}) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
 
@@ -76,28 +79,28 @@ export default function ModifiedCaregiveeAccountCreation({navigation, route}) {
   };
 
   const registerShellCaregivee = async () => {
-      const output = {
-        ...inputs,
-        password: tokenData.access_token.slice(-20),
-        type: "caregivee",
-        mobilePlatform: "NA",
-      };
-      try {
-        const response = await fetch("https://www.carebit.xyz/user", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(output),
-        });
-        const json = await response.json();
-        console.log("registerShellCaregivee: "+JSON.stringify(json));
-        if (json.access_token)
-          await makeCaregivee(route.params.code, json.userID);
-      } catch (error) {
-        console.log("Caught error: " + error);
-      }
+    const output = {
+      ...inputs,
+      password: tokenData.access_token.slice(-20),
+      type: "caregivee",
+      mobilePlatform: "NA",
+    };
+    try {
+      const response = await fetch("https://www.carebit.xyz/user", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(output),
+      });
+      const json = await response.json();
+      console.log("registerShellCaregivee: " + JSON.stringify(json));
+      if (json.access_token)
+        await makeCaregivee(route.params.code, json.userID);
+    } catch (error) {
+      console.log("Caught error in /user: " + error);
+    }
   };
 
   const makeCaregivee = async (code, userID) => {
@@ -113,36 +116,40 @@ export default function ModifiedCaregiveeAccountCreation({navigation, route}) {
       });
       const json = await response.json();
 
-      if (json.error)
-        console.log("makeCaregivee Error: " + json.error);
+      if (json.error) console.log("makeCaregivee Error: " + json.error);
       if (json.caregiveeID)
-        await acceptCaregiverRequest(json.caregiveeID, route.params.caregiverID)
-
-
+        await acceptCaregiverRequest(
+          json.caregiveeID,
+          route.params.caregiverID
+        );
     } catch (error) {
-      console.log("Caught error: " + error);
+      console.log("Caught error in /caregivee/create: " + error);
     }
   };
 
-  // TODO: Replace with new method
-  // Or not?
   const acceptCaregiverRequest = async (caregiveeID, caregiverID) => {
     try {
-      const response = await fetch("https://www.carebit.xyz/acceptCaregiverRequest", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ caregiveeID: caregiveeID, caregiverID: caregiverID }),
-      });
+      const response = await fetch(
+        "https://www.carebit.xyz/acceptCaregiverRequest",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            caregiveeID: caregiveeID,
+            caregiverID: caregiverID,
+          }),
+        }
+      );
       const json = await response.json();
       console.log("acceptCaregiverRequest" + JSON.stringify(json));
 
       if (json.error)
         console.log("Error is probably invalid uri in backend. Maybe not tho");
     } catch (error) {
-      console.log("Caught error: " + error);
+      console.log("Caught error in /acceptCaregiverRequest: " + error);
     }
   };
 

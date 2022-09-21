@@ -62,7 +62,6 @@ export default function GiverSettingsScreen({ navigation }) {
       <SafeAreaView></SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Pam</Text>
-        {/* TODO: Add and implement caregivee info here */}
         <Text style={styles.BoxSub}>PamWisniewski@gmail.com</Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>

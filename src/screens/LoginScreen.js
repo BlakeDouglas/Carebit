@@ -15,7 +15,7 @@ import { setPhysicianData, setTokenData, setUserData } from "../redux/actions";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as SecureStore from "expo-secure-store";
 
-export const login = async (email, password) => {
+export const login = async (email, password, dispatch, outside) => {
   const body = JSON.stringify({ email, password });
   try {
     let response = await fetch("https://www.carebit.xyz/login", {
@@ -29,10 +29,13 @@ export const login = async (email, password) => {
     const json = await response.json();
     if (json.access_token !== undefined) {
       dispatch(setTokenData({ ...json, selected: 0 }));
-      fetchUserData(json);
+      fetchUserData(json, dispatch);
       await SecureStore.setItemAsync("carebitcredentials", body);
     } else {
-      if (json.message === "Email not found")
+      if (outside) {
+        await SecureStore.deleteItemAsync("carebitcredentials");
+        console.log("Saved credentials are invalid. Removing...");
+      } else if (json.message === "Email not found")
         handleError(" Email not found", "email");
       else {
         handleError(" Incorrect password", "password");
@@ -43,7 +46,7 @@ export const login = async (email, password) => {
   }
 };
 
-export const fetchUserData = async (jsonTokenData) => {
+export const fetchUserData = async (jsonTokenData, dispatch) => {
   try {
     let url = "https://www.carebit.xyz/user/" + jsonTokenData.userID;
     const response = await fetch(url, {
@@ -76,7 +79,7 @@ export const fetchUserData = async (jsonTokenData) => {
         })
       );
   } catch (error) {
-    console.log("Caught error: " + error);
+    console.log("Caught error in /user: " + error);
   }
 };
 
@@ -117,7 +120,7 @@ export default function LoginScreen({ navigation }) {
     }
 
     if (valid === true) {
-      login(inputs.email, inputs.password);
+      login(inputs.email, inputs.password, dispatch, false);
     }
   };
 

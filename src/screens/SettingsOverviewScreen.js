@@ -15,9 +15,6 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 export default function SettingsOverviewScreen({ route, navigation }) {
   const selectedUser = route.params.user;
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const logOutButtonHandler = () => {
-    navigation.navigate("TitleScreen");
-  };
   const customAlertButtonHandler = () => {
     navigation.navigate("CustomNotification");
   };
@@ -26,7 +23,7 @@ export default function SettingsOverviewScreen({ route, navigation }) {
     navigation.navigate("ActivityLevel");
   };
 
-  const rejectRequest = async (tokenData, rejectID) => {
+  const deleteRequest = async (tokenData, rejectID) => {
     try {
       const response = await fetch(
         "https://www.carebit.xyz/deleteRequest/" + rejectID,
@@ -42,7 +39,7 @@ export default function SettingsOverviewScreen({ route, navigation }) {
       const json = await response.json();
       console.log("Result from delete: " + JSON.stringify(json));
     } catch (error) {
-      console.log("Caught error: " + error);
+      console.log("Caught error in /deleteRequest: " + error);
     }
   };
 
@@ -61,13 +58,14 @@ export default function SettingsOverviewScreen({ route, navigation }) {
         {
           text: "Continue",
           onPress: () => {
-            rejectRequest(tokenData, item.requestID);
+            deleteRequest(tokenData, item.requestID);
           },
         },
       ]
     );
   };
 
+  console.log("------ Selected User -------");
   console.log(selectedUser);
   return (
     // Header Container
@@ -87,7 +85,6 @@ export default function SettingsOverviewScreen({ route, navigation }) {
       <SafeAreaView style={styles.Box2}>
         <SafeAreaView style={[styles.Box]}>
           <Text style={styles.BoxTitle}>Pam</Text>
-          {/* TODO: Add and implement caregivee info here */}
           <Text style={styles.BoxSub}>PamWisniewski@gmail.com</Text>
         </SafeAreaView>
         <SafeAreaView style={styles.Box}>
@@ -164,7 +161,9 @@ export default function SettingsOverviewScreen({ route, navigation }) {
       >
         <TouchableOpacity
           style={{ alignItems: "center", justifyContent: "center" }}
-          onPress={onPressDelete(selectedUser)}
+          onPress={() => {
+            onPressDelete(selectedUser);
+          }}
         >
           <Text
             style={{

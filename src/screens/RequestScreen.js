@@ -83,7 +83,7 @@ const RequestScreen = ({ navigation }) => {
       const json = await response.json();
       console.log("Result from delete: " + JSON.stringify(json));
     } catch (error) {
-      console.log("Caught error: " + error);
+      console.log("Caught error in /deleteRequest: " + error);
     }
   };
 
@@ -106,10 +106,10 @@ const RequestScreen = ({ navigation }) => {
       if (json.request) {
         getRequests(tokenData);
       } else {
-        // TODO: Bad error case
+        // TODO: Error case goes here
       }
     } catch (error) {
-      console.log("Caught error: " + error);
+      console.log("Caught error in /acceptRequest: " + error);
     }
   };
 
@@ -134,7 +134,7 @@ const RequestScreen = ({ navigation }) => {
       if (JSON.stringify(backgroundData) !== JSON.stringify(json.connections))
         setBackgroundData(json.connections);
     } catch (error) {
-      console.log("Caught error: " + error);
+      console.log("Caught error in /getRequests: " + error);
     }
   };
 

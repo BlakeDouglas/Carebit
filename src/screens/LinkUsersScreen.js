@@ -122,7 +122,7 @@ export default function LinkUsersScreen({ navigation }) {
 
       getRequests(tokenData);
     } catch (error) {
-      console.log("Caught error: " + error);
+      console.log("Caught error in /createRequest: " + error);
     }
   };
 
@@ -148,7 +148,7 @@ export default function LinkUsersScreen({ navigation }) {
         setTokenData({ ...tokenData, caregiveeID: [json.connections[0]] })
       );
     } catch (error) {
-      console.log("Caught error: " + error);
+      console.log("Caught error in /getRequests: " + error);
     }
   };
   */

@@ -289,7 +289,7 @@ const HomeStack = () => {
 
             headerLeft: () => (
               <TouchableOpacity
-                onPress={() => navigation.navigate("HomeScreen")}
+                onPress={() => navigation.goBack()}
                 style={{ marginLeft: "8%" }}
               >
                 <Text
@@ -301,7 +301,7 @@ const HomeStack = () => {
             ),
             headerRight: () => (
               <TouchableOpacity
-                onPress={() => navigation.navigate("HomeScreen")}
+                onPress={() => navigation.goBack()}
                 style={{ marginRight: "8%" }}
               >
                 <Text
@@ -333,7 +333,7 @@ const HomeStack = () => {
 
             headerLeft: () => (
               <TouchableOpacity
-                onPress={() => navigation.navigate("HomeScreen")}
+                onPress={() => navigation.goBack()}
                 style={{ marginLeft: "8%" }}
               >
                 <Text
@@ -345,7 +345,7 @@ const HomeStack = () => {
             ),
             headerRight: () => (
               <TouchableOpacity
-                onPress={() => navigation.navigate("HomeScreen")}
+                onPress={() => navigation.goBack()}
                 style={{ marginRight: "8%" }}
               >
                 <Text
@@ -373,7 +373,7 @@ const HomeStack = () => {
 
             headerLeft: () => (
               <TouchableOpacity
-                onPress={() => navigation.navigate("HomeScreen")}
+                onPress={() => navigation.goBack()}
                 style={{ marginLeft: "8%" }}
               >
                 <Text
@@ -385,7 +385,7 @@ const HomeStack = () => {
             ),
             headerRight: () => (
               <TouchableOpacity
-                onPress={() => navigation.navigate("HomeScreen")}
+                onPress={() => navigation.goBack()}
                 style={{ marginRight: "8%" }}
               >
                 <Text
@@ -413,7 +413,7 @@ const HomeStack = () => {
 
             headerLeft: () => (
               <TouchableOpacity
-                onPress={() => navigation.navigate("HomeScreen")}
+                onPress={() => navigation.goBack()}
                 style={{ marginLeft: "8%" }}
               >
                 <Text
@@ -458,7 +458,7 @@ const HomeStack = () => {
 
             headerLeft: () => (
               <TouchableOpacity
-                onPress={() => navigation.navigate("HomeScreen")}
+                onPress={() => navigation.goBack()}
                 style={{ marginLeft: "8%" }}
               >
                 <Text

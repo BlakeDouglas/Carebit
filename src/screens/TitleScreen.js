@@ -11,8 +11,10 @@ import React, { useEffect } from "react";
 import * as Linking from "expo-linking";
 import * as SecureStore from "expo-secure-store";
 import { login, fetchUserData } from "./LoginScreen";
+import { useDispatch } from "react-redux";
 
 export default function TitleScreen({ navigation }) {
+  const dispatch = useDispatch();
   const createAccountButtonHandler = () => {
     navigation.navigate("RoleSelectScreen");
   };
@@ -29,8 +31,7 @@ export default function TitleScreen({ navigation }) {
       const credentials = await SecureStore.getItemAsync("carebitcredentials");
       if (credentials) {
         const json = JSON.parse(credentials);
-        login(json.email, json.password);
-        // TODO: ^ Check to make sure this works
+        login(json.email, json.password, dispatch, true);
       }
     } catch (error) {
       console.log("Error accessing credentials: ", error);

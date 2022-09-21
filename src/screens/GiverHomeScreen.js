@@ -61,7 +61,7 @@ export default function GiverHomeScreen({ navigation }) {
       if (json.access_token) setFitbitAccessToken(json.access_token);
       else console.log("Refreshing error: " + json.error);
     } catch (error) {
-      console.log("Caught error: " + error);
+      console.log("Caught error in /refreshFitbitToken: " + error);
     }
   };
   const fetchFitbitAccessToken = async (caregiveeID) => {
@@ -81,7 +81,7 @@ export default function GiverHomeScreen({ navigation }) {
       if (!json.error) setFitbitAccessToken(json.fitbitToken);
       else console.log("Error: " + json.error);
     } catch (error) {
-      console.log("Caught error: " + error);
+      console.log("Caught error in /getFitbitToken: " + error);
     }
   };
 

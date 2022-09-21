@@ -39,13 +39,15 @@ export const makeCaregivee = async (code, tokenData, dispatch) => {
     const json = await response.json();
 
     if (json.caregiveeID !== undefined) {
-      dispatch(setTokenData({ ...tokenData, ...json, type: "caregivee", selected: 0 }));
+      dispatch(
+        setTokenData({ ...tokenData, ...json, type: "caregivee", selected: 0 })
+      );
     } else
       Alert.alert("Error", json.error, [
         { text: "Ok", onPress: () => {}, style: "cancel" },
       ]);
   } catch (error) {
-    console.log("Caught error: " + error);
+    console.log("Caught error in /caregivee/create: " + error);
   }
 };
 

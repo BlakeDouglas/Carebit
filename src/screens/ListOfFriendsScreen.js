@@ -59,7 +59,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
       if (JSON.stringify(backgroundData) !== JSON.stringify(json.connections))
         setBackgroundData(json.connections);
     } catch (error) {
-      console.log("Caught error: " + error);
+      console.log("Caught error in /getRequests: " + error);
     }
   };
 
