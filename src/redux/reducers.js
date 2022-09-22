@@ -19,10 +19,6 @@ const initialState = {
   physData: {
     physName: "",
     physPhone: "",
-    physStreet: "",
-    physCity: "",
-    physState: "",
-    physZip: "",
   },
 };
 

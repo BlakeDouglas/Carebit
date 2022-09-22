@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   StatusBar,
   useWindowDimensions,
+  TouchableWithoutFeedback,
 } from "react-native";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -25,10 +26,6 @@ export default function PhysicianInfoScreen({ navigation }) {
   const [inputs, setInputs] = useState({
     physName: "",
     physPhone: "",
-    physStreet: "",
-    physCity: "",
-    physState: "",
-    physZip: "",
   });
 
   const requiredText = " Input required";
@@ -96,21 +93,22 @@ export default function PhysicianInfoScreen({ navigation }) {
       resizeMode="stretch"
       style={GlobalStyle.Background}
     >
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ height: windowHeight, width: windowWidth }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
-        <KeyboardAwareScrollView>
-          <View
-            style={[
-              GlobalStyle.Container,
-              {
-                marginTop: "25%",
-                marginLeft: "5%",
-                marginRight: "5%",
-                //backgroundColor: "blue",
-              },
-            ]}
-          >
-            <View style={{ height: "10%", width: "100%" }}>
+
+        <View
+          style={[
+            GlobalStyle.Container,
+            {
+              marginTop: "25%",
+              marginLeft: "5%",
+              marginRight: "5%",
+              //backgroundColor: "blue",
+            },
+          ]}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={{ height: "18%", width: "100%" }}>
               <Text
                 style={[
                   GlobalStyle.Subtitle,
@@ -120,6 +118,8 @@ export default function PhysicianInfoScreen({ navigation }) {
                 Physician Contact
               </Text>
             </View>
+          </TouchableWithoutFeedback>
+          <KeyboardAwareScrollView>
             <View
               style={{
                 marginTop: "6%",
@@ -150,55 +150,8 @@ export default function PhysicianInfoScreen({ navigation }) {
                   handleError(null, "physPhone");
                 }}
               />
-              <CustomTextInput
-                placeholder="e.g. 111 Lane Road, STE. 120"
-                //iconName="phone-outline"
-                label="Physician's Street Address"
-                error={errors.physStreet}
-                onChangeText={(text) => handleChange(text, "physStreet")}
-                onFocus={() => {
-                  handleError(null, "physStreet");
-                }}
-              />
 
-              <CustomTextInput
-                placeholder="e.g. London"
-                //iconName="phone-outline"
-                label="City"
-                error={errors.physCity}
-                onChangeText={(text) => handleChange(text, "physCity")}
-                onFocus={() => {
-                  handleError(null, "physCity");
-                }}
-              />
-              <View style={{ flexDirection: "row" }}>
-                <View style={[GlobalStyle.Background]}>
-                  <CustomTextInput
-                    placeholder="e.g. Florida"
-                    //iconName="phone-outline"
-                    label="State"
-                    error={errors.physState}
-                    onChangeText={(text) => handleChange(text, "physState")}
-                    onFocus={() => {
-                      handleError(null, "physState");
-                    }}
-                  />
-                </View>
-                <View style={[GlobalStyle.Background]}>
-                  <CustomTextInput
-                    placeholder="e.g. 90210"
-                    //iconName="phone-outline"
-                    label="Zipcode"
-                    keyboardType="number-pad"
-                    error={errors.physZip}
-                    onChangeText={(text) => handleChange(text, "physZip")}
-                    onFocus={() => {
-                      handleError(null, "physZip");
-                    }}
-                  />
-                </View>
-              </View>
-              <View style={{ width: "100%", marginTop: "4%" }}>
+              <View style={{ width: "100%", marginTop: "12%" }}>
                 <TouchableOpacity
                   style={[
                     GlobalStyle.Button,
@@ -212,11 +165,10 @@ export default function PhysicianInfoScreen({ navigation }) {
                 >
                   <Text style={GlobalStyle.ButtonText}>Create Account</Text>
                 </TouchableOpacity>
-                <Text></Text>
               </View>
             </View>
-          </View>
-        </KeyboardAwareScrollView>
+          </KeyboardAwareScrollView>
+        </View>
       </SafeAreaView>
     </ImageBackground>
   );
