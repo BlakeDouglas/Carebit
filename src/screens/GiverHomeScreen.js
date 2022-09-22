@@ -18,8 +18,8 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import call from "react-native-phone-call";
 import { useDrawerStatus } from "@react-navigation/drawer";
 import * as WebBrowser from "expo-web-browser";
-import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
 
 let date = moment().format("dddd, MMM D");
 
@@ -50,28 +50,29 @@ export default function GiverHomeScreen({ navigation }) {
   async function registerForPushNotificationsAsync() {
     let token;
     if (Device.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
+      if (existingStatus !== "granted") {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
-      if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
+      if (finalStatus !== "granted") {
+        alert("Failed to get push token for push notification!");
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
       storeMessageToken(token);
     } else {
-      alert('Must use physical device for Push Notifications');
+      alert("Must use physical device for Push Notifications");
     }
 
-    if (Platform.OS === 'android') {
-      Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
+    if (Platform.OS === "android") {
+      Notifications.setNotificationChannelAsync("default", {
+        name: "default",
         importance: Notifications.AndroidImportance.MAX,
         vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
+        lightColor: "#FF231F7C",
       });
     }
 
@@ -81,8 +82,11 @@ export default function GiverHomeScreen({ navigation }) {
   // Stores expo-token-notification in user's database
   const storeMessageToken = async (token) => {
     try {
-      let url = "https://www.carebit.xyz/notificationToken/" +
-        tokenData.userID + "/" + token;
+      let url =
+        "https://www.carebit.xyz/notificationToken/" +
+        tokenData.userID +
+        "/" +
+        token;
 
       let response = await fetch(url, {
         method: "POST",
@@ -93,7 +97,6 @@ export default function GiverHomeScreen({ navigation }) {
         },
       });
       const json = await response.json();
-
     } catch (error) {
       console.log("Caught error 5: " + error);
     }
@@ -151,10 +154,10 @@ export default function GiverHomeScreen({ navigation }) {
       //Get HeartRate
       let heartResponse = await fetch(
         "https://api.fitbit.com/1/user/" +
-        caregiveeID +
-        "/activities/heart/date/" +
-        date_today +
-        "/1d.json",
+          caregiveeID +
+          "/activities/heart/date/" +
+          date_today +
+          "/1d.json",
         {
           headers: {
             Accept: "application/json",
@@ -179,10 +182,10 @@ export default function GiverHomeScreen({ navigation }) {
       //Get Steps
       let stepsResponse = await fetch(
         "https://api.fitbit.com/1/user/" +
-        caregiveeID +
-        "/activities/tracker/steps/date/" +
-        date_today +
-        "/1d.json",
+          caregiveeID +
+          "/activities/tracker/steps/date/" +
+          date_today +
+          "/1d.json",
         {
           headers: {
             Accept: "application/json",
@@ -212,10 +215,9 @@ export default function GiverHomeScreen({ navigation }) {
     }
   };
 
-
   useEffect(() => {
     registerForPushNotificationsAsync();
-  }, [])
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -310,7 +312,7 @@ export default function GiverHomeScreen({ navigation }) {
                   fontSize: responsiveFontSize(1.8),
                 }}
               >
-                Hello Testing Care
+                Hello {userData.firstName || "N/A"}
               </Text>
               <Text
                 style={{
@@ -320,7 +322,8 @@ export default function GiverHomeScreen({ navigation }) {
                   //marginLeft: "4%",
                 }}
               >
-                Your Caregivee is Paola
+                Your Caregivee is{" "}
+                {tokenData.caregiveeID[tokenData.selected].firstName || "N/A"}
               </Text>
             </SafeAreaView>
             <SafeAreaView
@@ -342,7 +345,7 @@ export default function GiverHomeScreen({ navigation }) {
                 <Image
                   source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
                 />
-                <Text style={styles.callText}>Call Paola</Text>
+                <Text style={styles.callText}>Call Caregiver</Text>
               </TouchableOpacity>
             </SafeAreaView>
           </SafeAreaView>

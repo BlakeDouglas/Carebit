@@ -9,6 +9,7 @@ import * as SecureStore from "expo-secure-store";
 export default function GiveeSettingsScreen({ navigation }) {
   const userData = useSelector((state) => state.Reducers.userData);
   const physData = useSelector((state) => state.Reducers.physData);
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
   const logOutButtonHandler = async () => {
     await SecureStore.deleteItemAsync("carebitcredentials");
@@ -41,31 +42,46 @@ export default function GiveeSettingsScreen({ navigation }) {
         />
         <SafeAreaView style={{ marginLeft: "5%" }}>
           <Text style={{ fontSize: responsiveFontSize(2.8), width: "100%" }}>
-            {userData.firstName} {userData.lastName}
+            {userData.firstName || "N/A"} {userData.lastName || "N/A"}
           </Text>
           <Text style={{ fontSize: responsiveFontSize(2.1) }}>
-            {userData.email}
+            {userData.email || "N/A"}
           </Text>
         </SafeAreaView>
       </SafeAreaView>
       <SafeAreaView style={styles.TitleContainer}>
-        <Text style={styles.Title}>CAREGIVER</Text>
+        <Text style={styles.Title}>SELECTED CAREGIVER</Text>
       </SafeAreaView>
       <SafeAreaView></SafeAreaView>
       <SafeAreaView style={styles.Box}>
-        <Text style={styles.BoxTitle}>Mamtaj</Text>
-        <Text style={styles.BoxSub}>MamtajAkter@gmail.com</Text>
+        <Text style={styles.BoxTitle}>Name</Text>
+        <Text style={styles.BoxSub}>
+          {tokenData.caregiverID[tokenData.selected].firstName || "N/A"}{" "}
+          {tokenData.caregiverID[tokenData.selected].firstName || "N/A"}
+        </Text>
+      </SafeAreaView>
+      <SafeAreaView style={styles.Box}>
+        <Text style={styles.BoxTitle}>Email</Text>
+        <Text style={styles.BoxSub}>
+          {tokenData.caregiverID[tokenData.selected].email || "N/A"}
+        </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
-        <Text style={styles.BoxSub}>(407) 777-7777</Text>
+        <Text style={styles.BoxSub}>
+          {tokenData.caregiverID[tokenData.selected].phone || "N/A"}
+        </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.TitleContainer}>
         <Text style={styles.Title}>PHYSICIAN INFO</Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
-        <Text style={styles.BoxTitle}>{physData.physName}</Text>
-        <Text style={styles.BoxSub}>{physData.physPhone}</Text>
+        <Text style={styles.BoxTitle}>Name</Text>
+        <Text style={styles.BoxSub}>{physData.physName || "N/A"}</Text>
+      </SafeAreaView>
+      <SafeAreaView style={styles.Box}>
+        <Text style={styles.BoxTitle}>Phone</Text>
+        <Text style={styles.BoxSub}>{physData.physPhone || "N/A"}</Text>
       </SafeAreaView>
       <SafeAreaView
         style={{

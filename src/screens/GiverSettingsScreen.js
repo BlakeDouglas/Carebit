@@ -4,11 +4,12 @@ import { React } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
-import { resetData } from "../redux/actions";
+import { resetData, setTokenData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
 
 export default function GiverSettingsScreen({ navigation }) {
   const userData = useSelector((state) => state.Reducers.userData);
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
   const logOutButtonHandler = async () => {
     await SecureStore.deleteItemAsync("carebitcredentials");
@@ -16,11 +17,17 @@ export default function GiverSettingsScreen({ navigation }) {
   };
 
   const customAlertButtonHandler = () => {
-    navigation.navigate("CustomNotification");
+    navigation.navigate(
+      "CustomNotification",
+      tokenData.caregiveeID[tokenData.selected]
+    );
   };
 
   const activityButtonHandler = () => {
-    navigation.navigate("ActivityLevel");
+    navigation.navigate(
+      "ActivityLevel",
+      tokenData.caregiveeID[tokenData.selected]
+    );
   };
   return (
     // Header Container
@@ -57,30 +64,39 @@ export default function GiverSettingsScreen({ navigation }) {
         </SafeAreaView>
       </SafeAreaView>
       <SafeAreaView style={styles.TitleContainer}>
-        <Text style={styles.Title}>CAREGIVEE</Text>
+        <Text style={styles.Title}>SELECTED CAREGIVEE</Text>
       </SafeAreaView>
       <SafeAreaView></SafeAreaView>
       <SafeAreaView style={styles.Box}>
-        <Text style={styles.BoxTitle}>Pam</Text>
-        <Text style={styles.BoxSub}>PamWisniewski@gmail.com</Text>
+        <Text style={styles.BoxTitle}>Name</Text>
+        <Text style={styles.BoxSub}>
+          {tokenData.caregiveeID[tokenData.selected].firstName || "N/A"}{" "}
+          {tokenData.caregiveeID[tokenData.selected].lastName || "N/A"}
+        </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
-        <Text style={styles.BoxSub}>(407) 777-7777</Text>
+        <Text style={styles.BoxSub}>
+          {tokenData.caregiveeID[tokenData.selected].phone || "N/A"}
+        </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.TitleContainer}>
         <Text style={styles.Title}>PHYSICIAN INFO</Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
-        <Text style={styles.BoxTitle}>Dr. Doctor</Text>
-        <Text style={styles.BoxSub}>RealDoctor@gmail.com</Text>
+        <Text style={styles.BoxTitle}>Name</Text>
+        <Text style={styles.BoxSub}>
+          {tokenData.caregiveeID[tokenData.selected].physName || "N/A"}
+        </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
-        <Text style={styles.BoxSub}>(407) 894-5656</Text>
+        <Text style={styles.BoxSub}>
+          {tokenData.caregiveeID[tokenData.selected].physPhone || "N/A"}
+        </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.TitleContainer}>
-        <Text style={styles.Title}>Alerts</Text>
+        <Text style={styles.Title}>ALERTS</Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Activity Level</Text>
@@ -92,6 +108,7 @@ export default function GiverSettingsScreen({ navigation }) {
             flexDirection: "row",
           }}
         >
+          {/* TODO: For healthProfile != 4 */}
           <Text style={styles.BoxSub}>Active</Text>
           <Image
             style={{ height: 15, width: 15, marginLeft: "1%" }}
@@ -109,7 +126,12 @@ export default function GiverSettingsScreen({ navigation }) {
             flexDirection: "row",
           }}
         >
-          <Text style={styles.BoxSub}>Off</Text>
+          {/* TODO: For healthProfile == 4 */}
+          <Text style={styles.BoxSub}>
+            {tokenData.caregiveeID[tokenData.selected].healthProfile === 4
+              ? "On"
+              : "Off"}
+          </Text>
           <Image
             style={{ height: 15, width: 15, marginLeft: "1%" }}
             source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
@@ -161,7 +183,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   TitleContainer: {
-    marginTop: "5%",
+    marginTop: "2%",
     width: "100%",
     justifyContent: "center",
     height: "5%",

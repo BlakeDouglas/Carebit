@@ -20,7 +20,7 @@ export default function SettingsOverviewScreen({ route, navigation }) {
   };
 
   const activityButtonHandler = () => {
-    navigation.navigate("ActivityLevel");
+    navigation.navigate("ActivityLevel", { selectedUser });
   };
 
   const deleteRequest = async (tokenData, rejectID) => {
@@ -78,54 +78,60 @@ export default function SettingsOverviewScreen({ route, navigation }) {
 
       <SafeAreaView style={styles.TitleContainer}>
         <Text style={styles.Title}>
+          {"SELECTED "}
           {tokenData.type === "caregivee" ? "CAREGIVER" : "CAREGIVEE"}
         </Text>
       </SafeAreaView>
-
-      <SafeAreaView style={styles.Box2}>
-        <SafeAreaView style={[styles.Box]}>
-          <Text style={styles.BoxTitle}>Pam</Text>
-          <Text style={styles.BoxSub}>PamWisniewski@gmail.com</Text>
-        </SafeAreaView>
-        <SafeAreaView style={styles.Box}>
-          <Text style={styles.BoxTitle}>Phone</Text>
-          <Text style={styles.BoxSub}>(407) 777-7777</Text>
-        </SafeAreaView>
+      <SafeAreaView></SafeAreaView>
+      <SafeAreaView style={styles.Box}>
+        <Text style={styles.BoxTitle}>Name</Text>
+        <Text style={styles.BoxSub}>
+          {selectedUser.firstName || "N/A"} {selectedUser.lastName || "N/A"}
+        </Text>
+      </SafeAreaView>
+      <SafeAreaView style={styles.Box}>
+        <Text style={styles.BoxTitle}>Email</Text>
+        <Text style={styles.BoxSub}>{selectedUser.email || "N/A"}</Text>
+      </SafeAreaView>
+      <SafeAreaView style={styles.Box}>
+        <Text style={styles.BoxTitle}>Phone</Text>
+        <Text style={styles.BoxSub}>{selectedUser.phone || "N/A"}</Text>
       </SafeAreaView>
 
-      <SafeAreaView style={[styles.TitleContainer]}>
-        {tokenData.type === "caregiver" ? (
-          <SafeAreaView>
+      {tokenData.type === "caregiver" && (
+        <>
+          <SafeAreaView style={styles.TitleContainer}>
             <Text style={styles.Title}>PHYSICIAN INFO</Text>
           </SafeAreaView>
-        ) : null}
-      </SafeAreaView>
-      {tokenData.type === "caregiver" ? (
-        <SafeAreaView style={styles.Box3}>
-          <SafeAreaView style={styles.Box4}>
-            <Text style={styles.BoxTitle}>Phone</Text>
-            <Text style={styles.BoxSub}>(407) 777-7777</Text>
+          <SafeAreaView style={styles.Box}>
+            <Text style={styles.BoxTitle}>Name</Text>
+            <Text style={styles.BoxSub}>
+              {tokenData.caregiveeID[tokenData.selected].physName || "N/A"}
+            </Text>
           </SafeAreaView>
-        </SafeAreaView>
-      ) : null}
+          <SafeAreaView style={styles.Box}>
+            <Text style={styles.BoxTitle}>Phone</Text>
+            <Text style={styles.BoxSub}>
+              {tokenData.caregiveeID[tokenData.selected].physPhone || "N/A"}
+            </Text>
+          </SafeAreaView>
 
-      {tokenData.type === "caregiver" ? (
-        <SafeAreaView style={styles.TitleContainer}>
-          <Text style={styles.Title}>ALERTS</Text>
-        </SafeAreaView>
-      ) : null}
-      {tokenData.type === "caregiver" ? (
-        <SafeAreaView style={styles.Box2}>
+          <SafeAreaView style={styles.TitleContainer}>
+            <Text style={styles.Title}>ALERTS</Text>
+          </SafeAreaView>
           <SafeAreaView style={styles.Box}>
             <Text style={styles.BoxTitle}>Activity Level</Text>
             <TouchableOpacity
-              onPress={activityButtonHandler}
+              onPress={() => {
+                activityButtonHandler();
+              }}
               style={{
                 alignItems: "center",
                 justifyContent: "center",
                 flexDirection: "row",
               }}
             >
+              {/* TODO: For healthProfile != 4 */}
               <Text style={styles.BoxSub}>Active</Text>
               <Image
                 style={{ height: 15, width: 15, marginLeft: "1%" }}
@@ -136,22 +142,28 @@ export default function SettingsOverviewScreen({ route, navigation }) {
           <SafeAreaView style={styles.Box}>
             <Text style={styles.BoxTitle}>Custom Alert Settings</Text>
             <TouchableOpacity
-              onPress={customAlertButtonHandler}
+              onPress={() => {
+                customAlertButtonHandler();
+              }}
               style={{
                 alignItems: "center",
                 justifyContent: "center",
                 flexDirection: "row",
               }}
             >
-              <Text style={styles.BoxSub}>Off</Text>
+              <Text style={styles.BoxSub}>
+                {tokenData.caregiveeID[tokenData.selected].healthProfile === 4
+                  ? "On"
+                  : "Off"}
+              </Text>
               <Image
                 style={{ height: 15, width: 15, marginLeft: "1%" }}
                 source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
               />
             </TouchableOpacity>
           </SafeAreaView>
-        </SafeAreaView>
-      ) : null}
+        </>
+      )}
       <SafeAreaView
         style={{
           flex: 1,
@@ -172,7 +184,7 @@ export default function SettingsOverviewScreen({ route, navigation }) {
               fontWeight: "bold",
             }}
           >
-            Delete {tokenData.type === "caregivee" ? "Caregiver" : "Caregivee"}
+            Delete {tokenData.type === "caregiver" ? "Caregivee" : "Caregiver"}
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
@@ -182,29 +194,7 @@ export default function SettingsOverviewScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   Box: {
-    height: "50%",
-    width: "100%",
-    backgroundColor: "white",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderTopColor: "rgba(128,128,128,.1)",
-    borderTopWidth: 1,
-    borderBottomColor: "rgba(128,128,128,.1)",
-    borderBottomWidth: 1,
-  },
-  Box2: {
-    height: "14%",
-    width: "100%",
-    backgroundColor: "white",
-  },
-  Box3: {
     height: "7%",
-    width: "100%",
-    backgroundColor: "white",
-  },
-  Box4: {
-    height: "100%",
     width: "100%",
     backgroundColor: "white",
     flexDirection: "row",
@@ -221,10 +211,10 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   TitleContainer: {
+    marginTop: "5%",
     width: "100%",
     justifyContent: "center",
     height: "5%",
-    marginVertical: "1%",
     marginLeft: "4%",
   },
   BoxTitle: {

@@ -15,15 +15,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
 export default function CustomNotificationScreen({ route, navigation }) {
-  const selectedUser = route.params.selectedUser;
+  const selectedUser = route.params.selectedUser || route.params;
   const dispatch = useDispatch();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const [isCustom, setIsCustom] = useState(false);
+  const [isCustom, setIsCustom] = useState(
+    tokenData.caregiveeID[tokenData.selected].healthProfile === 4
+  );
   const [isHrAlerts, setIsHrAlerts] = useState(true);
   const [isActivityAlerts, setIsActivityAlerts] = useState(true);
   const [isWandering, setIsWandering] = useState(false);
   const [isSync, setIsSync] = useState(false);
   const [isBattery, setIsBattery] = useState(true);
+  const [thresholds, setThresholds] = useState(null);
+
   const toggleCustom = () => {
     setIsCustom(!isCustom);
   };
@@ -42,8 +46,6 @@ export default function CustomNotificationScreen({ route, navigation }) {
   const toggleBattery = () => {
     setIsBattery(!isBattery);
   };
-
-  const [thresholds, setThresholds] = useState(null);
 
   const range = (start, end) => {
     var arr = [];

@@ -68,6 +68,7 @@ export default function GiveeHomeScreen({ navigation }) {
     wait(1000).then(() => setRefreshing(false));
   }, []);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const userData = useSelector((state) => state.Reducers.userData);
   const args = {
     number: 7,
     prompt: true,
@@ -460,7 +461,7 @@ export default function GiveeHomeScreen({ navigation }) {
                   fontSize: responsiveFontSize(1.9),
                 }}
               >
-                Hello Testing Care
+                Hello {userData.firstName || "N/A"}
               </Text>
               <Text
                 style={{
@@ -470,7 +471,8 @@ export default function GiveeHomeScreen({ navigation }) {
                   marginLeft: "4%",
                 }}
               >
-                Your Caregiver is Paola
+                Your Caregiver is{" "}
+                {tokenData.caregiverID[tokenData.selected].firstName || "N/A"}
               </Text>
             </SafeAreaView>
             <SafeAreaView

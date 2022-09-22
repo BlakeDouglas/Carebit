@@ -64,14 +64,10 @@ export default function AddScreen({ navigation: { goBack } }) {
         body: JSON.stringify(body),
       });
       const json = await response.json();
-      console.log("MAKING REQUEST WITH BODY: " + JSON.stringify(body));
-      console.log("Request result: " + JSON.stringify(json));
-      if (!json.request) {
-        //TODO: Errors go here
+      if (json.error) {
+        // TODO: Prettify these errors.
+        handleError(json.error, "phone");
       } else {
-        // TODO: Happy success signs go here.
-
-        // Then go back to previous screen
         goBack();
       }
     } catch (error) {

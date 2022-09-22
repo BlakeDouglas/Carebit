@@ -13,9 +13,11 @@ import {
   responsiveWidth,
 } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 export default function AccountCreationScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedUser = route.params.selectedUser || route.params;
+  const dispatch = useDispatch();
 
   const setActivity = async (tokenData, level) => {
     if (!tokenData.caregiveeID) {
@@ -37,9 +39,11 @@ export default function AccountCreationScreen({ navigation, route }) {
           },
         }
       );
-      const json = await response.json();
-
-      if (json.error) console.log("Error setting activity level");
+      const responseText = await response.text();
+      console.log(
+        "Successfully set activity level? Got: '" + responseText + "'"
+      );
+      navigation.goBack();
     } catch (error) {
       console.log("Caught error in /activity: " + error);
     }
@@ -76,7 +80,9 @@ export default function AccountCreationScreen({ navigation, route }) {
           >
             <TouchableOpacity
               style={styles.InnerContainers}
-              onPress={setActivity(tokenData, 3)}
+              onPress={() => {
+                setActivity(tokenData, 3);
+              }}
             >
               <SafeAreaView>
                 <Text style={styles.InnerTitle}>Active</Text>
@@ -90,7 +96,9 @@ export default function AccountCreationScreen({ navigation, route }) {
 
             <TouchableOpacity
               style={styles.InnerContainers}
-              onPress={setActivity(tokenData, 2)}
+              onPress={() => {
+                setActivity(tokenData, 2);
+              }}
             >
               <SafeAreaView>
                 <Text style={styles.InnerTitle}>Sedentary</Text>
@@ -105,7 +113,9 @@ export default function AccountCreationScreen({ navigation, route }) {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.InnerContainers}
-              onPress={setActivity(tokenData, 1)}
+              onPress={() => {
+                setActivity(tokenData, 1);
+              }}
             >
               <SafeAreaView>
                 <Text style={styles.InnerTitle}>Homebound</Text>
