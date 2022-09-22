@@ -157,10 +157,9 @@ export default function AddScreen({ navigation: { goBack } }) {
             <SafeAreaView style={{}}>
               <TouchableOpacity
                 style={[GlobalStyle.Button, { marginTop: "8%" }]}
+                onPress={validate}
               >
-                <Text style={GlobalStyle.ButtonText} onPress={validate}>
-                  Send Request
-                </Text>
+                <Text style={GlobalStyle.ButtonText}>Send Request</Text>
               </TouchableOpacity>
             </SafeAreaView>
           </SafeAreaView>
