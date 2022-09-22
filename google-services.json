@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1042058218989",
+    "firebase_url": "https://carebit-48f39.firebaseio.com",
+    "project_id": "carebit-48f39",
+    "storage_bucket": "carebit-48f39.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1042058218989:android:6e57aee1e6ab81b7",
+        "android_client_info": {
+          "package_name": "com.fitbit.carebit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1042058218989-0sf51smak4e3rmksgjng7gnopfmhr3tb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDK-d_UqJ4MBLiTxEucRzymd0tH7NiUTIc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1042058218989-0sf51smak4e3rmksgjng7gnopfmhr3tb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1042058218989-4mqtvp1f6a45muloukhf8fc0aj1b65ef.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.carebit.Carebit",
+                "app_store_id": "1136042367"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

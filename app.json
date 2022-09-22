@@ -8,6 +8,9 @@
     "orientation": "portrait",
     "icon": "./assets/appicon.png",
     "userInterfaceStyle": "light",
+    "notification": {
+      "icon": "./assets/appicon.png"
+    },
     "splash": {
       "image": "./assets/gradient.png",
       "resizeMode": "cover",
@@ -27,7 +30,8 @@
         "foregroundImage": "./assets/appicon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.masspwnser.carebit"
+      "package": "com.fitbit.carebit",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/appicon.png"
