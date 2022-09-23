@@ -2,7 +2,7 @@
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, Image, TextInput, View } from "react-native";
 
 const CustomTextInput = ({
   label,
@@ -14,6 +14,12 @@ const CustomTextInput = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [hidePassword, setHidePassword] = useState(password);
+  const imageFile = "../../assets/images/" + iconName + ".png";
+  const accountImage = require("../../assets/images/account-outline.png");
+  const phoneImage = require("../../assets/images/phone-outline.png");
+  const emailImage = require("../../assets/images/email-outline.png");
+  const lockImage = require("../../assets/images/lock-outline.png");
+
   return (
     <View style={{ marginBottom: 15 }}>
       <View style={{ flexDirection: "row" }}>
@@ -37,9 +43,17 @@ const CustomTextInput = ({
           { borderColor: error ? "red" : "rgba(255, 255, 255, .25)" },
         ]}
       >
-        <Icon
-          name={iconName}
-          style={{ fontSize: 22, color: "white", marginRight: 10 }}
+        <Image
+          source={
+            iconName === "account-outline"
+              ? accountImage
+              : iconName === "phone-outline"
+              ? phoneImage
+              : iconName === "email-outline"
+              ? emailImage
+              : lockImage
+          }
+          style={{ height: 22, width: 22, marginRight: 10 }}
         />
 
         <TextInput

@@ -21,6 +21,10 @@ import CustomTextInput from "../utils/CustomTextInput";
 import { setTokenData, setUserData } from "../redux/actions";
 import { createIconSetFromFontello } from "react-native-vector-icons";
 import fontelloConfig from "../../config.json";
+import AccountOutline from "../../assets/icons/account-outline.svg";
+import EmailOutline from "../../assets/icons/email-outline.svg";
+import LockOutline from "../../assets/icons/lock-outline.svg";
+import PhoneOutline from "../../assets/icons/phone-outline.svg";
 const Icon = createIconSetFromFontello(fontelloConfig);
 
 export default function AccountCreationScreen({ navigation, route }) {
@@ -147,19 +151,11 @@ export default function AccountCreationScreen({ navigation, route }) {
               tokenData.type.slice(1) +
               " Registration"}
           </Text>
-
           <View style={{ flexDirection: "row" }}>
-            <Image
-              source={require("../../assets/images/account-outline.png")}
-              style={{
-                width: 20,
-                height: 20,
-              }}
-            />
             <View style={GlobalStyle.Background}>
               <CustomTextInput
                 placeholder="First Name"
-                label="Name*"
+                iconName="account-outline"
                 error={errors.firstName}
                 onChangeText={(text) => handleChange(text, "firstName")}
                 onFocus={() => {
@@ -179,16 +175,10 @@ export default function AccountCreationScreen({ navigation, route }) {
               />
             </View>
           </View>
-          <Image
-            source={require("../../assets/images/phone-outline.png")}
-            style={{
-              width: 20,
-              height: 20,
-            }}
-          />
           <CustomTextInput
             placeholder="(XXX)-XXX-XXXX"
             label="Phone*"
+            iconName="phone-outline"
             keyboardType="number-pad"
             error={errors.phone}
             onChangeText={(text) =>
@@ -199,15 +189,9 @@ export default function AccountCreationScreen({ navigation, route }) {
               handleError(null, "phone");
             }}
           />
-          <Image
-            source={require("../../assets/images/email-outline.png")}
-            style={{
-              width: 20,
-              height: 20,
-            }}
-          />
           <CustomTextInput
             placeholder="example@domain.com"
+            iconName="email-outline"
             label="Email*"
             keyboardType="email-address"
             error={errors.email}
@@ -216,15 +200,9 @@ export default function AccountCreationScreen({ navigation, route }) {
               handleError(null, "email");
             }}
           />
-          <Image
-            source={require("../../assets/images/lock-outline.png")}
-            style={{
-              width: 20,
-              height: 20,
-            }}
-          />
           <CustomTextInput
             placeholder="Password"
+            iconName="lock-outline"
             label="Password*"
             error={errors.password}
             onChangeText={(text) => handleChange(text, "password")}
