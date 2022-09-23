@@ -77,7 +77,13 @@ export default function GiverSettingsScreen({ navigation }) {
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiveeID[tokenData.selected].phone || "N/A"}
+          {"(" +
+            tokenData.caregiveeID[tokenData.selected].phone.substring(0, 3) +
+            ") " +
+            tokenData.caregiveeID[tokenData.selected].phone.substring(3, 6) +
+            "-" +
+            tokenData.caregiveeID[tokenData.selected].phone.substring(6) ||
+            "N/A"}
         </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.TitleContainer}>
@@ -92,7 +98,19 @@ export default function GiverSettingsScreen({ navigation }) {
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiveeID[tokenData.selected].physPhone || "N/A"}
+          {"(" +
+            tokenData.caregiveeID[tokenData.selected].physPhone.substring(
+              0,
+              3
+            ) +
+            ") " +
+            tokenData.caregiveeID[tokenData.selected].physPhone.substring(
+              3,
+              6
+            ) +
+            "-" +
+            tokenData.caregiveeID[tokenData.selected].physPhone.substring(6) ||
+            "N/A"}
         </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.TitleContainer}>

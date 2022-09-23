@@ -317,10 +317,13 @@ export default function GiverHomeScreen({ navigation }) {
               <Text
                 style={{
                   color: "black",
-                  fontSize: responsiveFontSize(2.4),
+                  fontSize: responsiveFontSize(2.2),
                   fontWeight: "500",
+                  //flex: 1,
+                  marginRight: "5%",
                   //marginLeft: "4%",
                 }}
+                numberOfLines={1}
               >
                 Your Caregivee is{" "}
                 {tokenData.caregiveeID[tokenData.selected].firstName || "N/A"}
@@ -345,7 +348,10 @@ export default function GiverHomeScreen({ navigation }) {
                 <Image
                   source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
                 />
-                <Text style={styles.callText}>Call Caregiver</Text>
+                <Text style={styles.callText}>
+                  Call{" "}
+                  {tokenData.caregiveeID[tokenData.selected].firstName || "N/A"}
+                </Text>
               </TouchableOpacity>
             </SafeAreaView>
           </SafeAreaView>

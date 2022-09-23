@@ -466,10 +466,11 @@ export default function GiveeHomeScreen({ navigation }) {
               <Text
                 style={{
                   color: "black",
-                  fontSize: responsiveFontSize(2.4),
+                  fontSize: responsiveFontSize(2.2),
                   fontWeight: "500",
                   marginLeft: "4%",
                 }}
+                numberOfLines={1}
               >
                 Your Caregiver is{" "}
                 {tokenData.caregiverID[tokenData.selected].firstName || "N/A"}
@@ -492,7 +493,10 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Image
                   source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
                 />
-                <Text style={styles.callText}>Call Paola</Text>
+                <Text style={styles.callText}>
+                  Call{" "}
+                  {tokenData.caregiverID[tokenData.selected].firstName || "N/A"}
+                </Text>
               </TouchableOpacity>
             </SafeAreaView>
           </SafeAreaView>

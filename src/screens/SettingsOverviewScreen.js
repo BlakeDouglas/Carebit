@@ -95,7 +95,14 @@ export default function SettingsOverviewScreen({ route, navigation }) {
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
-        <Text style={styles.BoxSub}>{selectedUser.phone || "N/A"}</Text>
+        <Text style={styles.BoxSub}>
+          {"(" +
+            selectedUser.phone.substring(0, 3) +
+            ") " +
+            selectedUser.phone.substring(3, 6) +
+            "-" +
+            selectedUser.phone.substring(6) || "N/A"}
+        </Text>
       </SafeAreaView>
 
       {tokenData.type === "caregiver" && (

@@ -57,7 +57,7 @@ export default function GiveeSettingsScreen({ navigation }) {
         <Text style={styles.BoxTitle}>Name</Text>
         <Text style={styles.BoxSub}>
           {tokenData.caregiverID[tokenData.selected].firstName || "N/A"}{" "}
-          {tokenData.caregiverID[tokenData.selected].firstName || "N/A"}
+          {tokenData.caregiverID[tokenData.selected].lastName || "N/A"}
         </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
@@ -69,7 +69,13 @@ export default function GiveeSettingsScreen({ navigation }) {
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiverID[tokenData.selected].phone || "N/A"}
+          {"(" +
+            tokenData.caregiverID[tokenData.selected].phone.substring(0, 3) +
+            ") " +
+            tokenData.caregiverID[tokenData.selected].phone.substring(3, 6) +
+            "-" +
+            tokenData.caregiverID[tokenData.selected].phone.substring(6) ||
+            "N/A"}
         </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.TitleContainer}>
@@ -81,7 +87,14 @@ export default function GiveeSettingsScreen({ navigation }) {
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
-        <Text style={styles.BoxSub}>{physData.physPhone || "N/A"}</Text>
+        <Text style={styles.BoxSub}>
+          {"(" +
+            physData.physPhone.substring(0, 3) +
+            ") " +
+            physData.physPhone.substring(3, 6) +
+            "-" +
+            physData.physPhone.substring(6) || "N/A"}
+        </Text>
       </SafeAreaView>
       <SafeAreaView
         style={{
