@@ -57,12 +57,12 @@ export default function LinkUsersScreen({ navigation }) {
     Keyboard.dismiss();
     let valid = true;
     if (!inputs.phone) {
-      handleError(" Input required", "phone");
+      handleError("  Input required", "phone");
       valid = false;
     } else if (
       !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
     ) {
-      handleError(" Invalid phone number", "phone");
+      handleError("  Too Short", "phone");
       valid = false;
     }
 
@@ -116,6 +116,15 @@ export default function LinkUsersScreen({ navigation }) {
         body: JSON.stringify(body),
       });
       const json = await response.json();
+      if (json.error) {
+        console.log(json.error);
+        // TODO: Prettify these errors.
+        if (json.error === "This request already exists") {
+          handleError("  Already added", "phone");
+        } else {
+          handleError("  Not Found", "phone");
+        }
+      }
       console.log(json);
       if (json.request)
         dispatch(setTokenData({ ...tokenData, caregiveeID: [json.request] }));

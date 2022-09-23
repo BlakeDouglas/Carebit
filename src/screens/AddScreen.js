@@ -34,12 +34,12 @@ export default function AddScreen({ navigation: { goBack } }) {
     Keyboard.dismiss();
     let valid = true;
     if (!inputs.phone) {
-      handleError(" Input required", "phone");
+      handleError("  Input required", "phone");
       valid = false;
     } else if (
       !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
     ) {
-      handleError(" Invalid", "phone");
+      handleError("  Too Short", "phone");
       valid = false;
     }
 
@@ -65,8 +65,13 @@ export default function AddScreen({ navigation: { goBack } }) {
       });
       const json = await response.json();
       if (json.error) {
+        console.log(json.error);
         // TODO: Prettify these errors.
-        handleError(json.error, "phone");
+        if (json.error === "This request already exists") {
+          handleError("  Already added", "phone");
+        } else {
+          handleError("  Not Found", "phone");
+        }
       } else {
         goBack();
       }
