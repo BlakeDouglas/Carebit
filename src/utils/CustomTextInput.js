@@ -51,7 +51,9 @@ const CustomTextInput = ({
               ? phoneImage
               : iconName === "email-outline"
               ? emailImage
-              : lockImage
+              : iconName === "lock-outline"
+              ? lockImage
+              : accountImage
           }
           style={{ height: 22, width: 22, marginRight: 10 }}
         />
