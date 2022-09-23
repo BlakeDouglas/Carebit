@@ -44,6 +44,8 @@ export default function SettingsOverviewScreen({ route, navigation }) {
     }
   };
 
+  const oppositeUser =
+    tokenData.type === "caregiver" ? "caregivee" : "caregiver";
   const onPressDelete = (item) => {
     console.log(item);
     Alert.alert(
@@ -52,7 +54,7 @@ export default function SettingsOverviewScreen({ route, navigation }) {
         " " +
         item.lastName +
         " as a " +
-        item.type +
+        oppositeUser +
         "?",
       "",
       [
