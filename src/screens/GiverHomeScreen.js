@@ -34,7 +34,7 @@ export default function GiverHomeScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
 
   const args = {
-    number: 1,
+    number: tokenData.caregiveeID[tokenData.selected].phone,
     prompt: true,
   };
   const [refreshing, setRefreshing] = React.useState(false);

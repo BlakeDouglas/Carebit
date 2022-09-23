@@ -70,7 +70,7 @@ export default function GiveeHomeScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const userData = useSelector((state) => state.Reducers.userData);
   const args = {
-    number: 7,
+    number: tokenData.caregiverID[tokenData.selected].phone,
     prompt: true,
   };
 
