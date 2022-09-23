@@ -13,7 +13,7 @@ import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import moment from "moment";
-import { Provider, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import call from "react-native-phone-call";
 import { useDrawerStatus } from "@react-navigation/drawer";
@@ -98,7 +98,7 @@ export default function GiverHomeScreen({ navigation }) {
       });
       const json = await response.json();
     } catch (error) {
-      console.log("Caught error 5: " + error);
+      console.log("Caught error in /notificationToken: " + error);
     }
   };
 

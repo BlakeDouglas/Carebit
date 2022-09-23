@@ -14,20 +14,21 @@ import {
 } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
+import { setTokenData } from "../redux/actions";
 export default function AccountCreationScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = route.params.selectedUser || route.params;
   const dispatch = useDispatch();
 
   const setActivity = async (tokenData, level) => {
-    if (!tokenData.caregiveeID) {
+    if (!selectedUser.caregiveeID) {
       console.log("Couldn't set activity level");
       return;
     }
     try {
       const response = await fetch(
         "https://www.carebit.xyz/activity/" +
-          tokenData.caregiveeID +
+          selectedUser.caregiveeID +
           "/" +
           level,
         {
@@ -40,9 +41,16 @@ export default function AccountCreationScreen({ navigation, route }) {
         }
       );
       const responseText = await response.text();
-      console.log(
-        "Successfully set activity level? Got: '" + responseText + "'"
-      );
+      if (!responseText)
+        console.log("Successfylly set activity level to " + level);
+      else {
+        console.log("Error setting activity level");
+        return;
+      }
+      var tempTokenData = tokenData;
+      tempTokenData.caregiveeID[tempTokenData.selected].healthProfile = level;
+      dispatch(setTokenData(tokenData));
+
       navigation.goBack();
     } catch (error) {
       console.log("Caught error in /activity: " + error);

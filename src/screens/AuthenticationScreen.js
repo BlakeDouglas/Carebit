@@ -43,7 +43,7 @@ export const makeCaregivee = async (code, tokenData, dispatch) => {
         setTokenData({ ...tokenData, ...json, type: "caregivee", selected: 0 })
       );
     } else
-      Alert.alert("Error", json.error, [
+      Alert.alert("Error", json.error, json.error_0, [
         { text: "Ok", onPress: () => {}, style: "cancel" },
       ]);
   } catch (error) {
