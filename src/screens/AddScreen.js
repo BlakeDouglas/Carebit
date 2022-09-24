@@ -42,7 +42,7 @@ export default function AddScreen({ navigation: { goBack } }) {
       handleError("  Invalid Number", "phone");
       valid = false;
     } else if (inputs.phone === tokenData.phone) {
-      handleError("  Number is associated with your account", "phone");
+      handleError("  Invalid Number", "phone");
       valid = false;
     }
 

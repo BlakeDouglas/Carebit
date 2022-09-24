@@ -32,9 +32,14 @@ export default function GiverHomeScreen({ navigation }) {
   const [fitbitAccessToken, setFitbitAccessToken] = useState(null);
   const userData = useSelector((state) => state.Reducers.userData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-
+  let phone;
+  if (tokenData.caregiveeID.Array !== undefined) {
+    phone = tokenData.caregiveeID[tokenData.selected].phone;
+  } else {
+    phone = "0";
+  }
   const args = {
-    number: tokenData.caregiveeID[tokenData.selected].phone || "0",
+    phone,
     prompt: true,
   };
   const [refreshing, setRefreshing] = React.useState(false);
@@ -143,7 +148,10 @@ export default function GiverHomeScreen({ navigation }) {
   };
 
   const fetchData = async () => {
-    const caregiveeID = tokenData.caregiveeID[tokenData.selected].caregiveeID;
+    let caregiveeID;
+    tokenData.caregeeID
+      ? (caregiveeID = tokenData.caregiveeID[tokenData.selected].caregiveeID)
+      : (caregiveeID = null);
     if (!fitbitAccessToken) {
       // Seems that refresh has a cooldown. Switch this on if u get invalid token
       // await refreshFitbitAccessToken();
@@ -325,7 +333,9 @@ export default function GiverHomeScreen({ navigation }) {
                 numberOfLines={1}
               >
                 Your Caregivee is{" "}
-                {tokenData.caregiveeID[tokenData.selected].firstName || "N/A"}
+                {tokenData.caregiveeID.Array
+                  ? tokenData.caregiveeID[tokenData.selected].firstName
+                  : "N/A"}
               </Text>
             </SafeAreaView>
             <SafeAreaView
@@ -349,7 +359,9 @@ export default function GiverHomeScreen({ navigation }) {
                 />
                 <Text style={styles.callText}>
                   Call{" "}
-                  {tokenData.caregiveeID[tokenData.selected].firstName || "N/A"}
+                  {tokenData.caregiveeID.Array
+                    ? tokenData.caregiveeID[tokenData.selected].firstName
+                    : "N/A"}
                 </Text>
               </TouchableOpacity>
             </SafeAreaView>
