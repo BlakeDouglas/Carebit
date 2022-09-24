@@ -54,8 +54,16 @@ export default function AddScreen({ navigation: { goBack } }) {
   const makeRequest = async () => {
     const body =
       tokenData.type === "caregivee"
-        ? { caregiveePhone: tokenData.phone, caregiverPhone: inputs.phone }
-        : { caregiverPhone: tokenData.phone, caregiveePhone: inputs.phone };
+        ? {
+            caregiveePhone: tokenData.phone,
+            caregiverPhone: inputs.phone,
+            sender: tokenData.type,
+          }
+        : {
+            caregiverPhone: tokenData.phone,
+            caregiveePhone: inputs.phone,
+            sender: tokenData.type,
+          };
     try {
       const response = await fetch("https://www.carebit.xyz/createRequest", {
         method: "POST",
