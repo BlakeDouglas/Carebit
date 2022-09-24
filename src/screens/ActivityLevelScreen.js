@@ -51,7 +51,7 @@ export default function AccountCreationScreen({ navigation }) {
       tempTokenData.caregiveeID[tempTokenData.selected].healthProfile = level;
       dispatch(setSelectedUser({ ...selectedUser, healthProfile: level }));
       dispatch(setTokenData(tempTokenData));
-
+      console.log(selectedUser);
       navigation.goBack();
     } catch (error) {
       console.log("Caught error in /activity: " + error);

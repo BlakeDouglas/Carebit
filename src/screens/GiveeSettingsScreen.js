@@ -56,26 +56,33 @@ export default function GiveeSettingsScreen({ navigation }) {
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Name</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiverID[tokenData.selected].firstName || "N/A"}{" "}
-          {tokenData.caregiverID[tokenData.selected].lastName || "N/A"}
+          {tokenData.caregiverID.Array
+            ? tokenData.caregiverID[tokenData.selected].firstName
+            : "N/A"}{" "}
+          {tokenData.caregiverID.Array
+            ? tokenData.caregiverID[tokenData.selected].lastName
+            : "N/A"}
         </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Email</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiverID[tokenData.selected].email || "N/A"}
+          {tokenData.caregiverID.Array
+            ? tokenData.caregiverID[tokenData.selected].email
+            : "N/A"}
         </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
         <Text style={styles.BoxSub}>
-          {"(" +
-            tokenData.caregiverID[tokenData.selected].phone.substring(0, 3) +
-            ") " +
-            tokenData.caregiverID[tokenData.selected].phone.substring(3, 6) +
-            "-" +
-            tokenData.caregiverID[tokenData.selected].phone.substring(6) ||
-            "N/A"}
+          {tokenData.caregiverID.Array
+            ? "(" +
+              tokenData.caregiverID[tokenData.selected].phone.substring(0, 3) +
+              ") " +
+              tokenData.caregiverID[tokenData.selected].phone.substring(3, 6) +
+              "-" +
+              tokenData.caregiverID[tokenData.selected].phone.substring(6)
+            : "N/A"}
         </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.TitleContainer}>
