@@ -56,10 +56,10 @@ export default function GiveeSettingsScreen({ navigation }) {
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Name</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiverID.length === "0"
+          {tokenData.caregiverID.length !== 0
             ? tokenData.caregiverID[tokenData.selected].firstName
             : "N/A"}{" "}
-          {tokenData.caregiverID.length === "0"
+          {tokenData.caregiverID.length !== 0
             ? tokenData.caregiverID[tokenData.selected].lastName
             : "N/A"}
         </Text>
@@ -67,7 +67,7 @@ export default function GiveeSettingsScreen({ navigation }) {
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Email</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiverID.length === "0"
+          {tokenData.caregiverID.length !== 0
             ? tokenData.caregiverID[tokenData.selected].email
             : "N/A"}
         </Text>
@@ -75,7 +75,7 @@ export default function GiveeSettingsScreen({ navigation }) {
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiverID.length === "0"
+          {tokenData.caregiverID.length !== 0
             ? "(" +
               tokenData.caregiverID[tokenData.selected].phone.substring(0, 3) +
               ") " +

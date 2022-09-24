@@ -33,8 +33,10 @@ export default function GiverHomeScreen({ navigation }) {
   const userData = useSelector((state) => state.Reducers.userData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   let phone;
-  if (tokenData.caregiveeID.Array !== undefined) {
+  if ((tokenData.caregiveeID.length !== 0) !== undefined) {
+    console.log("LENGTH HERE: " + tokenData.caregiveeID.length);
     phone = tokenData.caregiveeID[tokenData.selected].phone;
+    console.log("Phone # set");
   } else {
     phone = "0";
   }
@@ -333,7 +335,7 @@ export default function GiverHomeScreen({ navigation }) {
                 numberOfLines={1}
               >
                 Your Caregivee is{" "}
-                {tokenData.caregiveeID.Array
+                {tokenData.caregiveeID.length !== 0
                   ? tokenData.caregiveeID[tokenData.selected].firstName
                   : "N/A"}
               </Text>
@@ -359,7 +361,7 @@ export default function GiverHomeScreen({ navigation }) {
                 />
                 <Text style={styles.callText}>
                   Call{" "}
-                  {tokenData.caregiveeID.Array
+                  {tokenData.caregiveeID.length !== 0
                     ? tokenData.caregiveeID[tokenData.selected].firstName
                     : "N/A"}
                 </Text>
