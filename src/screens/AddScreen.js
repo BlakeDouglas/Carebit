@@ -39,7 +39,10 @@ export default function AddScreen({ navigation: { goBack } }) {
     } else if (
       !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
     ) {
-      handleError("  Too Short", "phone");
+      handleError("  Invalid Number", "phone");
+      valid = false;
+    } else if (inputs.phone === tokenData.phone) {
+      handleError("  Number is associated with your account", "phone");
       valid = false;
     }
 

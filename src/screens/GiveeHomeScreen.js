@@ -70,8 +70,7 @@ export default function GiveeHomeScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const userData = useSelector((state) => state.Reducers.userData);
   let number;
-  if (tokenData.caregiverID.Array) {
-    console.log(tokenData.caregiverID.Array);
+  if (tokenData.caregiverID) {
     number = tokenData.caregiverID[tokenData.selected].phone;
   } else {
     number = "0";
@@ -480,7 +479,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 numberOfLines={1}
               >
                 Your Caregiver is{" "}
-                {tokenData.caregiverID.Array
+                {tokenData.caregiverID
                   ? tokenData.caregiverID[tokenData.selected].firstName
                   : "N/A"}
               </Text>
@@ -504,7 +503,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 />
                 <Text style={styles.callText}>
                   Call{" "}
-                  {tokenData.caregiverID.Array
+                  {tokenData.caregiverID
                     ? tokenData.caregiverID[tokenData.selected].firstName
                     : "N/A"}
                 </Text>

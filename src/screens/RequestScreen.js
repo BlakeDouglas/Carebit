@@ -14,10 +14,13 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
+import { setSelectedUser } from "../redux/actions";
 
 const RequestScreen = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
+  const dispatch = useDispatch();
 
   // Stores only incoming requests
   const [data, setData] = useState([]);
@@ -59,7 +62,7 @@ const RequestScreen = ({ navigation }) => {
         {
           text: "Allow",
           onPress: () => {
-            acceptRequest(tokenData, item.caregiverID);
+            acceptRequest(tokenData, item);
             getRequests(tokenData);
           },
         },
@@ -88,11 +91,11 @@ const RequestScreen = ({ navigation }) => {
     }
   };
 
-  const acceptRequest = async (tokenData, acceptID) => {
+  const acceptRequest = async (tokenData, item) => {
     const body =
       tokenData.type === "caregivee"
-        ? { caregiveeID: tokenData.caregiveeID, caregiverID: acceptID }
-        : { caregiverID: tokenData.caregiverID, caregiveeID: acceptID };
+        ? { caregiveeID: tokenData.caregiveeID, caregiverID: item.caregiverID }
+        : { caregiverID: tokenData.caregiverID, caregiveeID: item.caregiveeID };
     try {
       const response = await fetch("https://www.carebit.xyz/acceptRequest", {
         method: "PUT",
@@ -105,9 +108,13 @@ const RequestScreen = ({ navigation }) => {
       });
       const json = await response.json();
       if (json.request) {
-        getRequests(tokenData);
+        {
+          dispatch(setSelectedUser(item));
+          getRequests(tokenData);
+        }
       } else {
         // TODO: Error case goes here
+        console.log("Caught error #2 in /acceptRequest. Failed accept.");
       }
     } catch (error) {
       console.log("Caught error in /acceptRequest: " + error);
@@ -143,12 +150,8 @@ const RequestScreen = ({ navigation }) => {
 
   useEffect(() => {
     const idType = tokenData.type + "ID";
-    setData(
-      backgroundData.filter(
-        (iter) =>
-          iter.status === "Pending" && iter[idType] !== tokenData[idType]
-      )
-    );
+    // TODO: Check if incoming or outgoing
+    setData(backgroundData.filter((iter) => iter.status === "Pending"));
   }, [backgroundData]);
 
   const renderItem = ({ item }) => {

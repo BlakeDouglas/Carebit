@@ -82,7 +82,7 @@ const AuthStack = () => {
       <Stack.Group
         screenOptions={{
           headerTransparent: true,
-          //headerTintColor: "#fff",
+          headerTintColor: "#fff",
           title: "",
         }}
       >
@@ -158,6 +158,7 @@ const HomeStack = () => {
       <Stack.Group
         screenOptions={{
           headerTransparent: true,
+          headerTintColor: "#fff",
           title: "",
         }}
       >
@@ -286,39 +287,14 @@ const HomeStack = () => {
               backgroundColor: "dodgerblue",
             },
             headerTitle: "Alert Settings",
-
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={{ marginLeft: "8%" }}
-              >
-                <Text
-                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
-                >
-                  Cancel
-                </Text>
-              </TouchableOpacity>
-            ),
-            headerRight: () => (
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={{ marginRight: "8%" }}
-              >
-                <Text
-                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
-                >
-                  Done
-                </Text>
-              </TouchableOpacity>
-            ),
           })}
         />
         <Stack.Screen
           name="SettingsScreen"
           component={
-            tokenData.type === "caregivee"
-              ? GiveeSettingsScreen
-              : GiverSettingsScreen
+            tokenData.type === "caregiver"
+              ? GiverSettingsScreen
+              : GiveeSettingsScreen
           }
           options={({ navigation }) => ({
             headerTransparent: false,
@@ -330,31 +306,6 @@ const HomeStack = () => {
               backgroundColor: "dodgerblue",
             },
             headerTitle: "Alert Settings",
-
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={{ marginLeft: "8%" }}
-              >
-                <Text
-                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
-                >
-                  Cancel
-                </Text>
-              </TouchableOpacity>
-            ),
-            headerRight: () => (
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={{ marginRight: "8%" }}
-              >
-                <Text
-                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
-                >
-                  Done
-                </Text>
-              </TouchableOpacity>
-            ),
           })}
         />
         <Stack.Screen
@@ -371,18 +322,6 @@ const HomeStack = () => {
             },
             headerTitle: "Alert Settings",
 
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={{ marginLeft: "8%" }}
-              >
-                <Text
-                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
-                >
-                  Cancel
-                </Text>
-              </TouchableOpacity>
-            ),
             headerRight: () => (
               <TouchableOpacity
                 onPress={() => navigation.goBack()}
@@ -411,18 +350,6 @@ const HomeStack = () => {
             },
             headerTitle: "Friend Requests",
 
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={{ marginLeft: "8%" }}
-              >
-                <Text
-                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
-                >
-                  Done
-                </Text>
-              </TouchableOpacity>
-            ),
             headerRight: () => (
               <TouchableOpacity
                 onPress={() => navigation.navigate("AddScreen")}
@@ -455,19 +382,6 @@ const HomeStack = () => {
               tokenData.type === "caregiver"
                 ? "Linked Caregivees"
                 : "Linked Caregiver",
-
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={{ marginLeft: "8%" }}
-              >
-                <Text
-                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
-                >
-                  Done
-                </Text>
-              </TouchableOpacity>
-            ),
           })}
         />
         <Stack.Screen name="AddScreen" component={AddScreen} />
