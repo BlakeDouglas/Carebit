@@ -149,9 +149,11 @@ const RequestScreen = ({ navigation }) => {
   getRequests(tokenData);
 
   useEffect(() => {
-    const idType = tokenData.type + "ID";
-    // TODO: Check if incoming or outgoing
-    setData(backgroundData.filter((iter) => iter.status === "Pending"));
+    setData(
+      backgroundData.filter(
+        (iter) => iter.status === "Pending" && iter.sender !== tokenData.type
+      )
+    );
   }, [backgroundData]);
 
   const renderItem = ({ item }) => {
