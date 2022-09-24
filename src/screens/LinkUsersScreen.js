@@ -103,8 +103,16 @@ export default function LinkUsersScreen({ navigation }) {
     if (!tokenData.phone || !inputs.phone) return;
     const body =
       tokenData.type !== "caregiver"
-        ? { caregiveePhone: tokenData.phone, caregiverPhone: inputs.phone }
-        : { caregiverPhone: tokenData.phone, caregiveePhone: inputs.phone };
+        ? {
+            caregiveePhone: tokenData.phone,
+            caregiverPhone: inputs.phone,
+            sender: tokenData.type,
+          }
+        : {
+            caregiverPhone: tokenData.phone,
+            caregiveePhone: inputs.phone,
+            sender: tokenData.type,
+          };
     try {
       const response = await fetch("https://www.carebit.xyz/createRequest", {
         method: "POST",
