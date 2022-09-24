@@ -25,6 +25,15 @@ export const setPhysicianData = (physData) => {
   };
 };
 
+export const setSelectedUser = (selectedUser) => {
+  return async (dispatch) => {
+    dispatch({
+      type: "SET_SELECTED_USER",
+      payload: selectedUser,
+    });
+  };
+};
+
 export const resetData = () => {
   return async (dispatch) => {
     dispatch({

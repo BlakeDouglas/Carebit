@@ -14,14 +14,14 @@ import {
 } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
-import { setTokenData } from "../redux/actions";
-export default function AccountCreationScreen({ navigation, route }) {
+import { setSelectedUser, setTokenData } from "../redux/actions";
+export default function AccountCreationScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const selectedUser = route.params.selectedUser || route.params;
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
 
   const setActivity = async (tokenData, level) => {
-    if (!selectedUser.caregiveeID) {
+    if (!selectedUser) {
       console.log("Couldn't set activity level");
       return;
     }
@@ -49,7 +49,8 @@ export default function AccountCreationScreen({ navigation, route }) {
       }
       var tempTokenData = tokenData;
       tempTokenData.caregiveeID[tempTokenData.selected].healthProfile = level;
-      dispatch(setTokenData(tokenData));
+      dispatch(setSelectedUser({ ...selectedUser, healthProfile: level }));
+      dispatch(setTokenData(tempTokenData));
 
       navigation.goBack();
     } catch (error) {

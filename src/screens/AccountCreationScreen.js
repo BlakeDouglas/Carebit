@@ -18,7 +18,7 @@ import CustomTextInput from "../utils/CustomTextInput";
 import { setTokenData, setUserData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
 
-export default function AccountCreationScreen({ navigation, route }) {
+export default function AccountCreationScreen({ navigation }) {
   // These are the two tools of the redux state manager. Use them instead of hooks
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();

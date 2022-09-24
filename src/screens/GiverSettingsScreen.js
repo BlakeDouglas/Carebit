@@ -4,12 +4,13 @@ import { React } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
-import { resetData, setTokenData } from "../redux/actions";
+import { resetData, setSelectedUser, setTokenData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
 
 export default function GiverSettingsScreen({ navigation }) {
   const userData = useSelector((state) => state.Reducers.userData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
   const logOutButtonHandler = async () => {
     await SecureStore.deleteItemAsync("carebitcredentials");
@@ -17,17 +18,13 @@ export default function GiverSettingsScreen({ navigation }) {
   };
 
   const customAlertButtonHandler = () => {
-    navigation.navigate(
-      "CustomNotification",
-      tokenData.caregiveeID[tokenData.selected]
-    );
+    dispatch(setSelectedUser(tokenData.caregiveeID[tokenData.selected]));
+    navigation.navigate("CustomNotification");
   };
 
   const activityButtonHandler = () => {
-    navigation.navigate(
-      "ActivityLevel",
-      tokenData.caregiveeID[tokenData.selected]
-    );
+    dispatch(setSelectedUser(tokenData.caregiveeID[tokenData.selected]));
+    navigation.navigate("ActivityLevel");
   };
   return (
     // Header Container

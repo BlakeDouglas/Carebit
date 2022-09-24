@@ -16,7 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { setTokenData } from "../redux/actions";
+import { setSelectedUser, setTokenData } from "../redux/actions";
 
 const ListOfFriendsScreen = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
@@ -177,7 +177,8 @@ const ListOfFriendsScreen = ({ navigation }) => {
                   const user = data.filter(
                     (iter) => iter.requestID === selectedId
                   )[0];
-                  navigation.navigate("SettingsOverview", { user });
+                  dispatch(setSelectedUser(user));
+                  navigation.navigate("SettingsOverview");
                 }}
               >
                 <Image

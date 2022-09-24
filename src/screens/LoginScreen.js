@@ -11,7 +11,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import CustomTextInput from "../utils/CustomTextInput";
-import { setPhysicianData, setTokenData, setUserData } from "../redux/actions";
+import {
+  setPhysicianData,
+  setSelectedUser,
+  setTokenData,
+  setUserData,
+} from "../redux/actions";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as SecureStore from "expo-secure-store";
 
@@ -29,9 +34,9 @@ export const login = async (email, password, dispatch, outside) => {
     });
     const json = await response.json();
     if (json.access_token !== undefined) {
-      dispatch(setTokenData({ ...json, selected: 0 }));
+      SecureStore.setItemAsync("carebitcredentials", body);
       fetchUserData(json, dispatch);
-      await SecureStore.setItemAsync("carebitcredentials", body);
+      dispatch(setTokenData({ ...json, selected: 0 }));
     } else {
       if (outside) {
         await SecureStore.deleteItemAsync("carebitcredentials");

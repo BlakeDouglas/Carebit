@@ -12,15 +12,15 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { Provider, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 
-export default function SettingsOverviewScreen({ route, navigation }) {
-  const selectedUser = route.params.user;
+export default function SettingsOverviewScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const customAlertButtonHandler = () => {
-    navigation.navigate("CustomNotification", { selectedUser });
+    navigation.navigate("CustomNotification");
   };
 
   const activityButtonHandler = () => {
-    navigation.navigate("ActivityLevel", { selectedUser });
+    navigation.navigate("ActivityLevel");
   };
 
   const deleteRequest = async (tokenData, rejectID) => {

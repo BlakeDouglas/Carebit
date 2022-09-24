@@ -13,9 +13,10 @@ import SelectDropdown from "react-native-select-dropdown";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import { setSelectedUser, setTokenData } from "../redux/actions";
 
-export default function CustomNotificationScreen({ route, navigation }) {
-  const selectedUser = route.params.selectedUser || route.params;
+export default function CustomNotificationScreen({ navigation }) {
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const [isCustom, setIsCustom] = useState(

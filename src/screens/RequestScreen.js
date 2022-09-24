@@ -142,7 +142,13 @@ const RequestScreen = ({ navigation }) => {
   getRequests(tokenData);
 
   useEffect(() => {
-    setData(backgroundData.filter((iter) => iter.status === "Pending"));
+    const idType = tokenData.type + "ID";
+    setData(
+      backgroundData.filter(
+        (iter) =>
+          iter.status === "Pending" && iter[idType] !== tokenData[idType]
+      )
+    );
   }, [backgroundData]);
 
   const renderItem = ({ item }) => {
