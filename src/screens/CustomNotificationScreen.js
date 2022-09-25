@@ -21,8 +21,10 @@ export default function CustomNotificationScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const [isCustom, setIsCustom] = useState(
     tokenData.caregiveeID.length !== 0
-      ? tokenData.caregiveeID[tokenData.selected].healthProfile
-      : 0 === 4
+      ? tokenData.caregiveeID[tokenData.selected].healthProfile === 4
+        ? true
+        : false
+      : true
   );
   const [isHrAlerts, setIsHrAlerts] = useState(true);
   const [isActivityAlerts, setIsActivityAlerts] = useState(true);
@@ -81,6 +83,7 @@ export default function CustomNotificationScreen({ navigation }) {
         }
       );
       const json = await response.json();
+      console.log(selectedUser);
       if (json.thresholds) setThresholds(json.thresholds);
     } catch (error) {
       console.log("Caught error in /thresholds: " + error);

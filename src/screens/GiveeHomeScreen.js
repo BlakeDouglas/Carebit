@@ -73,7 +73,7 @@ export default function GiveeHomeScreen({ navigation }) {
   const windowHeight = useWindowDimensions().height;
 
   const [number, setNumber] = useState(() => {
-    return tokenData.caregiverID.length !== 0
+    return tokenData.caregiverID !== null && tokenData.caregiverID.length !== 0
       ? tokenData.caregiverID[tokenData.selected].phone
       : "0";
   });
@@ -474,7 +474,8 @@ export default function GiveeHomeScreen({ navigation }) {
                 numberOfLines={1}
               >
                 Your Caregiver is{" "}
-                {tokenData.caregiverID.length !== 0
+                {tokenData.caregiverID !== null &&
+                tokenData.caregiverID.length !== 0
                   ? tokenData.caregiverID[tokenData.selected].firstName
                   : "N/A"}
               </Text>
@@ -501,7 +502,8 @@ export default function GiveeHomeScreen({ navigation }) {
                 />
                 <Text style={styles.callText}>
                   Call{" "}
-                  {tokenData.caregiverID.length !== 0
+                  {tokenData.caregiverID !== null &&
+                  tokenData.caregiverID.length !== 0
                     ? tokenData.caregiverID[tokenData.selected].firstName
                     : "N/A"}
                 </Text>

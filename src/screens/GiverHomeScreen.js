@@ -34,7 +34,7 @@ export default function GiverHomeScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
 
   const [number, setNumber] = useState(() => {
-    return tokenData.caregiveeID.length !== 0
+    return tokenData.caregiveeID !== null && tokenData.caregiveeID.length !== 0
       ? tokenData.caregiveeID[tokenData.selected].phone
       : "0";
   });
@@ -145,7 +145,7 @@ export default function GiverHomeScreen({ navigation }) {
 
   const fetchData = async () => {
     const caregiveeID =
-      tokenData.caregiveeID.length !== 0
+      tokenData.caregiveeID !== null && tokenData.caregiveeID.length !== 0
         ? tokenData.caregiveeID[tokenData.selected].caregiveeID
         : null;
     if (!fitbitAccessToken) {
@@ -329,7 +329,8 @@ export default function GiverHomeScreen({ navigation }) {
                 numberOfLines={1}
               >
                 Your Caregivee is{" "}
-                {tokenData.caregiveeID.length !== 0
+                {tokenData.caregiveeID !== null &&
+                tokenData.caregiveeID.length !== 0
                   ? tokenData.caregiveeID[tokenData.selected].firstName
                   : "N/A"}
               </Text>
@@ -355,7 +356,8 @@ export default function GiverHomeScreen({ navigation }) {
                 />
                 <Text style={styles.callText}>
                   Call{" "}
-                  {tokenData.caregiveeID.length !== 0
+                  {tokenData.caregiveeID !== null &&
+                  tokenData.caregiveeID.length !== 0
                     ? tokenData.caregiveeID[tokenData.selected].firstName
                     : "N/A"}
                 </Text>
