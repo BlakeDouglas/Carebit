@@ -117,13 +117,17 @@ export default function SettingsOverviewScreen({ navigation }) {
           <SafeAreaView style={styles.Box}>
             <Text style={styles.BoxTitle}>Name</Text>
             <Text style={styles.BoxSub}>
-              {tokenData.caregiveeID[tokenData.selected].physName || "N/A"}
+              {tokenData[oppositeUser + "ID"].length !== 0
+                ? tokenData[oppositeUser + "ID"][tokenData.selected].physName
+                : "N/A"}
             </Text>
           </SafeAreaView>
           <SafeAreaView style={styles.Box}>
             <Text style={styles.BoxTitle}>Phone</Text>
             <Text style={styles.BoxSub}>
-              {tokenData.caregiveeID[tokenData.selected].physPhone || "N/A"}
+              {tokenData[oppositeUser + "ID"].length !== 0
+                ? tokenData[oppositeUser + "ID"][tokenData.selected].physPhone
+                : "N/A"}
             </Text>
           </SafeAreaView>
 
@@ -163,7 +167,9 @@ export default function SettingsOverviewScreen({ navigation }) {
               }}
             >
               <Text style={styles.BoxSub}>
-                {tokenData.caregiveeID[tokenData.selected].healthProfile === 4
+                {tokenData[oppositeUser + "ID"].length !== 0 &&
+                tokenData[oppositeUser + "ID"][tokenData.selected]
+                  .healthProfile === 4
                   ? "On"
                   : "Off"}
               </Text>

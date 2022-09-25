@@ -163,7 +163,7 @@ export default function ModifiedCaregiveeAccountCreation({
 
   return (
     <ImageBackground
-      source={require("../../assets/images/background-hearts.imageset/background03.png")} // Edit me if you find a better image~!
+      source={require("../../assets/images/background-hearts.imageset/background03.png")}
       resizeMode="cover"
       style={GlobalStyle.Background}
     >

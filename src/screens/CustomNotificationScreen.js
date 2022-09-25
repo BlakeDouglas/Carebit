@@ -20,7 +20,9 @@ export default function CustomNotificationScreen({ navigation }) {
   const dispatch = useDispatch();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const [isCustom, setIsCustom] = useState(
-    tokenData.caregiveeID[tokenData.selected].healthProfile === 4
+    tokenData.caregiveeID.length !== 0
+      ? tokenData.caregiveeID[tokenData.selected].healthProfile
+      : 0 === 4
   );
   const [isHrAlerts, setIsHrAlerts] = useState(true);
   const [isActivityAlerts, setIsActivityAlerts] = useState(true);

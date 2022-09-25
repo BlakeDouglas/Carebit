@@ -18,11 +18,13 @@ export default function GiverSettingsScreen({ navigation }) {
   };
 
   const customAlertButtonHandler = () => {
+    if (tokenData.caregiveeID.length === 0) return;
     dispatch(setSelectedUser(tokenData.caregiveeID[tokenData.selected]));
     navigation.navigate("CustomNotification");
   };
 
   const activityButtonHandler = () => {
+    if (tokenData.caregiveeID.length === 0) return;
     dispatch(setSelectedUser(tokenData.caregiveeID[tokenData.selected]));
     navigation.navigate("ActivityLevel");
   };

@@ -32,18 +32,12 @@ export default function GiverHomeScreen({ navigation }) {
   const [fitbitAccessToken, setFitbitAccessToken] = useState(null);
   const userData = useSelector((state) => state.Reducers.userData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  let phone;
-  if ((tokenData.caregiveeID.length !== 0) !== undefined) {
-    console.log("LENGTH HERE: " + tokenData.caregiveeID.length);
-    phone = tokenData.caregiveeID[tokenData.selected].phone;
-    console.log("Phone # set");
-  } else {
-    phone = "0";
-  }
-  const args = {
-    phone,
-    prompt: true,
-  };
+
+  const [number, setNumber] = useState(() => {
+    return tokenData.caregiveeID.length !== 0
+      ? tokenData.caregiveeID[tokenData.selected].phone
+      : "0";
+  });
   const [refreshing, setRefreshing] = React.useState(false);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -150,10 +144,10 @@ export default function GiverHomeScreen({ navigation }) {
   };
 
   const fetchData = async () => {
-    let caregiveeID;
-    tokenData.caregeeID
-      ? (caregiveeID = tokenData.caregiveeID[tokenData.selected].caregiveeID)
-      : (caregiveeID = null);
+    const caregiveeID =
+      tokenData.caregiveeID.length !== 0
+        ? tokenData.caregiveeID[tokenData.selected].caregiveeID
+        : null;
     if (!fitbitAccessToken) {
       // Seems that refresh has a cooldown. Switch this on if u get invalid token
       // await refreshFitbitAccessToken();

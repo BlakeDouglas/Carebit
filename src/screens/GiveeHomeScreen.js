@@ -69,20 +69,14 @@ export default function GiveeHomeScreen({ navigation }) {
   }, []);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const userData = useSelector((state) => state.Reducers.userData);
-  let number;
-  console.log(tokenData.caregiverID.length);
-  if (tokenData.caregiverID.length !== 0) {
-    number = tokenData.caregiverID[tokenData.selected].phone;
-  } else {
-    number = "0";
-  }
-  const args = {
-    number,
-    prompt: true,
-  };
-
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
+
+  const [number, setNumber] = useState(() => {
+    return tokenData.caregiverID.length !== 0
+      ? tokenData.caregiverID[tokenData.selected].phone
+      : "0";
+  });
 
   return (
     <View style={{ height: windowHeight, width: windowWidth }}>
@@ -496,7 +490,10 @@ export default function GiveeHomeScreen({ navigation }) {
               <TouchableOpacity
                 style={styles.callBody}
                 onPress={() => {
-                  call(args).catch(console.error);
+                  call({
+                    number,
+                    prompt: true,
+                  }).catch(console.error);
                 }}
               >
                 <Image
