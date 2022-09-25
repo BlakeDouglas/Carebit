@@ -20,38 +20,6 @@ import {
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as SecureStore from "expo-secure-store";
 
-// The outside variable is a boolean to see if login is called within our outside LoginScreen.js
-export const login = async (email, password, dispatch, outside) => {
-  const body = JSON.stringify({ email, password });
-  try {
-    let response = await fetch("https://www.carebit.xyz/login", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: body,
-    });
-    const json = await response.json();
-    if (json.access_token !== undefined) {
-      SecureStore.setItemAsync("carebitcredentials", body);
-      fetchUserData(json, dispatch);
-      dispatch(setTokenData({ ...json, selected: 0 }));
-    } else {
-      if (outside) {
-        await SecureStore.deleteItemAsync("carebitcredentials");
-        console.log("Saved credentials are invalid. Removing...");
-      } else if (json.message === "Email not found")
-        handleError(" Email not found", "email");
-      else {
-        handleError(" Incorrect password", "password");
-      }
-    }
-  } catch (error) {
-    console.log("Caught error in /login: " + error);
-  }
-};
-
 export const fetchUserData = async (jsonTokenData, dispatch) => {
   try {
     let url = "https://www.carebit.xyz/user/" + jsonTokenData.userID;
@@ -127,6 +95,34 @@ export default function LoginScreen({ navigation }) {
 
     if (valid === true) {
       login(inputs.email, inputs.password, dispatch, false);
+    }
+  };
+
+  const login = async (email, password) => {
+    const body = JSON.stringify({ email, password });
+    try {
+      let response = await fetch("https://www.carebit.xyz/login", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: body,
+      });
+      const json = await response.json();
+      if (json.access_token !== undefined) {
+        SecureStore.setItemAsync("carebitcredentials", body);
+        fetchUserData(json, dispatch);
+        dispatch(setTokenData({ ...json, selected: 0 }));
+      } else {
+        if (json.message === "Email not found")
+          handleError(" Email not found", "email");
+        else {
+          handleError(" Incorrect password", "password");
+        }
+      }
+    } catch (error) {
+      console.log("Caught error in /login: " + error);
     }
   };
 
