@@ -83,8 +83,13 @@ export default function CustomNotificationScreen({ navigation }) {
         }
       );
       const json = await response.json();
-      console.log(selectedUser);
-      if (json.thresholds) setThresholds(json.thresholds);
+      if (json.thresholds) {
+        setThresholds(json.thresholds);
+        let copyTokenData = tokenData;
+        copyTokenData.caregiveeID[copyTokenData.selected].healthProfile =
+          json.activityLevel;
+        dispatch(setTokenData(copyTokenData));
+      }
     } catch (error) {
       console.log("Caught error in /thresholds: " + error);
     }
