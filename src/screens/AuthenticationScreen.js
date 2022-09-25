@@ -87,7 +87,7 @@ export default function AuthenticationScreen({ navigation }) {
     if (response?.type === "success")
       makeCaregivee(response.params.code, tokenData, dispatch);
   }, [response]);
-
+  console.log(makeRedirectUri({ scheme: "carebit", path: "callback" }));
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background01.png")}

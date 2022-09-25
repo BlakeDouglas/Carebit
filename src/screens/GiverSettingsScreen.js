@@ -69,10 +69,14 @@ export default function GiverSettingsScreen({ navigation }) {
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Name</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiveeID.length !== 0
+          {tokenData.caregiveeID !== null &&
+          tokenData.caregiveeID.length !== 0 &&
+          tokenData.caregiveeID[0].firstName
             ? tokenData.caregiveeID[tokenData.selected].firstName
             : "N/A"}{" "}
-          {tokenData.caregiveeID.length !== 0
+          {tokenData.caregiveeID !== null &&
+          tokenData.caregiveeID.length !== 0 &&
+          tokenData.caregiveeID[0].firstName
             ? tokenData.caregiveeID[tokenData.selected].lastName
             : "N/A"}
         </Text>
@@ -80,7 +84,9 @@ export default function GiverSettingsScreen({ navigation }) {
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiveeID.length !== 0
+          {tokenData.caregiveeID !== null &&
+          tokenData.caregiveeID.length !== 0 &&
+          tokenData.caregiveeID[0].firstName
             ? "(" +
               tokenData.caregiveeID[tokenData.selected].phone.substring(0, 3) +
               ") " +
@@ -96,7 +102,9 @@ export default function GiverSettingsScreen({ navigation }) {
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Name</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiveeID.length !== 0
+          {tokenData.caregiveeID !== null &&
+          tokenData.caregiveeID.length !== 0 &&
+          tokenData.caregiveeID[0].firstName
             ? tokenData.caregiveeID[tokenData.selected].physName
             : "N/A"}
         </Text>
@@ -104,7 +112,9 @@ export default function GiverSettingsScreen({ navigation }) {
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiveeID.length !== 0
+          {tokenData.caregiveeID !== null &&
+          tokenData.caregiveeID.length !== 0 &&
+          tokenData.caregiveeID[0].firstName
             ? "(" +
               tokenData.caregiveeID[tokenData.selected].physPhone.substring(
                 0,
@@ -153,7 +163,9 @@ export default function GiverSettingsScreen({ navigation }) {
         >
           {/* TODO: For healthProfile == 4 */}
           <Text style={styles.BoxSub}>
-            {tokenData.caregiveeID.length !== 0
+            {tokenData.caregiveeID !== null &&
+            tokenData.caregiveeID.length !== 0 &&
+            tokenData.caregiveeID[0].firstName
               ? tokenData.caregiveeID[tokenData.selected].healthProfile === 4
                 ? "On"
                 : "Off"

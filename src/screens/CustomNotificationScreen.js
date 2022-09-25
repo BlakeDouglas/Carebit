@@ -24,7 +24,7 @@ export default function CustomNotificationScreen({ navigation }) {
       ? tokenData.caregiveeID[tokenData.selected].healthProfile === 4
         ? true
         : false
-      : true
+      : false
   );
   const [isHrAlerts, setIsHrAlerts] = useState(true);
   const [isActivityAlerts, setIsActivityAlerts] = useState(true);
