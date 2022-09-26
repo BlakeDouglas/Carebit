@@ -532,7 +532,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Image
                   source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
                 />
-                <Text style={styles.callText}>
+                <Text style={styles.callText} numberOfLines={2}>
                   Call {selectedUser.firstName || "N/A"}
                 </Text>
               </TouchableOpacity>
