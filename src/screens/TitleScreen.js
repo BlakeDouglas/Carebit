@@ -10,9 +10,8 @@ import GlobalStyle from "../utils/GlobalStyle";
 import React, { useEffect } from "react";
 import * as Linking from "expo-linking";
 import * as SecureStore from "expo-secure-store";
-import { fetchUserData } from "./LoginScreen";
 import { useDispatch } from "react-redux";
-import { setTokenData } from "../redux/actions";
+import { setSelectedUser, setTokenData } from "../redux/actions";
 
 export default function TitleScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -40,20 +39,23 @@ export default function TitleScreen({ navigation }) {
       });
       const json = await response.json();
       if (json.access_token !== undefined) {
-        SecureStore.setItemAsync("carebitcredentials", body);
-        fetchUserData(json, dispatch);
+        dispatch(setTokenData(json));
+
         const oppositeType =
           json.type === "caregiver" ? "caregivee" : "caregiver";
-        const selected =
-          json[oppositeType + "ID"] && json[oppositeType + "ID"].length !== 0
-            ? json[oppositeType + "ID"].findIndex(
-                (iter) => iter.status === "Accepted"
-              )
-            : 0;
-        console.log(selected);
-        dispatch(setTokenData({ ...json, selected }));
+        if (
+          json[oppositeType + "ID"] &&
+          json[oppositeType + "ID"].length !== 0
+        ) {
+          const selected = json[oppositeType + "ID"].find(
+            (iter) => iter.status === "Accepted"
+          );
+          dispatch(setSelectedUser(selected));
+        }
+
+        SecureStore.setItemAsync("carebitcredentials", body);
       } else {
-        await SecureStore.deleteItemAsync("carebitcredentials");
+        SecureStore.deleteItemAsync("carebitcredentials");
         console.log("Saved credentials are invalid. Removing...");
       }
     } catch (error) {

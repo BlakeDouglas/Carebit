@@ -8,7 +8,6 @@ import { resetData, setSelectedUser, setTokenData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
 
 export default function GiverSettingsScreen({ navigation }) {
-  const userData = useSelector((state) => state.Reducers.userData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
@@ -18,15 +17,11 @@ export default function GiverSettingsScreen({ navigation }) {
   };
 
   const customAlertButtonHandler = () => {
-    if (tokenData.caregiveeID.length === 0) return;
-    dispatch(setSelectedUser(tokenData.caregiveeID[tokenData.selected]));
-    navigation.navigate("CustomNotification");
+    navigation.navigate("CustomNotification", { secondarySelectedUser: null });
   };
 
   const activityButtonHandler = () => {
-    if (tokenData.caregiveeID.length === 0) return;
-    dispatch(setSelectedUser(tokenData.caregiveeID[tokenData.selected]));
-    navigation.navigate("ActivityLevel");
+    navigation.navigate("ActivityLevel", { secondarySelectedUser: null });
   };
   return (
     // Header Container
@@ -55,10 +50,10 @@ export default function GiverSettingsScreen({ navigation }) {
         />
         <SafeAreaView style={{ marginLeft: "5%" }}>
           <Text style={{ fontSize: responsiveFontSize(2.8) }}>
-            {userData.firstName} {userData.lastName}
+            {tokenData.firstName || "N/A"} {tokenData.lastName || "N/A"}
           </Text>
           <Text style={{ fontSize: responsiveFontSize(2.1) }}>
-            {userData.email}
+            {tokenData.email || "N/A"}
           </Text>
         </SafeAreaView>
       </SafeAreaView>
@@ -69,30 +64,19 @@ export default function GiverSettingsScreen({ navigation }) {
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Name</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiveeID !== null &&
-          tokenData.caregiveeID.length !== 0 &&
-          tokenData.caregiveeID[0].firstName
-            ? tokenData.caregiveeID[tokenData.selected].firstName
-            : "N/A"}{" "}
-          {tokenData.caregiveeID !== null &&
-          tokenData.caregiveeID.length !== 0 &&
-          tokenData.caregiveeID[0].firstName
-            ? tokenData.caregiveeID[tokenData.selected].lastName
-            : "N/A"}
+          {selectedUser.firstName || "N/A"} {selectedUser.lastName || "N/A"}
         </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiveeID !== null &&
-          tokenData.caregiveeID.length !== 0 &&
-          tokenData.caregiveeID[0].firstName
+          {selectedUser.phone
             ? "(" +
-              tokenData.caregiveeID[tokenData.selected].phone.substring(0, 3) +
+              selectedUser.phone.substring(0, 3) +
               ") " +
-              tokenData.caregiveeID[tokenData.selected].phone.substring(3, 6) +
+              selectedUser.phone.substring(3, 6) +
               "-" +
-              tokenData.caregiveeID[tokenData.selected].phone.substring(6)
+              selectedUser.phone.substring(6)
             : "N/A"}
         </Text>
       </SafeAreaView>
@@ -101,32 +85,18 @@ export default function GiverSettingsScreen({ navigation }) {
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Name</Text>
-        <Text style={styles.BoxSub}>
-          {tokenData.caregiveeID !== null &&
-          tokenData.caregiveeID.length !== 0 &&
-          tokenData.caregiveeID[0].firstName
-            ? tokenData.caregiveeID[tokenData.selected].physName
-            : "N/A"}
-        </Text>
+        <Text style={styles.BoxSub}>{selectedUser.physName || "N/A"}</Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiveeID !== null &&
-          tokenData.caregiveeID.length !== 0 &&
-          tokenData.caregiveeID[0].firstName
+          {selectedUser.physPhone
             ? "(" +
-              tokenData.caregiveeID[tokenData.selected].physPhone.substring(
-                0,
-                3
-              ) +
+              selectedUser.physPhone.substring(0, 3) +
               ") " +
-              tokenData.caregiveeID[tokenData.selected].physPhone.substring(
-                3,
-                6
-              ) +
+              selectedUser.physPhone.substring(3, 6) +
               "-" +
-              tokenData.caregiveeID[tokenData.selected].physPhone.substring(6)
+              selectedUser.physPhone.substring(6)
             : "N/A"}
         </Text>
       </SafeAreaView>
@@ -143,7 +113,6 @@ export default function GiverSettingsScreen({ navigation }) {
             flexDirection: "row",
           }}
         >
-          {/* TODO: For healthProfile != 4 */}
           <Text style={styles.BoxSub}>Active</Text>
           <Image
             style={{ height: 15, width: 15, marginLeft: "1%" }}
@@ -161,15 +130,8 @@ export default function GiverSettingsScreen({ navigation }) {
             flexDirection: "row",
           }}
         >
-          {/* TODO: For healthProfile == 4 */}
           <Text style={styles.BoxSub}>
-            {tokenData.caregiveeID !== null &&
-            tokenData.caregiveeID.length !== 0 &&
-            tokenData.caregiveeID[0].firstName
-              ? tokenData.caregiveeID[tokenData.selected].healthProfile === 4
-                ? "On"
-                : "Off"
-              : "N/A"}
+            {selectedUser.healthProfile === 4 ? "On" : "Off"}
           </Text>
           <Image
             style={{ height: 15, width: 15, marginLeft: "1%" }}

@@ -7,35 +7,36 @@ const initialState = {
     phone: "",
     type: "",
     userID: null,
-    selected: 0,
   },
-  userData: {
+
+  // TODO: Need to remove requestID, sender, status from the /login response. Not sure about /getRequest
+  selectedUser: {
+    email: "",
     firstName: "",
     lastName: "",
-    email: "",
     phone: "",
-    mobilePlatform: "",
-  },
-  physData: {
+    // type: "",
+
+    caregiverID: "",
+
+    caregiveeID: "",
     physName: "",
     physPhone: "",
+    healthProfile: null,
   },
-  selectedUser: null,
 };
 
 // Handles the actions in actions.js
 export default (state = initialState, action) => {
   switch (action.type) {
-    case "SET_USER_DATA":
-      return { ...state, userData: action.payload };
     case "SET_TOKEN_DATA":
       return { ...state, tokenData: action.payload };
-    case "SET_PHYSICIAN_DATA":
-      return { ...state, physData: action.payload };
     case "SET_SELECTED_USER":
       return { ...state, selectedUser: action.payload };
     case "RESET_DATA":
       return initialState;
+    case "RESET_SELECTED_DATA":
+      return { ...state, selectedUser: initialState.selectedUser };
     default:
       return state;
   }

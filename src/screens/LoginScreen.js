@@ -11,51 +11,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import CustomTextInput from "../utils/CustomTextInput";
-import {
-  setPhysicianData,
-  setSelectedUser,
-  setTokenData,
-  setUserData,
-} from "../redux/actions";
+import { setSelectedUser, setTokenData } from "../redux/actions";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as SecureStore from "expo-secure-store";
-
-export const fetchUserData = async (jsonTokenData, dispatch) => {
-  try {
-    let url = "https://www.carebit.xyz/user/" + jsonTokenData.userID;
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + jsonTokenData.access_token,
-      },
-    });
-    const json = await response.json();
-    dispatch(
-      setUserData({
-        firstName: json.user.firstName,
-        lastName: json.user.lastName,
-        email: json.user.email,
-        phone: json.user.phone,
-        mobilePlatform: json.user.mobilePlatform,
-      })
-    );
-    if (json.user.physName !== undefined)
-      dispatch(
-        setPhysicianData({
-          physName: json.user.physName,
-          physPhone: json.user.physPhone,
-          physStreet: json.user.physStreet,
-          physCity: json.user.physCity,
-          physState: json.user.physState,
-          physZip: json.user.physZip,
-        })
-      );
-  } catch (error) {
-    console.log("Caught error in /user: " + error);
-  }
-};
 
 export default function LoginScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -111,9 +69,21 @@ export default function LoginScreen({ navigation }) {
       });
       const json = await response.json();
       if (json.access_token !== undefined) {
+        dispatch(setTokenData(json));
+
+        const oppositeType =
+          json.type === "caregiver" ? "caregivee" : "caregiver";
+        if (
+          json[oppositeType + "ID"] &&
+          json[oppositeType + "ID"].length !== 0
+        ) {
+          const selected = json[oppositeType + "ID"].find(
+            (iter) => iter.status === "Accepted"
+          );
+          dispatch(setSelectedUser(selected));
+        }
+
         SecureStore.setItemAsync("carebitcredentials", body);
-        fetchUserData(json, dispatch);
-        dispatch(setTokenData({ ...json, selected: 0 }));
       } else {
         if (json.message === "Email not found")
           handleError(" Email not found", "email");

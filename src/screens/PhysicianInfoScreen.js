@@ -16,9 +16,9 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import CustomTextInput from "../utils/CustomTextInput";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
-import { setPhysicianData } from "../redux/actions";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { setTokenData } from "../redux/actions";
 
 export default function PhysicianInfoScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -70,8 +70,7 @@ export default function PhysicianInfoScreen({ navigation }) {
         }),
       });
       const json = await response.json();
-      console.log(json.cgvee);
-      dispatch(setPhysicianData(json.cgvee));
+      dispatch(setTokenData({ ...tokenData, ...json }));
     } catch (error) {
       console.log("Caught error in /physician: " + error);
     }

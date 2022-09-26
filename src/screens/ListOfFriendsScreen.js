@@ -21,6 +21,7 @@ import { setSelectedUser, setTokenData } from "../redux/actions";
 const ListOfFriendsScreen = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
   const typeOfRequester =
     tokenData.type === "caregivee" ? "caregivee" : "caregiver";
@@ -30,14 +31,9 @@ const ListOfFriendsScreen = ({ navigation }) => {
   const [backgroundData, setBackgroundData] = useState([]);
 
   const setSelected = () => {
-    dispatch(
-      setTokenData({
-        ...tokenData,
-        selected: backgroundData.findIndex(
-          (iter) => iter.requestID === selectedId
-        ),
-      })
-    );
+    const selected = data.filter((iter) => iter.requestID === selectedId)[0];
+    dispatch(setSelectedUser(selected));
+    navigation.goBack();
   };
 
   const getRequests = async (tokenData) => {
@@ -177,8 +173,9 @@ const ListOfFriendsScreen = ({ navigation }) => {
                   const user = data.filter(
                     (iter) => iter.requestID === selectedId
                   )[0];
-                  dispatch(setSelectedUser(user));
-                  navigation.navigate("SettingsOverview");
+                  navigation.navigate("SettingsOverview", {
+                    secondarySelectedUser: user,
+                  });
                 }}
               >
                 <Image

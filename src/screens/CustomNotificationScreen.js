@@ -15,17 +15,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { setSelectedUser, setTokenData } from "../redux/actions";
 
-export default function CustomNotificationScreen({ navigation }) {
-  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
+export default function CustomNotificationScreen({ navigation, route }) {
+  // Selected user is taken from route passed through settings overview if available.
+  // Otherwise, uses the currently selected connection
+  console.log(route.params);
+  const selectedUser =
+    route.params.secondarySelectedUser ||
+    useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const [isCustom, setIsCustom] = useState(
-    tokenData.caregiveeID.length !== 0
-      ? tokenData.caregiveeID[tokenData.selected].healthProfile === 4
-        ? true
-        : false
-      : false
-  );
+  const [isCustom, setIsCustom] = useState(selectedUser.healthProfile === 4);
   const [isHrAlerts, setIsHrAlerts] = useState(true);
   const [isActivityAlerts, setIsActivityAlerts] = useState(true);
   const [isWandering, setIsWandering] = useState(false);
@@ -34,6 +33,8 @@ export default function CustomNotificationScreen({ navigation }) {
   const [thresholds, setThresholds] = useState(null);
 
   const toggleCustom = () => {
+    if (!route.params.secondarySelectedUser)
+      dispatch(setSelectedUser({ ...selectedUser, healthProfile: 4 }));
     setIsCustom(!isCustom);
   };
   const toggleHrAlerts = () => {
@@ -85,10 +86,8 @@ export default function CustomNotificationScreen({ navigation }) {
       const json = await response.json();
       if (json.thresholds) {
         setThresholds(json.thresholds);
-        let copyTokenData = tokenData;
-        copyTokenData.caregiveeID[copyTokenData.selected].healthProfile =
-          json.activityLevel;
-        dispatch(setTokenData(copyTokenData));
+        if (!route.params.secondarySelectedUser)
+          dispatch(setSelectedUser({ ...selectedUser, healthProfile: 4 }));
       }
     } catch (error) {
       console.log("Caught error in /thresholds: " + error);

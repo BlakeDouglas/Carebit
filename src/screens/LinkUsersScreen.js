@@ -142,34 +142,6 @@ export default function LinkUsersScreen({ navigation }) {
       console.log("Caught error in /createRequest: " + error);
     }
   };
-
-  /* Shouldn't be necessary. Fetches 
-  const getRequests = async (tokenData) => {
-    if (!tokenData.type) return;
-    const body =
-      tokenData.type === "caregivee"
-        ? { caregiveeID: tokenData.caregiveeID, caregiverID: null }
-        : { caregiverID: tokenData.caregiverID, caregiveeID: null };
-    try {
-      const response = await fetch("https://www.carebit.xyz/getRequests", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify(body),
-      });
-      const json = await response.json();
-      dispatch(
-        setTokenData({ ...tokenData, caregiveeID: [json.connections[0]] })
-      );
-    } catch (error) {
-      console.log("Caught error in /getRequests: " + error);
-    }
-  };
-  */
-
   React.useEffect(() => {
     if (response?.type === "success") {
       navigation.navigate("ModifiedCaregiveeAccountCreation", {

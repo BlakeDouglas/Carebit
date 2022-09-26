@@ -15,7 +15,6 @@ import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
-import { setTokenData, setUserData } from "../redux/actions";
 
 export default function ModifiedCaregiveeAccountCreation({
   navigation,

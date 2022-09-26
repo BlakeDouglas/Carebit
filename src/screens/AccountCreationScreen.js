@@ -15,7 +15,7 @@ import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
-import { setTokenData, setUserData } from "../redux/actions";
+import { setTokenData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
 
 export default function AccountCreationScreen({ navigation }) {
@@ -109,12 +109,8 @@ export default function AccountCreationScreen({ navigation }) {
       });
       const json = await response.json();
       if (json.access_token !== undefined) {
-        dispatch(setUserData({ ...output, password: undefined }));
-        dispatch(setTokenData({ ...tokenData, ...json, selected: 0 }));
-        await SecureStore.setItemAsync(
-          "carebitcredentials",
-          JSON.stringify(body)
-        );
+        dispatch(setTokenData({ ...tokenData, ...json }));
+        SecureStore.setItemAsync("carebitcredentials", JSON.stringify(body));
       } else if (json.error === "Phone number already exists.") {
         handleError(" Phone Number already exists", "phone");
         console.log(json.error);

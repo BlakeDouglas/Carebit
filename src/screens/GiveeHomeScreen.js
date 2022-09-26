@@ -14,12 +14,20 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { Provider, useSelector } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import Modal from "react-native-modal";
 import call from "react-native-phone-call";
+import { resetSelectedData, setSelectedUser } from "../redux/actions";
 
 export default function GiveeHomeScreen({ navigation }) {
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
+  const dispatch = useDispatch();
+  const number = selectedUser.phone || "0";
+
   const [isModal1Visible, setModal1Visible] = useState(false);
   const [isModal2Visible, setModal2Visible] = useState(false);
   const [isModal3Visible, setModal3Visible] = useState(false);
@@ -65,18 +73,46 @@ export default function GiveeHomeScreen({ navigation }) {
   };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
+    updateConnections();
     wait(1000).then(() => setRefreshing(false));
   }, []);
-  const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const userData = useSelector((state) => state.Reducers.userData);
-  const windowWidth = useWindowDimensions().width;
-  const windowHeight = useWindowDimensions().height;
 
-  const [number, setNumber] = useState(() => {
-    return tokenData.caregiverID !== null && tokenData.caregiverID.length !== 0
-      ? tokenData.caregiverID[tokenData.selected].phone
-      : "0";
-  });
+  const updateConnections = async () => {
+    try {
+      const response = await fetch("https://www.carebit.xyz/getRequests", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokenData.access_token,
+        },
+        body: JSON.stringify({
+          caregiverID: null,
+          caregiveeID: tokenData.caregiveeID,
+        }),
+      });
+      const json = await response.json();
+      if (json.connections) {
+        let selected = null;
+        // Pull new data from the same user if possible.
+        selected = json.connections.find(
+          (iter) => iter.email === selectedUser.email
+        );
+
+        // If you cant find, then it was deleted. Find the first Accepted alternative
+        if (!selected)
+          selected = json.connections.find(
+            (iter) => iter.status === "Accepted"
+          );
+
+        // If you could find one, set it. Otherwise, reset the state
+        if (selected) dispatch(setSelectedUser(selected));
+        else dispatch(resetSelectedData());
+      }
+    } catch (error) {
+      console.log("Caught error in /getRequests: " + error);
+    }
+  };
 
   return (
     <View style={{ height: windowHeight, width: windowWidth }}>
@@ -462,7 +498,7 @@ export default function GiveeHomeScreen({ navigation }) {
                   fontSize: responsiveFontSize(1.9),
                 }}
               >
-                Hello {userData.firstName || "N/A"}
+                Hello {tokenData.firstName || "N/A"}
               </Text>
               <Text
                 style={{
@@ -473,11 +509,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 }}
                 numberOfLines={1}
               >
-                Your Caregiver is{" "}
-                {tokenData.caregiverID !== null &&
-                tokenData.caregiverID.length !== 0
-                  ? tokenData.caregiverID[tokenData.selected].firstName
-                  : "N/A"}
+                Your Caregiver is {selectedUser.firstName || "N/A"}
               </Text>
             </SafeAreaView>
             <SafeAreaView
@@ -501,11 +533,7 @@ export default function GiveeHomeScreen({ navigation }) {
                   source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
                 />
                 <Text style={styles.callText}>
-                  Call{" "}
-                  {tokenData.caregiverID !== null &&
-                  tokenData.caregiverID.length !== 0
-                    ? tokenData.caregiverID[tokenData.selected].firstName
-                    : "N/A"}
+                  Call {selectedUser.firstName || "N/A"}
                 </Text>
               </TouchableOpacity>
             </SafeAreaView>

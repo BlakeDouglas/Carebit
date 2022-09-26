@@ -109,7 +109,6 @@ const RequestScreen = ({ navigation }) => {
       const json = await response.json();
       if (json.request) {
         {
-          dispatch(setSelectedUser(item));
           getRequests(tokenData);
         }
       } else {

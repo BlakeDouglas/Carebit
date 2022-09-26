@@ -8,23 +8,18 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import {
-  responsiveFontSize,
-  responsiveWidth,
-} from "react-native-responsive-dimensions";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedUser, setTokenData } from "../redux/actions";
-export default function AccountCreationScreen({ navigation }) {
+import { setSelectedUser } from "../redux/actions";
+export default function AccountCreationScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
+  const selectedUser =
+    route.params.secondarySelectedUser ||
+    useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
 
-  const setActivity = async (tokenData, level) => {
-    if (!selectedUser) {
-      console.log("Couldn't set activity level");
-      return;
-    }
+  const setActivity = async (level) => {
     try {
       const response = await fetch(
         "https://www.carebit.xyz/activity/" +
@@ -41,18 +36,11 @@ export default function AccountCreationScreen({ navigation }) {
         }
       );
       const responseText = await response.text();
-      if (!responseText)
-        console.log("Successfylly set activity level to " + level);
-      else {
-        console.log("Error setting activity level");
-        return;
-      }
-      var tempTokenData = tokenData;
-      tempTokenData.caregiveeID[tempTokenData.selected].healthProfile = level;
-      dispatch(setSelectedUser({ ...selectedUser, healthProfile: level }));
-      dispatch(setTokenData(tempTokenData));
-      console.log(selectedUser);
-      navigation.goBack();
+      if (!responseText) {
+        if (!route.params.secondarySelectedUser)
+          dispatch(setSelectedUser({ ...selectedUser, healthProfile: level }));
+        navigation.goBack();
+      } else console.log("Error setting activity level");
     } catch (error) {
       console.log("Caught error in /activity: " + error);
     }
@@ -90,7 +78,7 @@ export default function AccountCreationScreen({ navigation }) {
             <TouchableOpacity
               style={styles.InnerContainers}
               onPress={() => {
-                setActivity(tokenData, 3);
+                setActivity(3);
               }}
             >
               <SafeAreaView>
@@ -106,7 +94,7 @@ export default function AccountCreationScreen({ navigation }) {
             <TouchableOpacity
               style={styles.InnerContainers}
               onPress={() => {
-                setActivity(tokenData, 2);
+                setActivity(2);
               }}
             >
               <SafeAreaView>
@@ -123,7 +111,7 @@ export default function AccountCreationScreen({ navigation }) {
             <TouchableOpacity
               style={styles.InnerContainers}
               onPress={() => {
-                setActivity(tokenData, 1);
+                setActivity(1);
               }}
             >
               <SafeAreaView>

@@ -7,12 +7,11 @@ import { resetData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
 
 export default function GiveeSettingsScreen({ navigation }) {
-  const userData = useSelector((state) => state.Reducers.userData);
-  const physData = useSelector((state) => state.Reducers.physData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
   const logOutButtonHandler = async () => {
-    await SecureStore.deleteItemAsync("carebitcredentials");
+    SecureStore.deleteItemAsync("carebitcredentials");
     dispatch(resetData());
   };
   return (
@@ -42,10 +41,10 @@ export default function GiveeSettingsScreen({ navigation }) {
         />
         <SafeAreaView style={{ marginLeft: "5%" }}>
           <Text style={{ fontSize: responsiveFontSize(2.8), width: "100%" }}>
-            {userData.firstName || "N/A"} {userData.lastName || "N/A"}
+            {tokenData.firstName || "N/A"} {tokenData.lastName || "N/A"}
           </Text>
           <Text style={{ fontSize: responsiveFontSize(2.1) }}>
-            {userData.email || "N/A"}
+            {tokenData.email || "N/A"}
           </Text>
         </SafeAreaView>
       </SafeAreaView>
@@ -56,32 +55,23 @@ export default function GiveeSettingsScreen({ navigation }) {
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Name</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiverID !== null && tokenData.caregiverID.length !== 0
-            ? tokenData.caregiverID[tokenData.selected].firstName
-            : "N/A"}{" "}
-          {tokenData.caregiverID !== null && tokenData.caregiverID.length !== 0
-            ? tokenData.caregiverID[tokenData.selected].lastName
-            : "N/A"}
+          {selectedUser.firstName || "N/A"} {selectedUser.lastName || "N/A"}
         </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Email</Text>
-        <Text style={styles.BoxSub}>
-          {tokenData.caregiverID !== null && tokenData.caregiverID.length !== 0
-            ? tokenData.caregiverID[tokenData.selected].email
-            : "N/A"}
-        </Text>
+        <Text style={styles.BoxSub}>{selectedUser.email || "N/A"}</Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
         <Text style={styles.BoxSub}>
-          {tokenData.caregiverID !== null && tokenData.caregiverID.length !== 0
+          {selectedUser.phone
             ? "(" +
-              tokenData.caregiverID[tokenData.selected].phone.substring(0, 3) +
+              selectedUser.phone.substring(0, 3) +
               ") " +
-              tokenData.caregiverID[tokenData.selected].phone.substring(3, 6) +
+              selectedUser.phone.substring(3, 6) +
               "-" +
-              tokenData.caregiverID[tokenData.selected].phone.substring(6)
+              selectedUser.phone.substring(6)
             : "N/A"}
         </Text>
       </SafeAreaView>
@@ -90,17 +80,17 @@ export default function GiveeSettingsScreen({ navigation }) {
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Name</Text>
-        <Text style={styles.BoxSub}>{physData.physName || "N/A"}</Text>
+        <Text style={styles.BoxSub}>{tokenData.physName || "N/A"}</Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
         <Text style={styles.BoxSub}>
           {"(" +
-            physData.physPhone.substring(0, 3) +
+            tokenData.physPhone.substring(0, 3) +
             ") " +
-            physData.physPhone.substring(3, 6) +
+            tokenData.physPhone.substring(3, 6) +
             "-" +
-            physData.physPhone.substring(6) || "N/A"}
+            tokenData.physPhone.substring(6) || "N/A"}
         </Text>
       </SafeAreaView>
       <SafeAreaView

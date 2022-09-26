@@ -13,13 +13,14 @@ import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import moment from "moment";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import call from "react-native-phone-call";
 import { useDrawerStatus } from "@react-navigation/drawer";
 import * as WebBrowser from "expo-web-browser";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import { resetSelectedData, setSelectedUser } from "../redux/actions";
 
 let date = moment().format("dddd, MMM D");
 
@@ -30,24 +31,57 @@ export default function GiverHomeScreen({ navigation }) {
   const [HeartMin, setHeartMin] = useState(0);
   const [HeartAvg, setHeartAvg] = useState(0);
   const [fitbitAccessToken, setFitbitAccessToken] = useState(null);
-  const userData = useSelector((state) => state.Reducers.userData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
+  const dispatch = useDispatch();
 
-  const [number, setNumber] = useState(() => {
-    return tokenData.caregiveeID !== null &&
-      tokenData.caregiveeID.length !== 0 &&
-      tokenData.caregiveeID[0].firstName
-      ? tokenData.caregiveeID[tokenData.selected].phone
-      : "0";
-  });
+  const number = selectedUser.phone || "0";
   const [refreshing, setRefreshing] = React.useState(false);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
+    updateConnections();
     wait(1000).then(() => setRefreshing(false));
   }, []);
+
+  const updateConnections = async () => {
+    try {
+      const response = await fetch("https://www.carebit.xyz/getRequests", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokenData.access_token,
+        },
+        body: JSON.stringify({
+          caregiverID: tokenData.caregiverID,
+          caregiveeID: null,
+        }),
+      });
+      const json = await response.json();
+      if (json.connections) {
+        let selected = null;
+        // Pull new data from the same user if possible.
+        selected = json.connections.find(
+          (iter) => iter.email === selectedUser.email
+        );
+
+        // If you cant find, then it was deleted. Find the first Accepted alternative
+        if (!selected)
+          selected = json.connections.find(
+            (iter) => iter.status === "Accepted"
+          );
+
+        // If you could find one, set it. Otherwise, reset the state
+        if (selected) dispatch(setSelectedUser(selected));
+        else dispatch(resetSelectedData());
+      }
+    } catch (error) {
+      console.log("Caught error in /getRequests: " + error);
+    }
+  };
 
   // Get Device expo-token-Notification
   async function registerForPushNotificationsAsync() {
@@ -145,12 +179,7 @@ export default function GiverHomeScreen({ navigation }) {
     }
   };
   const fetchData = async () => {
-    const caregiveeID =
-      tokenData.caregiveeID !== null &&
-      tokenData.caregiveeID.length !== 0 &&
-      tokenData.caregiveeID[0].firstName
-        ? tokenData.caregiveeID[tokenData.selected].caregiveeID
-        : null;
+    const caregiveeID = selectedUser.caregiveeID;
     if (!fitbitAccessToken) {
       // Seems that refresh has a cooldown. Switch this on if u get invalid token
       // await refreshFitbitAccessToken();
@@ -318,7 +347,7 @@ export default function GiverHomeScreen({ navigation }) {
                   fontSize: responsiveFontSize(1.8),
                 }}
               >
-                Hello {userData.firstName || "N/A"}
+                Hello {tokenData.firstName || "N/A"}
               </Text>
               <Text
                 style={{
@@ -331,12 +360,7 @@ export default function GiverHomeScreen({ navigation }) {
                 }}
                 numberOfLines={1}
               >
-                Your Caregivee is{" "}
-                {tokenData.caregiveeID !== null &&
-                tokenData.caregiveeID.length !== 0 &&
-                tokenData.caregiveeID[0].firstName
-                  ? tokenData.caregiveeID[tokenData.selected].firstName
-                  : "N/A"}
+                Your Caregivee is {selectedUser.firstName || "N/A"}
               </Text>
             </SafeAreaView>
             <SafeAreaView
@@ -359,12 +383,7 @@ export default function GiverHomeScreen({ navigation }) {
                   source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
                 />
                 <Text style={styles.callText}>
-                  Call{" "}
-                  {tokenData.caregiveeID !== null &&
-                  tokenData.caregiveeID.length !== 0 &&
-                  tokenData.caregiveeID[0].firstName
-                    ? tokenData.caregiveeID[tokenData.selected].firstName
-                    : "N/A"}
+                  Call {selectedUser.firstName || "N/A"}
                 </Text>
               </TouchableOpacity>
             </SafeAreaView>

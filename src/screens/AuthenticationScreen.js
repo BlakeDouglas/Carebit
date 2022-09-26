@@ -15,7 +15,8 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setTokenData } from "../redux/actions";
+import { resetData, setTokenData } from "../redux/actions";
+import * as SecureStore from "expo-secure-store";
 
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 
@@ -39,9 +40,7 @@ export const makeCaregivee = async (code, tokenData, dispatch) => {
     const json = await response.json();
 
     if (json.caregiveeID !== undefined) {
-      dispatch(
-        setTokenData({ ...tokenData, ...json, type: "caregivee", selected: 0 })
-      );
+      dispatch(setTokenData({ ...tokenData, ...json, type: "caregivee" }));
     } else
       Alert.alert("Error", json.error, json.error_0, [
         { text: "Ok", onPress: () => {}, style: "cancel" },
@@ -83,10 +82,16 @@ export default function AuthenticationScreen({ navigation }) {
     discovery
   );
 
+  const logOutButtonHandler = async () => {
+    await SecureStore.deleteItemAsync("carebitcredentials");
+    dispatch(resetData());
+  };
+
   React.useEffect(() => {
     if (response?.type === "success")
       makeCaregivee(response.params.code, tokenData, dispatch);
   }, [response]);
+
   console.log(makeRedirectUri({ scheme: "carebit", path: "callback" }));
   return (
     <ImageBackground
@@ -148,6 +153,18 @@ export default function AuthenticationScreen({ navigation }) {
               }}
             >
               <Text style={GlobalStyle.ButtonText}>Link Fitbit</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                GlobalStyle.Button,
+                { marginTop: 20, backgroundColor: "transparent" },
+              ]}
+              onPress={() => {
+                logOutButtonHandler();
+              }}
+            >
+              <Text style={GlobalStyle.ButtonText}>Cancel</Text>
             </TouchableOpacity>
           </SafeAreaView>
         </SafeAreaView>

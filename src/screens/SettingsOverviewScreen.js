@@ -12,18 +12,21 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { Provider, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 
-export default function SettingsOverviewScreen({ navigation }) {
+export default function SettingsOverviewScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
+  const selectedUser =
+    route.params.secondarySelectedUser ||
+    useSelector((state) => state.Reducers.selectedUser);
+
   const customAlertButtonHandler = () => {
-    navigation.navigate("CustomNotification");
+    navigation.navigate("CustomNotification", route.params);
   };
 
   const activityButtonHandler = () => {
-    navigation.navigate("ActivityLevel");
+    navigation.navigate("ActivityLevel", route.params);
   };
 
-  const deleteRequest = async (tokenData, rejectID) => {
+  const deleteConnection = async (tokenData, rejectID) => {
     try {
       const response = await fetch(
         "https://www.carebit.xyz/deleteRequest/" + rejectID,
@@ -37,7 +40,6 @@ export default function SettingsOverviewScreen({ navigation }) {
         }
       );
       const json = await response.json();
-      console.log("Result from delete: " + JSON.stringify(json));
       navigation.navigate("HomeScreen");
     } catch (error) {
       console.log("Caught error in /deleteRequest: " + error);
@@ -62,15 +64,13 @@ export default function SettingsOverviewScreen({ navigation }) {
         {
           text: "Continue",
           onPress: () => {
-            deleteRequest(tokenData, item.requestID);
+            deleteConnection(tokenData, item.requestID);
           },
         },
       ]
     );
   };
 
-  console.log("------ Selected User -------");
-  console.log(selectedUser);
   return (
     // Header Container
     <SafeAreaView style={{ flex: 1, marginTop: "2%" }}>
@@ -116,19 +116,11 @@ export default function SettingsOverviewScreen({ navigation }) {
           </SafeAreaView>
           <SafeAreaView style={styles.Box}>
             <Text style={styles.BoxTitle}>Name</Text>
-            <Text style={styles.BoxSub}>
-              {tokenData[oppositeUser + "ID"].length !== 0
-                ? tokenData[oppositeUser + "ID"][tokenData.selected].physName
-                : "N/A"}
-            </Text>
+            <Text style={styles.BoxSub}>{selectedUser.physName || "N/A"}</Text>
           </SafeAreaView>
           <SafeAreaView style={styles.Box}>
             <Text style={styles.BoxTitle}>Phone</Text>
-            <Text style={styles.BoxSub}>
-              {tokenData[oppositeUser + "ID"].length !== 0
-                ? tokenData[oppositeUser + "ID"][tokenData.selected].physPhone
-                : "N/A"}
-            </Text>
+            <Text style={styles.BoxSub}>{selectedUser.physPhone || "N/A"}</Text>
           </SafeAreaView>
 
           <SafeAreaView style={styles.TitleContainer}>
@@ -146,7 +138,6 @@ export default function SettingsOverviewScreen({ navigation }) {
                 flexDirection: "row",
               }}
             >
-              {/* TODO: For healthProfile != 4 */}
               <Text style={styles.BoxSub}>Active</Text>
               <Image
                 style={{ height: 15, width: 15, marginLeft: "1%" }}
@@ -167,11 +158,7 @@ export default function SettingsOverviewScreen({ navigation }) {
               }}
             >
               <Text style={styles.BoxSub}>
-                {tokenData[oppositeUser + "ID"].length !== 0 &&
-                tokenData[oppositeUser + "ID"][tokenData.selected]
-                  .healthProfile === 4
-                  ? "On"
-                  : "Off"}
+                {selectedUser.healthProfile === 4 ? "On" : "Off"}
               </Text>
               <Image
                 style={{ height: 15, width: 15, marginLeft: "1%" }}

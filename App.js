@@ -60,13 +60,12 @@ const App = () => {
 
 const RootNavigation = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const physData = useSelector((state) => state.Reducers.physData);
   console.log(tokenData);
   return (
     <NavigationContainer>
       {tokenData.access_token === "" ? (
         <AuthStack />
-      ) : (tokenData.type === "caregivee" && !physData.physName) ||
+      ) : (tokenData.type === "caregivee" && !tokenData.physName) ||
         !tokenData.caregiveeID ? (
         <MiddleStack />
       ) : (
@@ -101,7 +100,6 @@ const AuthStack = () => {
 // Stack of screens to handle little things between authentication and the home screen,
 // like phys data, first-time instructions, etc
 const MiddleStack = () => {
-  const physData = useSelector((state) => state.Reducers.physData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   return (
     <Stack.Navigator>
@@ -135,7 +133,7 @@ const MiddleStack = () => {
             component={ActivityLevelScreen}
           />
         )}
-        {tokenData.type === "caregivee" && !physData.physName && (
+        {tokenData.type === "caregivee" && !tokenData.physName && (
           <Stack.Screen
             name="PhysicianInfoScreen"
             component={PhysicianInfoScreen}
