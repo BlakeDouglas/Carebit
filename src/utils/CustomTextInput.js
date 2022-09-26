@@ -2,7 +2,14 @@
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useState } from "react";
-import { StyleSheet, Text, Image, TextInput, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  Image,
+  TouchableOpacity,
+  TextInput,
+  View,
+} from "react-native";
 
 const CustomTextInput = ({
   label,
@@ -19,6 +26,8 @@ const CustomTextInput = ({
   const phoneImage = require("../../assets/images/phone-outline.png");
   const emailImage = require("../../assets/images/email-outline.png");
   const lockImage = require("../../assets/images/lock-outline.png");
+  const eyeImage = require("../../assets/images/eye-outline.png");
+  const eyeOffImage = require("../../assets/images/eye-off-outline.png");
 
   return (
     <View style={{ marginBottom: 15 }}>
@@ -73,13 +82,16 @@ const CustomTextInput = ({
           {...props}
         />
         {password && (
-          <Icon
+          <TouchableOpacity
             onPress={() => {
               setHidePassword(!hidePassword);
             }}
-            style={{ fontSize: 22, color: "white" }}
-            name={hidePassword ? "eye-outline" : "eye-off-outline"}
-          />
+          >
+            <Image
+              source={hidePassword ? eyeOffImage : eyeImage}
+              style={{ height: 22, width: 22 }}
+            />
+          </TouchableOpacity>
         )}
       </View>
     </View>
