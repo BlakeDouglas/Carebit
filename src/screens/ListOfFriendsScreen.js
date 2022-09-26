@@ -61,6 +61,51 @@ const ListOfFriendsScreen = ({ navigation }) => {
 
   getRequests(tokenData);
 
+  const oppositeUser =
+    tokenData.type === "caregiver" ? "caregivee" : "caregiver";
+
+  const onPressDelete = (item) => {
+    console.log(item);
+    Alert.alert(
+      "Remove " +
+        item.firstName +
+        " " +
+        item.lastName +
+        " as a " +
+        oppositeUser +
+        "?",
+      "",
+      [
+        { text: "Cancel", onPress: () => {}, style: "cancel" },
+        {
+          text: "Continue",
+          onPress: () => {
+            deleteConnection(tokenData, item.requestID);
+          },
+        },
+      ]
+    );
+  };
+  const deleteConnection = async (tokenData, rejectID) => {
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/deleteRequest/" + rejectID,
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+        }
+      );
+      const json = await response.json();
+      navigation.navigate("HomeScreen");
+    } catch (error) {
+      console.log("Caught error in /deleteRequest: " + error);
+    }
+  };
+
   useEffect(() => {
     setData(backgroundData.filter((iter) => iter.status === "Accepted"));
   }, [backgroundData]);
@@ -166,22 +211,23 @@ const ListOfFriendsScreen = ({ navigation }) => {
                   alignItems: "center",
                   height: "100%",
                   width: "100%",
-                  //  backgroundColor: "blue",
+                  //backgroundColor: "blue",
                   borderRadius: 8,
                 }}
                 onPress={() => {
-                  const user = data.filter(
-                    (iter) => iter.requestID === selectedId
-                  )[0];
-                  navigation.navigate("SettingsOverview", {
-                    secondarySelectedUser: user,
-                  });
+                  onPressDelete(selectedUser);
                 }}
               >
-                <Image
-                  style={{ height: 40, width: 40 }}
-                  source={require("../../assets/images/settings/settings.png")}
-                />
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: "red",
+                    fontWeight: "bold",
+                    fontSize: responsiveFontSize(3),
+                  }}
+                >
+                  Delete
+                </Text>
               </TouchableOpacity>
             </View>
           )}
