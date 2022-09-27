@@ -81,6 +81,9 @@ export default function AccountCreationScreen({ navigation }) {
     } else if (!/[0-9]/.test(inputs.password)) {
       handleError(" Must contain a number", "password");
       valid = false;
+    } else if (!/[A-Z]/.test(inputs.password)) {
+      handleError(" Must contain capital", "password");
+      valid = false;
     }
 
     if (valid) {
