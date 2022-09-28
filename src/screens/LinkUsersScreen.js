@@ -48,7 +48,9 @@ export default function LinkUsersScreen({ navigation }) {
         },
         {
           text: "OK",
-          onPress: promptAsync,
+          onPress: () => {
+            navigation.navigate("ModifiedCaregiveeAccountCreation");
+          },
         },
       ]
     );

@@ -18,7 +18,7 @@ import RequestScreen from "./src/screens/RequestScreen";
 import RoleSelectScreen from "./src/screens/RoleSelectScreen";
 import SettingsOverviewScreen from "./src/screens/SettingsOverviewScreen";
 import TitleScreen from "./src/screens/TitleScreen";
-
+import ModifiedAuthScreen from "./src/screens/ModifiedAuthScreen";
 import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
 import { Provider, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
@@ -125,7 +125,13 @@ const MiddleStack = () => {
             component={ModifiedCaregiveeAccountCreation}
           />
         )}
-
+        {tokenData.type === "caregiver" && tokenData.caregiveeID === null && (
+          <Stack.Screen
+            name="ModifiedAuthScreen"
+            component={ModifiedAuthScreen}
+          />
+        )}
+        <Stack.Screen name="Home" component={GiverHomeScreen} />
         {/* TODO: Put some real logic here, or implement elsewhere */}
         {false && (
           <Stack.Screen
@@ -133,7 +139,7 @@ const MiddleStack = () => {
             component={ActivityLevelScreen}
           />
         )}
-        {tokenData.type === "caregivee" && !tokenData.physName && (
+        {tokenData.type === "caregivee" && tokenData.physName && (
           <Stack.Screen
             name="PhysicianInfoScreen"
             component={PhysicianInfoScreen}
