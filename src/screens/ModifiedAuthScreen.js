@@ -13,7 +13,7 @@ import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
 import * as Linking from "expo-linking";
 import GlobalStyle from "../utils/GlobalStyle";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { resetData, setTokenData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
@@ -133,7 +133,6 @@ export default function ModifiedAuthScreen({ navigation, route }) {
         body: JSON.stringify(body),
       });
       const json = await response.json();
-
       console.log("JSON is here: ");
       console.log(json);
       console.log("End of JSON\n\n");
@@ -149,10 +148,10 @@ export default function ModifiedAuthScreen({ navigation, route }) {
       // console.log(json);
       if (json.request) {
         console.log("\nSending accept request: ");
-        console.log(json.caregiveeID);
+        console.log(json.request.caregiveeID);
         console.log(tokenData.caregiverID);
         console.log("End of sent\n\n");
-        await acceptRequest(json[caregiveeID], tokenData.caregiverID);
+        await acceptRequest(json.request.caregiveeID, tokenData.caregiverID);
       }
     } catch (error) {
       console.log("Caught error in /createRequest: " + error);
@@ -186,6 +185,11 @@ export default function ModifiedAuthScreen({ navigation, route }) {
     } catch (error) {
       console.log("Caught error in /acceptCaregiverRequest: " + error);
     }
+  };
+
+  const [errors, setErrors] = useState({});
+  const handleError = (errorMessage, input) => {
+    setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
 
   return (
