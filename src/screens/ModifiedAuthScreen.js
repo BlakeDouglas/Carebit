@@ -17,55 +17,28 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { resetData, setTokenData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
+import { roundToNearestPixel } from "react-native/Libraries/Utilities/PixelRatio";
 
 export default function ModifiedAuthScreen({ navigation, route }) {
   console.log(makeRedirectUri({ scheme: "carebit", path: "callback" }));
-  console.log("Auth Screen");
-  console.log(route.params.json.access_token);
-  console.log("They be present above");
+
   const dispatch = useDispatch();
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
+  console.log(
+    "----------------------------------------------------------------------------------------------\nAll route data on Auth Screen"
+  );
+  console.log(route.params);
+  console.log("Everything is above \n\n");
+  console.log("Token data is here");
+  console.log(tokenData);
+  console.log(
+    "End of token data\n---------------------------------------------------------------------------------------------------\n\n"
+  );
 
   const discovery = {
     authorizationEndpoint: "https://www.fitbit.com/oauth2/authorize",
     tokenEndpoint: "https://api.fitbit.com/oauth2/token",
     revocationEndpoint: "https://api.fitbit.com/oauth2/revoke",
-  };
-
-  const makeCaregivee = async (code, userID) => {
-    try {
-      const response = await fetch("https://www.carebit.xyz/caregivee/create", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + route.params.json.access_token,
-        },
-        body: JSON.stringify({
-          userID: userID,
-          authCode: code,
-        }),
-      });
-      const json = await response.json();
-
-      if (json.caregiveeID !== undefined) {
-        dispatch(
-          setTokenData({
-            ...route.params.json.access_token,
-            ...json,
-            type: "caregivee",
-          })
-        ),
-          await acceptRequest(
-            json.caregiveeID,
-            route.params.tokenData.caregiverID
-          );
-      } else
-        Alert.alert("Error", json.error, json.error_0, [
-          { text: "Ok", onPress: () => {}, style: "cancel" },
-        ]);
-    } catch (error) {
-      console.log("Caught error in /caregivee/create: " + error);
-    }
   };
 
   const [request, response, promptAsync] = useAuthRequest(
@@ -97,11 +70,95 @@ export default function ModifiedAuthScreen({ navigation, route }) {
   );
 
   React.useEffect(() => {
-    if (response?.type === "success")
+    if (response?.type === "success") {
+      console.log(
+        "\nSuccess on Fitbit Auth. Data being sent to makeCaregivee: "
+      );
+      console.log(response.params.code);
+      console.log(route.params.json.userID);
+      console.log("End of makeCaregivee data\n\n");
       makeCaregivee(response.params.code, route.params.json.userID);
+    }
   }, [response]);
 
-  //Can't do accept until Fitbit auth. caregiveeID comes from /createCaregivee which takes FitBit code and userID}
+  const makeCaregivee = async (code, userID) => {
+    try {
+      const response = await fetch("https://www.carebit.xyz/caregivee/create", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + route.params.json.access_token,
+        },
+        body: JSON.stringify({
+          userID: userID,
+          authCode: code,
+        }),
+      });
+      const json = await response.json();
+
+      if (json.caregiveeID !== undefined) {
+        await makeRequest();
+      } else
+        Alert.alert("Error", json.error, json.error_0, [
+          { text: "Ok", onPress: () => {}, style: "cancel" },
+        ]);
+    } catch (error) {
+      console.log("Caught error in /caregivee/create: " + error);
+    }
+  };
+
+  const makeRequest = async () => {
+    if (!tokenData.phone || !route.params.json.phone) return;
+    const body =
+      tokenData.type !== "caregiver"
+        ? {
+            caregiveePhone: tokenData.phone,
+            caregiverPhone: route.params.json.phone,
+            sender: tokenData.type,
+          }
+        : {
+            caregiverPhone: tokenData.phone,
+            caregiveePhone: route.params.json.phone,
+            sender: tokenData.type,
+          };
+    try {
+      const response = await fetch("https://www.carebit.xyz/createRequest", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokenData.access_token,
+        },
+        body: JSON.stringify(body),
+      });
+      const json = await response.json();
+
+      console.log("JSON is here: ");
+      console.log(json);
+      console.log("End of JSON\n\n");
+      if (json.error) {
+        console.log(json.error);
+        // TODO: Prettify these errors.
+        if (json.error === "This request already exists") {
+          handleError("  Already added", "phone");
+        } else {
+          handleError("  Not Found", "phone");
+        }
+      }
+      // console.log(json);
+      if (json.request) {
+        console.log("\nSending accept request: ");
+        console.log(json.caregiveeID);
+        console.log(tokenData.caregiverID);
+        console.log("End of sent\n\n");
+        await acceptRequest(json[caregiveeID], tokenData.caregiverID);
+      }
+    } catch (error) {
+      console.log("Caught error in /createRequest: " + error);
+    }
+  };
+
   const acceptRequest = async (caregiveeID, caregiverID) => {
     try {
       const response = await fetch("https://www.carebit.xyz/acceptRequest", {
@@ -117,8 +174,13 @@ export default function ModifiedAuthScreen({ navigation, route }) {
         }),
       });
       const json = await response.json();
-      console.log("acceptRequest" + JSON.stringify(json));
-      navigation.navigate("Home");
+      console.log("\nAccept Request info here");
+      console.log(json);
+      console.log("End\n\n");
+      if (json.caregiveeID) {
+        console.log("acceptRequest" + JSON.stringify(json));
+        navigation.navigate("Home");
+      }
       if (json.error)
         console.log("Error is probably invalid uri in backend. Maybe not tho");
     } catch (error) {
