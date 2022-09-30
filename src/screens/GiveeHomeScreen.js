@@ -233,7 +233,8 @@ export default function GiveeHomeScreen({ navigation }) {
                 textAlign: "center",
               }}
             >
-              Turning on Sleep Mode will inform Pam that you are going to sleep.
+              Turning on Sleep Mode will inform{" "}
+              {selectedUser.firstName || "N/A"} that you are going to sleep.
               They will not receive alerts.
             </Text>
           </SafeAreaView>
@@ -349,8 +350,9 @@ export default function GiveeHomeScreen({ navigation }) {
                 textAlign: "center",
               }}
             >
-              Turning on Do Not Disturb will inform Pam that you do not want to
-              be called. They will not receive alerts.
+              Turning on Do Not Disturb will inform{" "}
+              {selectedUser.firstName || "N/A"} that you do not want to be
+              called. They will not receive alerts.
             </Text>
           </SafeAreaView>
           <SafeAreaView
@@ -465,8 +467,8 @@ export default function GiveeHomeScreen({ navigation }) {
                 textAlign: "center",
               }}
             >
-              Pausing Monitoring will prevent Pam from receiving any of your
-              health data, including alerts.
+              Pausing Monitoring will prevent {selectedUser.firstName || "N/A"}{" "}
+              from receiving any of your health data, including alerts.
             </Text>
           </SafeAreaView>
           <SafeAreaView
@@ -639,16 +641,45 @@ export default function GiveeHomeScreen({ navigation }) {
                 },
               ]}
             >
-              <TouchableOpacity
-                style={{ alignItems: "center", justifyContent: "center" }}
+              <SafeAreaView
+                style={{
+                  // backgroundColor: "blue",
+                  marginTop: "5%",
+                  height: "40%",
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                }}
               >
-                <Image
-                  style={styles.imagesBody}
-                  source={require("../../assets/images/icons-alert-big-color.imageset/icons-alert-big-color.png")}
-                />
+                <TouchableOpacity
+                  style={{ alignItems: "center", justifyContent: "center" }}
+                >
+                  <Image
+                    style={styles.imagesBody}
+                    source={require("../../assets/images/icons-alert-big-color.imageset/icons-alert-big-color.png")}
+                  />
+                </TouchableOpacity>
+              </SafeAreaView>
+              <SafeAreaView
+                style={{
+                  height: "40%",
+                  width: "100%",
+                  //backgroundColor: "red",
+                  alignItems: "center",
+                  justifyContent: "space-evenly",
+                }}
+              >
                 <Text style={styles.buttonBigText}>Alerts</Text>
-                <Text style={styles.buttonSmallText}>0 Today</Text>
-              </TouchableOpacity>
+                <Text
+                  style={{
+                    fontSize: responsiveFontSize(2.08),
+                    color: "darkgrey",
+                    fontWeight: "500",
+                  }}
+                >
+                  0 Today
+                </Text>
+              </SafeAreaView>
             </SafeAreaView>
             <SafeAreaView
               style={[
@@ -667,16 +698,41 @@ export default function GiveeHomeScreen({ navigation }) {
                 },
               ]}
             >
-              <TouchableOpacity
-                style={{ alignItems: "center", justifyContent: "center" }}
+              <SafeAreaView
+                style={{
+                  // backgroundColor: "blue",
+                  marginTop: "5%",
+                  height: "40%",
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                }}
               >
                 <Image
-                  style={styles.imagesBody}
-                  source={require("../../assets/images/icons-caregivee-message.imageset/icons-caregivee-message.png")}
+                  style={{ height: 30, width: 55 }}
+                  source={require("../../assets/images/battery-full.imageset/battery-full.png")}
                 />
-                <Text style={styles.buttonBigText}>Quick Chat</Text>
-                <Text style={styles.buttonSmallText}>0 New</Text>
-              </TouchableOpacity>
+              </SafeAreaView>
+              <SafeAreaView
+                style={{
+                  height: "40%",
+                  width: "100%",
+                  //backgroundColor: "red",
+                  alignItems: "center",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <Text style={[styles.buttonBigText]}>Battery</Text>
+                <Text
+                  style={{
+                    fontSize: responsiveFontSize(2.08),
+                    color: "darkgrey",
+                    fontWeight: "500",
+                  }}
+                >
+                  Full
+                </Text>
+              </SafeAreaView>
             </SafeAreaView>
           </SafeAreaView>
           <SafeAreaView
@@ -1001,7 +1057,7 @@ const styles = StyleSheet.create({
   alertBody: {
     backgroundColor: "white",
     alignItems: "center",
-    justifyContent: "center",
+    //justifyContent: "center",
     height: "100%",
     width: "43%",
     borderRadius: 5,
@@ -1009,7 +1065,7 @@ const styles = StyleSheet.create({
   chatBody: {
     backgroundColor: "white",
     alignItems: "center",
-    justifyContent: "center",
+    //justifyContent: "center",
     height: "100%",
     width: "43%",
     borderRadius: 5,
