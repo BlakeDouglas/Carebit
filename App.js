@@ -139,7 +139,7 @@ const MiddleStack = () => {
             component={ActivityLevelScreen}
           />
         )}
-        {tokenData.type === "caregivee" && tokenData.physName && (
+        {tokenData.type === "caregivee" && !tokenData.physName && (
           <Stack.Screen
             name="PhysicianInfoScreen"
             component={PhysicianInfoScreen}
