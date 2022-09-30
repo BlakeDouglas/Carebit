@@ -48,7 +48,9 @@ export default function LinkUsersScreen({ navigation }) {
         },
         {
           text: "OK",
-          onPress: promptAsync,
+          onPress: () => {
+            navigation.navigate("ModifiedCaregiveeAccountCreation");
+          },
         },
       ]
     );
@@ -70,34 +72,6 @@ export default function LinkUsersScreen({ navigation }) {
       makeRequest();
     }
   };
-
-  const [request, response, promptAsync] = useAuthRequest(
-    {
-      clientId: "238QS3",
-      scopes: [
-        "activity",
-        "heartrate",
-        "location",
-        "nutrition",
-        "profile",
-        "settings",
-        "sleep",
-        "social",
-        "weight",
-        "oxygen_saturation",
-        "respiratory_rate",
-        "temperature",
-      ],
-      redirectUri: makeRedirectUri({
-        scheme: "carebit",
-        path: "callback",
-      }),
-
-      usePKCE: false,
-      extraParams: { prompt: "login" },
-    },
-    discovery
-  );
 
   const makeRequest = async () => {
     if (!tokenData.phone || !inputs.phone) return;
@@ -133,7 +107,6 @@ export default function LinkUsersScreen({ navigation }) {
           handleError("  Not Found", "phone");
         }
       }
-      console.log(json);
       if (json.request)
         dispatch(setTokenData({ ...tokenData, caregiveeID: [json.request] }));
 
@@ -142,14 +115,6 @@ export default function LinkUsersScreen({ navigation }) {
       console.log("Caught error in /createRequest: " + error);
     }
   };
-  React.useEffect(() => {
-    if (response?.type === "success") {
-      navigation.navigate("ModifiedCaregiveeAccountCreation", {
-        caregiverToken: tokenData,
-        code: response.params.code,
-      });
-    }
-  }, [response]);
 
   return (
     <ImageBackground

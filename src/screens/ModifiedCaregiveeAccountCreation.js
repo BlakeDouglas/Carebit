@@ -16,10 +16,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
 
-export default function ModifiedCaregiveeAccountCreation({
-  navigation,
-  route,
-}) {
+export default function ModifiedCaregiveeAccountCreation({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
 
@@ -39,16 +36,16 @@ export default function ModifiedCaregiveeAccountCreation({
   });
 
   const [errors, setErrors] = useState({});
-
+  //console.log(tokenData);
   // Checks for formatting in text fields
-  const validate = async () => {
+  const validate = () => {
     Keyboard.dismiss();
     let valid = true;
     if (!inputs.email) {
       handleError(requiredText, "email");
       valid = false;
     } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-      handleError(requiredText, "email");
+      handleError(" Invalid email", "email");
       valid = false;
     }
 
@@ -71,16 +68,27 @@ export default function ModifiedCaregiveeAccountCreation({
       handleError(" Invalid phone number", "phone");
       valid = false;
     }
-
+    if (!inputs.password) {
+      handleError(requiredText, "password");
+      valid = false;
+    } else if (inputs.password.length < 8) {
+      handleError(" Too short (8 minimum)", "password");
+      valid = false;
+    } else if (!/[0-9]/.test(inputs.password)) {
+      handleError(" Must contain a number", "password");
+      valid = false;
+    } else if (!/[A-Z]/.test(inputs.password)) {
+      handleError(" Must contain capital", "password");
+      valid = false;
+    }
     if (valid) {
-      await registerShellCaregivee();
+      registerShellCaregivee();
     }
   };
 
   const registerShellCaregivee = async () => {
     const output = {
       ...inputs,
-      password: tokenData.access_token.slice(-20),
       type: "caregivee",
       mobilePlatform: "NA",
     };
@@ -95,60 +103,11 @@ export default function ModifiedCaregiveeAccountCreation({
       });
       const json = await response.json();
       console.log("registerShellCaregivee: " + JSON.stringify(json));
-      if (json.access_token)
-        await makeCaregivee(route.params.code, json.userID);
+      if (json.access_token) {
+        navigation.navigate("ModifiedAuthScreen", { json });
+      }
     } catch (error) {
       console.log("Caught error in /user: " + error);
-    }
-  };
-
-  const makeCaregivee = async (code, userID) => {
-    try {
-      const response = await fetch("https://www.carebit.xyz/caregivee/create", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify({ userID: userID, authCode: code }),
-      });
-      const json = await response.json();
-
-      if (json.error) console.log("makeCaregivee Error: " + json.error);
-      if (json.caregiveeID)
-        await acceptCaregiverRequest(
-          json.caregiveeID,
-          route.params.caregiverID
-        );
-    } catch (error) {
-      console.log("Caught error in /caregivee/create: " + error);
-    }
-  };
-
-  const acceptCaregiverRequest = async (caregiveeID, caregiverID) => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/acceptCaregiverRequest",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            caregiveeID: caregiveeID,
-            caregiverID: caregiverID,
-          }),
-        }
-      );
-      const json = await response.json();
-      console.log("acceptCaregiverRequest" + JSON.stringify(json));
-
-      if (json.error)
-        console.log("Error is probably invalid uri in backend. Maybe not tho");
-    } catch (error) {
-      console.log("Caught error in /acceptCaregiverRequest: " + error);
     }
   };
 
@@ -160,6 +119,9 @@ export default function ModifiedCaregiveeAccountCreation({
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
 
+  //console.log("TokenData Present McAC: " + json.stringify(tokenData));
+  //console.log("JSON Present MCAC: " + json.stringify(json));
+
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background03.png")}
@@ -167,23 +129,27 @@ export default function ModifiedCaregiveeAccountCreation({
       style={GlobalStyle.Background}
     >
       <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar
-          hidden={false}
-          translucent={true}
-          backgroundColor="dodgerblue"
-        />
+        <StatusBar hidden={false} translucent={true} backgroundColor="black" />
         <View
           style={[
             GlobalStyle.Container,
             {
-              marginTop: "25%",
+              marginTop: "5%",
+
+              //backgroundColor: "blue",
             },
           ]}
         >
-          <View style={{ height: "15%", width: "100%" }}>
-            <Text style={GlobalStyle.Subtitle2}>
-              {"Caregivee Registration"}
-            </Text>
+          <View
+            style={{
+              height: "25%",
+              width: "100%",
+              //backgroundColor: "red",
+              justifyContent: "flex-end",
+              marginBottom: "5%",
+            }}
+          >
+            <Text style={GlobalStyle.Subtitle2}>Caregivee Registration</Text>
           </View>
           <KeyboardAwareScrollView style={{ flex: 1 }}>
             <View style={{ height: "80%", width: "100%" }}>
@@ -239,16 +205,30 @@ export default function ModifiedCaregiveeAccountCreation({
                   iconName="email-outline"
                   label="Email*"
                   keyboardType="email-address"
+                  autoCapitalize="none"
                   error={errors.email}
                   onChangeText={(text) => handleChange(text, "email")}
                   onFocus={() => {
                     handleError(null, "email");
                   }}
                 />
+
+                <CustomTextInput
+                  placeholder="Password"
+                  iconName="lock-outline"
+                  label="Password*"
+                  error={errors.password}
+                  onChangeText={(text) => handleChange(text, "password")}
+                  onFocus={() => {
+                    handleError(null, "password");
+                  }}
+                  password
+                />
               </View>
               <View
                 style={{
                   height: "20%",
+                  marginTop: "5%",
                   justifyContent: "center",
                 }}
               >
@@ -276,5 +256,3 @@ export default function ModifiedCaregiveeAccountCreation({
     </ImageBackground>
   );
 }
-
-const styles = StyleSheet.create({});
