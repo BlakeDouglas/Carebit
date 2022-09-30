@@ -14,9 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSelectedUser } from "../redux/actions";
 export default function AccountCreationScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const selectedUser =
-    route.params.secondarySelectedUser ||
-    useSelector((state) => state.Reducers.selectedUser);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
 
   const setActivity = async (level) => {
@@ -37,8 +35,7 @@ export default function AccountCreationScreen({ navigation, route }) {
       );
       const responseText = await response.text();
       if (!responseText) {
-        if (!route.params.secondarySelectedUser)
-          dispatch(setSelectedUser({ ...selectedUser, healthProfile: level }));
+        dispatch(setSelectedUser({ ...selectedUser, healthProfile: level }));
         navigation.goBack();
       } else console.log("Error setting activity level");
     } catch (error) {

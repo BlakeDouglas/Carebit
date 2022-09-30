@@ -28,6 +28,7 @@ export default function GiveeHomeScreen({ navigation }) {
   const dispatch = useDispatch();
   const number = selectedUser.phone || "0";
 
+  const [caregivee, setCaregivee] = useState(null);
   const [isModal1Visible, setModal1Visible] = useState(false);
   const [isModal2Visible, setModal2Visible] = useState(false);
   const [isModal3Visible, setModal3Visible] = useState(false);
@@ -45,26 +46,29 @@ export default function GiveeHomeScreen({ navigation }) {
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
   const toggleSwitchSleep = () => {
-    toggleSleep();
+    // toggleSleep();
     toggleModal1();
   };
   const toggleSwitchDisturb = () => {
-    toggleDisturb();
+    // toggleDisturb();
     toggleModal2();
   };
   const toggleSwitchMonitor = () => {
-    toggleMonitor();
+    // toggleMonitor();
     toggleModal3();
   };
 
   const toggleSleep = () => {
     setIsEnabledSleep(!isEnabledSleep);
+    setCaregiveeInfo({ sleep: 0 });
   };
   const toggleDisturb = () => {
     setIsEnabledDisturb(!isEnabledDisturb);
+    setCaregiveeInfo({ doNotDisturb: 0 });
   };
   const toggleMonitor = () => {
     setIsEnabledMonitor(!isEnabledMonitor);
+    setCaregiveeInfo({ monitoring: 1 });
   };
 
   const [refreshing, setRefreshing] = React.useState(false);
@@ -113,6 +117,71 @@ export default function GiveeHomeScreen({ navigation }) {
       console.log("Caught error in /getRequests: " + error);
     }
   };
+
+  const getCaregiveeInfo = async () => {
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/caregivee/" + tokenData.caregiveeID,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+        }
+      );
+      const json = await response.json();
+      if (json.caregivee) {
+        setCaregivee(json.caregivee);
+        setIsEnabledSleep(json.caregivee.sleep === 1);
+        setIsEnabledDisturb(json.caregivee.doNotDisturb === 1);
+        setIsEnabledMonitor(json.caregivee.monitoring === 1);
+      }
+    } catch (error) {
+      console.log(
+        "Caught error downloading from /caregivee/<caregiveeID>: " + error
+      );
+    }
+  };
+  const setCaregiveeInfo = async (newJson) => {
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/caregivee/" + tokenData.caregiveeID,
+        {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+          body: JSON.stringify({
+            ...caregivee,
+            ...newJson,
+            physCity: undefined,
+            physName: undefined,
+            physPhone: undefined,
+            physState: undefined,
+            physStreet: undefined,
+            physZip: undefined,
+            caregiveeID: undefined,
+            userID: undefined,
+          }),
+        }
+      );
+      const json = await response.json();
+      if (json.caregivee) setCaregivee(json.caregivee);
+    } catch (error) {
+      console.log(
+        "Caught error uploading to /caregivee/<caregiveeID>: " + error
+      );
+    }
+  };
+
+  // TODO: Move to login, redo caregivee field to accomodate. Will speed up things
+  useEffect(() => {
+    getCaregiveeInfo();
+  }, []);
 
   return (
     <View style={{ height: windowHeight, width: windowWidth }}>
@@ -191,6 +260,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 onPress={() => {
                   toggleModal1();
                   setIsEnabledSleep((isEnabledSleep) => true);
+                  setCaregiveeInfo({ sleep: 1 });
                 }}
               >
                 <Text
@@ -306,6 +376,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 onPress={() => {
                   toggleModal2();
                   setIsEnabledDisturb((isEnabledDisturb) => true);
+                  setCaregiveeInfo({ doNotDisturb: 1 });
                 }}
               >
                 <Text
@@ -421,6 +492,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 onPress={() => {
                   toggleModal3();
                   setIsEnabledMonitor((isEnabledMonitor) => false);
+                  setCaregiveeInfo({ monitoring: 0 });
                 }}
               >
                 <Text

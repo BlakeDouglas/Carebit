@@ -17,11 +17,11 @@ export default function GiverSettingsScreen({ navigation }) {
   };
 
   const customAlertButtonHandler = () => {
-    navigation.navigate("CustomNotification", { secondarySelectedUser: null });
+    navigation.navigate("CustomNotification");
   };
 
   const activityButtonHandler = () => {
-    navigation.navigate("ActivityLevel", { secondarySelectedUser: null });
+    navigation.navigate("ActivityLevel");
   };
   return (
     // Header Container

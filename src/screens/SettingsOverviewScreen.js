@@ -12,11 +12,9 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { Provider, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 
-export default function SettingsOverviewScreen({ navigation, route }) {
+export default function SettingsOverviewScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const selectedUser =
-    route.params.secondarySelectedUser ||
-    useSelector((state) => state.Reducers.selectedUser);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
 
   const customAlertButtonHandler = () => {
     navigation.navigate("CustomNotification", route.params);

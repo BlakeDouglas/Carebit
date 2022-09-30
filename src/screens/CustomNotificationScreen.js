@@ -17,13 +17,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { setSelectedUser, setTokenData } from "../redux/actions";
 import GlobalStyle from "../utils/GlobalStyle";
-export default function CustomNotificationScreen({ navigation, route }) {
-  // Selected user is taken from route passed through settings overview if available.
-  // Otherwise, uses the currently selected connection
-  console.log(route.params);
-  const selectedUser =
-    route.params.secondarySelectedUser ||
-    useSelector((state) => state.Reducers.selectedUser);
+export default function CustomNotificationScreen({ navigation }) {
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const [isCustom, setIsCustom] = useState(selectedUser.healthProfile === 4);
@@ -35,8 +30,7 @@ export default function CustomNotificationScreen({ navigation, route }) {
   const [thresholds, setThresholds] = useState(null);
 
   const toggleCustom = () => {
-    if (!route.params.secondarySelectedUser)
-      dispatch(setSelectedUser({ ...selectedUser, healthProfile: 4 }));
+    dispatch(setSelectedUser({ ...selectedUser, healthProfile: 4 }));
     setIsCustom(!isCustom);
   };
   const toggleHrAlerts = () => {
@@ -88,8 +82,7 @@ export default function CustomNotificationScreen({ navigation, route }) {
       const json = await response.json();
       if (json.thresholds) {
         setThresholds(json.thresholds);
-        if (!route.params.secondarySelectedUser)
-          dispatch(setSelectedUser({ ...selectedUser, healthProfile: 4 }));
+        dispatch(setSelectedUser({ ...selectedUser, healthProfile: 4 }));
       }
     } catch (error) {
       console.log("Caught error in /thresholds: " + error);
@@ -415,7 +408,7 @@ export default function CustomNotificationScreen({ navigation, route }) {
                   );
                 }}
                 dropdownIconPosition={"right"}
-                defaultValue={thresholds ? thresholds.maxSteps : "N/A"}
+                defaultValue={thresholds ? thresholds.stepThreshold : "N/A"}
                 disableAutoScroll={true}
                 //search={true}
                 selectedRowStyle={{ backgroundColor: "lightgray" }}
@@ -428,7 +421,7 @@ export default function CustomNotificationScreen({ navigation, route }) {
                 onSelect={(selectedItem) => {
                   thresholdsAPI("PUT", {
                     ...thresholds,
-                    maxSteps: selectedItem,
+                    stepThreshold: selectedItem,
                   });
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
