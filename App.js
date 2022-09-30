@@ -12,13 +12,14 @@ import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
 import LinkUsersScreen from "./src/screens/LinkUsersScreen";
 import ListOfFriendsScreen from "./src/screens/ListOfFriendsScreen";
 import LoginScreen from "./src/screens/LoginScreen";
+import ModifiedAuthScreen from "./src/screens/ModifiedAuthScreen";
 import ModifiedCaregiveeAccountCreation from "./src/screens/ModifiedCaregiveeAccountCreation";
+import ModifiedPhysScreen from "./src/screens/ModifiedPhysScreen";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
 import RequestScreen from "./src/screens/RequestScreen";
 import RoleSelectScreen from "./src/screens/RoleSelectScreen";
 import SettingsOverviewScreen from "./src/screens/SettingsOverviewScreen";
 import TitleScreen from "./src/screens/TitleScreen";
-import ModifiedAuthScreen from "./src/screens/ModifiedAuthScreen";
 import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
 import { Provider, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
@@ -125,13 +126,20 @@ const MiddleStack = () => {
             component={ModifiedCaregiveeAccountCreation}
           />
         )}
+
         {tokenData.type === "caregiver" && tokenData.caregiveeID === null && (
           <Stack.Screen
             name="ModifiedAuthScreen"
             component={ModifiedAuthScreen}
           />
         )}
-        <Stack.Screen name="Home" component={GiverHomeScreen} />
+        {tokenData.type === "caregiver" && tokenData.caregiveeID === null && (
+          <Stack.Screen
+            name="ModifiedPhysScreen"
+            component={ModifiedPhysScreen}
+          />
+        )}
+
         {/* TODO: Put some real logic here, or implement elsewhere */}
         {false && (
           <Stack.Screen

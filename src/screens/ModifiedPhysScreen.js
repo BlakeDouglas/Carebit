@@ -27,7 +27,12 @@ export default function PhysicianInfoScreen({ navigation, route }) {
     physName: "",
     physPhone: "",
   });
-  console.log("\nData on Modified Phy Screen: " + route.params);
+  console.log("\nData on Modified Phy Screen: ");
+  console.log(route.params);
+  console.log("Above\n\n");
+  console.log("Token Data on ModPhys");
+  console.log(tokenData);
+  console.log("Info above \n\n");
   const requiredText = " Input required";
 
   const [errors, setErrors] = useState({});
@@ -62,14 +67,22 @@ export default function PhysicianInfoScreen({ navigation, route }) {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: "Bearer " + route.params.json.access_token,
+          Authorization: "Bearer " + tokenData.access_token,
         },
         body: JSON.stringify({
           ...inputs,
-          caregiveeID: route.params.json.caregiveeID,
+          caregiveeID: route.params.caregiveeID,
         }),
       });
       const json = await response.json();
+      if (json.cgvee) {
+        dispatch(
+          setTokenData({
+            ...tokenData,
+            caregiveeID: route.params.caregiveeID,
+          })
+        );
+      }
     } catch (error) {
       console.log("Caught error in /physician: " + error);
     }

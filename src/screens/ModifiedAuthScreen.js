@@ -177,8 +177,9 @@ export default function ModifiedAuthScreen({ navigation, route }) {
       console.log("\nAccept Request info here");
       console.log(json);
       console.log("End\n\n");
-      if (json.caregiveeID) {
+      if (json.request.caregiveeID) {
         console.log("acceptRequest" + JSON.stringify(json));
+        navigation.navigate("ModifiedPhysScreen", json.request);
       }
       if (json.error)
         console.log("Error is probably invalid uri in backend. Maybe not tho");
