@@ -112,7 +112,15 @@ export default function AccountCreationScreen({ navigation }) {
       });
       const json = await response.json();
       if (json.access_token !== undefined) {
-        dispatch(setTokenData({ ...tokenData, ...json }));
+        dispatch(
+          setTokenData({
+            ...tokenData,
+            ...json,
+            firstName: inputs.firstName,
+            lastName: inputs.lastName,
+          })
+        );
+        // TODO: Modify here
         SecureStore.setItemAsync("carebitcredentials", JSON.stringify(body));
       } else if (json.error === "Phone number already exists.") {
         handleError(" Phone Number already exists", "phone");

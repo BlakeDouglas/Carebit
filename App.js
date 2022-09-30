@@ -140,7 +140,7 @@ const MiddleStack = () => {
           />
         )}
 
-        {/* TODO: Put some real logic here, or implement elsewhere */}
+        {/* TODO: Implement Activity Level in Authentication*/}
         {false && (
           <Stack.Screen
             name="ActivityLevelScreen"
