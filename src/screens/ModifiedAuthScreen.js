@@ -17,7 +17,6 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { resetData, setTokenData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
-import { roundToNearestPixel } from "react-native/Libraries/Utilities/PixelRatio";
 
 export default function ModifiedAuthScreen({ navigation, route }) {
   console.log(makeRedirectUri({ scheme: "carebit", path: "callback" }));
@@ -104,6 +103,7 @@ export default function ModifiedAuthScreen({ navigation, route }) {
           { text: "Ok", onPress: () => {}, style: "cancel" },
         ]);
     } catch (error) {
+      console.log(tokenData);
       console.log("Caught error in /caregivee/create: " + error);
     }
   };
@@ -161,12 +161,13 @@ export default function ModifiedAuthScreen({ navigation, route }) {
   const acceptRequest = async (caregiveeID, caregiverID) => {
     try {
       const response = await fetch("https://www.carebit.xyz/acceptRequest", {
-        method: "POST",
+        method: "PUT",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
           Authorization: "Bearer " + route.params.json.access_token,
         },
+
         body: JSON.stringify({
           caregiveeID: caregiveeID,
           caregiverID: caregiverID,
@@ -178,18 +179,22 @@ export default function ModifiedAuthScreen({ navigation, route }) {
       console.log("End\n\n");
       if (json.caregiveeID) {
         console.log("acceptRequest" + JSON.stringify(json));
-        navigation.navigate("Home");
       }
       if (json.error)
         console.log("Error is probably invalid uri in backend. Maybe not tho");
     } catch (error) {
-      console.log("Caught error in /acceptCaregiverRequest: " + error);
+      console.log("Caught error in /acceptRequest: " + error);
     }
   };
 
   const [errors, setErrors] = useState({});
   const handleError = (errorMessage, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
+  };
+
+  const logOutButtonHandler = async () => {
+    await SecureStore.deleteItemAsync("carebitcredentials");
+    dispatch(resetData());
   };
 
   return (
