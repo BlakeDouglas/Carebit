@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
 import { setTokenData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 export default function AccountCreationScreen({ navigation }) {
   // These are the two tools of the redux state manager. Use them instead of hooks
@@ -154,7 +155,7 @@ export default function AccountCreationScreen({ navigation }) {
           style={[
             GlobalStyle.Container,
             {
-              marginTop: "5%",
+              marginTop: "0%",
 
               //backgroundColor: "blue",
             },
@@ -162,14 +163,19 @@ export default function AccountCreationScreen({ navigation }) {
         >
           <View
             style={{
-              height: "25%",
+              height: "22%",
               width: "100%",
               //backgroundColor: "red",
               justifyContent: "flex-end",
-              marginBottom: "5%",
+              marginBottom: "8%",
             }}
           >
-            <Text style={GlobalStyle.Subtitle2}>
+            <Text
+              style={[
+                GlobalStyle.Subtitle2,
+                { fontSize: responsiveFontSize(3.71) },
+              ]}
+            >
               {tokenData.type.charAt(0).toUpperCase() +
                 tokenData.type.slice(1) +
                 " Registration"}
@@ -252,7 +258,7 @@ export default function AccountCreationScreen({ navigation }) {
               <View
                 style={{
                   height: "20%",
-                  marginTop: "5%",
+                  marginTop: "7%",
                   justifyContent: "center",
                 }}
               >
@@ -271,8 +277,6 @@ export default function AccountCreationScreen({ navigation }) {
                   <Text style={GlobalStyle.ButtonText}>Create Account</Text>
                 </TouchableOpacity>
               </View>
-              <Text> </Text>
-              <Text> </Text>
             </View>
           </KeyboardAwareScrollView>
         </View>

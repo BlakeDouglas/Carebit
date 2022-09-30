@@ -23,16 +23,6 @@ export default function ModifiedAuthScreen({ navigation, route }) {
 
   const dispatch = useDispatch();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  console.log(
-    "----------------------------------------------------------------------------------------------\nAll route data on Auth Screen"
-  );
-  console.log(route.params);
-  console.log("Everything is above \n\n");
-  console.log("Token data is here");
-  console.log(tokenData);
-  console.log(
-    "End of token data\n---------------------------------------------------------------------------------------------------\n\n"
-  );
 
   const discovery = {
     authorizationEndpoint: "https://www.fitbit.com/oauth2/authorize",
@@ -103,7 +93,6 @@ export default function ModifiedAuthScreen({ navigation, route }) {
           { text: "Ok", onPress: () => {}, style: "cancel" },
         ]);
     } catch (error) {
-      console.log(tokenData);
       console.log("Caught error in /caregivee/create: " + error);
     }
   };
@@ -239,8 +228,8 @@ export default function ModifiedAuthScreen({ navigation, route }) {
                 fontSize: responsiveFontSize(2.5),
               }}
             >
-              To allow your Caregiver to monitor you, you'll need to link your
-              Fitbit account
+              Link the Caregivee's Fitbit account to provide the Caregiver
+              monitoring access
             </Text>
           </SafeAreaView>
           <SafeAreaView

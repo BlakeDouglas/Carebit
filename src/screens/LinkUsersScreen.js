@@ -1,6 +1,7 @@
 import {
   StyleSheet,
   ImageBackground,
+  View,
   SafeAreaView,
   Text,
   Alert,
@@ -11,6 +12,7 @@ import {
 } from "react-native";
 import CustomTextInput from "../utils/CustomTextInput";
 import React, { useEffect, useState, useCallback } from "react";
+import Modal from "react-native-modal";
 import GlobalStyle from "../utils/GlobalStyle";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { useSelector, useDispatch } from "react-redux";
@@ -54,7 +56,10 @@ export default function LinkUsersScreen({ navigation }) {
         },
       ]
     );
-
+  const [isModal1Visible, setModal1Visible] = useState(false);
+  const toggleModal1 = () => {
+    setModal1Visible(!isModal1Visible);
+  };
   const validate = () => {
     Keyboard.dismiss();
     let valid = true;
@@ -129,6 +134,119 @@ export default function LinkUsersScreen({ navigation }) {
             translucent={true}
             backgroundColor="black"
           />
+          <Modal
+            isVisible={isModal1Visible}
+            backdropOpacity={0.5}
+            useNativeDriverForBackdrop={true}
+            hideModalContentWhileAnimating={true}
+            animationIn={"fadeIn"}
+            animationOut={"fadeOut"}
+          >
+            <View
+              style={{
+                alignSelf: "center",
+                height: "31%",
+                width: "75%",
+                backgroundColor: "white",
+                borderRadius: 8,
+                alignItems: "center",
+                justifyContent: "space-evenly",
+              }}
+            >
+              <SafeAreaView
+                style={{
+                  alignItems: "center",
+                  width: "90%",
+                  height: "60%",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: responsiveFontSize(2.2),
+                  }}
+                >
+                  Warning
+                </Text>
+                <Text
+                  style={{
+                    fontSize: responsiveFontSize(1.8),
+                    fontWeight: "400",
+                    textAlign: "left",
+                  }}
+                >
+                  You will need to sign in to your caregivee's Fitbit device.
+                  Only continue if you know their Fitbit credentials
+                </Text>
+              </SafeAreaView>
+              <SafeAreaView
+                style={{
+                  height: "40%",
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <SafeAreaView
+                  style={{
+                    height: "50%",
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderTopColor: "rgba(128, 128, 128, .2)",
+                    borderTopWidth: 1,
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{ alignItems: "center", justifyContent: "center" }}
+                    onPress={() => {
+                      toggleModal1();
+                      navigation.navigate("ModifiedCaregiveeAccountCreation");
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "dodgerblue",
+                        fontSize: responsiveFontSize(2),
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Continue
+                    </Text>
+                  </TouchableOpacity>
+                </SafeAreaView>
+                <SafeAreaView
+                  style={{
+                    height: "50%",
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderTopColor: "rgba(128, 128, 128, .2)",
+                    borderTopWidth: 1,
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{ alignItems: "center", justifyContent: "center" }}
+                    onPress={() => {
+                      toggleModal1();
+                      console.log("Cancel Pressed");
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "dodgerblue",
+                        fontSize: responsiveFontSize(2),
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Cancel
+                    </Text>
+                  </TouchableOpacity>
+                </SafeAreaView>
+              </SafeAreaView>
+            </View>
+          </Modal>
           <SafeAreaView style={[GlobalStyle.Container, { marginTop: "20%" }]}>
             <Text
               style={[
@@ -212,7 +330,7 @@ export default function LinkUsersScreen({ navigation }) {
                 </Text>
                 <TouchableOpacity
                   style={[GlobalStyle.Button, { marginTop: "8%" }]}
-                  onPress={createButtonAlert}
+                  onPress={toggleModal1}
                 >
                   <Text style={GlobalStyle.ButtonText}>Opt Out</Text>
                 </TouchableOpacity>

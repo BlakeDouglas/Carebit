@@ -7,14 +7,15 @@ import {
   StatusBar,
   Platform,
   View,
+  TouchableOpacity,
 } from "react-native";
-
+import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 export default function ModifiedCaregiveeAccountCreation({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -82,7 +83,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
       valid = false;
     }
     if (valid) {
-      registerShellCaregivee();
+      toggleModal2();
     }
   };
 
@@ -119,22 +120,109 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
 
-  //console.log("TokenData Present McAC: " + json.stringify(tokenData));
-  //console.log("JSON Present MCAC: " + json.stringify(json));
-
+  const [isModal2Visible, setModal2Visible] = useState(false);
+  const toggleModal2 = () => {
+    setModal2Visible(!isModal2Visible);
+  };
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background03.png")}
       resizeMode="cover"
       style={GlobalStyle.Background}
     >
+      <Modal
+        isVisible={isModal2Visible}
+        backdropOpacity={0.5}
+        useNativeDriverForBackdrop={true}
+        hideModalContentWhileAnimating={true}
+        animationIn={"fadeIn"}
+        animationOut={"fadeOut"}
+      >
+        <View
+          style={{
+            alignSelf: "center",
+            height: "30%",
+            width: "75%",
+            backgroundColor: "white",
+            borderRadius: 8,
+            alignItems: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <SafeAreaView
+            style={{
+              alignItems: "center",
+              width: "90%",
+              height: "78%",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: responsiveFontSize(2.2),
+              }}
+            >
+              Opting Out
+            </Text>
+            <Text
+              style={{
+                fontSize: responsiveFontSize(1.8),
+                fontWeight: "400",
+                textAlign: "left",
+              }}
+            >
+              By opting out, your caregivee won't need the app. However, please
+              have them use this account if they download the app in the future
+            </Text>
+          </SafeAreaView>
+          <SafeAreaView
+            style={{
+              height: "22%",
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <SafeAreaView
+              style={{
+                height: "100%",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                borderTopColor: "rgba(128, 128, 128, .2)",
+                borderTopWidth: 1,
+              }}
+            >
+              <TouchableOpacity
+                style={{ alignItems: "center", justifyContent: "center" }}
+                onPress={() => {
+                  toggleModal2();
+                  registerShellCaregivee();
+                }}
+              >
+                <Text
+                  style={{
+                    color: "dodgerblue",
+                    fontSize: responsiveFontSize(2),
+                    fontWeight: "bold",
+                  }}
+                >
+                  Continue
+                </Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+          </SafeAreaView>
+        </View>
+      </Modal>
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
+
         <View
           style={[
             GlobalStyle.Container,
             {
-              marginTop: "5%",
+              marginTop: "0%",
 
               //backgroundColor: "blue",
             },
@@ -142,14 +230,21 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
         >
           <View
             style={{
-              height: "25%",
+              height: "22%",
               width: "100%",
               //backgroundColor: "red",
               justifyContent: "flex-end",
-              marginBottom: "5%",
+              marginBottom: "8%",
             }}
           >
-            <Text style={GlobalStyle.Subtitle2}>Caregivee Registration</Text>
+            <Text
+              style={[
+                GlobalStyle.Subtitle2,
+                { fontSize: responsiveFontSize(3.71) },
+              ]}
+            >
+              Caregivee Registration
+            </Text>
           </View>
           <KeyboardAwareScrollView style={{ flex: 1 }}>
             <View style={{ height: "80%", width: "100%" }}>
@@ -228,7 +323,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
               <View
                 style={{
                   height: "20%",
-                  marginTop: "5%",
+                  marginTop: "7%",
                   justifyContent: "center",
                 }}
               >
@@ -247,8 +342,6 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                   <Text style={GlobalStyle.ButtonText}>Create Account</Text>
                 </TouchableOpacity>
               </View>
-              <Text> </Text>
-              <Text> </Text>
             </View>
           </KeyboardAwareScrollView>
         </View>
