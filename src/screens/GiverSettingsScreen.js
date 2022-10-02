@@ -64,7 +64,7 @@ export default function GiverSettingsScreen({ navigation }) {
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Name</Text>
         <Text style={styles.BoxSub}>
-          {selectedUser.firstName || "N/A"} {selectedUser.lastName || "N/A"}
+          {selectedUser.firstName || ""} {selectedUser.lastName || "N/A"}
         </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>

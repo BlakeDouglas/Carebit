@@ -229,11 +229,18 @@ export default function GiveeHomeScreen({ navigation }) {
             >
               Sleep Mode
             </Text>
+            <SafeAreaView
+              style={{
+                borderBottomColor: "lightgray",
+                borderBottomWidth: 1,
+                width: "110%",
+              }}
+            ></SafeAreaView>
             <Text
               style={{
                 fontSize: responsiveFontSize(1.8),
                 fontWeight: "400",
-                textAlign: "center",
+                textAlign: "left",
               }}
             >
               Turning on Sleep Mode will inform{" "}
@@ -345,12 +352,19 @@ export default function GiveeHomeScreen({ navigation }) {
             >
               Do Not Disturb
             </Text>
+            <SafeAreaView
+              style={{
+                borderBottomColor: "lightgray",
+                borderBottomWidth: 1,
+                width: "110%",
+              }}
+            ></SafeAreaView>
             <Text
               style={{
                 fontSize: responsiveFontSize(1.8),
                 fontWeight: "400",
 
-                textAlign: "center",
+                textAlign: "left",
               }}
             >
               Turning on Do Not Disturb will inform{" "}
@@ -449,9 +463,11 @@ export default function GiveeHomeScreen({ navigation }) {
           <SafeAreaView
             style={{
               alignItems: "center",
-              width: "90%",
+              width: "100%",
               height: "60%",
               justifyContent: "space-evenly",
+
+              //backgroundColor: "lightblue",
             }}
           >
             <Text
@@ -462,12 +478,19 @@ export default function GiveeHomeScreen({ navigation }) {
             >
               Monitoring
             </Text>
+            <SafeAreaView
+              style={{
+                borderBottomColor: "lightgray",
+                borderBottomWidth: 1,
+                width: "100%",
+              }}
+            ></SafeAreaView>
             <Text
               style={{
                 fontSize: responsiveFontSize(1.8),
                 fontWeight: "400",
 
-                textAlign: "center",
+                textAlign: "left",
               }}
             >
               Pausing Monitoring will prevent {selectedUser.firstName || "N/A"}{" "}
@@ -548,7 +571,12 @@ export default function GiveeHomeScreen({ navigation }) {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <SafeAreaView style={{ height: windowHeight, width: windowWidth }}>
+        <SafeAreaView
+          style={{
+            height: windowHeight - 50,
+            width: windowWidth,
+          }}
+        >
           <SafeAreaView
             style={{
               height: "10%",
@@ -739,7 +767,7 @@ export default function GiveeHomeScreen({ navigation }) {
             style={{
               borderBottomColor: "lightgray",
               borderBottomWidth: 1,
-              marginTop: "7%",
+              marginTop: "8%",
               width: "100%",
             }}
           ></SafeAreaView>

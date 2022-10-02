@@ -100,7 +100,7 @@ export default function GiverHomeScreen({ navigation }) {
       token = (await Notifications.getExpoPushTokenAsync()).data;
       storeMessageToken(token);
     } else {
-      alert("Must use physical device for Push Notifications");
+      console.log("Must use physical device for Push Notifications");
     }
 
     if (Platform.OS === "android") {
@@ -280,7 +280,7 @@ export default function GiverHomeScreen({ navigation }) {
       >
         <SafeAreaView
           style={{
-            height: windowHeight,
+            height: windowHeight - 50,
             width: windowWidth,
           }}
         >
@@ -644,7 +644,7 @@ export default function GiverHomeScreen({ navigation }) {
             style={{
               borderBottomColor: "lightgray",
               borderBottomWidth: 1,
-              marginTop: "5%",
+              marginTop: "7%",
             }}
           ></SafeAreaView>
           <SafeAreaView

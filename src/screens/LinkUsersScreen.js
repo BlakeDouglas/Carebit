@@ -247,20 +247,22 @@ export default function LinkUsersScreen({ navigation }) {
               </SafeAreaView>
             </View>
           </Modal>
-          <SafeAreaView style={[GlobalStyle.Container, { marginTop: "20%" }]}>
-            <Text
-              style={[
-                GlobalStyle.Subtitle,
-                { fontSize: responsiveFontSize(5.3) },
-              ]}
-            >
-              Connect to a Caregivee
-            </Text>
+          <SafeAreaView style={[GlobalStyle.Container, { marginTop: "17%" }]}>
+            <SafeAreaView style={{ marginBottom: "2%" }}>
+              <Text
+                style={[
+                  GlobalStyle.Subtitle,
+                  { fontSize: responsiveFontSize(5.3) },
+                ]}
+              >
+                Connect to a Caregivee
+              </Text>
+            </SafeAreaView>
             <SafeAreaView
               style={{
                 height: "75%",
                 width: "100%",
-                marginTop: "10%",
+                marginTop: "13%",
                 justifyContent: "center",
 
                 //backgroundColor: "green",
@@ -318,7 +320,7 @@ export default function LinkUsersScreen({ navigation }) {
                 </TouchableOpacity>
               </SafeAreaView>
               <SafeAreaView
-                style={{ flex: 1, marginTop: "20%", alignItems: "center" }}
+                style={{ flex: 1, marginTop: "19%", alignItems: "center" }}
               >
                 <Text
                   style={[

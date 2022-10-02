@@ -146,8 +146,8 @@ const ListOfFriendsScreen = ({ navigation }) => {
         >
           <Text style={{ fontSize: responsiveFontSize(4.3), color: "white" }}>
             {typeOfRequester === "caregivee"
-              ? "Caregiver's List"
-              : "Caregivee's List"}
+              ? "Added Caregivers"
+              : "Added Caregivees"}
           </Text>
         </SafeAreaView>
         <FlatList

@@ -41,7 +41,7 @@ export default function GiveeSettingsScreen({ navigation }) {
         />
         <SafeAreaView style={{ marginLeft: "5%" }}>
           <Text style={{ fontSize: responsiveFontSize(2.8), width: "100%" }}>
-            {tokenData.firstName || "N/A"} {tokenData.lastName || "N/A"}
+            {tokenData.firstName || "N/A"} {tokenData.lastName || ""}
           </Text>
           <Text style={{ fontSize: responsiveFontSize(2.1) }}>
             {tokenData.email || "N/A"}
@@ -55,7 +55,7 @@ export default function GiveeSettingsScreen({ navigation }) {
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Name</Text>
         <Text style={styles.BoxSub}>
-          {selectedUser.firstName || "N/A"} {selectedUser.lastName || "N/A"}
+          {selectedUser.firstName || ""} {selectedUser.lastName || "N/A"}
         </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
