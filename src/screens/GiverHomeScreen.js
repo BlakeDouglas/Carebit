@@ -258,6 +258,11 @@ export default function GiverHomeScreen({ navigation }) {
     fetchData();
   }, [fitbitAccessToken]);
 
+  const args = {
+    number,
+    prompt: true,
+  };
+
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
   console.log(tokenData);

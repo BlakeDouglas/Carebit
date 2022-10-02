@@ -13,6 +13,7 @@ import LinkUsersScreen from "./src/screens/LinkUsersScreen";
 import ListOfFriendsScreen from "./src/screens/ListOfFriendsScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import ModifiedAuthScreen from "./src/screens/ModifiedAuthScreen";
+import ModifiedActivityScreen from "./src/screens/ModifiedActivityScreen";
 import ModifiedCaregiveeAccountCreation from "./src/screens/ModifiedCaregiveeAccountCreation";
 import ModifiedPhysScreen from "./src/screens/ModifiedPhysScreen";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
@@ -137,6 +138,12 @@ const MiddleStack = () => {
           <Stack.Screen
             name="ModifiedPhysScreen"
             component={ModifiedPhysScreen}
+          />
+        )}
+        {tokenData.type === "caregiver" && tokenData.caregiveeID === null && (
+          <Stack.Screen
+            name="ModifiedActivityScreen"
+            component={ModifiedActivityScreen}
           />
         )}
 

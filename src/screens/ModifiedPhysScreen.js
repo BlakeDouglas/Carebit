@@ -18,7 +18,6 @@ import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
-import { setTokenData } from "../redux/actions";
 
 export default function PhysicianInfoScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -76,12 +75,7 @@ export default function PhysicianInfoScreen({ navigation, route }) {
       });
       const json = await response.json();
       if (json.cgvee) {
-        dispatch(
-          setTokenData({
-            ...tokenData,
-            caregiveeID: route.params.caregiveeID,
-          })
-        );
+        navigation.navigate("ModifiedActivityScreen", route.params);
       }
     } catch (error) {
       console.log("Caught error in /physician: " + error);

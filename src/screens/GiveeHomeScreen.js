@@ -27,7 +27,10 @@ export default function GiveeHomeScreen({ navigation }) {
   const windowHeight = useWindowDimensions().height;
   const dispatch = useDispatch();
   const number = selectedUser.phone || "0";
-
+  const args = {
+    number,
+    prompt: true,
+  };
   const [caregivee, setCaregivee] = useState(null);
   const [isModal1Visible, setModal1Visible] = useState(false);
   const [isModal2Visible, setModal2Visible] = useState(false);
@@ -597,10 +600,7 @@ export default function GiveeHomeScreen({ navigation }) {
               <TouchableOpacity
                 style={styles.callBody}
                 onPress={() => {
-                  call({
-                    number,
-                    prompt: true,
-                  }).catch(console.error);
+                  call(args).catch(console.error);
                 }}
               >
                 <Image
