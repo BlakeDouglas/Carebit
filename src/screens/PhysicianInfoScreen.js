@@ -70,7 +70,13 @@ export default function PhysicianInfoScreen({ navigation }) {
         }),
       });
       const json = await response.json();
-      dispatch(setTokenData({ ...tokenData, ...json }));
+      dispatch(
+        setTokenData({
+          ...tokenData,
+          physName: json.cgvee.physName,
+          physPhone: json.cgvee.physPhone,
+        })
+      );
     } catch (error) {
       console.log("Caught error in /physician: " + error);
     }
