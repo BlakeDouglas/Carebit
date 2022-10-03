@@ -67,7 +67,8 @@ const RootNavigation = () => {
     <NavigationContainer>
       {tokenData.access_token === "" ? (
         <AuthStack />
-      ) : (tokenData.type === "caregivee" && !tokenData.physName) ||
+      ) : (tokenData.type === "caregivee" &&
+          (!tokenData.physName || !tokenData.healthProfile)) ||
         !tokenData.caregiveeID ? (
         <MiddleStack />
       ) : (
@@ -140,24 +141,17 @@ const MiddleStack = () => {
             component={ModifiedPhysScreen}
           />
         )}
-        {tokenData.type === "caregiver" && tokenData.caregiveeID === null && (
-          <Stack.Screen
-            name="ModifiedActivityScreen"
-            component={ModifiedActivityScreen}
-          />
-        )}
-
-        {/* TODO: Implement Activity Level in Authentication*/}
-        {false && (
-          <Stack.Screen
-            name="ActivityLevelScreen"
-            component={ActivityLevelScreen}
-          />
-        )}
         {tokenData.type === "caregivee" && !tokenData.physName && (
           <Stack.Screen
             name="PhysicianInfoScreen"
             component={PhysicianInfoScreen}
+          />
+        )}
+        {((tokenData.type === "caregiver" && tokenData.caregiveeID === null) ||
+          (tokenData.type === "caregivee" && !tokenData.healthProfile)) && (
+          <Stack.Screen
+            name="ModifiedActivityScreen"
+            component={ModifiedActivityScreen}
           />
         )}
       </Stack.Group>

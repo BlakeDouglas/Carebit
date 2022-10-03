@@ -16,16 +16,14 @@ export default function AccountCreationScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
 
-  console.log("\nThis should be caregiveeID on ModifiedActivityScreen");
-  console.log(route.params.caregiveeID);
-  console.log("Above\n");
   const setActivity = async (level) => {
+    const giveeID = route.params
+      ? route.params.caregiveeID
+      : tokenData.caregiveeID;
+
     try {
       const response = await fetch(
-        "https://www.carebit.xyz/activity/" +
-          route.params.caregiveeID +
-          "/" +
-          level,
+        "https://www.carebit.xyz/activity/" + giveeID + "/" + level,
         {
           method: "PUT",
           headers: {
@@ -40,7 +38,7 @@ export default function AccountCreationScreen({ navigation, route }) {
         dispatch(
           setTokenData({
             ...tokenData,
-            caregiveeID: route.params.caregiveeID,
+            healthProfile: level,
           })
         );
       } else console.log("Error setting activity level");
