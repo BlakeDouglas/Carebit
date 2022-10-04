@@ -70,19 +70,7 @@ export default function LoginScreen({ navigation }) {
       const json = await response.json();
       if (json.access_token !== undefined) {
         dispatch(setTokenData(json));
-
-        const oppositeType =
-          json.type === "caregiver" ? "caregivee" : "caregiver";
-        if (
-          json[oppositeType + "ID"] &&
-          json[oppositeType + "ID"].length !== 0
-        ) {
-          const selected = json[oppositeType + "ID"].find(
-            (iter) => iter.status === "Accepted"
-          );
-          dispatch(setSelectedUser(selected));
-        }
-
+        await getDefault(json);
         SecureStore.setItemAsync("carebitcredentials", body);
       } else {
         if (json.message === "Email not found")
@@ -93,6 +81,36 @@ export default function LoginScreen({ navigation }) {
       }
     } catch (error) {
       console.log("Caught error in /login: " + error);
+    }
+  };
+
+  const getDefault = async (tokenJson) => {
+    const body =
+      tokenJson.type === "caregiver"
+        ? { caregiverID: tokenJson.caregiverID, caregiveeID: null }
+        : { caregiverID: null, caregiveeID: tokenJson.caregiveeID };
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/getDefaultRequest",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenJson.access_token,
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const responseText = await response.text();
+      const json = JSON.parse(responseText);
+
+      if (json.default) dispatch(setSelectedUser(json.default));
+      else dispatch(resetSelectedData());
+    } catch (error) {
+      console.log(
+        "Caught error in /getDefaultRequest on login screen: " + error
+      );
     }
   };
 

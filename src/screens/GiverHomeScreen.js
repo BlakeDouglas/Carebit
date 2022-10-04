@@ -48,41 +48,30 @@ export default function GiverHomeScreen({ navigation }) {
 
   const updateConnections = async () => {
     try {
-      const response = await fetch("https://www.carebit.xyz/getRequests", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify({
-          caregiverID: tokenData.caregiverID,
-          caregiveeID: null,
-        }),
-      });
-      const json = await response.json();
-      if (json.connections) {
-        let selected = null;
-        // Pull new data from the same user if possible.
-        selected = json.connections.find(
-          (iter) => iter.email === selectedUser.email
-        );
+      const response = await fetch(
+        "https://www.carebit.xyz/getDefaultRequest",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+          body: JSON.stringify({
+            caregiverID: tokenData.caregiverID,
+            caregiveeID: null,
+          }),
+        }
+      );
+      const responseText = await response.text();
+      const json = JSON.parse(responseText);
 
-        // If you cant find, then it was deleted. Find the first Accepted alternative
-        if (!selected)
-          selected = json.connections.find(
-            (iter) => iter.status === "Accepted"
-          );
-
-        // If you could find one, set it. Otherwise, reset the state
-        if (selected) dispatch(setSelectedUser(selected));
-        else dispatch(resetSelectedData());
-      }
+      if (json.default) dispatch(setSelectedUser(json.default));
+      else dispatch(resetSelectedData());
     } catch (error) {
-      console.log("Caught error in /getRequests: " + error);
+      console.log("Caught error in /getDefaultRequest on giverHome: " + error);
     }
   };
-
   // Get Device expo-token-Notification
   async function registerForPushNotificationsAsync() {
     let token;

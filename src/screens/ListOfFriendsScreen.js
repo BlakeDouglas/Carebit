@@ -16,7 +16,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { setSelectedUser, setTokenData } from "../redux/actions";
+import {
+  resetSelectedData,
+  setSelectedUser,
+  setTokenData,
+} from "../redux/actions";
 
 const ListOfFriendsScreen = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
@@ -33,7 +37,43 @@ const ListOfFriendsScreen = ({ navigation }) => {
   const setSelected = () => {
     const selected = data.filter((iter) => iter.requestID === selectedId)[0];
     dispatch(setSelectedUser(selected));
+    setDefault(selected);
     navigation.goBack();
+  };
+
+  const setDefault = async (selected) => {
+    const body =
+      tokenData.type === "caregiver"
+        ? {
+            caregiverID: tokenData.caregiverID,
+            caregiveeID: selected.caregiveeID,
+            user: tokenData.type,
+          }
+        : {
+            caregiverID: selected.caregiverID,
+            caregiveeID: tokenData.caregiveeID,
+            user: tokenData.type,
+          };
+    console.log("Passing body to /setDefaultRequest: ", body);
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/setDefaultRequest",
+        {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const responseText = await response.text();
+      const json = JSON.parse(responseText);
+      console.log("Response from /setDefaultRequest: ", json.request);
+    } catch (error) {
+      console.log("Caught error in /setDefaultRequest: " + error);
+    }
   };
 
   const getRequests = async (tokenData) => {
@@ -107,7 +147,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    setData(backgroundData.filter((iter) => iter.status === "Accepted"));
+    setData(backgroundData.filter((iter) => iter.status === "accepted"));
   }, [backgroundData]);
 
   const renderItem = ({ item }) => {
@@ -180,7 +220,9 @@ const ListOfFriendsScreen = ({ navigation }) => {
                   //backgroundColor: "blue",
                   borderRadius: 8,
                 }}
-                onPress={setSelected}
+                onPress={() => {
+                  setSelected();
+                }}
               >
                 <Text
                   style={{

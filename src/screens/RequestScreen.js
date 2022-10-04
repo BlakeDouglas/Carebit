@@ -150,7 +150,7 @@ const RequestScreen = ({ navigation }) => {
   useEffect(() => {
     setData(
       backgroundData.filter(
-        (iter) => iter.status === "Pending" && iter.sender !== tokenData.type
+        (iter) => iter.status === "pending" && iter.sender !== tokenData.type
       )
     );
   }, [backgroundData]);

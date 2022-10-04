@@ -66,6 +66,7 @@ export default function CustomNotificationScreen({ navigation }) {
   const thresholdsAPI = async (type, newJson) => {
     if (type === "PUT" && !thresholds) type = "GET";
     if (!newJson) newJson = thresholds;
+    if (!selectedUser.email) return; // TODO: make sure this works
     try {
       let response = await fetch(
         "https://www.carebit.xyz/thresholds/" + selectedUser.caregiveeID,
