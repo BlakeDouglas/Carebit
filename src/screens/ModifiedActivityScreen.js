@@ -67,7 +67,7 @@ export default function AccountCreationScreen({ navigation, route }) {
 
             <SafeAreaView style={styles.TextBox}>
               <Text style={styles.DescriptiveText}>
-                Choose the usual level of activity for your Caregivee
+                Choose the usual level of activity for this account
               </Text>
             </SafeAreaView>
 
@@ -120,9 +120,7 @@ export default function AccountCreationScreen({ navigation, route }) {
               >
                 <SafeAreaView>
                   <Text style={styles.InnerTitle}>Homebound</Text>
-                  <Text style={styles.InnerText}>
-                    Unable able to leave home
-                  </Text>
+                  <Text style={styles.InnerText}>Unable to leave home</Text>
                 </SafeAreaView>
 
                 <Image
