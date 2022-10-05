@@ -91,6 +91,41 @@ const RequestScreen = ({ navigation }) => {
     }
   };
 
+  const setDefault = async (selected) => {
+    const body =
+      tokenData.type === "caregiver"
+        ? {
+            caregiverID: tokenData.caregiverID,
+            caregiveeID: selected.caregiveeID,
+            user: tokenData.type,
+          }
+        : {
+            caregiverID: selected.caregiverID,
+            caregiveeID: tokenData.caregiveeID,
+            user: tokenData.type,
+          };
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/setDefaultRequest",
+        {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const responseText = await response.text();
+      const json = JSON.parse(responseText);
+    } catch (error) {
+      console.log(
+        "Caught error in /setDefaultRequest in requestScreen: " + error
+      );
+    }
+  };
+
   const acceptRequest = async (tokenData, item) => {
     const body =
       tokenData.type === "caregivee"
@@ -109,6 +144,8 @@ const RequestScreen = ({ navigation }) => {
       const json = await response.json();
       if (json.request) {
         {
+          setDefault(item);
+          dispatch(setSelectedUser(item));
           getRequests(tokenData);
         }
       } else {

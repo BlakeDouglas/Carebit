@@ -105,7 +105,6 @@ const ListOfFriendsScreen = ({ navigation }) => {
     tokenData.type === "caregiver" ? "caregivee" : "caregiver";
 
   const onPressDelete = (item) => {
-    console.log(item);
     Alert.alert(
       "Remove " +
         item.firstName +
@@ -257,7 +256,9 @@ const ListOfFriendsScreen = ({ navigation }) => {
                   borderRadius: 8,
                 }}
                 onPress={() => {
-                  onPressDelete(selectedUser);
+                  onPressDelete(
+                    data.filter((iter) => iter.requestID === selectedId)[0]
+                  );
                 }}
               >
                 <Text
