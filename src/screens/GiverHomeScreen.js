@@ -30,6 +30,11 @@ export default function GiverHomeScreen({ navigation }) {
   const [HeartMax, setHeartMax] = useState(0);
   const [HeartMin, setHeartMin] = useState(0);
   const [HeartAvg, setHeartAvg] = useState(0);
+
+  const [isEnabledSleep, setIsEnabledSleep] = useState(false);
+  const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
+  const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
+
   const [fitbitAccessToken, setFitbitAccessToken] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
@@ -43,8 +48,36 @@ export default function GiverHomeScreen({ navigation }) {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     updateConnections();
+    getCaregiveeInfo();
     wait(1000).then(() => setRefreshing(false));
   }, []);
+
+  const getCaregiveeInfo = async () => {
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/caregivee/" + selectedUser.caregiveeID,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+        }
+      );
+      const json = await response.json();
+      if (json.caregivee) {
+        setIsEnabledSleep(json.caregivee.sleep === 1);
+        setIsEnabledDisturb(json.caregivee.doNotDisturb === 1);
+        setIsEnabledMonitor(json.caregivee.monitoring === 1);
+      }
+    } catch (error) {
+      console.log(
+        "Caught error downloading from /caregivee/<caregiveeID> in GiverHome: " +
+          error
+      );
+    }
+  };
 
   const updateConnections = async () => {
     try {
@@ -241,6 +274,7 @@ export default function GiverHomeScreen({ navigation }) {
 
   useEffect(() => {
     registerForPushNotificationsAsync();
+    getCaregiveeInfo();
   }, []);
 
   useEffect(() => {
