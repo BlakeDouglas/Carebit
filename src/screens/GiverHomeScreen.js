@@ -53,6 +53,7 @@ export default function GiverHomeScreen({ navigation }) {
   }, []);
 
   const getCaregiveeInfo = async () => {
+    if (!selectedUser.email) return;
     try {
       const response = await fetch(
         "https://www.carebit.xyz/caregivee/" + selectedUser.caregiveeID,
@@ -99,7 +100,8 @@ export default function GiverHomeScreen({ navigation }) {
       const responseText = await response.text();
       const json = JSON.parse(responseText);
 
-      if (json.default) dispatch(setSelectedUser(json.default));
+      if (json.default && json.default[0])
+        dispatch(setSelectedUser(json.default[0]));
       else dispatch(resetSelectedData());
     } catch (error) {
       console.log("Caught error in /getDefaultRequest on giverHome: " + error);
