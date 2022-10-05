@@ -82,7 +82,7 @@ export default function AccountCreationScreen({ navigation, route }) {
               <TouchableOpacity
                 style={styles.InnerContainers}
                 onPress={() => {
-                  setActivity(3);
+                  setActivity(1);
                 }}
               >
                 <SafeAreaView>
@@ -115,7 +115,7 @@ export default function AccountCreationScreen({ navigation, route }) {
               <TouchableOpacity
                 style={styles.InnerContainers}
                 onPress={() => {
-                  setActivity(1);
+                  setActivity(3);
                 }}
               >
                 <SafeAreaView>
