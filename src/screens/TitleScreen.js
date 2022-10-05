@@ -11,7 +11,11 @@ import React, { useEffect } from "react";
 import * as Linking from "expo-linking";
 import * as SecureStore from "expo-secure-store";
 import { useDispatch } from "react-redux";
-import { setSelectedUser, setTokenData } from "../redux/actions";
+import {
+  resetSelectedData,
+  setSelectedUser,
+  setTokenData,
+} from "../redux/actions";
 
 export default function TitleScreen({ navigation }) {
   const dispatch = useDispatch();

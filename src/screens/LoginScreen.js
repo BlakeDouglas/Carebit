@@ -11,7 +11,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import CustomTextInput from "../utils/CustomTextInput";
-import { setSelectedUser, setTokenData } from "../redux/actions";
+import {
+  resetSelectedData,
+  setSelectedUser,
+  setTokenData,
+} from "../redux/actions";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as SecureStore from "expo-secure-store";
 
