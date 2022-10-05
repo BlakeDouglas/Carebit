@@ -350,74 +350,209 @@ export default function GiverHomeScreen({ navigation }) {
               </Text>
             </TouchableOpacity>
           </SafeAreaView>
-          <SafeAreaView
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              //backgroundColor: "green",
-              height: "9%",
-              width: "100%",
-            }}
-          >
+          {!isEnabledSleep && !isEnabledDisturb && isEnabledMonitor ? (
             <SafeAreaView
               style={{
+                flexDirection: "row",
                 justifyContent: "center",
-
-                //backgroundColor: "blue",
-                height: "80%",
-                width: "60%",
+                alignItems: "center",
+                //backgroundColor: "green",
+                height: "9%",
+                width: "100%",
               }}
             >
-              <Text
+              <SafeAreaView
                 style={{
-                  //marginTop: "10%",
-                  //marginLeft: "4%",
-                  color: "darkgrey",
-                  fontSize: responsiveFontSize(1.8),
+                  justifyContent: "center",
+
+                  //backgroundColor: "blue",
+                  height: "80%",
+                  width: "60%",
                 }}
               >
-                Hello {tokenData.firstName || "N/A"}
-              </Text>
+                <Text
+                  style={{
+                    //marginTop: "10%",
+                    //marginLeft: "4%",
+                    color: "darkgrey",
+                    fontSize: responsiveFontSize(1.8),
+                  }}
+                >
+                  Hello {tokenData.firstName || "N/A"}
+                </Text>
+                <Text
+                  style={{
+                    color: "black",
+                    fontSize: responsiveFontSize(2.2),
+                    fontWeight: "500",
+                    //flex: 1,
+                    marginRight: "5%",
+                    //marginLeft: "4%",
+                  }}
+                  numberOfLines={1}
+                >
+                  Your Caregivee is {selectedUser.firstName || "N/A"}
+                </Text>
+              </SafeAreaView>
+              <SafeAreaView
+                style={{
+                  //marginTop: "4%",
+                  //backgroundColor: "red",
+                  width: "32%",
+                  height: "80%",
+                  justifyContent: "center",
+                  alignItems: "flex-end",
+                }}
+              >
+                <TouchableOpacity
+                  style={styles.callBody}
+                  onPress={() => {
+                    call(args).catch(console.error);
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
+                  />
+                  <Text style={styles.callText}>
+                    Call {selectedUser.firstName || "N/A"}
+                  </Text>
+                </TouchableOpacity>
+              </SafeAreaView>
+            </SafeAreaView>
+          ) : !isEnabledMonitor ? (
+            <SafeAreaView
+              style={{
+                flexDirection: "row",
+                //justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(255, 197, 0, 0.8)",
+                height: "7%",
+                width: "100%",
+                ...Platform.select({
+                  ios: {
+                    shadowColor: "black",
+                    shadowOffset: { width: 4, height: 6 },
+                    shadowOpacity: 0.4,
+                  },
+                  android: {
+                    elevation: 6,
+                  },
+                }),
+              }}
+            >
+              <Image
+                style={[
+                  styles.imagesBody,
+                  {
+                    height: 20,
+                    width: 20,
+                    marginLeft: "3%",
+                    marginRight: "2%",
+                    tintColor: "black",
+                  },
+                ]}
+                source={require("../../assets/images/icons-caregivee-monitor-off.imageset/icons-caregivee-monitor-off.png")}
+              />
               <Text
                 style={{
-                  color: "black",
-                  fontSize: responsiveFontSize(2.2),
-                  fontWeight: "500",
-                  //flex: 1,
-                  marginRight: "5%",
-                  //marginLeft: "4%",
+                  fontWeight: "bold",
+                  fontSize: responsiveFontSize(2.1),
+                  fontWeight: "800",
                 }}
                 numberOfLines={1}
               >
-                Your Caregivee is {selectedUser.firstName || "N/A"}
+                {selectedUser.firstName} Paused Monitoring
               </Text>
             </SafeAreaView>
+          ) : isEnabledSleep ? (
             <SafeAreaView
               style={{
-                //marginTop: "4%",
-                //backgroundColor: "red",
-                width: "32%",
-                height: "80%",
-                justifyContent: "center",
-                alignItems: "flex-end",
+                flexDirection: "row",
+                //justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(0,0,0,.9)",
+                height: "7%",
+                width: "100%",
+                ...Platform.select({
+                  ios: {
+                    shadowColor: "blue",
+                    shadowOffset: { width: 4, height: 6 },
+                    shadowOpacity: 0.4,
+                  },
+                  android: {
+                    elevation: 6,
+                  },
+                }),
               }}
             >
-              <TouchableOpacity
-                style={styles.callBody}
-                onPress={() => {
-                  call(args).catch(console.error);
+              <Image
+                style={[
+                  {
+                    height: 25,
+                    width: 25,
+                    marginLeft: "3%",
+                    marginRight: "2%",
+                  },
+                ]}
+                source={require("../../assets/images/icons-caregivee-sleep-on.imageset/icons-caregivee-sleep-on.png")}
+              />
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: responsiveFontSize(2.1),
+                  fontWeight: "800",
                 }}
+                numberOfLines={1}
               >
-                <Image
-                  source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
-                />
-                <Text style={styles.callText}>
-                  Call {selectedUser.firstName || "N/A"}
-                </Text>
-              </TouchableOpacity>
+                {selectedUser.firstName} Said Good Night
+              </Text>
             </SafeAreaView>
-          </SafeAreaView>
+          ) : (
+            <SafeAreaView
+              style={{
+                flexDirection: "row",
+                //justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(0,0,0,.8)",
+                height: "7%",
+                width: "100%",
+                ...Platform.select({
+                  ios: {
+                    shadowColor: "black",
+                    shadowOffset: { width: 4, height: 6 },
+                    shadowOpacity: 0.4,
+                  },
+                  android: {
+                    elevation: 6,
+                  },
+                }),
+              }}
+            >
+              <Image
+                style={[
+                  {
+                    height: 25,
+                    width: 25,
+                    marginLeft: "3%",
+                    marginRight: "2%",
+                  },
+                ]}
+                source={require("../../assets/images/icons-caregivee-dnd-on.imageset/icons-caregivee-dnd-on.png")}
+              />
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: responsiveFontSize(2.1),
+                  fontWeight: "800",
+                }}
+                numberOfLines={1}
+              >
+                {selectedUser.firstName} Wants No Disturbances
+              </Text>
+            </SafeAreaView>
+          )}
           <SafeAreaView
             style={{
               borderBottomColor: "lightgray",

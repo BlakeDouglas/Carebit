@@ -233,9 +233,8 @@ export default function GiveeHomeScreen({ navigation }) {
                 textAlign: "left",
               }}
             >
-              Turning on Sleep Mode will inform{" "}
-              {selectedUser.firstName || "N/A"} that you are going to sleep.
-              They will not receive alerts.
+              Turning on Sleep Mode will inform your caregiver(s) that you are
+              going to sleep. They will not receive alerts.
             </Text>
           </SafeAreaView>
           <SafeAreaView
@@ -357,9 +356,8 @@ export default function GiveeHomeScreen({ navigation }) {
                 textAlign: "left",
               }}
             >
-              Turning on Do Not Disturb will inform{" "}
-              {selectedUser.firstName || "N/A"} that you do not want to be
-              called. They will not receive alerts.
+              Turning on Do Not Disturb will inform your caregiver(s) that you
+              do not want to be called. They will not receive alerts.
             </Text>
           </SafeAreaView>
           <SafeAreaView
@@ -483,8 +481,8 @@ export default function GiveeHomeScreen({ navigation }) {
                 textAlign: "left",
               }}
             >
-              Pausing Monitoring will prevent {selectedUser.firstName || "N/A"}{" "}
-              from receiving any of your health data, including alerts.
+              Pausing Monitoring will prevent your caregiver(s) from receiving
+              any of your health data, including alerts.
             </Text>
           </SafeAreaView>
           <SafeAreaView
