@@ -162,10 +162,11 @@ export default function GiverHomeScreen({ navigation }) {
     }
   };
 
-  const refreshFitbitAccessToken = async (caregiveeID) => {
+  const refreshFitbitAccessToken = async () => {
     try {
       const response = await fetch(
-        "https://www.carebit.xyz/refreshFitbitToken/" + caregiveeID,
+        "https://www.carebit.xyz/refreshFitbitToken/" +
+          selectedUser.caregiveeID,
         {
           method: "GET",
           headers: {
@@ -182,20 +183,27 @@ export default function GiverHomeScreen({ navigation }) {
       console.log("Caught error in /refreshFitbitToken: " + error);
     }
   };
-  const fetchFitbitAccessToken = async (caregiveeID) => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/getFitbitToken/" + caregiveeID,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
+  const fetchFitbitAccessToken = async () => {
+    if (!selectedUser.caregiveeID) {
+      console.log(
+        "Failed fetch because selectedUser not set. Will update when selectedUser is set."
       );
-      const json = await response.json();
+      return;
+    }
+    const url =
+      "https://www.carebit.xyz/getFitbitToken/" + selectedUser.caregiveeID;
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokenData.access_token,
+        },
+      });
+      const responseText = await response.text();
+      const json = JSON.parse(responseText);
+
       if (!json.error) setFitbitAccessToken(json.fitbitToken);
       else console.log("Error: " + json.error);
     } catch (error) {
@@ -203,17 +211,16 @@ export default function GiverHomeScreen({ navigation }) {
     }
   };
   const fetchData = async () => {
-    const caregiveeID = selectedUser.caregiveeID;
     if (!fitbitAccessToken) {
       // Seems that refresh has a cooldown. Switch this on if u get invalid token
       // await refreshFitbitAccessToken();
-      await fetchFitbitAccessToken(caregiveeID);
+      await fetchFitbitAccessToken(selectedUser.caregiveeID);
     } else {
       let date_today = moment().format("YYYY[-]MM[-]DD");
       //Get HeartRate
       let heartResponse = await fetch(
         "https://api.fitbit.com/1/user/" +
-          caregiveeID +
+          selectedUser.caregiveeID +
           "/activities/heart/date/" +
           date_today +
           "/1d.json",
@@ -230,7 +237,7 @@ export default function GiverHomeScreen({ navigation }) {
       // Checks for expired token
       if (heart.errors) {
         console.log("Refreshing ");
-        await refreshFitbitAccessToken(caregiveeID);
+        await refreshFitbitAccessToken(selectedUser.caregiveeID);
         return;
       }
 
@@ -281,7 +288,7 @@ export default function GiverHomeScreen({ navigation }) {
 
   useEffect(() => {
     fetchData();
-  }, [fitbitAccessToken]);
+  }, [fitbitAccessToken, selectedUser]);
 
   const args = {
     number,
@@ -290,7 +297,6 @@ export default function GiverHomeScreen({ navigation }) {
 
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
-  console.log(tokenData);
   return (
     <SafeAreaView style={{ height: windowHeight, width: windowWidth }}>
       <StatusBar
