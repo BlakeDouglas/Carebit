@@ -448,8 +448,8 @@ export default function CustomNotificationScreen({ navigation }) {
               </SafeAreaView>
               <SafeAreaView>
                 <Text style={styles.Descriptive}>
-                  We'll send you an alert after Testing Care's Fitbit hasn't
-                  synced for an hour
+                  We'll send you an alert after {selectedUser.firstName}'s
+                  Fitbit hasn't synced for an hour
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
@@ -469,8 +469,8 @@ export default function CustomNotificationScreen({ navigation }) {
               </SafeAreaView>
               <SafeAreaView>
                 <Text style={styles.Descriptive}>
-                  We'll send you an alert when Testing Care's Fitbit has no
-                  charge
+                  We'll send you an alert when {selectedUser.firstName}'s Fitbit
+                  has no charge
                 </Text>
               </SafeAreaView>
             </SafeAreaView>

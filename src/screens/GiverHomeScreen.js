@@ -16,7 +16,6 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import call from "react-native-phone-call";
-import { useDrawerStatus } from "@react-navigation/drawer";
 import * as WebBrowser from "expo-web-browser";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
