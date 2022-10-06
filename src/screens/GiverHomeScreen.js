@@ -288,6 +288,7 @@ export default function GiverHomeScreen({ navigation }) {
 
   useEffect(() => {
     fetchData();
+    getCaregiveeInfo();
   }, [fitbitAccessToken, selectedUser]);
 
   const args = {
