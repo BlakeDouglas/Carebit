@@ -311,7 +311,14 @@ const Item = ({ item, onPress, backgroundColor }) => (
     <Text style={styles.name}>
       {item.firstName} {item.lastName}
     </Text>
-    <Text style={styles.phone}>{item.phone}</Text>
+    <Text style={styles.phone}>
+      {"(" +
+        item.phone.substring(0, 3) +
+        ") " +
+        item.phone.substring(3, 6) +
+        "-" +
+        item.phone.substring(6)}
+    </Text>
   </TouchableOpacity>
 );
 
