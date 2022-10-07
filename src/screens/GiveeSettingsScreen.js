@@ -40,10 +40,13 @@ export default function GiveeSettingsScreen({ navigation }) {
           source={require("../../assets/images/avatar/DefaultAvatar.png")}
         />
         <SafeAreaView style={{ marginLeft: "5%" }}>
-          <Text style={{ fontSize: responsiveFontSize(2.8), width: "100%" }}>
+          <Text
+            style={{ fontSize: responsiveFontSize(2.8), width: "100%" }}
+            numberOfLines={1}
+          >
             {tokenData.firstName || "N/A"} {tokenData.lastName || ""}
           </Text>
-          <Text style={{ fontSize: responsiveFontSize(2.1) }}>
+          <Text style={{ fontSize: responsiveFontSize(2.1) }} numberOfLines={1}>
             {tokenData.email || "N/A"}
           </Text>
         </SafeAreaView>
@@ -54,13 +57,15 @@ export default function GiveeSettingsScreen({ navigation }) {
       <SafeAreaView></SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Name</Text>
-        <Text style={styles.BoxSub}>
+        <Text style={styles.BoxSub} numberOfLines={1}>
           {selectedUser.firstName || ""} {selectedUser.lastName || "N/A"}
         </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Email</Text>
-        <Text style={styles.BoxSub}>{selectedUser.email || "N/A"}</Text>
+        <Text style={styles.BoxSub} numberOfLines={1}>
+          {selectedUser.email || "N/A"}
+        </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
@@ -80,7 +85,9 @@ export default function GiveeSettingsScreen({ navigation }) {
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Name</Text>
-        <Text style={styles.BoxSub}>{tokenData.physName || "N/A"}</Text>
+        <Text style={styles.BoxSub} numberOfLines={1}>
+          {tokenData.physName || "N/A"}
+        </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>

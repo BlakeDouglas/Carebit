@@ -308,7 +308,7 @@ const RequestScreen = ({ navigation }) => {
 
 const Item = ({ item, onPress, backgroundColor }) => (
   <TouchableOpacity style={[styles.item, backgroundColor]} onPress={onPress}>
-    <Text style={styles.name}>
+    <Text style={styles.name} numberOfLines={1}>
       {item.firstName} {item.lastName}
     </Text>
     <Text style={styles.phone}>
