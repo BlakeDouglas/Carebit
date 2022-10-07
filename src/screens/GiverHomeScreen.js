@@ -22,13 +22,14 @@ import * as Notifications from "expo-notifications";
 import { resetSelectedData, setSelectedUser } from "../redux/actions";
 
 let date = moment().format("dddd, MMM D");
-
+let batteryLevel;
 export default function GiverHomeScreen({ navigation }) {
   const [steps, setSteps] = useState(0);
   const [HeartBPM, setHeart] = useState(0);
   const [HeartMax, setHeartMax] = useState(0);
   const [HeartMin, setHeartMin] = useState(0);
   const [HeartAvg, setHeartAvg] = useState(0);
+  const [BatteryLevel, setBatteryLevel] = useState("low");
 
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
@@ -78,7 +79,7 @@ export default function GiverHomeScreen({ navigation }) {
       );
     }
   };
-
+  console.log(selectedUser);
   const updateConnections = async () => {
     try {
       const response = await fetch(
@@ -233,6 +234,8 @@ export default function GiverHomeScreen({ navigation }) {
         }
       );
       let heart = await heartResponse.json();
+      console.log("Heart here");
+      console.log(heart);
 
       // Checks for expired token
       if (heart.errors) {
@@ -242,13 +245,19 @@ export default function GiverHomeScreen({ navigation }) {
       }
 
       setHeartAvg(heart["activities-heart"][0].value.restingHeartRate);
-      setHeartMax(heart["activities-heart"][0].value.heartRateZones[3].max);
+      setHeartMax(heart["activities-heart"][0].value.heartRateZones[0].max);
       setHeartMin(heart["activities-heart"][0].value.heartRateZones[0].min);
+      console.log("Heart max: ");
+      console.log(HeartMax);
+
+      //DELETE ONCE WE FIND IT IN THE STRUCT *********************************
+      setHeartAvg(Math.floor((HeartMax + HeartMin) / 2));
+      // MORE WORDS OF AGGRESSION AHHHHH****************************
 
       //Get Steps
       let stepsResponse = await fetch(
         "https://api.fitbit.com/1/user/" +
-          caregiveeID +
+          selectedUser.caregiveeID +
           "/activities/tracker/steps/date/" +
           date_today +
           "/1d.json",
@@ -276,11 +285,11 @@ export default function GiverHomeScreen({ navigation }) {
         }
       );
       let battery = await deviceResponse.json();
-      console.log("Response from devices:");
+      console.log("Battery response from devices:");
       console.log(battery);
+      setBatteryLevel(battery[0].battery);
     }
   };
-
   useEffect(() => {
     registerForPushNotificationsAsync();
     getCaregiveeInfo();
@@ -298,6 +307,8 @@ export default function GiverHomeScreen({ navigation }) {
 
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
+  console.log("Your true battery is here");
+  console.log(BatteryLevel);
   return (
     <SafeAreaView style={{ height: windowHeight, width: windowWidth }}>
       <StatusBar
@@ -724,11 +735,11 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5),
                       fontWeight: "700",
                     }}
                   >
-                    0
+                    {HeartAvg}
                   </Text>
                   <Text
                     style={{
@@ -787,11 +798,11 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5),
                       fontWeight: "700",
                     }}
                   >
-                    0
+                    {steps}
                   </Text>
                 </SafeAreaView>
                 <SafeAreaView
@@ -954,11 +965,11 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5),
                       fontWeight: "700",
                     }}
                   >
-                    0
+                    {HeartMin}
                   </Text>
                 </SafeAreaView>
 
@@ -1003,11 +1014,11 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5),
                       fontWeight: "700",
                     }}
                   >
-                    0
+                    {HeartAvg}
                   </Text>
                 </SafeAreaView>
 
@@ -1052,11 +1063,11 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5),
                       fontWeight: "700",
                     }}
                   >
-                    0
+                    {HeartMax}
                   </Text>
                 </SafeAreaView>
 
@@ -1107,7 +1118,7 @@ export default function GiverHomeScreen({ navigation }) {
               >
                 <Image
                   style={[styles.images, { marginLeft: "4%" }]}
-                  source={require("../../assets/images/heart/heart.png")}
+                  source={require("../../assets/images/steps/steps.png")}
                 />
                 <Text
                   style={{
@@ -1116,7 +1127,7 @@ export default function GiverHomeScreen({ navigation }) {
                     marginLeft: "5%",
                   }}
                 >
-                  Heart Rate
+                  Total Steps
                 </Text>
               </SafeAreaView>
 
@@ -1201,21 +1212,11 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5),
                       fontWeight: "700",
                     }}
                   >
-                    0
-                  </Text>
-                  <Text
-                    style={{
-                      color: "black",
-                      fontSize: responsiveFontSize(2),
-                      marginLeft: "3%",
-                      fontWeight: "600",
-                    }}
-                  >
-                    BPM
+                    {steps}
                   </Text>
                 </SafeAreaView>
                 <SafeAreaView
@@ -1261,15 +1262,22 @@ export default function GiverHomeScreen({ navigation }) {
                     width: "100%",
                   }}
                 >
-                  <Text
-                    style={{
-                      color: "black",
-                      fontSize: responsiveFontSize(4.8),
-                      fontWeight: "700",
-                    }}
-                  >
-                    0
-                  </Text>
+                  {BatteryLevel === "High" ? (
+                    <Image
+                      style={{ height: 29, width: 51 }}
+                      source={require("../../assets/images/battery-full.imageset/battery-full.png")}
+                    />
+                  ) : BatteryLevel === "Medium" ? (
+                    <Image
+                      style={{ height: 29, width: 51 }}
+                      source={require("../../assets/images/battery-medium.imageset/battery-medium.png")}
+                    />
+                  ) : (
+                    <Image
+                      style={{ height: 29, width: 51 }}
+                      source={require("../../assets/images/battery-low.imageset/battery-low.png")}
+                    />
+                  )}
                 </SafeAreaView>
                 <SafeAreaView
                   style={{
@@ -1279,7 +1287,7 @@ export default function GiverHomeScreen({ navigation }) {
                     justifyContent: "flex-start",
                   }}
                 >
-                  <Text style={styles.smallText}>in past hour</Text>
+                  <Text style={styles.smallText}>{BatteryLevel}</Text>
                 </SafeAreaView>
               </SafeAreaView>
             </SafeAreaView>
