@@ -76,8 +76,10 @@ export default function TitleScreen({ navigation }) {
       const responseText = await response.text();
       const json = JSON.parse(responseText);
 
-      if (json.default) dispatch(setSelectedUser(json.default));
-      else dispatch(resetSelectedData());
+      if (json.default) {
+        if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
+        else dispatch(setSelectedUser(json.default));
+      } else dispatch(resetSelectedData());
     } catch (error) {
       console.log(
         "Caught error in /getDefaultRequest on title screen: " + error
