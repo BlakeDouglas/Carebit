@@ -39,6 +39,7 @@ export default function AccountCreationScreen({ navigation, route }) {
           setTokenData({
             ...tokenData,
             healthProfile: level,
+            caregiveeID: [],
           })
         );
       } else console.log("Error setting activity level");
