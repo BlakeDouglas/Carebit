@@ -17,6 +17,7 @@ import ModifiedActivityScreen from "./src/screens/ModifiedActivityScreen";
 import ModifiedCaregiveeAccountCreation from "./src/screens/ModifiedCaregiveeAccountCreation";
 import ModifiedPhysScreen from "./src/screens/ModifiedPhysScreen";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
+import ReceivedAlertsScreen from "./src/screens/ReceivedAlertsScreen";
 import RequestScreen from "./src/screens/RequestScreen";
 import RoleSelectScreen from "./src/screens/RoleSelectScreen";
 import SettingsOverviewScreen from "./src/screens/SettingsOverviewScreen";
@@ -395,6 +396,33 @@ const HomeStack = () => {
               tokenData.type === "caregiver"
                 ? "Linked Caregivees"
                 : "Linked Caregiver",
+          })}
+        />
+        <Stack.Screen
+          name="ReceivedAlertsScreen"
+          component={ReceivedAlertsScreen}
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={{ marginRight: "8%" }}
+              >
+                <Text
+                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
+                >
+                  Done
+                </Text>
+              </TouchableOpacity>
+            ),
+            headerTitle: "Alert History",
           })}
         />
         <Stack.Screen name="AddScreen" component={AddScreen} />

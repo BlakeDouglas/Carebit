@@ -361,6 +361,9 @@ export default function GiverHomeScreen({ navigation }) {
                 alignItems: "flex-end",
                 justifyContent: "center",
               }}
+              onPress={() => {
+                navigation.navigate("ReceivedAlertsScreen");
+              }}
             >
               <Text
                 style={{
@@ -1160,7 +1163,7 @@ export default function GiverHomeScreen({ navigation }) {
               >
                 <Image
                   style={[styles.images, { marginLeft: "4%" }]}
-                  source={require("../../assets/images/steps/steps.png")}
+                  source={require("../../assets/images/icons-fitbit-color.imageset/icons-fitbit-color.png")}
                 />
                 <Text
                   style={{
@@ -1170,7 +1173,7 @@ export default function GiverHomeScreen({ navigation }) {
                     //marginVertical: "3%",
                   }}
                 >
-                  Steps
+                  Fitbit Battery
                 </Text>
               </SafeAreaView>
             </SafeAreaView>

@@ -680,6 +680,9 @@ export default function GiveeHomeScreen({ navigation }) {
               >
                 <TouchableOpacity
                   style={{ alignItems: "center", justifyContent: "center" }}
+                  onPress={() => {
+                    navigation.navigate("ReceivedAlertsScreen");
+                  }}
                 >
                   <Image
                     style={styles.imagesBody}
