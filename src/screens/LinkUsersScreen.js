@@ -114,8 +114,6 @@ export default function LinkUsersScreen({ navigation }) {
       }
       if (json.request)
         dispatch(setTokenData({ ...tokenData, caregiveeID: [json.request] }));
-
-      getRequests(tokenData);
     } catch (error) {
       console.log("Caught error in /createRequest: " + error);
     }
