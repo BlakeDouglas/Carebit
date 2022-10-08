@@ -76,15 +76,16 @@ export default function TitleScreen({ navigation }) {
       const responseText = await response.text();
       const json = JSON.parse(responseText);
 
-      // Accounts for array return value
-      // Accounts for no-default scenario
-      // Accounts for no-default causing an error scenario
+      // Accounts for array return value and missing default scenarios
       if (json.default) {
         if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
         else dispatch(setSelectedUser(json.default));
       } else {
-        const cgveeArray = tokenJson.caregiveeID;
-        const res = cgveeArray.filter((iter) => iter.status === "accepted");
+        const array =
+          tokenJson[
+            tokenJson.type === "caregiver" ? "caregiveeID" : "caregiverID"
+          ];
+        const res = array.filter((iter) => iter.status === "accepted");
         if (res[0]) dispatch(setSelectedUser(res[0]));
         else dispatch(resetSelectedData());
       }
