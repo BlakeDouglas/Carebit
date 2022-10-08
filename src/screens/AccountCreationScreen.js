@@ -124,7 +124,10 @@ export default function AccountCreationScreen({ navigation }) {
         // TODO: Modify here
         SecureStore.setItemAsync("carebitcredentials", JSON.stringify(body));
       } else if (json.error === "Phone number already exists.") {
-        handleError(" Phone Number already exists", "phone");
+        handleError(" Phone number taken", "phone");
+        console.log(json.error);
+      } else if (json.error === "Email already exists.") {
+        handleError(" Email taken", "email");
         console.log(json.error);
       } else {
         handleError(" Invalid email", "email");
