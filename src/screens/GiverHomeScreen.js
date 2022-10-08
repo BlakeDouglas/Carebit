@@ -292,8 +292,8 @@ export default function GiverHomeScreen({ navigation }) {
   }, []);
 
   useEffect(() => {
-    fetchData();
     getCaregiveeInfo();
+    fetchData();
   }, [fitbitAccessToken, selectedUser]);
 
   const args = {
