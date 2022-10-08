@@ -250,10 +250,6 @@ export default function GiverHomeScreen({ navigation }) {
       console.log("Heart max: ");
       console.log(HeartMax);
 
-      //DELETE ONCE WE FIND IT IN THE STRUCT *********************************
-      setHeartAvg(Math.floor((HeartMax + HeartMin) / 2));
-      // MORE WORDS OF AGGRESSION AHHHHH****************************
-
       //Get Steps
       let stepsResponse = await fetch(
         "https://api.fitbit.com/1/user/" +
@@ -801,6 +797,7 @@ export default function GiverHomeScreen({ navigation }) {
                       fontSize: responsiveFontSize(4.5),
                       fontWeight: "700",
                     }}
+                    numberOfLines={1}
                   >
                     {steps}
                   </Text>
@@ -1215,6 +1212,7 @@ export default function GiverHomeScreen({ navigation }) {
                       fontSize: responsiveFontSize(4.5),
                       fontWeight: "700",
                     }}
+                    numberOfLines={1}
                   >
                     {steps}
                   </Text>
