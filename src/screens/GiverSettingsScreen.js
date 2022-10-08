@@ -115,7 +115,15 @@ export default function GiverSettingsScreen({ navigation }) {
             flexDirection: "row",
           }}
         >
-          <Text style={styles.BoxSub}>Active</Text>
+          <Text style={styles.BoxSub}>
+            {selectedUser.healthProfile === 1
+              ? "Active"
+              : selectedUser.healthProfile === 2
+              ? "Sedentary"
+              : selectedUser.healthProfile === 3
+              ? "Homebound"
+              : "Set Default Alerts"}
+          </Text>
           <Image
             style={{ height: 15, width: 15, marginLeft: "1%" }}
             source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}

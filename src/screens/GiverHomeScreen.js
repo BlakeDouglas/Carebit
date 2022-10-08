@@ -735,7 +735,7 @@ export default function GiverHomeScreen({ navigation }) {
                       fontWeight: "700",
                     }}
                   >
-                    {HeartAvg}
+                    {HeartAvg || "--"}
                   </Text>
                   <Text
                     style={{
@@ -1015,7 +1015,7 @@ export default function GiverHomeScreen({ navigation }) {
                       fontWeight: "700",
                     }}
                   >
-                    {HeartAvg}
+                    {HeartAvg || Math.floor((HeartMin + HeartMax) / 2)}
                   </Text>
                 </SafeAreaView>
 
