@@ -23,7 +23,7 @@ import RoleSelectScreen from "./src/screens/RoleSelectScreen";
 import SettingsOverviewScreen from "./src/screens/SettingsOverviewScreen";
 import TitleScreen from "./src/screens/TitleScreen";
 import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
-import { Provider, useSelector } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
 import { useFonts } from "expo-font";
 import * as React from "react";
@@ -32,6 +32,7 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { setTokenData } from "./src/redux/actions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAu69cdb30ONSKMcrIrL7P4YT0ghQoNEdg",
@@ -105,6 +106,7 @@ const AuthStack = () => {
 // like phys data, first-time instructions, etc
 const MiddleStack = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const dispatch = useDispatch();
   return (
     <Stack.Navigator>
       <Stack.Group
@@ -133,7 +135,9 @@ const MiddleStack = () => {
               },
               headerRight: () => (
                 <TouchableOpacity
-                  onPress={() => console.log("Button pressed")}
+                  onPress={() =>
+                    dispatch(setTokenData({ ...tokenData, caregiveeID: [] }))
+                  }
                   style={{ marginRight: "8%" }}
                 >
                   <Text
