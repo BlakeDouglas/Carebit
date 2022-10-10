@@ -245,7 +245,7 @@ export default function LinkUsersScreen({ navigation }) {
               </SafeAreaView>
             </View>
           </Modal>
-          <SafeAreaView style={[GlobalStyle.Container, { marginTop: "17%" }]}>
+          <SafeAreaView style={[GlobalStyle.Container, { marginTop: "19%" }]}>
             <SafeAreaView style={{ marginBottom: "2%" }}>
               <Text
                 style={[

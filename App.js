@@ -121,7 +121,33 @@ const MiddleStack = () => {
           />
         )}
         {tokenData.type === "caregiver" && !tokenData.caregiveeID && (
-          <Stack.Screen name="LinkUsersScreen" component={LinkUsersScreen} />
+          <Stack.Screen
+            name="LinkUsersScreen"
+            component={LinkUsersScreen}
+            options={({ navigation }) => ({
+              headerTransparent: true,
+              headerTitleAlign: "center",
+
+              headerStyle: {
+                backgroundColor: "transparent",
+              },
+              headerRight: () => (
+                <TouchableOpacity
+                  onPress={() => console.log("Button pressed")}
+                  style={{ marginRight: "8%" }}
+                >
+                  <Text
+                    style={{
+                      fontSize: responsiveFontSize(2.5),
+                      color: "white",
+                    }}
+                  >
+                    Skip
+                  </Text>
+                </TouchableOpacity>
+              ),
+            })}
+          />
         )}
         {tokenData.type === "caregiver" && tokenData.caregiveeID === null && (
           <Stack.Screen
