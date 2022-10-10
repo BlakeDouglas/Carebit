@@ -6,6 +6,7 @@ import AddScreen from "./src/screens/AddScreen";
 import AuthenticationScreen from "./src/screens/AuthenticationScreen";
 import CustomNotificationScreen from "./src/screens/CustomNotificationScreen";
 import GiveeHomeScreen from "./src/screens/GiveeHomeScreen";
+import GiveeReceivedAlertsScreen from "./src/screens/GiveeReceivedAlertsScreen";
 import GiveeSettingsScreen from "./src/screens/GiveeSettingsScreen";
 import GiverHomeScreen from "./src/screens/GiverHomeScreen";
 import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
@@ -430,7 +431,11 @@ const HomeStack = () => {
         />
         <Stack.Screen
           name="ReceivedAlertsScreen"
-          component={ReceivedAlertsScreen}
+          component={
+            tokenData.type === "caregivee"
+              ? GiveeReceivedAlertsScreen
+              : ReceivedAlertsScreen
+          }
           options={({ navigation }) => ({
             headerTransparent: false,
             headerTitleAlign: "center",
