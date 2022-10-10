@@ -44,8 +44,9 @@ export default function TitleScreen({ navigation }) {
       const json = await response.json();
       if (json.access_token !== undefined) {
         getDefault(json);
+        if (json.caregiveeID && json.caregiveeID.length === 0)
+          json.caregiveeID = null;
         dispatch(setTokenData(json));
-        SecureStore.setItemAsync("carebitcredentials", body);
       } else {
         SecureStore.deleteItemAsync("carebitcredentials");
         console.log("Saved credentials are invalid. Removing...");

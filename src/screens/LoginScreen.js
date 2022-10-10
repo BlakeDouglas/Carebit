@@ -73,8 +73,10 @@ export default function LoginScreen({ navigation }) {
       });
       const json = await response.json();
       if (json.access_token !== undefined) {
+        if (json.caregiveeID && json.caregiveeID.length === 0)
+          json.caregiveeID = null;
         dispatch(setTokenData(json));
-        await getDefault(json);
+        getDefault(json);
         SecureStore.setItemAsync("carebitcredentials", body);
       } else {
         if (json.message === "Email not found")
