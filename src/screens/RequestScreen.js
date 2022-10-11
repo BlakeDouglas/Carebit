@@ -211,6 +211,7 @@ const RequestScreen = ({ navigation }) => {
   };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
+    getRequests(tokenData);
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
