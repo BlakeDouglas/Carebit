@@ -7,6 +7,7 @@ import {
   FlatList,
   Alert,
   ImageBackground,
+  RefreshControl,
 } from "react-native";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -204,6 +205,15 @@ const RequestScreen = ({ navigation }) => {
     );
   };
 
+  const [refreshing, setRefreshing] = React.useState(false);
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
+
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
@@ -232,6 +242,9 @@ const RequestScreen = ({ navigation }) => {
         </SafeAreaView>
         <FlatList
           data={data}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           renderItem={renderItem}
           keyExtractor={(item) => item.requestID}
           ListEmptyComponent={Empty}

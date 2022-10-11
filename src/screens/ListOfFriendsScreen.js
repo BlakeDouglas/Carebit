@@ -8,8 +8,10 @@ import {
   Image,
   Alert,
   ImageBackground,
+  RefreshControl,
 } from "react-native";
-import React, { useState } from "react";
+import * as React from "react";
+import { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -27,6 +29,14 @@ const ListOfFriendsScreen = ({ navigation }) => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
+  const [refreshing, setRefreshing] = React.useState(false);
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
   const typeOfRequester =
     tokenData.type === "caregivee" ? "caregivee" : "caregiver";
   // Stores only incoming requests
@@ -191,6 +201,9 @@ const ListOfFriendsScreen = ({ navigation }) => {
         </SafeAreaView>
         <FlatList
           data={data}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           renderItem={renderItem}
           keyExtractor={(item) => item.requestID}
           ListEmptyComponent={Empty}
