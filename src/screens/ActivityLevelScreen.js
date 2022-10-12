@@ -23,7 +23,9 @@ export default function AccountCreationScreen({ navigation, route }) {
         "https://www.carebit.xyz/activity/" +
           selectedUser.caregiveeID +
           "/" +
-          level,
+          level +
+          "/" +
+          tokenData.caregiverID,
         {
           method: "PUT",
           headers: {

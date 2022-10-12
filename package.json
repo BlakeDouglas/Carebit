@@ -50,7 +50,8 @@
     "react-native-web": "0.17.7",
     "react-navigation": "^4.4.4",
     "react-redux": "^8.0.2",
-    "redux": "^4.2.0"
+    "redux": "^4.2.0",
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

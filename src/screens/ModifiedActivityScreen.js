@@ -12,18 +12,17 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { setTokenData } from "../redux/actions";
-export default function AccountCreationScreen({ navigation, route }) {
+export default function ModifiedActivityScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
 
   const setActivity = async (level) => {
-    const giveeID = route.params
-      ? route.params.caregiveeID
-      : tokenData.caregiveeID;
-
     try {
       const response = await fetch(
-        "https://www.carebit.xyz/activity/" + giveeID + "/" + level,
+        "https://www.carebit.xyz/activity/" +
+          route.params.caregiveeID +
+          "/" +
+          tokenData.caregiverID,
         {
           method: "PUT",
           headers: {

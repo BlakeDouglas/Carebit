@@ -79,7 +79,6 @@ export default function GiverHomeScreen({ navigation }) {
       );
     }
   };
-  console.log(selectedUser);
   const updateConnections = async () => {
     try {
       const response = await fetch(
