@@ -17,10 +17,13 @@ export default function ModifiedActivityScreen({ navigation, route }) {
   const dispatch = useDispatch();
 
   const setActivity = async (level) => {
+    const giveeID = route.params
+      ? route.params.caregiveeID
+      : tokenData.caregiveeID;
     try {
       const response = await fetch(
         "https://www.carebit.xyz/activity/" +
-          route.params.caregiveeID +
+          giveeID +
           "/" +
           tokenData.caregiverID,
         {
