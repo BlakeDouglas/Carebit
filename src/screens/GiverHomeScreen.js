@@ -379,30 +379,31 @@ export default function GiverHomeScreen({ navigation }) {
           {!isEnabledSleep && !isEnabledDisturb && isEnabledMonitor ? (
             <SafeAreaView
               style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                //backgroundColor: "green",
                 height: "9%",
-                width: "100%",
+                width: "96%",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                //backgroundColor: "blue",
               }}
             >
               <SafeAreaView
                 style={{
+                  //backgroundColor: "yellow",
+                  height: "100%",
+                  width: "64%",
                   justifyContent: "center",
-
-                  //backgroundColor: "blue",
-                  height: "80%",
-                  width: "60%",
+                  marginRight: "2%",
+                  marginLeft: "4%",
                 }}
               >
                 <Text
                   style={{
-                    //marginTop: "10%",
                     //marginLeft: "4%",
                     color: "darkgrey",
-                    fontSize: responsiveFontSize(1.8),
+                    fontSize: responsiveFontSize(1.9),
                   }}
+                  numberOfLines={1}
                 >
                   Hello {tokenData.firstName || "N/A"}
                 </Text>
@@ -411,38 +412,46 @@ export default function GiverHomeScreen({ navigation }) {
                     color: "black",
                     fontSize: responsiveFontSize(2.2),
                     fontWeight: "500",
-                    //flex: 1,
-                    marginRight: "5%",
                     //marginLeft: "4%",
                   }}
                   numberOfLines={1}
                 >
-                  Your Caregivee is {selectedUser.firstName || "N/A"}
+                  Your Caregiver is {selectedUser.firstName || "N/A"}
                 </Text>
               </SafeAreaView>
               <SafeAreaView
                 style={{
-                  //marginTop: "4%",
-                  //backgroundColor: "red",
-                  width: "32%",
-                  height: "80%",
+                  height: "100%",
+                  width: "28%",
                   justifyContent: "center",
-                  alignItems: "flex-end",
+                  marginRight: "2%",
+                  //backgroundColor: "red",
                 }}
               >
-                <TouchableOpacity
-                  style={styles.callBody}
-                  onPress={() => {
-                    call(args).catch(console.error);
+                <SafeAreaView
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    //backgroundColor: "blue",
+                    flexDirection: "row",
+                    height: "100%",
+                    width: "100%",
                   }}
                 >
-                  <Image
-                    source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
-                  />
-                  <Text style={styles.callText} numberOfLines={2}>
-                    Call {selectedUser.firstName || "N/A"}
-                  </Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{ flexDirection: "row" }}
+                    onPress={() => {
+                      call(args).catch(console.error);
+                    }}
+                  >
+                    <Image
+                      source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
+                    />
+                    <Text style={styles.callText} numberOfLines={1}>
+                      Call {selectedUser.firstName || "N/A"}
+                    </Text>
+                  </TouchableOpacity>
+                </SafeAreaView>
               </SafeAreaView>
             </SafeAreaView>
           ) : !isEnabledMonitor ? (
@@ -1333,15 +1342,18 @@ const styles = StyleSheet.create({
   callBody: {
     alignItems: "center",
     flexDirection: "row",
+    height: "100%",
+    width: "100%",
+    //backgroundColor: "orange",
     //marginRight: "4%",
     //marginTop: Platform.OS == "ios" ? "10%" : "5%",
-    justifyContent: "center",
+    //justifyContent: "center",
   },
   callText: {
     color: "dodgerblue",
     fontSize: responsiveFontSize(2),
     fontWeight: "bold",
-    marginLeft: "2%",
+    // marginLeft: "2%",
   },
   images: {
     height: 25,

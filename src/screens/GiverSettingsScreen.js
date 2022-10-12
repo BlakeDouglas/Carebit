@@ -48,7 +48,14 @@ export default function GiverSettingsScreen({ navigation }) {
           style={{ height: 85, width: 85, marginLeft: "6%" }}
           source={require("../../assets/images/avatar/DefaultAvatar.png")}
         />
-        <SafeAreaView style={{ marginLeft: "5%" }}>
+        <SafeAreaView
+          style={{
+            marginLeft: "3%",
+            //backgroundColor: "blue",
+            width: "68%",
+            marginRight: "1%",
+          }}
+        >
           <Text style={{ fontSize: responsiveFontSize(2.8) }} numberOfLines={1}>
             {tokenData.firstName || "N/A"} {tokenData.lastName || "N/A"}
           </Text>

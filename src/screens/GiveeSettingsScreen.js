@@ -39,7 +39,14 @@ export default function GiveeSettingsScreen({ navigation }) {
           style={{ height: 85, width: 85, marginLeft: "6%" }}
           source={require("../../assets/images/avatar/DefaultAvatar.png")}
         />
-        <SafeAreaView style={{ marginLeft: "5%" }}>
+        <SafeAreaView
+          style={{
+            marginLeft: "3%",
+            //backgroundColor: "blue",
+            width: "68%",
+            marginRight: "1%",
+          }}
+        >
           <Text
             style={{ fontSize: responsiveFontSize(2.8), width: "100%" }}
             numberOfLines={1}
@@ -57,48 +64,102 @@ export default function GiveeSettingsScreen({ navigation }) {
       <SafeAreaView></SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Name</Text>
-        <Text style={styles.BoxSub} numberOfLines={1}>
-          {selectedUser.firstName || ""} {selectedUser.lastName || "N/A"}
-        </Text>
+        <SafeAreaView
+          style={{
+            width: "80%",
+            height: "100%",
+
+            justifyContent: "center",
+          }}
+        >
+          <Text
+            style={[styles.BoxSub, { textAlign: "right" }]}
+            numberOfLines={1}
+          >
+            {selectedUser.firstName || ""} {selectedUser.lastName || "N/A"}
+          </Text>
+        </SafeAreaView>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Email</Text>
-        <Text style={styles.BoxSub} numberOfLines={1}>
-          {selectedUser.email || "N/A"}
-        </Text>
+        <SafeAreaView
+          style={{
+            width: "80%",
+            height: "100%",
+
+            justifyContent: "center",
+          }}
+        >
+          <Text
+            style={[styles.BoxSub, { textAlign: "right" }]}
+            numberOfLines={1}
+          >
+            {selectedUser.email || "N/A"}
+          </Text>
+        </SafeAreaView>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
-        <Text style={styles.BoxSub}>
-          {selectedUser.phone
-            ? "(" +
-              selectedUser.phone.substring(0, 3) +
-              ") " +
-              selectedUser.phone.substring(3, 6) +
-              "-" +
-              selectedUser.phone.substring(6)
-            : "N/A"}
-        </Text>
+        <SafeAreaView
+          style={{
+            width: "80%",
+            height: "100%",
+
+            justifyContent: "center",
+          }}
+        >
+          <Text style={[styles.BoxSub, { textAlign: "right" }]}>
+            {selectedUser.phone
+              ? "(" +
+                selectedUser.phone.substring(0, 3) +
+                ") " +
+                selectedUser.phone.substring(3, 6) +
+                "-" +
+                selectedUser.phone.substring(6)
+              : "N/A"}
+          </Text>
+        </SafeAreaView>
       </SafeAreaView>
       <SafeAreaView style={styles.TitleContainer}>
         <Text style={styles.Title}>PHYSICIAN INFO</Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Name</Text>
-        <Text style={styles.BoxSub} numberOfLines={1}>
-          {tokenData.physName || "N/A"}
-        </Text>
+        <SafeAreaView
+          style={{
+            width: "80%",
+            height: "100%",
+
+            justifyContent: "center",
+          }}
+        >
+          <Text
+            style={[styles.BoxSub, { textAlign: "right" }]}
+            numberOfLines={1}
+          >
+            {tokenData.physName || "N/A"}
+          </Text>
+        </SafeAreaView>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
-        <Text style={styles.BoxSub}>
-          {"(" +
-            tokenData.physPhone.substring(0, 3) +
-            ") " +
-            tokenData.physPhone.substring(3, 6) +
-            "-" +
-            tokenData.physPhone.substring(6) || "N/A"}
-        </Text>
+        <SafeAreaView
+          style={{
+            width: "80%",
+            height: "100%",
+
+            justifyContent: "center",
+          }}
+        >
+          <Text style={[styles.BoxSub, { textAlign: "right" }]}>
+            {"(" +
+              tokenData.physPhone.substring(0, 3) +
+              ") " +
+              tokenData.physPhone.substring(3, 6) +
+              "-" +
+              tokenData.physPhone.substring(6) || "N/A"}
+          </Text>
+        </SafeAreaView>
       </SafeAreaView>
       <SafeAreaView
         style={{

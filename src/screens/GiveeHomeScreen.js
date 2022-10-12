@@ -591,8 +591,9 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 //backgroundColor: "green",
                 height: "100%",
-                width: "66%",
+                width: "64%",
                 justifyContent: "center",
+                marginRight: "2%",
               }}
             >
               <Text
@@ -601,6 +602,7 @@ export default function GiveeHomeScreen({ navigation }) {
                   color: "darkgrey",
                   fontSize: responsiveFontSize(1.9),
                 }}
+                numberOfLines={1}
               >
                 Hello {tokenData.firstName || "N/A"}
               </Text>
@@ -624,19 +626,21 @@ export default function GiveeHomeScreen({ navigation }) {
                 //backgroundColor: "red",
               }}
             >
-              <TouchableOpacity
-                style={styles.callBody}
-                onPress={() => {
-                  call(args).catch(console.error);
-                }}
-              >
-                <Image
-                  source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
-                />
-                <Text style={styles.callText} numberOfLines={2}>
-                  Call {selectedUser.firstName || "N/A"}
-                </Text>
-              </TouchableOpacity>
+              {selectedUser && (
+                <TouchableOpacity
+                  style={styles.callBody}
+                  onPress={() => {
+                    call(args).catch(console.error);
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
+                  />
+                  <Text style={styles.callText} numberOfLines={2}>
+                    Call {selectedUser.firstName || "N/A"}
+                  </Text>
+                </TouchableOpacity>
+              )}
             </SafeAreaView>
           </SafeAreaView>
 
