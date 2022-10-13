@@ -129,7 +129,7 @@ export default function GiverSettingsScreen({ navigation }) {
               ? "Sedentary"
               : selectedUser.healthProfile === 3
               ? "Homebound"
-              : "Set Default Alerts"}
+              : "Select a preset"}
           </Text>
           <Image
             style={{ height: 15, width: 15, marginLeft: "1%" }}

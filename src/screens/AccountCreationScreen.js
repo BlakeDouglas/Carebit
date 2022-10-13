@@ -7,10 +7,11 @@ import {
   StatusBar,
   Platform,
   View,
+  TouchableOpacity,
 } from "react-native";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TouchableOpacity } from "react-native-gesture-handler";
+
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";

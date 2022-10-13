@@ -398,7 +398,7 @@ export default function GiverHomeScreen({ navigation }) {
               >
                 <Text
                   style={{
-                    //marginLeft: "4%",
+                    flexShrink: 1,
                     color: "darkgrey",
                     fontSize: responsiveFontSize(1.9),
                   }}
@@ -411,7 +411,7 @@ export default function GiverHomeScreen({ navigation }) {
                     color: "black",
                     fontSize: responsiveFontSize(2.2),
                     fontWeight: "500",
-                    //marginLeft: "4%",
+                    flexShrink: 1,
                   }}
                   numberOfLines={1}
                 >
@@ -421,9 +421,10 @@ export default function GiverHomeScreen({ navigation }) {
               <SafeAreaView
                 style={{
                   height: "100%",
-                  width: "28%",
+                  width: "32%",
                   justifyContent: "center",
                   marginRight: "2%",
+                  //flexShrink: 1,
                   //backgroundColor: "red",
                 }}
               >
@@ -435,18 +436,27 @@ export default function GiverHomeScreen({ navigation }) {
                     flexDirection: "row",
                     height: "100%",
                     width: "100%",
+                    flexShrink: 1,
                   }}
                 >
                   <TouchableOpacity
-                    style={{ flexDirection: "row" }}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      flexShrink: 1,
+                    }}
                     onPress={() => {
                       call(args).catch(console.error);
                     }}
                   >
                     <Image
+                      style={{ flexShrink: 1 }}
                       source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
                     />
-                    <Text style={styles.callText} numberOfLines={1}>
+                    <Text
+                      style={[styles.callText, { flexShrink: 1 }]}
+                      numberOfLines={2}
+                    >
                       Call {selectedUser.firstName || "N/A"}
                     </Text>
                   </TouchableOpacity>
