@@ -122,9 +122,9 @@ export default function AccountCreationScreen({ navigation }) {
             ...json,
             firstName: inputs.firstName,
             lastName: inputs.lastName,
+            email: inputs.email,
           })
         );
-        // TODO: Modify here
         SecureStore.setItemAsync("carebitcredentials", JSON.stringify(body));
       } else if (json.error === "Phone number already exists.") {
         handleError(" Phone number taken", "phone");
