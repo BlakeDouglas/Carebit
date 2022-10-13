@@ -17,15 +17,36 @@ export default function ModifiedActivityScreen({ navigation, route }) {
   const dispatch = useDispatch();
 
   const setActivity = async (level) => {
-    const giveeID = route.params
-      ? route.params.caregiveeID
-      : tokenData.caregiveeID;
+    let giveeID;
+    let giverID;
+
+    // In the case that we're going through the opt-out feature
+    if (route.params) {
+      giveeID = route.params.caregiveeID;
+      giverID = tokenData.caregiverID;
+    }
+    // Account creation, caregiver edition
+    else if (tokenData.type === "caregiver") {
+      giveeID = tokenData.caregiveeID[0];
+      giverID = tokenData.caregiverID;
+    }
+    // Account creation, caregivee edition
+    // TODO: Fix things here.
+    // Uses a placeholder to escape.
+    // Doesn't work because caregivee has no caregiver.
+    // Set it up so it sets the default activity level for future caregivers
+    else {
+      dispatch(
+        setTokenData({
+          ...tokenData,
+          healthProfile: 4,
+        })
+      );
+      return;
+    }
     try {
       const response = await fetch(
-        "https://www.carebit.xyz/activity/" +
-          giveeID +
-          "/" +
-          tokenData.caregiverID,
+        "https://www.carebit.xyz/activity/" + giveeID + "/" + giverID,
         {
           method: "PUT",
           headers: {
@@ -37,13 +58,24 @@ export default function ModifiedActivityScreen({ navigation, route }) {
       );
       const responseText = await response.text();
       if (!responseText) {
-        dispatch(
-          setTokenData({
-            ...tokenData,
-            healthProfile: level,
-            caregiveeID: [],
-          })
-        );
+        // Sets caregiveeID to send to home screen
+        if (tokenData.type === "caregiver") {
+          dispatch(
+            setTokenData({
+              ...tokenData,
+              caregiveeID: [],
+            })
+          );
+        }
+        // Sets healthProfile to send to home screen
+        else {
+          dispatch(
+            setTokenData({
+              ...tokenData,
+              healthProfile: level,
+            })
+          );
+        }
       } else console.log("Error setting activity level");
     } catch (error) {
       console.log("Caught error in /activity: " + error);
