@@ -40,7 +40,7 @@ export default function GiverHomeScreen({ navigation }) {
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
 
-  const number = selectedUser.phone || "0";
+  const number = selectedUser.phone || null;
   const [refreshing, setRefreshing] = React.useState(false);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -313,6 +313,7 @@ export default function GiverHomeScreen({ navigation }) {
   const windowHeight = useWindowDimensions().height;
   console.log("Your true battery is here");
   console.log(BatteryLevel);
+
   return (
     <SafeAreaView style={{ height: windowHeight, width: windowWidth }}>
       <StatusBar
@@ -439,27 +440,29 @@ export default function GiverHomeScreen({ navigation }) {
                     flexShrink: 1,
                   }}
                 >
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      flexShrink: 1,
-                    }}
-                    onPress={() => {
-                      call(args).catch(console.error);
-                    }}
-                  >
-                    <Image
-                      style={{ flexShrink: 1 }}
-                      source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
-                    />
-                    <Text
-                      style={[styles.callText, { flexShrink: 1 }]}
-                      numberOfLines={2}
+                  {number && (
+                    <TouchableOpacity
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        flexShrink: 1,
+                      }}
+                      onPress={() => {
+                        call(args).catch(console.error);
+                      }}
                     >
-                      Call {selectedUser.firstName || "N/A"}
-                    </Text>
-                  </TouchableOpacity>
+                      <Image
+                        style={{ flexShrink: 1 }}
+                        source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
+                      />
+                      <Text
+                        style={[styles.callText, { flexShrink: 1 }]}
+                        numberOfLines={2}
+                      >
+                        Call {selectedUser.firstName || "N/A"}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                 </SafeAreaView>
               </SafeAreaView>
             </SafeAreaView>

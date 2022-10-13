@@ -26,7 +26,7 @@ export default function GiveeHomeScreen({ navigation }) {
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
   const dispatch = useDispatch();
-  const number = selectedUser.phone || "0";
+  const number = selectedUser.phone || null;
   const args = {
     number,
     prompt: true,
@@ -242,6 +242,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 fontSize: responsiveFontSize(1.8),
                 fontWeight: "400",
                 textAlign: "left",
+                padding: 7,
               }}
             >
               Turning on Sleep Mode will inform your caregiver(s) that you are
@@ -363,7 +364,7 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 fontSize: responsiveFontSize(1.8),
                 fontWeight: "400",
-
+                padding: 7,
                 textAlign: "left",
               }}
             >
@@ -488,7 +489,7 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 fontSize: responsiveFontSize(1.8),
                 fontWeight: "400",
-
+                padding: 7,
                 textAlign: "left",
               }}
             >
@@ -626,7 +627,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 //backgroundColor: "red",
               }}
             >
-              {selectedUser && (
+              {number && (
                 <TouchableOpacity
                   style={styles.callBody}
                   onPress={() => {
