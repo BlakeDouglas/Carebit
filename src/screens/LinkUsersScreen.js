@@ -60,6 +60,7 @@ export default function LinkUsersScreen({ navigation }) {
   const toggleModal1 = () => {
     setModal1Visible(!isModal1Visible);
   };
+
   const validate = () => {
     Keyboard.dismiss();
     let valid = true;
@@ -113,7 +114,12 @@ export default function LinkUsersScreen({ navigation }) {
         }
       }
       if (json.request)
-        dispatch(setTokenData({ ...tokenData, caregiveeID: [json.request] }));
+        Alert.alert(
+          "Sent!",
+          "Your request has been sent. Once accepted, you will be able to view their Fitbit data.",
+          [{ text: "Continue", onPress: () => console.log("Continue") }]
+        );
+      dispatch(setTokenData({ ...tokenData, caregiveeID: [json.request] }));
     } catch (error) {
       console.log("Caught error in /createRequest: " + error);
     }
@@ -197,7 +203,13 @@ export default function LinkUsersScreen({ navigation }) {
                   }}
                 >
                   <TouchableOpacity
-                    style={{ alignItems: "center", justifyContent: "center" }}
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100%",
+                      width: "100%",
+                      backgroundColor: "blue",
+                    }}
                     onPress={() => {
                       toggleModal1();
                       navigation.navigate("ModifiedCaregiveeAccountCreation");
@@ -245,6 +257,7 @@ export default function LinkUsersScreen({ navigation }) {
               </SafeAreaView>
             </View>
           </Modal>
+
           <SafeAreaView style={[GlobalStyle.Container, { marginTop: "19%" }]}>
             <SafeAreaView style={{ marginBottom: "2%" }}>
               <Text
