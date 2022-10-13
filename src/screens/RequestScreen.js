@@ -16,7 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { setSelectedUser } from "../redux/actions";
-
+import { useIsFocused } from "@react-navigation/native";
 const RequestScreen = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -214,6 +214,16 @@ const RequestScreen = ({ navigation }) => {
     getRequests(tokenData);
     wait(1000).then(() => setRefreshing(false));
   }, []);
+
+  const isFocused = useIsFocused();
+  // Auto refreshes every 10 seconds as long as the screen is focused
+  useEffect(() => {
+    const toggle = setInterval(() => {
+      isFocused ? getRequests(tokenData) : clearInterval(toggle);
+      console.log("Request screen focused? " + isFocused);
+    }, 10000);
+    return () => clearInterval(toggle);
+  });
 
   return (
     <ImageBackground

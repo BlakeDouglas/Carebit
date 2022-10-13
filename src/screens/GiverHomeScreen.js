@@ -9,6 +9,7 @@ import {
   Platform,
   useWindowDimensions,
 } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
@@ -313,6 +314,16 @@ export default function GiverHomeScreen({ navigation }) {
   const windowHeight = useWindowDimensions().height;
   console.log("Your true battery is here");
   console.log(BatteryLevel);
+
+  const isFocused = useIsFocused();
+  // Auto refreshes every 10 seconds as long as the screen is focused
+  useEffect(() => {
+    const toggle = setInterval(() => {
+      isFocused ? getCaregiveeInfo() : clearInterval(toggle);
+      console.log("Home screen focused? " + isFocused);
+    }, 10000);
+    return () => clearInterval(toggle);
+  });
 
   return (
     <SafeAreaView style={{ height: windowHeight, width: windowWidth }}>

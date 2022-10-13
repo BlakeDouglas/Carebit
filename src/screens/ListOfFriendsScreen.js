@@ -10,6 +10,7 @@ import {
   ImageBackground,
   RefreshControl,
 } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import * as React from "react";
 import { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -172,6 +173,15 @@ const ListOfFriendsScreen = ({ navigation }) => {
     );
   };
 
+  const isFocused = useIsFocused();
+  // Auto refreshes every 10 seconds as long as the screen is focused
+  useEffect(() => {
+    const toggle = setInterval(() => {
+      isFocused ? getRequests(tokenData) : clearInterval(toggle);
+      console.log("ListFriends focused? " + isFocused);
+    }, 10000);
+    return () => clearInterval(toggle);
+  });
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
