@@ -10,13 +10,13 @@ import {
   Image,
   FlatList,
   RefreshControl,
+  TouchableOpacity,
 } from "react-native";
 import moment from "moment";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 //const selectedUser = useSelector((state) => state.Reducers.selectedUser);
 import { useSelector } from "react-redux";
 import React, { useState } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const data_temp = [
   {

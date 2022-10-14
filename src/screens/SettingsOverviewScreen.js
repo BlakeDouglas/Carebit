@@ -5,8 +5,8 @@ import {
   Image,
   StatusBar,
   Alert,
+  TouchableOpacity,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import React, { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { Provider, useSelector } from "react-redux";

@@ -8,10 +8,10 @@ import {
   RefreshControl,
   Platform,
   useWindowDimensions,
+  TouchableOpacity,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import React, { useState } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";

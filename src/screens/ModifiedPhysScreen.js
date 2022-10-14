@@ -9,10 +9,10 @@ import {
   StatusBar,
   useWindowDimensions,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from "react-native";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import CustomTextInput from "../utils/CustomTextInput";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";

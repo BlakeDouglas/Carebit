@@ -1,5 +1,11 @@
-import { StyleSheet, SafeAreaView, Text, StatusBar, Image } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  StatusBar,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { React } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";

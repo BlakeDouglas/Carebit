@@ -5,8 +5,8 @@ import {
   ImageBackground,
   StatusBar,
   Keyboard,
+  TouchableOpacity,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
@@ -116,13 +116,23 @@ export default function LoginScreen({ navigation }) {
         if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
         else dispatch(setSelectedUser(json.default));
       } else {
+        // Selects the appropriate connection list based on user type
         const array =
           tokenJson[
             tokenJson.type === "caregiver" ? "caregiveeID" : "caregiverID"
           ];
-        const res = array.filter((iter) => iter.status === "accepted");
-        if (res[0]) dispatch(setSelectedUser(res[0]));
-        else dispatch(resetSelectedData());
+        // Just a bunch of checks to see that we don't access any null/undefined elements
+        if (
+          array &&
+          array.length !== 0 &&
+          array.filter((iter) => iter.status === "accepted").length !== 0
+        ) {
+          dispatch(
+            setSelectedUser(
+              array.filter((iter) => iter.status === "accepted")[0]
+            )
+          );
+        } else dispatch(resetSelectedData());
       }
     } catch (error) {
       console.log(

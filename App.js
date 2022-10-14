@@ -366,19 +366,6 @@ const HomeStack = () => {
               backgroundColor: "dodgerblue",
             },
             headerTitle: "Alert Settings",
-
-            headerRight: () => (
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={{ marginRight: "8%" }}
-              >
-                <Text
-                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
-                >
-                  Done
-                </Text>
-              </TouchableOpacity>
-            ),
           })}
         />
         <Stack.Screen

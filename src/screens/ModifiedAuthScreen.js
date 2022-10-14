@@ -7,8 +7,8 @@ import {
   Alert,
   LogBox,
   StatusBar,
+  TouchableOpacity,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
 import * as Linking from "expo-linking";
 import GlobalStyle from "../utils/GlobalStyle";

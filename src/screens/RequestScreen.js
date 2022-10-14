@@ -8,9 +8,9 @@ import {
   Alert,
   ImageBackground,
   RefreshControl,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";

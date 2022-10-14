@@ -17,45 +17,37 @@ export default function ModifiedActivityScreen({ navigation, route }) {
   const dispatch = useDispatch();
 
   const setActivity = async (level) => {
-    let giveeID;
-    let giverID;
+    let url = "https://www.carebit.xyz/";
+    let body;
 
     // In the case that we're going through the opt-out feature
     if (route.params) {
-      giveeID = route.params.caregiveeID;
-      giverID = tokenData.caregiverID;
+      url +=
+        "activity/" + route.params.caregiveeID + "/" + tokenData.caregiverID;
     }
     // Account creation, caregiver edition
     else if (tokenData.type === "caregiver") {
-      giveeID = tokenData.caregiveeID[0];
-      giverID = tokenData.caregiverID;
+      url +=
+        "activity/" + tokenData.caregiveeID[0] + "/" + tokenData.caregiverID;
     }
     // Account creation, caregivee edition
-    // TODO: Fix things here.
-    // Uses a placeholder to escape.
-    // Doesn't work because caregivee has no caregiver.
-    // Set it up so it sets the default activity level for future caregivers
     else {
-      dispatch(
-        setTokenData({
-          ...tokenData,
-          healthProfile: 4,
-        })
-      );
-      return;
+      url += "updateHealthProfile";
+      body = {
+        caregiveeID: tokenData.caregiveeID,
+        healthProfile: level.toString(),
+      };
     }
     try {
-      const response = await fetch(
-        "https://www.carebit.xyz/activity/" + giveeID + "/" + giverID,
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
-      );
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokenData.access_token,
+        },
+        body: JSON.stringify(body),
+      });
       const responseText = await response.text();
       if (!responseText) {
         // Sets caregiveeID to send to home screen
@@ -76,7 +68,8 @@ export default function ModifiedActivityScreen({ navigation, route }) {
             })
           );
         }
-      } else console.log("Error setting activity level");
+      } else
+        console.log("Error setting activity level\nResponse: ", responseText);
     } catch (error) {
       console.log("Caught error in /activity: " + error);
     }

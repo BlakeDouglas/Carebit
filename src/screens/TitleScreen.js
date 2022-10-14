@@ -4,8 +4,8 @@ import {
   Text,
   StatusBar,
   ImageBackground,
+  TouchableOpacity,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import GlobalStyle from "../utils/GlobalStyle";
 import React, { useEffect } from "react";
 import * as Linking from "expo-linking";
@@ -86,9 +86,17 @@ export default function TitleScreen({ navigation }) {
           tokenJson[
             tokenJson.type === "caregiver" ? "caregiveeID" : "caregiverID"
           ];
-        const res = array.filter((iter) => iter.status === "accepted");
-        if (res[0]) dispatch(setSelectedUser(res[0]));
-        else dispatch(resetSelectedData());
+        if (
+          array &&
+          array.length !== 0 &&
+          array.filter((iter) => iter.status === "accepted").length !== 0
+        ) {
+          dispatch(
+            setSelectedUser(
+              array.filter((iter) => iter.status === "accepted")[0]
+            )
+          );
+        } else dispatch(resetSelectedData());
       }
     } catch (error) {
       console.log(
