@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Modal from "react-native-modal";
 
 const data_temp = [
@@ -87,6 +88,32 @@ const data_temp = [
 ];
 
 export default function GiveeReceivedAlertsScreen({ navigation }) {
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
+
+  const getAlerts = async () => {
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/alerts/" + tokenData.caregiveeID,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+        }
+      );
+      const json = await response.json();
+      if (json) {
+        console.log(json.alerts);
+      }
+    } catch (error) {
+      console.log(
+        "Caught error from /alerts/<caregiveeID> in GiveeAlerts: " + error
+      );
+    }
+  };
+
   const [isModal1Visible, setModal1Visible] = useState(false);
   const toggleModal1 = () => {
     console.log(isModal1Visible);
@@ -168,6 +195,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                 onPress={() => {
                   console.log("Okay Pressed");
                   toggleModal1();
+                  getAlerts();
                   //Set that they're okay and send it to the Giver's screen
                 }}
               >
@@ -255,7 +283,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
           style={{
             marginLeft: "3%",
             //height: "100%",
-            width: "62%",
+            width: "58%",
             //backgroundColor: "blue",
             marginVertical: "5%",
             justifyContent: "center",
@@ -307,35 +335,21 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                   fontSize: responsiveFontSize(2.3),
                 }}
               >
-                Okay?
+                Check-in
               </Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity
+            <Text
               style={{
-                marginTop: "10%",
-                borderColor: "lightblue",
-                borderWidth: 1,
-                borderRadius: 5,
-                //width: "20%",
-              }}
-              onPress={() => {
-                toggleModal1();
-                console.log("Okay Pressed");
+                color: "rgba(0,225,200,.6)",
+                fontWeight: "bold",
+                textAlign: "center",
+                margin: "2%",
+                fontSize: responsiveFontSize(2.3),
               }}
             >
-              <Text
-                style={{
-                  color: "rgba(0,225,200,.6)",
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  margin: "2%",
-                  fontSize: responsiveFontSize(2.3),
-                }}
-              >
-                {""} Okay {""}
-              </Text>
-            </TouchableOpacity>
+              {""} Okay {""}
+            </Text>
           )}
           <Text style={{ color: "grey", marginTop: "14%" }}>{dateTime}</Text>
         </SafeAreaView>

@@ -17,177 +17,202 @@ import { useSelector } from "react-redux";
 
 const data_temp = [
   {
-    type: "StepsHigh",
-    time: "12:50pm",
-    total: "865",
-    id: "1",
+    alertType: "StepsHigh",
+    dateTime: "12:50pm",
+    title: "Too Many Steps",
+    body: "Name has taken more than 865 steps in the past hour",
+    caregiveeID: "BH32L",
+    alertID: "1",
+    ok: 1,
   },
   {
-    type: "StepsNone",
-    time: "1:15am",
+    alertType: "StepsNone",
+    dateTime: "1:15am",
+    title: "No Steps",
+    body: "Name has gone more than x hour(s) without steps",
     total: "0",
-    id: "2",
+    alertID: "2",
+    ok: 0,
   },
   {
-    type: "HeartNone",
-    time: "8:16am",
-    total: "8",
-    id: "3",
+    alertType: "HeartNone",
+    dateTime: "1:18am",
+    title: "Heart Rate Not Recorded",
+    body: "Name's heart rate hasn't been recorded for over 8 hour(s)",
+    total: "0",
+    alertID: "3",
+    ok: 0,
   },
   {
-    type: "HeartHigh",
-    time: "10:16am",
+    alertType: "HeartHigh",
+    dateTime: "10:16am",
+    title: "High Heart Rate",
+    body: "Name's heart rate was 162",
     total: "162",
-    id: "4",
+    alertID: "4",
+    ok: 0,
   },
   {
-    type: "StepsHigh",
-    time: "12:50pm",
+    alertType: "StepsHigh",
+    dateTime: "12:50pm",
+    title: "Too Many Steps",
+    body: "Name has taken more than 865 steps in the past hour",
     total: "865",
-    id: "5",
+    alertID: "5",
+    ok: 0,
   },
   {
-    type: "StepsNone",
-    time: "1:15am",
+    alertType: "StepsNone",
+    dateTime: "1:15am",
+    title: "No Steps",
+    body: "Name has gone more than x hour(s) without steps",
     total: "0",
-    id: "6",
+    alertID: "6",
+    ok: 1,
   },
   {
-    type: "HeartNone",
-    time: "8:16am",
+    alertType: "HeartNone",
+    dateTime: "8:16am",
+    title: "Heart Rate Not Recorded",
+    body: "Name's heart rate hasn't been recorded for over 8 hour(s)",
     total: "8",
-    id: "7",
+    alertID: "7",
+    ok: 0,
   },
   {
-    type: "HeartLow",
-    time: "10:16am",
+    alertType: "HeartLow",
+    dateTime: "10:16am",
+    title: "Low Heart Rate",
+    body: "Name's heart rate was 62",
     total: "62",
-    id: "8",
+    alertID: "8",
+    ok: 0,
   },
 ];
 
-const Item = ({ type, time, total }) => (
+const Item = ({ alertType, dateTime, body, title, ok }) => (
   <SafeAreaView
     style={{
-      justifyContent: "center",
-      //marginVertical: ".2%",
-      //backgroundColor: "blue",
+      marginVertical: "1%",
+      flexDirection: "row",
+      alignItems: "center",
+      //backgroundColor: "red",
     }}
   >
+    {alertType === "StepsHigh" && (
+      <Image
+        style={styles.images}
+        source={require("../../assets/images/icons-alert-steps-high.imageset/icons-alert-steps-high.png")}
+      />
+    )}
+    {alertType === "StepsNone" && (
+      <Image
+        style={styles.images}
+        source={require("../../assets/images/icons-alert-steps-none.imageset/icons-alert-steps-none.png")}
+      />
+    )}
+    {alertType === "HeartHigh" && (
+      <Image
+        style={styles.images}
+        source={require("../../assets/images/icons-alert-heart-high.imageset/icons-alert-heart-high.png")}
+      />
+    )}
+    {alertType === "HeartLow" && (
+      <Image
+        style={styles.images}
+        source={require("../../assets/images/icons-alert-heart-low.imageset/icons-alert-heart-low.png")}
+      />
+    )}
+    {alertType === "HeartNone" && (
+      <Image
+        style={styles.images}
+        source={require("../../assets/images/icons-alert-heart-none.imageset/icons-alert-heart-none.png")}
+      />
+    )}
     <SafeAreaView
       style={{
-        marginVertical: "1%",
-        flexDirection: "row",
-        alignItems: "center",
-        //backgroundColor: "red",
+        marginLeft: "3%",
+        //height: "100%",
+        width: "58%",
+        //backgroundColor: "blue",
+        marginVertical: "5%",
+        justifyContent: "center",
       }}
     >
-      {type === "StepsHigh" && (
-        <Image
-          style={styles.images}
-          source={require("../../assets/images/icons-alert-steps-high.imageset/icons-alert-steps-high.png")}
-        />
-      )}
-      {type === "StepsNone" && (
-        <Image
-          style={styles.images}
-          source={require("../../assets/images/icons-alert-steps-none.imageset/icons-alert-steps-none.png")}
-        />
-      )}
-      {type === "HeartHigh" && (
-        <Image
-          style={styles.images}
-          source={require("../../assets/images/icons-alert-heart-high.imageset/icons-alert-heart-high.png")}
-        />
-      )}
-      {type === "HeartLow" && (
-        <Image
-          style={styles.images}
-          source={require("../../assets/images/icons-alert-heart-low.imageset/icons-alert-heart-low.png")}
-        />
-      )}
-      {type === "HeartNone" && (
-        <Image
-          style={styles.images}
-          source={require("../../assets/images/icons-alert-heart-none.imageset/icons-alert-heart-none.png")}
-        />
-      )}
-      <SafeAreaView
+      <Text style={{ fontSize: responsiveFontSize(2.4), fontWeight: "600" }}>
+        {title}
+      </Text>
+      <Text
         style={{
-          marginLeft: "3%",
-          //height: "100%",
-          width: "62%",
-          //backgroundColor: "blue",
-          marginVertical: "5%",
-          justifyContent: "center",
+          marginTop: "1%",
+          fontSize: responsiveFontSize(1.8),
+          color: "gray",
+        }}
+        numberOfLines={2}
+      >
+        {body}
+      </Text>
+    </SafeAreaView>
+    <SafeAreaView
+      style={{
+        marginLeft: "1%",
+        marginRight: "3%",
+        // backgroundColor: "red",
+        justifyContent: "space-evenly",
+      }}
+    >
+      <Text
+        style={{
+          color: "rgba(0,225,200,.6)",
+          fontWeight: "bold",
+          textAlign: "right",
+          fontSize: responsiveFontSize(2.3),
+          marginTop: "10%",
         }}
       >
-        <Text style={{ fontSize: responsiveFontSize(2.4), fontWeight: "600" }}>
-          {type === "StepsHigh"
-            ? "Too Many Steps"
-            : type === "StepsNone"
-            ? "No Steps"
-            : type === "HeartHigh"
-            ? "High Heart Rate"
-            : type === "HeartLow"
-            ? "Low Heart Rate"
-            : type === "HeartNone"
-            ? "Heart Rate Not Recorded"
-            : null}
-        </Text>
-        <Text
-          style={{
-            marginTop: "1%",
-            fontSize: responsiveFontSize(1.8),
-            color: "gray",
-          }}
-          numberOfLines={2}
-        >
-          {type === "StepsHigh"
-            ? "Name has taken more than " + total + " steps in the past hour"
-            : type === "StepsNone"
-            ? "Name has gone more than x hour(s) without steps"
-            : type === "HeartHigh"
-            ? "Name's heart rate was " + total
-            : type === "HeartLow"
-            ? "Name's heart rate was " + total
-            : type === "HeartNone"
-            ? "Name's heart rate hasn't been recorded for over " +
-              total +
-              " hour(s)"
-            : null}
-        </Text>
-      </SafeAreaView>
-      <SafeAreaView
-        style={{
-          marginLeft: "1%",
-          marginRight: "3%",
-          // backgroundColor: "red",
-          justifyContent: "space-evenly",
-        }}
-      >
-        <Text
-          style={{
-            color: "rgba(0,225,200,.6)",
-            fontWeight: "bold",
-            textAlign: "right",
-            fontSize: responsiveFontSize(2.3),
-            marginTop: "10%",
-          }}
-        >
-          OKAY
-        </Text>
-        <Text style={{ color: "grey", marginTop: "14%" }}>{time}</Text>
-      </SafeAreaView>
+        OKAY
+      </Text>
+      <Text style={{ color: "grey", marginTop: "14%" }}>{dateTime}</Text>
     </SafeAreaView>
   </SafeAreaView>
 );
 
 export default function ReceivedAlertsScreen({ navigation }) {
   //const [data, setData] = useState([]);
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
+
+  const getAlerts = async () => {
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/alerts/" + tokenData.caregiveeID,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+        }
+      );
+      const json = await response.json();
+      if (json) {
+        console.log(json.alerts);
+      }
+    } catch (error) {
+      console.log(
+        "Caught error from /alerts/<caregiveeID> in ReceivedAlerts: " + error
+      );
+    }
+  };
 
   const renderItem = ({ item }) => (
-    <Item type={item.type} time={item.time} total={item.total} />
+    <Item
+      alertType={item.alertType}
+      dateTime={item.dateTime}
+      body={item.body}
+      title={item.title}
+      ok={item.ok}
+    />
   );
   return (
     <SafeAreaView
@@ -215,7 +240,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
       <FlatList
         data={data_temp}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.alertID}
         //backgroundColor="blue"
       />
     </SafeAreaView>
