@@ -48,11 +48,18 @@ export default function GiverSettingsScreen({ navigation }) {
           style={{ height: 85, width: 85, marginLeft: "6%" }}
           source={require("../../assets/images/avatar/DefaultAvatar.png")}
         />
-        <SafeAreaView style={{ marginLeft: "5%" }}>
-          <Text style={{ fontSize: responsiveFontSize(2.8) }}>
+        <SafeAreaView
+          style={{
+            marginLeft: "3%",
+            //backgroundColor: "blue",
+            width: "68%",
+            marginRight: "1%",
+          }}
+        >
+          <Text style={{ fontSize: responsiveFontSize(2.8) }} numberOfLines={1}>
             {tokenData.firstName || "N/A"} {tokenData.lastName || "N/A"}
           </Text>
-          <Text style={{ fontSize: responsiveFontSize(2.1) }}>
+          <Text style={{ fontSize: responsiveFontSize(2.1) }} numberOfLines={1}>
             {tokenData.email || "N/A"}
           </Text>
         </SafeAreaView>
@@ -63,7 +70,7 @@ export default function GiverSettingsScreen({ navigation }) {
       <SafeAreaView></SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Name</Text>
-        <Text style={styles.BoxSub}>
+        <Text style={styles.BoxSub} numberOfLines={1}>
           {selectedUser.firstName || ""} {selectedUser.lastName || "N/A"}
         </Text>
       </SafeAreaView>
@@ -85,7 +92,9 @@ export default function GiverSettingsScreen({ navigation }) {
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Name</Text>
-        <Text style={styles.BoxSub}>{selectedUser.physName || "N/A"}</Text>
+        <Text style={styles.BoxSub} numberOfLines={1}>
+          {selectedUser.physName || "N/A"}
+        </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
         <Text style={styles.BoxTitle}>Phone</Text>
@@ -113,7 +122,15 @@ export default function GiverSettingsScreen({ navigation }) {
             flexDirection: "row",
           }}
         >
-          <Text style={styles.BoxSub}>Active</Text>
+          <Text style={styles.BoxSub}>
+            {selectedUser.healthProfile === 1
+              ? "Active"
+              : selectedUser.healthProfile === 2
+              ? "Sedentary"
+              : selectedUser.healthProfile === 3
+              ? "Homebound"
+              : "Select a preset"}
+          </Text>
           <Image
             style={{ height: 15, width: 15, marginLeft: "1%" }}
             source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}

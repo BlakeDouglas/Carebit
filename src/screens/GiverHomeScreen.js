@@ -9,6 +9,7 @@ import {
   Platform,
   useWindowDimensions,
 } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
@@ -16,26 +17,31 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import call from "react-native-phone-call";
-import { useDrawerStatus } from "@react-navigation/drawer";
 import * as WebBrowser from "expo-web-browser";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { resetSelectedData, setSelectedUser } from "../redux/actions";
 
 let date = moment().format("dddd, MMM D");
-
+let batteryLevel;
 export default function GiverHomeScreen({ navigation }) {
   const [steps, setSteps] = useState(0);
   const [HeartBPM, setHeart] = useState(0);
   const [HeartMax, setHeartMax] = useState(0);
   const [HeartMin, setHeartMin] = useState(0);
   const [HeartAvg, setHeartAvg] = useState(0);
+  const [BatteryLevel, setBatteryLevel] = useState("low");
+
+  const [isEnabledSleep, setIsEnabledSleep] = useState(false);
+  const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
+  const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
+
   const [fitbitAccessToken, setFitbitAccessToken] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
 
-  const number = selectedUser.phone || "0";
+  const number = selectedUser.phone || null;
   const [refreshing, setRefreshing] = React.useState(false);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -43,46 +49,74 @@ export default function GiverHomeScreen({ navigation }) {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     updateConnections();
+    getCaregiveeInfo();
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
+  const getCaregiveeInfo = async () => {
+    if (!selectedUser.email) return;
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/caregivee/" + selectedUser.caregiveeID,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+        }
+      );
+      const json = await response.json();
+      if (json.caregivee) {
+        setIsEnabledSleep(json.caregivee.sleep === 1);
+        setIsEnabledDisturb(json.caregivee.doNotDisturb === 1);
+        setIsEnabledMonitor(json.caregivee.monitoring === 1);
+      }
+    } catch (error) {
+      console.log(
+        "Caught error downloading from /caregivee/<caregiveeID> in GiverHome: " +
+          error
+      );
+    }
+  };
   const updateConnections = async () => {
     try {
-      const response = await fetch("https://www.carebit.xyz/getRequests", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify({
-          caregiverID: tokenData.caregiverID,
-          caregiveeID: null,
-        }),
-      });
-      const json = await response.json();
-      if (json.connections) {
-        let selected = null;
-        // Pull new data from the same user if possible.
-        selected = json.connections.find(
-          (iter) => iter.email === selectedUser.email
-        );
+      const response = await fetch(
+        "https://www.carebit.xyz/getDefaultRequest",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+          body: JSON.stringify({
+            caregiverID: tokenData.caregiverID,
+            caregiveeID: null,
+          }),
+        }
+      );
+      const responseText = await response.text();
+      const json = JSON.parse(responseText);
 
-        // If you cant find, then it was deleted. Find the first Accepted alternative
-        if (!selected)
-          selected = json.connections.find(
-            (iter) => iter.status === "Accepted"
-          );
-
-        // If you could find one, set it. Otherwise, reset the state
-        if (selected) dispatch(setSelectedUser(selected));
+      // Accounts for array return value and missing default scenarios
+      if (json.default) {
+        if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
+        else dispatch(setSelectedUser(json.default));
+      } else {
+        const array =
+          tokenJson[
+            tokenJson.type === "caregiver" ? "caregiveeID" : "caregiverID"
+          ];
+        const res = array.filter((iter) => iter.status === "accepted");
+        if (res[0]) dispatch(setSelectedUser(res[0]));
         else dispatch(resetSelectedData());
       }
     } catch (error) {
-      console.log("Caught error in /getRequests: " + error);
+      console.log("Caught error in /getDefaultRequest on giverHome: " + error);
     }
   };
-
   // Get Device expo-token-Notification
   async function registerForPushNotificationsAsync() {
     let token;
@@ -138,10 +172,11 @@ export default function GiverHomeScreen({ navigation }) {
     }
   };
 
-  const refreshFitbitAccessToken = async (caregiveeID) => {
+  const refreshFitbitAccessToken = async () => {
     try {
       const response = await fetch(
-        "https://www.carebit.xyz/refreshFitbitToken/" + caregiveeID,
+        "https://www.carebit.xyz/refreshFitbitToken/" +
+          selectedUser.caregiveeID,
         {
           method: "GET",
           headers: {
@@ -158,20 +193,27 @@ export default function GiverHomeScreen({ navigation }) {
       console.log("Caught error in /refreshFitbitToken: " + error);
     }
   };
-  const fetchFitbitAccessToken = async (caregiveeID) => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/getFitbitToken/" + caregiveeID,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
+  const fetchFitbitAccessToken = async () => {
+    if (!selectedUser.caregiveeID) {
+      console.log(
+        "Failed fetch because selectedUser not set. Will update when selectedUser is set."
       );
-      const json = await response.json();
+      return;
+    }
+    const url =
+      "https://www.carebit.xyz/getFitbitToken/" + selectedUser.caregiveeID;
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + tokenData.access_token,
+        },
+      });
+      const responseText = await response.text();
+      const json = JSON.parse(responseText);
+
       if (!json.error) setFitbitAccessToken(json.fitbitToken);
       else console.log("Error: " + json.error);
     } catch (error) {
@@ -179,17 +221,16 @@ export default function GiverHomeScreen({ navigation }) {
     }
   };
   const fetchData = async () => {
-    const caregiveeID = selectedUser.caregiveeID;
     if (!fitbitAccessToken) {
       // Seems that refresh has a cooldown. Switch this on if u get invalid token
       // await refreshFitbitAccessToken();
-      await fetchFitbitAccessToken(caregiveeID);
+      await fetchFitbitAccessToken(selectedUser.caregiveeID);
     } else {
       let date_today = moment().format("YYYY[-]MM[-]DD");
       //Get HeartRate
       let heartResponse = await fetch(
         "https://api.fitbit.com/1/user/" +
-          caregiveeID +
+          selectedUser.caregiveeID +
           "/activities/heart/date/" +
           date_today +
           "/1d.json",
@@ -202,22 +243,26 @@ export default function GiverHomeScreen({ navigation }) {
         }
       );
       let heart = await heartResponse.json();
+      console.log("Heart here");
+      console.log(heart);
 
       // Checks for expired token
       if (heart.errors) {
         console.log("Refreshing ");
-        await refreshFitbitAccessToken(caregiveeID);
+        await refreshFitbitAccessToken(selectedUser.caregiveeID);
         return;
       }
 
       setHeartAvg(heart["activities-heart"][0].value.restingHeartRate);
-      setHeartMax(heart["activities-heart"][0].value.heartRateZones[3].max);
+      setHeartMax(heart["activities-heart"][0].value.heartRateZones[0].max);
       setHeartMin(heart["activities-heart"][0].value.heartRateZones[0].min);
+      console.log("Heart max: ");
+      console.log(HeartMax);
 
       //Get Steps
       let stepsResponse = await fetch(
         "https://api.fitbit.com/1/user/" +
-          caregiveeID +
+          selectedUser.caregiveeID +
           "/activities/tracker/steps/date/" +
           date_today +
           "/1d.json",
@@ -245,18 +290,20 @@ export default function GiverHomeScreen({ navigation }) {
         }
       );
       let battery = await deviceResponse.json();
-      console.log("Response from devices:");
+      console.log("Battery response from devices:");
       console.log(battery);
+      setBatteryLevel(battery === [] ? battery[0].battery : "low");
     }
   };
-
   useEffect(() => {
     registerForPushNotificationsAsync();
+    getCaregiveeInfo();
   }, []);
 
   useEffect(() => {
+    getCaregiveeInfo();
     fetchData();
-  }, [fitbitAccessToken]);
+  }, [fitbitAccessToken, selectedUser]);
 
   const args = {
     number,
@@ -265,7 +312,19 @@ export default function GiverHomeScreen({ navigation }) {
 
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
-  console.log(tokenData);
+  console.log("Your true battery is here");
+  console.log(BatteryLevel);
+
+  const isFocused = useIsFocused();
+  // Auto refreshes every 10 seconds as long as the screen is focused
+  useEffect(() => {
+    const toggle = setInterval(() => {
+      isFocused ? getCaregiveeInfo() : clearInterval(toggle);
+      console.log("Home screen focused? " + isFocused);
+    }, 10000);
+    return () => clearInterval(toggle);
+  });
+
   return (
     <SafeAreaView style={{ height: windowHeight, width: windowWidth }}>
       <StatusBar
@@ -313,6 +372,9 @@ export default function GiverHomeScreen({ navigation }) {
                 alignItems: "flex-end",
                 justifyContent: "center",
               }}
+              onPress={() => {
+                navigation.navigate("ReceivedAlertsScreen");
+              }}
             >
               <Text
                 style={{
@@ -325,74 +387,230 @@ export default function GiverHomeScreen({ navigation }) {
               </Text>
             </TouchableOpacity>
           </SafeAreaView>
-          <SafeAreaView
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              //backgroundColor: "green",
-              height: "9%",
-              width: "100%",
-            }}
-          >
+          {!isEnabledSleep && !isEnabledDisturb && isEnabledMonitor ? (
             <SafeAreaView
               style={{
-                justifyContent: "center",
-
+                height: "9%",
+                width: "96%",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
                 //backgroundColor: "blue",
-                height: "80%",
-                width: "60%",
               }}
             >
-              <Text
+              <SafeAreaView
                 style={{
-                  //marginTop: "10%",
-                  //marginLeft: "4%",
-                  color: "darkgrey",
-                  fontSize: responsiveFontSize(1.8),
+                  //backgroundColor: "yellow",
+                  height: "100%",
+                  width: "64%",
+                  justifyContent: "center",
+                  marginRight: "2%",
+                  marginLeft: "4%",
                 }}
               >
-                Hello {tokenData.firstName || "N/A"}
-              </Text>
+                <Text
+                  style={{
+                    flexShrink: 1,
+                    color: "darkgrey",
+                    fontSize: responsiveFontSize(1.9),
+                  }}
+                  numberOfLines={1}
+                >
+                  Hello {tokenData.firstName || "N/A"}
+                </Text>
+                <Text
+                  style={{
+                    color: "black",
+                    fontSize: responsiveFontSize(2.2),
+                    fontWeight: "500",
+                    flexShrink: 1,
+                  }}
+                  numberOfLines={1}
+                >
+                  Your Caregiver is {selectedUser.firstName || "N/A"}
+                </Text>
+              </SafeAreaView>
+              <SafeAreaView
+                style={{
+                  height: "100%",
+                  width: "32%",
+                  justifyContent: "center",
+                  marginRight: "2%",
+                  //flexShrink: 1,
+                  //backgroundColor: "red",
+                }}
+              >
+                <SafeAreaView
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    //backgroundColor: "blue",
+                    flexDirection: "row",
+                    height: "100%",
+                    width: "100%",
+                    flexShrink: 1,
+                  }}
+                >
+                  {number && (
+                    <TouchableOpacity
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        flexShrink: 1,
+                      }}
+                      onPress={() => {
+                        call(args).catch(console.error);
+                      }}
+                    >
+                      <Image
+                        style={{ flexShrink: 1 }}
+                        source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
+                      />
+                      <Text
+                        style={[styles.callText, { flexShrink: 1 }]}
+                        numberOfLines={2}
+                      >
+                        Call {selectedUser.firstName || "N/A"}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </SafeAreaView>
+              </SafeAreaView>
+            </SafeAreaView>
+          ) : !isEnabledMonitor ? (
+            <SafeAreaView
+              style={{
+                flexDirection: "row",
+                //justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(255, 197, 0, 0.8)",
+                height: "7%",
+                width: "100%",
+                ...Platform.select({
+                  ios: {
+                    shadowColor: "black",
+                    shadowOffset: { width: 4, height: 6 },
+                    shadowOpacity: 0.4,
+                  },
+                  android: {
+                    elevation: 6,
+                  },
+                }),
+              }}
+            >
+              <Image
+                style={[
+                  styles.imagesBody,
+                  {
+                    height: 20,
+                    width: 20,
+                    marginLeft: "3%",
+                    marginRight: "2%",
+                    tintColor: "black",
+                  },
+                ]}
+                source={require("../../assets/images/icons-caregivee-monitor-off.imageset/icons-caregivee-monitor-off.png")}
+              />
               <Text
                 style={{
-                  color: "black",
-                  fontSize: responsiveFontSize(2.2),
-                  fontWeight: "500",
-                  //flex: 1,
-                  marginRight: "5%",
-                  //marginLeft: "4%",
+                  fontWeight: "bold",
+                  fontSize: responsiveFontSize(2.1),
+                  fontWeight: "800",
                 }}
                 numberOfLines={1}
               >
-                Your Caregivee is {selectedUser.firstName || "N/A"}
+                {selectedUser.firstName} Paused Monitoring
               </Text>
             </SafeAreaView>
+          ) : isEnabledSleep ? (
             <SafeAreaView
               style={{
-                //marginTop: "4%",
-                //backgroundColor: "red",
-                width: "32%",
-                height: "80%",
-                justifyContent: "center",
-                alignItems: "flex-end",
+                flexDirection: "row",
+                //justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(0,0,0,.9)",
+                height: "7%",
+                width: "100%",
+                ...Platform.select({
+                  ios: {
+                    shadowColor: "blue",
+                    shadowOffset: { width: 4, height: 6 },
+                    shadowOpacity: 0.4,
+                  },
+                  android: {
+                    elevation: 6,
+                  },
+                }),
               }}
             >
-              <TouchableOpacity
-                style={styles.callBody}
-                onPress={() => {
-                  call(args).catch(console.error);
+              <Image
+                style={[
+                  {
+                    height: 25,
+                    width: 25,
+                    marginLeft: "3%",
+                    marginRight: "2%",
+                  },
+                ]}
+                source={require("../../assets/images/icons-caregivee-sleep-on.imageset/icons-caregivee-sleep-on.png")}
+              />
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: responsiveFontSize(2.1),
+                  fontWeight: "800",
                 }}
+                numberOfLines={1}
               >
-                <Image
-                  source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
-                />
-                <Text style={styles.callText}>
-                  Call {selectedUser.firstName || "N/A"}
-                </Text>
-              </TouchableOpacity>
+                {selectedUser.firstName} Said Good Night
+              </Text>
             </SafeAreaView>
-          </SafeAreaView>
+          ) : (
+            <SafeAreaView
+              style={{
+                flexDirection: "row",
+                //justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(0,0,0,.8)",
+                height: "7%",
+                width: "100%",
+                ...Platform.select({
+                  ios: {
+                    shadowColor: "black",
+                    shadowOffset: { width: 4, height: 6 },
+                    shadowOpacity: 0.4,
+                  },
+                  android: {
+                    elevation: 6,
+                  },
+                }),
+              }}
+            >
+              <Image
+                style={[
+                  {
+                    height: 25,
+                    width: 25,
+                    marginLeft: "3%",
+                    marginRight: "2%",
+                  },
+                ]}
+                source={require("../../assets/images/icons-caregivee-dnd-on.imageset/icons-caregivee-dnd-on.png")}
+              />
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: responsiveFontSize(2.1),
+                  fontWeight: "800",
+                }}
+                numberOfLines={1}
+              >
+                {selectedUser.firstName} Wants No Disturbances
+              </Text>
+            </SafeAreaView>
+          )}
           <SafeAreaView
             style={{
               borderBottomColor: "lightgray",
@@ -557,11 +775,11 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5),
                       fontWeight: "700",
                     }}
                   >
-                    0
+                    {HeartAvg || "--"}
                   </Text>
                   <Text
                     style={{
@@ -620,11 +838,12 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5),
                       fontWeight: "700",
                     }}
+                    numberOfLines={1}
                   >
-                    0
+                    {steps}
                   </Text>
                 </SafeAreaView>
                 <SafeAreaView
@@ -787,11 +1006,11 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5),
                       fontWeight: "700",
                     }}
                   >
-                    0
+                    {HeartMin}
                   </Text>
                 </SafeAreaView>
 
@@ -836,11 +1055,11 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5),
                       fontWeight: "700",
                     }}
                   >
-                    0
+                    {HeartAvg || Math.floor((HeartMin + HeartMax) / 2)}
                   </Text>
                 </SafeAreaView>
 
@@ -885,11 +1104,11 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5),
                       fontWeight: "700",
                     }}
                   >
-                    0
+                    {HeartMax}
                   </Text>
                 </SafeAreaView>
 
@@ -940,7 +1159,7 @@ export default function GiverHomeScreen({ navigation }) {
               >
                 <Image
                   style={[styles.images, { marginLeft: "4%" }]}
-                  source={require("../../assets/images/heart/heart.png")}
+                  source={require("../../assets/images/steps/steps.png")}
                 />
                 <Text
                   style={{
@@ -949,7 +1168,7 @@ export default function GiverHomeScreen({ navigation }) {
                     marginLeft: "5%",
                   }}
                 >
-                  Heart Rate
+                  Total Steps
                 </Text>
               </SafeAreaView>
 
@@ -976,7 +1195,7 @@ export default function GiverHomeScreen({ navigation }) {
               >
                 <Image
                   style={[styles.images, { marginLeft: "4%" }]}
-                  source={require("../../assets/images/steps/steps.png")}
+                  source={require("../../assets/images/icons-fitbit-color.imageset/icons-fitbit-color.png")}
                 />
                 <Text
                   style={{
@@ -986,7 +1205,7 @@ export default function GiverHomeScreen({ navigation }) {
                     //marginVertical: "3%",
                   }}
                 >
-                  Steps
+                  Fitbit Battery
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
@@ -1034,21 +1253,12 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5),
                       fontWeight: "700",
                     }}
+                    numberOfLines={1}
                   >
-                    0
-                  </Text>
-                  <Text
-                    style={{
-                      color: "black",
-                      fontSize: responsiveFontSize(2),
-                      marginLeft: "3%",
-                      fontWeight: "600",
-                    }}
-                  >
-                    BPM
+                    {steps}
                   </Text>
                 </SafeAreaView>
                 <SafeAreaView
@@ -1094,15 +1304,22 @@ export default function GiverHomeScreen({ navigation }) {
                     width: "100%",
                   }}
                 >
-                  <Text
-                    style={{
-                      color: "black",
-                      fontSize: responsiveFontSize(4.8),
-                      fontWeight: "700",
-                    }}
-                  >
-                    0
-                  </Text>
+                  {BatteryLevel === "High" ? (
+                    <Image
+                      style={{ height: 29, width: 51 }}
+                      source={require("../../assets/images/battery-full.imageset/battery-full.png")}
+                    />
+                  ) : BatteryLevel === "Medium" ? (
+                    <Image
+                      style={{ height: 29, width: 51 }}
+                      source={require("../../assets/images/battery-medium.imageset/battery-medium.png")}
+                    />
+                  ) : (
+                    <Image
+                      style={{ height: 29, width: 51 }}
+                      source={require("../../assets/images/battery-low.imageset/battery-low.png")}
+                    />
+                  )}
                 </SafeAreaView>
                 <SafeAreaView
                   style={{
@@ -1112,7 +1329,7 @@ export default function GiverHomeScreen({ navigation }) {
                     justifyContent: "flex-start",
                   }}
                 >
-                  <Text style={styles.smallText}>in past hour</Text>
+                  <Text style={styles.smallText}>{BatteryLevel}</Text>
                 </SafeAreaView>
               </SafeAreaView>
             </SafeAreaView>
@@ -1148,15 +1365,18 @@ const styles = StyleSheet.create({
   callBody: {
     alignItems: "center",
     flexDirection: "row",
+    height: "100%",
+    width: "100%",
+    //backgroundColor: "orange",
     //marginRight: "4%",
     //marginTop: Platform.OS == "ios" ? "10%" : "5%",
-    justifyContent: "center",
+    //justifyContent: "center",
   },
   callText: {
     color: "dodgerblue",
     fontSize: responsiveFontSize(2),
     fontWeight: "bold",
-    marginLeft: "2%",
+    // marginLeft: "2%",
   },
   images: {
     height: 25,

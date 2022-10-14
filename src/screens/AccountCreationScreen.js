@@ -7,10 +7,11 @@ import {
   StatusBar,
   Platform,
   View,
+  TouchableOpacity,
 } from "react-native";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TouchableOpacity } from "react-native-gesture-handler";
+
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,6 +19,7 @@ import CustomTextInput from "../utils/CustomTextInput";
 import { setTokenData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import validator from "validator";
 
 export default function AccountCreationScreen({ navigation }) {
   // These are the two tools of the redux state manager. Use them instead of hooks
@@ -48,7 +50,7 @@ export default function AccountCreationScreen({ navigation }) {
     if (!inputs.email) {
       handleError(requiredText, "email");
       valid = false;
-    } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
+    } else if (!validator.isEmail(inputs.email)) {
       handleError(" Invalid email", "email");
       valid = false;
     }
@@ -73,18 +75,19 @@ export default function AccountCreationScreen({ navigation }) {
       valid = false;
     }
 
-    if (!inputs.password) {
-      handleError(requiredText, "password");
+    if (!validator.isStrongPassword(inputs.password, { minSymbols: 0 })) {
       valid = false;
-    } else if (inputs.password.length < 8) {
-      handleError(" Too short (8 minimum)", "password");
-      valid = false;
-    } else if (!/[0-9]/.test(inputs.password)) {
-      handleError(" Must contain a number", "password");
-      valid = false;
-    } else if (!/[A-Z]/.test(inputs.password)) {
-      handleError(" Must contain capital", "password");
-      valid = false;
+      if (!inputs.password) {
+        handleError(requiredText, "password");
+      } else if (inputs.password.length < 8) {
+        handleError(" Too short (8 minimum)", "password");
+      } else if (!/[0-9]/.test(inputs.password)) {
+        handleError(" Must contain a number", "password");
+      } else if (!/[A-Z]/.test(inputs.password)) {
+        handleError(" Must contain capital", "password");
+      } else {
+        handleError(" Invalid password", "password");
+      }
     }
 
     if (valid) {
@@ -119,12 +122,15 @@ export default function AccountCreationScreen({ navigation }) {
             ...json,
             firstName: inputs.firstName,
             lastName: inputs.lastName,
+            email: inputs.email,
           })
         );
-        // TODO: Modify here
         SecureStore.setItemAsync("carebitcredentials", JSON.stringify(body));
       } else if (json.error === "Phone number already exists.") {
-        handleError(" Phone Number already exists", "phone");
+        handleError(" Phone number taken", "phone");
+        console.log(json.error);
+      } else if (json.error === "Email already exists.") {
+        handleError(" Email taken", "email");
         console.log(json.error);
       } else {
         handleError(" Invalid email", "email");
@@ -197,7 +203,9 @@ export default function AccountCreationScreen({ navigation }) {
                       iconName="account-outline"
                       label="Name*"
                       error={errors.firstName}
-                      onChangeText={(text) => handleChange(text, "firstName")}
+                      onChangeText={(text) =>
+                        handleChange(validator.trim(text), "firstName")
+                      }
                       onFocus={() => {
                         handleError(null, "firstName");
                       }}
@@ -208,7 +216,9 @@ export default function AccountCreationScreen({ navigation }) {
                       placeholder="Last Name"
                       label="  "
                       error={errors.lastName}
-                      onChangeText={(text) => handleChange(text, "lastName")}
+                      onChangeText={(text) =>
+                        handleChange(validator.trim(text), "lastName")
+                      }
                       onFocus={() => {
                         handleError(null, "lastName");
                       }}
@@ -223,6 +233,7 @@ export default function AccountCreationScreen({ navigation }) {
                   error={errors.phone}
                   onChangeText={(text) =>
                     // Removes everything but numbers, so it complies with the api
+                    // TODO: Handle this differently
                     handleChange(text.replace(/[^0-9]+/g, ""), "phone")
                   }
                   onFocus={() => {
@@ -237,7 +248,9 @@ export default function AccountCreationScreen({ navigation }) {
                   keyboardType="email-address"
                   autoCapitalize="none"
                   error={errors.email}
-                  onChangeText={(text) => handleChange(text, "email")}
+                  onChangeText={(text) =>
+                    handleChange(validator.trim(text), "email")
+                  }
                   onFocus={() => {
                     handleError(null, "email");
                   }}

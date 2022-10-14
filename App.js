@@ -6,6 +6,7 @@ import AddScreen from "./src/screens/AddScreen";
 import AuthenticationScreen from "./src/screens/AuthenticationScreen";
 import CustomNotificationScreen from "./src/screens/CustomNotificationScreen";
 import GiveeHomeScreen from "./src/screens/GiveeHomeScreen";
+import GiveeReceivedAlertsScreen from "./src/screens/GiveeReceivedAlertsScreen";
 import GiveeSettingsScreen from "./src/screens/GiveeSettingsScreen";
 import GiverHomeScreen from "./src/screens/GiverHomeScreen";
 import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
@@ -17,12 +18,13 @@ import ModifiedActivityScreen from "./src/screens/ModifiedActivityScreen";
 import ModifiedCaregiveeAccountCreation from "./src/screens/ModifiedCaregiveeAccountCreation";
 import ModifiedPhysScreen from "./src/screens/ModifiedPhysScreen";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
+import ReceivedAlertsScreen from "./src/screens/ReceivedAlertsScreen";
 import RequestScreen from "./src/screens/RequestScreen";
 import RoleSelectScreen from "./src/screens/RoleSelectScreen";
 import SettingsOverviewScreen from "./src/screens/SettingsOverviewScreen";
 import TitleScreen from "./src/screens/TitleScreen";
 import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
-import { Provider, useSelector } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
 import { useFonts } from "expo-font";
 import * as React from "react";
@@ -31,6 +33,7 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { setTokenData } from "./src/redux/actions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAu69cdb30ONSKMcrIrL7P4YT0ghQoNEdg",
@@ -62,7 +65,7 @@ const App = () => {
 
 const RootNavigation = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  console.log(tokenData);
+  console.log("TokenData: ", tokenData);
   return (
     <NavigationContainer>
       {tokenData.access_token === "" ? (
@@ -104,6 +107,7 @@ const AuthStack = () => {
 // like phys data, first-time instructions, etc
 const MiddleStack = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const dispatch = useDispatch();
   return (
     <Stack.Navigator>
       <Stack.Group
@@ -120,7 +124,35 @@ const MiddleStack = () => {
           />
         )}
         {tokenData.type === "caregiver" && !tokenData.caregiveeID && (
-          <Stack.Screen name="LinkUsersScreen" component={LinkUsersScreen} />
+          <Stack.Screen
+            name="LinkUsersScreen"
+            component={LinkUsersScreen}
+            options={({ navigation }) => ({
+              headerTransparent: true,
+              headerTitleAlign: "center",
+
+              headerStyle: {
+                backgroundColor: "transparent",
+              },
+              headerRight: () => (
+                <TouchableOpacity
+                  onPress={() =>
+                    dispatch(setTokenData({ ...tokenData, caregiveeID: [] }))
+                  }
+                  style={{ marginRight: "8%" }}
+                >
+                  <Text
+                    style={{
+                      fontSize: responsiveFontSize(2.5),
+                      color: "white",
+                    }}
+                  >
+                    Skip
+                  </Text>
+                </TouchableOpacity>
+              ),
+            })}
+          />
         )}
         {tokenData.type === "caregiver" && tokenData.caregiveeID === null && (
           <Stack.Screen
@@ -395,6 +427,37 @@ const HomeStack = () => {
               tokenData.type === "caregiver"
                 ? "Linked Caregivees"
                 : "Linked Caregiver",
+          })}
+        />
+        <Stack.Screen
+          name="ReceivedAlertsScreen"
+          component={
+            tokenData.type === "caregivee"
+              ? GiveeReceivedAlertsScreen
+              : ReceivedAlertsScreen
+          }
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={{ marginRight: "8%" }}
+              >
+                <Text
+                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
+                >
+                  Done
+                </Text>
+              </TouchableOpacity>
+            ),
+            headerTitle: "Alert History",
           })}
         />
         <Stack.Screen name="AddScreen" component={AddScreen} />

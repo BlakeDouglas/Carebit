@@ -11,7 +11,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import CustomTextInput from "../utils/CustomTextInput";
-import { setSelectedUser, setTokenData } from "../redux/actions";
+import {
+  resetSelectedData,
+  setSelectedUser,
+  setTokenData,
+} from "../redux/actions";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as SecureStore from "expo-secure-store";
 
@@ -69,20 +73,10 @@ export default function LoginScreen({ navigation }) {
       });
       const json = await response.json();
       if (json.access_token !== undefined) {
+        if (json.caregiveeID && json.caregiveeID.length === 0)
+          json.caregiveeID = null;
         dispatch(setTokenData(json));
-
-        const oppositeType =
-          json.type === "caregiver" ? "caregivee" : "caregiver";
-        if (
-          json[oppositeType + "ID"] &&
-          json[oppositeType + "ID"].length !== 0
-        ) {
-          const selected = json[oppositeType + "ID"].find(
-            (iter) => iter.status === "Accepted"
-          );
-          dispatch(setSelectedUser(selected));
-        }
-
+        getDefault(json);
         SecureStore.setItemAsync("carebitcredentials", body);
       } else {
         if (json.message === "Email not found")
@@ -93,6 +87,47 @@ export default function LoginScreen({ navigation }) {
       }
     } catch (error) {
       console.log("Caught error in /login: " + error);
+    }
+  };
+
+  const getDefault = async (tokenJson) => {
+    const body =
+      tokenJson.type === "caregiver"
+        ? { caregiverID: tokenJson.caregiverID, caregiveeID: null }
+        : { caregiverID: null, caregiveeID: tokenJson.caregiveeID };
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/getDefaultRequest",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenJson.access_token,
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const responseText = await response.text();
+      const json = JSON.parse(responseText);
+
+      // Accounts for array return value and missing default scenarios
+      if (json.default) {
+        if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
+        else dispatch(setSelectedUser(json.default));
+      } else {
+        const array =
+          tokenJson[
+            tokenJson.type === "caregiver" ? "caregiveeID" : "caregiverID"
+          ];
+        const res = array.filter((iter) => iter.status === "accepted");
+        if (res[0]) dispatch(setSelectedUser(res[0]));
+        else dispatch(resetSelectedData());
+      }
+    } catch (error) {
+      console.log(
+        "Caught error in /getDefaultRequest on login screen: " + error
+      );
     }
   };
 

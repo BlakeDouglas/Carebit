@@ -106,6 +106,15 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
       console.log("registerShellCaregivee: " + JSON.stringify(json));
       if (json.access_token) {
         navigation.navigate("ModifiedAuthScreen", { json });
+      } else if (json.error === "Phone number already exists.") {
+        handleError(" Phone number taken", "phone");
+        console.log(json.error);
+      } else if (json.error === "Email already exists.") {
+        handleError(" Email taken", "email");
+        console.log(json.error);
+      } else {
+        handleError(" Invalid email", "email");
+        console.log(json.error);
       }
     } catch (error) {
       console.log("Caught error in /user: " + error);

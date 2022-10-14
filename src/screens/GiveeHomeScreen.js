@@ -26,7 +26,7 @@ export default function GiveeHomeScreen({ navigation }) {
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
   const dispatch = useDispatch();
-  const number = selectedUser.phone || "0";
+  const number = selectedUser.phone || null;
   const args = {
     number,
     prompt: true,
@@ -86,38 +86,39 @@ export default function GiveeHomeScreen({ navigation }) {
 
   const updateConnections = async () => {
     try {
-      const response = await fetch("https://www.carebit.xyz/getRequests", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify({
-          caregiverID: null,
-          caregiveeID: tokenData.caregiveeID,
-        }),
-      });
-      const json = await response.json();
-      if (json.connections) {
-        let selected = null;
-        // Pull new data from the same user if possible.
-        selected = json.connections.find(
-          (iter) => iter.email === selectedUser.email
-        );
+      const response = await fetch(
+        "https://www.carebit.xyz/getDefaultRequest",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+          body: JSON.stringify({
+            caregiverID: null,
+            caregiveeID: tokenData.caregiveeID,
+          }),
+        }
+      );
+      const responseText = await response.text();
+      const json = JSON.parse(responseText);
 
-        // If you cant find, then it was deleted. Find the first Accepted alternative
-        if (!selected)
-          selected = json.connections.find(
-            (iter) => iter.status === "Accepted"
-          );
-
-        // If you could find one, set it. Otherwise, reset the state
-        if (selected) dispatch(setSelectedUser(selected));
+      // Accounts for array return value and missing default scenarios
+      if (json.default) {
+        if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
+        else dispatch(setSelectedUser(json.default));
+      } else {
+        const array =
+          tokenJson[
+            tokenJson.type === "caregiver" ? "caregiveeID" : "caregiverID"
+          ];
+        const res = array.filter((iter) => iter.status === "accepted");
+        if (res[0]) dispatch(setSelectedUser(res[0]));
         else dispatch(resetSelectedData());
       }
     } catch (error) {
-      console.log("Caught error in /getRequests: " + error);
+      console.log("Caught error in /getDefaultRequest on giveeHome: " + error);
     }
   };
 
@@ -241,11 +242,11 @@ export default function GiveeHomeScreen({ navigation }) {
                 fontSize: responsiveFontSize(1.8),
                 fontWeight: "400",
                 textAlign: "left",
+                padding: 7,
               }}
             >
-              Turning on Sleep Mode will inform{" "}
-              {selectedUser.firstName || "N/A"} that you are going to sleep.
-              They will not receive alerts.
+              Turning on Sleep Mode will inform your caregiver(s) that you are
+              going to sleep. They will not receive alerts.
             </Text>
           </SafeAreaView>
           <SafeAreaView
@@ -363,13 +364,12 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 fontSize: responsiveFontSize(1.8),
                 fontWeight: "400",
-
+                padding: 7,
                 textAlign: "left",
               }}
             >
-              Turning on Do Not Disturb will inform{" "}
-              {selectedUser.firstName || "N/A"} that you do not want to be
-              called. They will not receive alerts.
+              Turning on Do Not Disturb will inform your caregiver(s) that you
+              do not want to be called. They will not receive alerts.
             </Text>
           </SafeAreaView>
           <SafeAreaView
@@ -489,12 +489,12 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 fontSize: responsiveFontSize(1.8),
                 fontWeight: "400",
-
+                padding: 7,
                 textAlign: "left",
               }}
             >
-              Pausing Monitoring will prevent {selectedUser.firstName || "N/A"}{" "}
-              from receiving any of your health data, including alerts.
+              Pausing Monitoring will prevent your caregiver(s) from receiving
+              any of your health data, including alerts.
             </Text>
           </SafeAreaView>
           <SafeAreaView
@@ -592,8 +592,9 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 //backgroundColor: "green",
                 height: "100%",
-                width: "66%",
+                width: "64%",
                 justifyContent: "center",
+                marginRight: "2%",
               }}
             >
               <Text
@@ -602,6 +603,7 @@ export default function GiveeHomeScreen({ navigation }) {
                   color: "darkgrey",
                   fontSize: responsiveFontSize(1.9),
                 }}
+                numberOfLines={1}
               >
                 Hello {tokenData.firstName || "N/A"}
               </Text>
@@ -625,19 +627,21 @@ export default function GiveeHomeScreen({ navigation }) {
                 //backgroundColor: "red",
               }}
             >
-              <TouchableOpacity
-                style={styles.callBody}
-                onPress={() => {
-                  call(args).catch(console.error);
-                }}
-              >
-                <Image
-                  source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
-                />
-                <Text style={styles.callText} numberOfLines={2}>
-                  Call {selectedUser.firstName || "N/A"}
-                </Text>
-              </TouchableOpacity>
+              {number && (
+                <TouchableOpacity
+                  style={styles.callBody}
+                  onPress={() => {
+                    call(args).catch(console.error);
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
+                  />
+                  <Text style={styles.callText} numberOfLines={2}>
+                    Call {selectedUser.firstName || "N/A"}
+                  </Text>
+                </TouchableOpacity>
+              )}
             </SafeAreaView>
           </SafeAreaView>
 
@@ -681,6 +685,9 @@ export default function GiveeHomeScreen({ navigation }) {
               >
                 <TouchableOpacity
                   style={{ alignItems: "center", justifyContent: "center" }}
+                  onPress={() => {
+                    navigation.navigate("ReceivedAlertsScreen");
+                  }}
                 >
                   <Image
                     style={styles.imagesBody}

@@ -7,6 +7,7 @@ import {
   FlatList,
   Alert,
   ImageBackground,
+  RefreshControl,
 } from "react-native";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -15,7 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { setSelectedUser } from "../redux/actions";
-
+import { useIsFocused } from "@react-navigation/native";
 const RequestScreen = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -91,6 +92,41 @@ const RequestScreen = ({ navigation }) => {
     }
   };
 
+  const setDefault = async (selected) => {
+    const body =
+      tokenData.type === "caregiver"
+        ? {
+            caregiverID: tokenData.caregiverID,
+            caregiveeID: selected.caregiveeID,
+            user: tokenData.type,
+          }
+        : {
+            caregiverID: selected.caregiverID,
+            caregiveeID: tokenData.caregiveeID,
+            user: tokenData.type,
+          };
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/setDefaultRequest",
+        {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const responseText = await response.text();
+      const json = JSON.parse(responseText);
+    } catch (error) {
+      console.log(
+        "Caught error in /setDefaultRequest in requestScreen: " + error
+      );
+    }
+  };
+
   const acceptRequest = async (tokenData, item) => {
     const body =
       tokenData.type === "caregivee"
@@ -109,6 +145,8 @@ const RequestScreen = ({ navigation }) => {
       const json = await response.json();
       if (json.request) {
         {
+          setDefault(item);
+          dispatch(setSelectedUser(item));
           getRequests(tokenData);
         }
       } else {
@@ -150,7 +188,7 @@ const RequestScreen = ({ navigation }) => {
   useEffect(() => {
     setData(
       backgroundData.filter(
-        (iter) => iter.status === "Pending" && iter.sender !== tokenData.type
+        (iter) => iter.status === "pending" && iter.sender !== tokenData.type
       )
     );
   }, [backgroundData]);
@@ -166,6 +204,26 @@ const RequestScreen = ({ navigation }) => {
       />
     );
   };
+
+  const [refreshing, setRefreshing] = React.useState(false);
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getRequests(tokenData);
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
+
+  const isFocused = useIsFocused();
+  // Auto refreshes every 10 seconds as long as the screen is focused
+  useEffect(() => {
+    const toggle = setInterval(() => {
+      isFocused ? getRequests(tokenData) : clearInterval(toggle);
+      console.log("Request screen focused? " + isFocused);
+    }, 10000);
+    return () => clearInterval(toggle);
+  });
 
   return (
     <ImageBackground
@@ -195,6 +253,9 @@ const RequestScreen = ({ navigation }) => {
         </SafeAreaView>
         <FlatList
           data={data}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           renderItem={renderItem}
           keyExtractor={(item) => item.requestID}
           ListEmptyComponent={Empty}
@@ -271,10 +332,17 @@ const RequestScreen = ({ navigation }) => {
 
 const Item = ({ item, onPress, backgroundColor }) => (
   <TouchableOpacity style={[styles.item, backgroundColor]} onPress={onPress}>
-    <Text style={styles.name}>
+    <Text style={styles.name} numberOfLines={1}>
       {item.firstName} {item.lastName}
     </Text>
-    <Text style={styles.phone}>{item.phone}</Text>
+    <Text style={styles.phone}>
+      {"(" +
+        item.phone.substring(0, 3) +
+        ") " +
+        item.phone.substring(3, 6) +
+        "-" +
+        item.phone.substring(6)}
+    </Text>
   </TouchableOpacity>
 );
 

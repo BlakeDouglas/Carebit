@@ -19,7 +19,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 
-export default function PhysicianInfoScreen({ navigation, route }) {
+export default function ModifiedPhysScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
   const [inputs, setInputs] = useState({
@@ -75,10 +75,46 @@ export default function PhysicianInfoScreen({ navigation, route }) {
       });
       const json = await response.json();
       if (json.cgvee) {
+        getDefault(tokenData);
         navigation.navigate("ModifiedActivityScreen", route.params);
       }
     } catch (error) {
       console.log("Caught error in /physician: " + error);
+    }
+  };
+
+  const getDefault = async (tokenJson) => {
+    const body = { caregiverID: tokenJson.caregiverID, caregiveeID: null };
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/getDefaultRequest",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenJson.access_token,
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const responseText = await response.text();
+      const json = JSON.parse(responseText);
+
+      // Accounts for array return value and missing default scenarios
+      if (json.default) {
+        if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
+        else dispatch(setSelectedUser(json.default));
+      } else {
+        const array = tokenJson.caregiveeID;
+        const res = array.filter((iter) => iter.status === "accepted");
+        if (res[0]) dispatch(setSelectedUser(res[0]));
+        else dispatch(resetSelectedData());
+      }
+    } catch (error) {
+      console.log(
+        "Caught error in /getDefaultRequest on modified phys screen: " + error
+      );
     }
   };
 

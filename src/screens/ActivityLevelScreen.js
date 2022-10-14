@@ -23,7 +23,9 @@ export default function AccountCreationScreen({ navigation, route }) {
         "https://www.carebit.xyz/activity/" +
           selectedUser.caregiveeID +
           "/" +
-          level,
+          level +
+          "/" +
+          tokenData.caregiverID,
         {
           method: "PUT",
           headers: {
@@ -113,7 +115,7 @@ export default function AccountCreationScreen({ navigation, route }) {
                 <TouchableOpacity
                   style={styles.InnerContainers}
                   onPress={() => {
-                    setActivity(3);
+                    setActivity(1);
                   }}
                 >
                   <SafeAreaView>
@@ -146,7 +148,7 @@ export default function AccountCreationScreen({ navigation, route }) {
                 <TouchableOpacity
                   style={styles.InnerContainers}
                   onPress={() => {
-                    setActivity(1);
+                    setActivity(3);
                   }}
                 >
                   <SafeAreaView>

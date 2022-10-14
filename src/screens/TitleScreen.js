@@ -11,7 +11,11 @@ import React, { useEffect } from "react";
 import * as Linking from "expo-linking";
 import * as SecureStore from "expo-secure-store";
 import { useDispatch } from "react-redux";
-import { setSelectedUser, setTokenData } from "../redux/actions";
+import {
+  resetSelectedData,
+  setSelectedUser,
+  setTokenData,
+} from "../redux/actions";
 
 export default function TitleScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -39,27 +43,57 @@ export default function TitleScreen({ navigation }) {
       });
       const json = await response.json();
       if (json.access_token !== undefined) {
+        getDefault(json);
+        if (json.caregiveeID && json.caregiveeID.length === 0)
+          json.caregiveeID = null;
         dispatch(setTokenData(json));
-
-        const oppositeType =
-          json.type === "caregiver" ? "caregivee" : "caregiver";
-        if (
-          json[oppositeType + "ID"] &&
-          json[oppositeType + "ID"].length !== 0
-        ) {
-          const selected = json[oppositeType + "ID"].find(
-            (iter) => iter.status === "Accepted"
-          );
-          dispatch(setSelectedUser(selected));
-        }
-
-        SecureStore.setItemAsync("carebitcredentials", body);
       } else {
         SecureStore.deleteItemAsync("carebitcredentials");
         console.log("Saved credentials are invalid. Removing...");
       }
     } catch (error) {
-      console.log("Caught error in /login: " + error);
+      console.log("Caught error in /login in title screen: " + error);
+    }
+  };
+
+  const getDefault = async (tokenJson) => {
+    const body =
+      tokenJson.type === "caregiver"
+        ? { caregiverID: tokenJson.caregiverID, caregiveeID: null }
+        : { caregiverID: null, caregiveeID: tokenJson.caregiveeID };
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/getDefaultRequest",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenJson.access_token,
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const responseText = await response.text();
+      const json = JSON.parse(responseText);
+
+      // Accounts for array return value and missing default scenarios
+      if (json.default) {
+        if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
+        else dispatch(setSelectedUser(json.default));
+      } else {
+        const array =
+          tokenJson[
+            tokenJson.type === "caregiver" ? "caregiveeID" : "caregiverID"
+          ];
+        const res = array.filter((iter) => iter.status === "accepted");
+        if (res[0]) dispatch(setSelectedUser(res[0]));
+        else dispatch(resetSelectedData());
+      }
+    } catch (error) {
+      console.log(
+        "Caught error in /getDefaultRequest on title screen: " + error
+      );
     }
   };
 

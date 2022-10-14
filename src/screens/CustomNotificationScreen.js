@@ -66,6 +66,7 @@ export default function CustomNotificationScreen({ navigation }) {
   const thresholdsAPI = async (type, newJson) => {
     if (type === "PUT" && !thresholds) type = "GET";
     if (!newJson) newJson = thresholds;
+    if (!selectedUser.email) return; // TODO: make sure this works
     try {
       let response = await fetch(
         "https://www.carebit.xyz/thresholds/" + selectedUser.caregiveeID,
@@ -447,8 +448,8 @@ export default function CustomNotificationScreen({ navigation }) {
               </SafeAreaView>
               <SafeAreaView>
                 <Text style={styles.Descriptive}>
-                  We'll send you an alert after Testing Care's Fitbit hasn't
-                  synced for an hour
+                  We'll send you an alert after {selectedUser.firstName}'s
+                  Fitbit hasn't synced for an hour
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
@@ -468,8 +469,8 @@ export default function CustomNotificationScreen({ navigation }) {
               </SafeAreaView>
               <SafeAreaView>
                 <Text style={styles.Descriptive}>
-                  We'll send you an alert when Testing Care's Fitbit has no
-                  charge
+                  We'll send you an alert when {selectedUser.firstName}'s Fitbit
+                  has no charge
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
