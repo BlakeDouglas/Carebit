@@ -3,6 +3,7 @@
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 const CustomTextInput = ({
   label,
@@ -15,15 +16,14 @@ const CustomTextInput = ({
   const [isFocused, setIsFocused] = useState(false);
   const [hidePassword, setHidePassword] = useState(password);
   return (
-    <View style={{ marginBottom: 15 }}>
+    <View style={{ marginBottom: "4%" }}>
       <View style={{ flexDirection: "row" }}>
         <Text style={style.label}>{label}</Text>
         {error && (
           <Text
             style={{
               color: "red",
-              fontSize: 15,
-              marginBottom: 5,
+              fontSize: responsiveFontSize(1.9),
               fontFamily: "RobotoBold",
             }}
           >
@@ -39,7 +39,11 @@ const CustomTextInput = ({
       >
         <Icon
           name={iconName}
-          style={{ fontSize: 22, color: "white", marginRight: 10 }}
+          style={{
+            fontSize: responsiveFontSize(2.8),
+            color: "white",
+            marginRight: "3%",
+          }}
         />
 
         <TextInput
@@ -51,7 +55,11 @@ const CustomTextInput = ({
           onBlur={() => {
             setIsFocused(false);
           }}
-          style={{ color: "white", flex: 1, fontSize: 17 }}
+          style={{
+            color: "white",
+            flex: 1,
+            fontSize: responsiveFontSize(2.15),
+          }}
           placeholderTextColor="rgba(255, 255, 255, .5)"
           secureTextEntry={hidePassword}
           {...props}
@@ -61,7 +69,7 @@ const CustomTextInput = ({
             onPress={() => {
               setHidePassword(!hidePassword);
             }}
-            style={{ fontSize: 22, color: "white" }}
+            style={{ fontSize: responsiveFontSize(2.8), color: "white" }}
             name={hidePassword ? "eye-outline" : "eye-off-outline"}
           />
         )}
@@ -72,15 +80,15 @@ const CustomTextInput = ({
 
 const style = StyleSheet.create({
   label: {
-    marginBottom: 5,
-    fontSize: 15,
+    marginBottom: "1.8%",
+    fontSize: responsiveFontSize(1.9),
     color: "white",
   },
   inputContainer: {
     height: 55,
     backgroundColor: "transparent",
     flexDirection: "row",
-    paddingHorizontal: 15,
+    paddingHorizontal: "3%",
     borderWidth: 1.5,
     alignItems: "center",
   },

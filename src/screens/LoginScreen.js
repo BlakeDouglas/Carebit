@@ -3,17 +3,20 @@ import {
   Text,
   SafeAreaView,
   ImageBackground,
-  TouchableWithoutFeedback,
+  StatusBar,
   Keyboard,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import CustomTextInput from "../utils/CustomTextInput";
-import { setTokenData, setUserData } from "../redux/actions";
-
-export default function LoginScreen() {
+import { setSelectedUser, setTokenData } from "../redux/actions";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import * as SecureStore from "expo-secure-store";
+import { login } from "../network/Carebitapi";
+export default function LoginScreen({ navigation }) {
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
 
   const [inputs, setInputs] = useState({
@@ -49,100 +52,94 @@ export default function LoginScreen() {
     }
 
     if (valid === true) {
-      login();
-    }
-  };
-
-  const login = async () => {
-    try {
-      let response = await fetch("https://www.carebit.xyz/login", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: inputs.email,
-          password: inputs.password,
-        }),
-      });
-      const json = await response.json();
+      
+      const json  = login(inputs.email, inputs.password, dispatch, false);
+      
       if (json.access_token !== undefined) {
         dispatch(setTokenData(json));
-        fetchUserData(json);
+
+        const oppositeType =
+          json.type === "caregiver" ? "caregivee" : "caregiver";
+        if (
+          json[oppositeType + "ID"] &&
+          json[oppositeType + "ID"].length !== 0
+        ) {
+          const selected = json[oppositeType + "ID"].find(
+            (iter) => iter.status === "Accepted"
+          );
+          dispatch(setSelectedUser(selected));
+        }
+
+        SecureStore.setItemAsync("carebitcredentials", body);
       } else {
-        if (json.message === " Email not found")
-          handleError(" Email not found", "email");
-        else handleError(" Incorrect password", "password");
+        SecureStore.deleteItemAsync("carebitcredentials");
+        console.log("Saved credentials are invalid. Removing...");
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
-  const fetchUserData = async (jsonTokenData) => {
-    try {
-      let url = "https://www.carebit.xyz/user/" + jsonTokenData.userId;
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + jsonTokenData.access_token,
-        },
-      });
-      const json = await response.json();
-      dispatch(setUserData(json));
-      // TODO: user.mobilePlatform is "" for my account
-    } catch (error) {
-      console.log("Caught error: " + error);
-    }
-  };
-
+  
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
-      resizeMode="stretch"
+      resizeMode="cover"
       style={GlobalStyle.Background}
     >
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <SafeAreaView style={[GlobalStyle.Container, { marginTop: "25%" }]}>
-          <Text style={[GlobalStyle.Title, { marginBottom: 20 }]}>
-            Log into Carebit
-          </Text>
-          <CustomTextInput
-            placeholder="Enter your email address"
-            iconName="email-outline"
-            label="Email"
-            keyboardType="email-address"
-            error={errors.email}
-            onChangeText={(text) => handleChange(text, "email")}
-            onFocus={() => {
-              handleError(null, "email");
-            }}
-          />
-          <CustomTextInput
-            placeholder="Enter your password"
-            iconName="lock-outline"
-            label="Password"
-            error={errors.password}
-            onChangeText={(text) => handleChange(text, "password")}
-            onFocus={() => {
-              handleError(null, "password");
-            }}
-            password
-          />
-          <TouchableOpacity
-            style={[
-              GlobalStyle.Button,
-              { backgroundColor: "rgba(255, 255, 255, .2)", marginTop: 20 },
-            ]}
-            onPress={validate}
-          >
-            <Text style={GlobalStyle.ButtonText}>Log In</Text>
-          </TouchableOpacity>
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
+      <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar hidden={false} translucent={true} backgroundColor="black" />
+        <KeyboardAwareScrollView style={{ flex: 1 }}>
+          <SafeAreaView style={GlobalStyle.Container}>
+            <Text style={GlobalStyle.Title}>Log into Carebit</Text>
+            <SafeAreaView
+              style={{
+                height: "60%",
+                marginTop: "12%",
+                justifyContent: "space-evenly",
+              }}
+            >
+              <CustomTextInput
+                placeholder="Enter your email address"
+                iconName="email-outline"
+                label="Email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                error={errors.email}
+                onChangeText={(text) => handleChange(text, "email")}
+                onFocus={() => {
+                  handleError(null, "email");
+                }}
+              />
+              <CustomTextInput
+                placeholder="Enter your password"
+                iconName="lock-outline"
+                label="Password"
+                error={errors.password}
+                onChangeText={(text) => handleChange(text, "password")}
+                onFocus={() => {
+                  handleError(null, "password");
+                }}
+                password
+              />
+
+              <TouchableOpacity
+                style={[
+                  GlobalStyle.Button,
+                  {
+                    backgroundColor: "rgba(255, 255, 255, .2)",
+                    marginTop: "8%",
+                  },
+                ]}
+                onPress={validate}
+              >
+                <Text style={GlobalStyle.ButtonText}>Log In</Text>
+              </TouchableOpacity>
+              <Text></Text>
+            </SafeAreaView>
+            <Text></Text>
+            <Text></Text>
+          </SafeAreaView>
+        </KeyboardAwareScrollView>
+      </SafeAreaView>
     </ImageBackground>
   );
 }

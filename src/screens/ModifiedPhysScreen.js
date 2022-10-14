@@ -18,16 +18,20 @@ import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
-import { setTokenData } from "../redux/actions";
-import { registerPhysician } from "../network/Carebitapi";
-export default function PhysicianInfoScreen({ navigation }) {
+
+export default function PhysicianInfoScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
   const [inputs, setInputs] = useState({
     physName: "",
     physPhone: "",
   });
-
+  console.log("\nData on Modified Phy Screen: ");
+  console.log(route.params);
+  console.log("Above\n\n");
+  console.log("Token Data on ModPhys");
+  console.log(tokenData);
+  console.log("Info above \n\n");
   const requiredText = " Input required";
 
   const [errors, setErrors] = useState({});
@@ -51,7 +55,6 @@ export default function PhysicianInfoScreen({ navigation }) {
       valid = false;
     }
     if (valid) {
-      
       const json = await registerPhysician(inputs, tokenData);
       dispatch(
         setTokenData({
@@ -63,6 +66,7 @@ export default function PhysicianInfoScreen({ navigation }) {
     }
   };
 
+  
 
   const handleChange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));

@@ -7,20 +7,17 @@ import {
   StatusBar,
   Platform,
   View,
+  TouchableOpacity,
 } from "react-native";
-
+import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
-import { setTokenData } from "../redux/actions";
-import * as SecureStore from "expo-secure-store";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 
-export default function AccountCreationScreen({ navigation }) {
-  // These are the two tools of the redux state manager. Use them instead of hooks
+export default function ModifiedCaregiveeAccountCreation({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
 
@@ -40,7 +37,7 @@ export default function AccountCreationScreen({ navigation }) {
   });
 
   const [errors, setErrors] = useState({});
-
+  //console.log(tokenData);
   // Checks for formatting in text fields
   const validate = () => {
     Keyboard.dismiss();
@@ -72,7 +69,6 @@ export default function AccountCreationScreen({ navigation }) {
       handleError(" Invalid phone number", "phone");
       valid = false;
     }
-
     if (!inputs.password) {
       handleError(requiredText, "password");
       valid = false;
@@ -86,54 +82,18 @@ export default function AccountCreationScreen({ navigation }) {
       handleError(" Must contain capital", "password");
       valid = false;
     }
-
     if (valid) {
-      register();
+      toggleModal2();
     }
   };
+  const handleRegisterCaregivee = async () =>{
+    const json = await registerShellCaregivee();
+    if (json.access_token) {
+      navigation.navigate("ModifiedAuthScreen", { json });
+    }
 
-  const register = async () => {
-    const output = {
-      ...inputs,
-      type: tokenData.type,
-      mobilePlatform: Platform.OS,
-    };
-    const body = {
-      email: inputs.email,
-      password: inputs.password,
-    };
-    try {
-      let response = await fetch("https://www.carebit.xyz/user", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(output),
-      });
-      const json = await response.json();
-      if (json.access_token !== undefined) {
-        dispatch(
-          setTokenData({
-            ...tokenData,
-            ...json,
-            firstName: inputs.firstName,
-            lastName: inputs.lastName,
-          })
-        );
-        // TODO: Modify here
-        SecureStore.setItemAsync("carebitcredentials", JSON.stringify(body));
-      } else if (json.error === "Phone number already exists.") {
-        handleError(" Phone Number already exists", "phone");
-        console.log(json.error);
-      } else {
-        handleError(" Invalid email", "email");
-        console.log(json.error);
-      }
-    } catch (error) {
-      console.log("Caught error in /user: " + error);
-    }
-  };
+  }
+ 
 
   const handleChange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
@@ -143,14 +103,104 @@ export default function AccountCreationScreen({ navigation }) {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
 
+  const [isModal2Visible, setModal2Visible] = useState(false);
+  const toggleModal2 = () => {
+    setModal2Visible(!isModal2Visible);
+  };
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background03.png")}
       resizeMode="cover"
       style={GlobalStyle.Background}
     >
+      <Modal
+        isVisible={isModal2Visible}
+        backdropOpacity={0.5}
+        useNativeDriverForBackdrop={true}
+        hideModalContentWhileAnimating={true}
+        animationIn={"fadeIn"}
+        animationOut={"fadeOut"}
+      >
+        <View
+          style={{
+            alignSelf: "center",
+            height: "30%",
+            width: "75%",
+            backgroundColor: "white",
+            borderRadius: 8,
+            alignItems: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <SafeAreaView
+            style={{
+              alignItems: "center",
+              width: "90%",
+              height: "78%",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: responsiveFontSize(2.2),
+              }}
+            >
+              Opting Out
+            </Text>
+            <Text
+              style={{
+                fontSize: responsiveFontSize(1.8),
+                fontWeight: "400",
+                textAlign: "left",
+              }}
+            >
+              By opting out, your caregivee won't need the app. However, please
+              have them use this account if they download the app in the future
+            </Text>
+          </SafeAreaView>
+          <SafeAreaView
+            style={{
+              height: "22%",
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <SafeAreaView
+              style={{
+                height: "100%",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                borderTopColor: "rgba(128, 128, 128, .2)",
+                borderTopWidth: 1,
+              }}
+            >
+              <TouchableOpacity
+                style={{ alignItems: "center", justifyContent: "center" }}
+                onPress={() => {
+                  toggleModal2();
+                  handleRegisterCaregivee();
+                }}
+              >
+                <Text
+                  style={{
+                    color: "dodgerblue",
+                    fontSize: responsiveFontSize(2),
+                    fontWeight: "bold",
+                  }}
+                >
+                  Continue
+                </Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+          </SafeAreaView>
+        </View>
+      </Modal>
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
+
         <View
           style={[
             GlobalStyle.Container,
@@ -176,9 +226,7 @@ export default function AccountCreationScreen({ navigation }) {
                 { fontSize: responsiveFontSize(3.71) },
               ]}
             >
-              {tokenData.type.charAt(0).toUpperCase() +
-                tokenData.type.slice(1) +
-                " Registration"}
+              Caregivee Registration
             </Text>
           </View>
           <KeyboardAwareScrollView style={{ flex: 1 }}>
@@ -284,5 +332,3 @@ export default function AccountCreationScreen({ navigation }) {
     </ImageBackground>
   );
 }
-
-const styles = StyleSheet.create({});

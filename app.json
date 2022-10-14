@@ -1,12 +1,16 @@
 {
   "expo": {
     "name": "Carebit",
-    "slug": "Carebit",
+    "slug": "carebit",
     "scheme": "carebit",
+    "owner": "carebit",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/appicon.png",
     "userInterfaceStyle": "light",
+    "notification": {
+      "icon": "./assets/appicon.png"
+    },
     "splash": {
       "image": "./assets/gradient.png",
       "resizeMode": "cover",
@@ -25,10 +29,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/appicon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.fitbit.carebit",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/appicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "17f17172-ec84-40c1-a76b-4dab0d22e4c6"
+      }
     }
   }
 }

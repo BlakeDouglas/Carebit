@@ -1,25 +1,37 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-
-import TitleScreen from "./src/screens/TitleScreen";
-import RoleSelectScreen from "./src/screens/RoleSelectScreen";
-import LoginScreen from "./src/screens/LoginScreen";
 import AccountCreationScreen from "./src/screens/AccountCreationScreen";
-import GiveeHomeScreen from "./src/screens/GiveeHomeScreen";
-import GiverHomeScreen from "./src/screens/GiverHomeScreen";
+import ActivityLevelScreen from "./src/screens/ActivityLevelScreen";
+import AddScreen from "./src/screens/AddScreen";
 import AuthenticationScreen from "./src/screens/AuthenticationScreen";
+import CustomNotificationScreen from "./src/screens/CustomNotificationScreen";
+import GiveeHomeScreen from "./src/screens/GiveeHomeScreen";
 import GiveeSettingsScreen from "./src/screens/GiveeSettingsScreen";
+import GiverHomeScreen from "./src/screens/GiverHomeScreen";
 import GiverSettingsScreen from "./src/screens/GiverSettingsScreen";
+import LinkUsersScreen from "./src/screens/LinkUsersScreen";
+import ListOfFriendsScreen from "./src/screens/ListOfFriendsScreen";
+import LoginScreen from "./src/screens/LoginScreen";
+import ModifiedAuthScreen from "./src/screens/ModifiedAuthScreen";
+import ModifiedActivityScreen from "./src/screens/ModifiedActivityScreen";
+import ModifiedCaregiveeAccountCreation from "./src/screens/ModifiedCaregiveeAccountCreation";
+import ModifiedPhysScreen from "./src/screens/ModifiedPhysScreen";
 import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
-import { Image } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import RequestScreen from "./src/screens/RequestScreen";
+import RoleSelectScreen from "./src/screens/RoleSelectScreen";
+import SettingsOverviewScreen from "./src/screens/SettingsOverviewScreen";
+import TitleScreen from "./src/screens/TitleScreen";
+import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
 import { Provider, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
 import { useFonts } from "expo-font";
+import * as React from "react";
+import { Menu, Divider, Provider as Provider2 } from "react-native-paper";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+
 const firebaseConfig = {
   apiKey: "AIzaSyAu69cdb30ONSKMcrIrL7P4YT0ghQoNEdg",
   authDomain: "carebit-48f39.firebaseapp.com",
@@ -31,7 +43,6 @@ const firebaseConfig = {
   measurementId: "G-QCBPVPX8QC",
 };
 const Stack = createStackNavigator();
-const Tab = createMaterialBottomTabNavigator();
 initializeApp(firebaseConfig);
 
 const App = () => {
@@ -51,13 +62,14 @@ const App = () => {
 
 const RootNavigation = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const physData = useSelector((state) => state.Reducers.physData);
+  console.log(tokenData);
   return (
     <NavigationContainer>
       {tokenData.access_token === "" ? (
         <AuthStack />
-      ) : (tokenData.type !== "caregiver" && !physData.physName) ||
-        (tokenData.type !== "caregiver" && !tokenData.caregiveeId) ? (
+      ) : (tokenData.type === "caregivee" &&
+          (!tokenData.physName || !tokenData.healthProfile)) ||
+        !tokenData.caregiveeID ? (
         <MiddleStack />
       ) : (
         <HomeStack />
@@ -66,10 +78,31 @@ const RootNavigation = () => {
   );
 };
 
+const AuthStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Group
+        screenOptions={{
+          headerTransparent: true,
+          headerTintColor: "#fff",
+          title: "",
+        }}
+      >
+        <Stack.Screen name="TitleScreen" component={TitleScreen} />
+        <Stack.Screen name="RoleSelectScreen" component={RoleSelectScreen} />
+        <Stack.Screen
+          name="AccountCreationScreen"
+          component={AccountCreationScreen}
+        />
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      </Stack.Group>
+    </Stack.Navigator>
+  );
+};
+
 // Stack of screens to handle little things between authentication and the home screen,
 // like phys data, first-time instructions, etc
 const MiddleStack = () => {
-  const physData = useSelector((state) => state.Reducers.physData);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   return (
     <Stack.Navigator>
@@ -80,16 +113,45 @@ const MiddleStack = () => {
           title: "",
         }}
       >
-        {tokenData.type !== "caregiver" && !tokenData.caregiveeId && (
+        {tokenData.type !== "caregiver" && !tokenData.caregiveeID && (
           <Stack.Screen
             name="AuthenticationScreen"
             component={AuthenticationScreen}
           />
         )}
-        {tokenData.type !== "caregiver" && !physData.physName && (
+        {tokenData.type === "caregiver" && !tokenData.caregiveeID && (
+          <Stack.Screen name="LinkUsersScreen" component={LinkUsersScreen} />
+        )}
+        {tokenData.type === "caregiver" && tokenData.caregiveeID === null && (
+          <Stack.Screen
+            name="ModifiedCaregiveeAccountCreation"
+            component={ModifiedCaregiveeAccountCreation}
+          />
+        )}
+
+        {tokenData.type === "caregiver" && tokenData.caregiveeID === null && (
+          <Stack.Screen
+            name="ModifiedAuthScreen"
+            component={ModifiedAuthScreen}
+          />
+        )}
+        {tokenData.type === "caregiver" && tokenData.caregiveeID === null && (
+          <Stack.Screen
+            name="ModifiedPhysScreen"
+            component={ModifiedPhysScreen}
+          />
+        )}
+        {tokenData.type === "caregivee" && !tokenData.physName && (
           <Stack.Screen
             name="PhysicianInfoScreen"
             component={PhysicianInfoScreen}
+          />
+        )}
+        {((tokenData.type === "caregiver" && tokenData.caregiveeID === null) ||
+          (tokenData.type === "caregivee" && !tokenData.healthProfile)) && (
+          <Stack.Screen
+            name="ModifiedActivityScreen"
+            component={ModifiedActivityScreen}
           />
         )}
       </Stack.Group>
@@ -97,29 +159,27 @@ const MiddleStack = () => {
   );
 };
 
-const AuthStack = () => {
+const HomeStack = () => {
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const [visible, setVisible] = React.useState(false);
+
+  const openMenu = () => setVisible(true);
+
+  const closeMenu = () => setVisible(false);
   return (
     <Stack.Navigator>
       <Stack.Group
         screenOptions={{
           headerTransparent: true,
-          //headerTintColor: "#fff",
+          headerTintColor: "#fff",
           title: "",
         }}
       >
         <Stack.Screen
-          name="GiveeSettingsScreen"
-          component={GiveeSettingsScreen}
-        />
-        <Stack.Screen name="TitleScreen" component={TitleScreen} />
-        <Stack.Screen name="RoleSelectScreen" component={RoleSelectScreen} />
-        <Stack.Screen
-          name="AccountCreationScreen"
-          component={AccountCreationScreen}
-        />
-        <Stack.Screen
-          name="GiveeHomeScreen"
-          component={GiveeHomeScreen}
+          name="HomeScreen"
+          component={
+            tokenData.type === "caregivee" ? GiveeHomeScreen : GiverHomeScreen
+          }
           options={({ navigation }) => ({
             headerTransparent: false,
             headerTitleAlign: "center",
@@ -132,9 +192,92 @@ const AuthStack = () => {
             headerTitle: "Carebit",
 
             headerLeft: () => (
+              <Provider2>
+                <View
+                  style={{
+                    marginTop: Platform.OS === "ios" ? "7%" : "12%",
+                    marginLeft: "8%",
+                    //alignItems: "flex-end",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Menu
+                    visible={visible}
+                    onDismiss={closeMenu}
+                    anchor={
+                      <TouchableOpacity
+                        style={{
+                          alignSelf: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                        onPress={openMenu}
+                      >
+                        <Image
+                          style={{
+                            height: 28,
+                            width: 28,
+                            alignSelf: "center",
+                          }}
+                          source={require("./assets/images/moreIcon/moreIcon.png")}
+                        />
+                      </TouchableOpacity>
+                    }
+                  >
+                    <Menu.Item
+                      leadingIcon={require("./assets/images/avatar/userList.png")}
+                      onPress={() => (
+                        closeMenu(), navigation.navigate("ListOfFriendsScreen")
+                      )}
+                      titleStyle={{
+                        color: "black",
+                        fontSize: responsiveFontSize(1.9),
+                      }}
+                      title={
+                        tokenData.type === "caregivee"
+                          ? "My Caregivers"
+                          : "My Caregivees"
+                      }
+                    />
+                    <Divider />
+                    <Menu.Item
+                      leadingIcon={require("./assets/images/avatar/outline_people_outline_white_24dp.png")}
+                      onPress={() => (
+                        closeMenu(), navigation.navigate("RequestScreen")
+                      )}
+                      titleStyle={{
+                        color: "black",
+                        fontSize: responsiveFontSize(1.9),
+                      }}
+                      title="Requests"
+                    />
+                    <Divider />
+                    <Menu.Item
+                      leadingIcon={require("./assets/images/avatar/addUser.png")}
+                      onPress={() => (
+                        closeMenu(), navigation.navigate("AddScreen")
+                      )}
+                      titleStyle={{
+                        color: "black",
+                        fontSize: responsiveFontSize(1.9),
+                      }}
+                      title={
+                        tokenData.type === "caregivee"
+                          ? "Add Caregiver"
+                          : "Add Caregivee"
+                      }
+                    />
+                  </Menu>
+                </View>
+              </Provider2>
+            ),
+            headerRight: () => (
               <TouchableOpacity
-                onPress={() => navigation.navigate("GiveeSettingsScreen")}
-                style={{ marginLeft: "5%" }}
+                onPress={() => [
+                  closeMenu(),
+                  navigation.navigate("SettingsScreen"),
+                ]}
+                style={{ marginRight: "8%" }}
               >
                 <Image
                   source={require("./assets/images/settings/settings.png")}
@@ -143,36 +286,120 @@ const AuthStack = () => {
             ),
           })}
         />
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
-      </Stack.Group>
-    </Stack.Navigator>
-  );
-};
-
-const HomeStack = () => {
-  const tokenData = useSelector((state) => state.Reducers.tokenData);
-  return (
-    <Tab.Navigator>
-      <Tab.Group
-        screenOptions={{
-          headerShown: false,
-          title: "",
-        }}
-      >
-        <Tab.Screen
-          name="HomeScreen"
-          component={
-            tokenData.type === "caregivee" ? GiveeHomeScreen : GiverHomeScreen
-          }
+        <Stack.Screen name="ActivityLevel" component={ActivityLevelScreen} />
+        <Stack.Screen
+          name="SettingsOverview"
+          component={SettingsOverviewScreen}
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerTitle: "Alert Settings",
+          })}
         />
-        <Tab.Screen
+        <Stack.Screen
           name="SettingsScreen"
           component={
-            tokenData.type === "caregivee" ? GiveeHomeScreen : GiverHomeScreen
+            tokenData.type === "caregiver"
+              ? GiverSettingsScreen
+              : GiveeSettingsScreen
           }
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerTitle: "Alert Settings",
+          })}
         />
-      </Tab.Group>
-    </Tab.Navigator>
+        <Stack.Screen
+          name="CustomNotification"
+          component={CustomNotificationScreen}
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerTitle: "Alert Settings",
+
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={{ marginRight: "8%" }}
+              >
+                <Text
+                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
+                >
+                  Done
+                </Text>
+              </TouchableOpacity>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="RequestScreen"
+          component={RequestScreen}
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerTitle: "Friend Requests",
+
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("AddScreen")}
+              >
+                <Image
+                  style={{
+                    width: 28,
+                    height: 28,
+                    marginRight: "8%",
+                  }}
+                  source={require("./assets/images/avatar/addUser.png")}
+                />
+              </TouchableOpacity>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="ListOfFriendsScreen"
+          component={ListOfFriendsScreen}
+          options={({ navigation }) => ({
+            headerTransparent: false,
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "white",
+            },
+            headerStyle: {
+              backgroundColor: "dodgerblue",
+            },
+            headerTitle:
+              tokenData.type === "caregiver"
+                ? "Linked Caregivees"
+                : "Linked Caregiver",
+          })}
+        />
+        <Stack.Screen name="AddScreen" component={AddScreen} />
+      </Stack.Group>
+    </Stack.Navigator>
   );
 };
 

@@ -1,12 +1,3 @@
-export const setUserData = (userData) => {
-  return async (dispatch) => {
-    dispatch({
-      type: "SET_USER_DATA",
-      payload: userData,
-    });
-  };
-};
-
 export const setTokenData = (tokenData) => {
   return async (dispatch) => {
     dispatch({
@@ -16,11 +7,27 @@ export const setTokenData = (tokenData) => {
   };
 };
 
-export const setPhysicianData = (physData) => {
+export const setSelectedUser = (selectedUser) => {
   return async (dispatch) => {
     dispatch({
-      type: "SET_PHYSICIAN_DATA",
-      payload: physData,
+      type: "SET_SELECTED_USER",
+      payload: selectedUser,
+    });
+  };
+};
+
+export const resetData = () => {
+  return async (dispatch) => {
+    dispatch({
+      type: "RESET_DATA",
+    });
+  };
+};
+
+export const resetSelectedData = () => {
+  return async (dispatch) => {
+    dispatch({
+      type: "RESET_SELECTED_DATA",
     });
   };
 };

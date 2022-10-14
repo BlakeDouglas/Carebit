@@ -1,263 +1,157 @@
-import * as React from "react";
-import {
-  StyleSheet,
-  Text,
-  SafeAreaView,
-  TextInput,
-  View,
-  StatusBar,
-  Image,
-  Platform,
-  RefreshControl,
-  Switch,
-  ImageBackground,
-} from "react-native";
+import { StyleSheet, SafeAreaView, Text, StatusBar, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import Icon from "react-native-vector-icons/Entypo";
+import { React } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { resetData } from "../redux/actions";
+import * as SecureStore from "expo-secure-store";
 
-import {
-  SettingsScreen,
-  SettingsData,
-  Chevron,
-} from "react-native-settings-screen/dist/lib";
-import GlobalStyle from "../utils/GlobalStyle";
-const fontFamily = Platform.OS === "ios" ? "Avenir" : "sans-serif";
-
-const renderHero = () => (
-  <View style={styles.heroContainer}>
-    <Image
-      source={require("../../assets/images/default-avatar2.jpg")}
-      style={styles.heroImage}
-    />
-    <View style={{ flex: 1 }}>
-      <Text style={styles.heroTitle}>Celia Cruz</Text>
-      <Text style={styles.heroSubtitle}>CeliaCruz@yahoo.com</Text>
-    </View>
-    <Chevron />
-  </View>
-);
-
-export default class App extends React.Component {
-  state = {
-    refreshing: false,
+export default function GiveeSettingsScreen({ navigation }) {
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
+  const dispatch = useDispatch();
+  const logOutButtonHandler = async () => {
+    SecureStore.deleteItemAsync("carebitcredentials");
+    dispatch(resetData());
   };
-
-  settingsData: SettingsData = [
-    { type: "CUSTOM_VIEW", key: "hero", render: renderHero },
-    {
-      type: "SECTION",
-      header: "Caregiver".toUpperCase(),
-      rows: [
-        {
-          title: "Paola",
-          renderAccessory: () => (
-            <Text style={{ color: "#999", marginRight: 6, fontSize: 18 }}>
-              pjosecare@gmail.com
-            </Text>
-          ),
-        },
-        {
-          title: "Phone",
-          renderAccessory: () => (
-            <Text style={{ color: "#999", marginRight: 6, fontSize: 18 }}>
-              +1 485-482-5837
-            </Text>
-          ),
-        },
-      ],
-    },
-    {
-      type: "SECTION",
-      header: "Alerts".toUpperCase(),
-      footer:
-        "Turn on to use custom thresholds instead of Activity Levels to Trigger alerts",
-      rows: [
-        {
-          title: "Use Custom Alerts",
-          renderAccessory: () => <Switch value={0} onValueChange={() => {}} />,
-        },
-      ],
-    },
-
-    {
-      type: "SECTION",
-      header: "Custom Alerts".toUpperCase(),
-      rows: [
-        {
-          title: "Heart Rate Alerts",
-          renderAccessory: () => <Switch value onValueChange={() => {}} />,
-        },
-        {
-          title: "Low Heart Rate",
-          renderAccessory: () => (
-            <Text style={{ color: "#999", marginRight: 6, fontSize: 18 }}>
-              50 BPM
-            </Text>
-          ),
-        },
-        {
-          title: "High Heart Rate",
-          renderAccessory: () => (
-            <Text style={{ color: "#999", marginRight: 6, fontSize: 18 }}>
-              130 BPM
-            </Text>
-          ),
-          showDisclosureIndicator: true,
-        },
-      ],
-    },
-    {
-      type: "SECTION",
-      rows: [
-        {
-          title: "No Activity Alerts",
-          renderAccessory: () => <Switch value onValueChange={() => {}} />,
-        },
-        {
-          title: "Time Without Heart Rate",
-          renderAccessory: () => (
-            <Text style={{ color: "#999", marginRight: 6, fontSize: 18 }}>
-              1 hours
-            </Text>
-          ),
-          showDisclosureIndicator: true,
-        },
-        {
-          title: "Time Without Steps",
-          renderAccessory: () => (
-            <Text style={{ color: "#999", marginRight: 6, fontSize: 18 }}>
-              1 hours
-            </Text>
-          ),
-          showDisclosureIndicator: true,
-        },
-      ],
-    },
-    {
-      type: "SECTION",
-      rows: [
-        {
-          title: "Wandering Alerts",
-          renderAccessory: () => <Switch value={0} onValueChange={() => {}} />,
-        },
-      ],
-    },
-    {
-      type: "SECTION",
-      rows: [
-        {
-          title: "No Sync Alerts",
-          renderAccessory: () => <Switch value onValueChange={() => {}} />,
-        },
-      ],
-    },
-
-    {
-      type: "SECTION",
-      rows: [
-        {
-          title: "Logout",
-          titleStyle: {
-            color: "red",
-          },
-        },
-      ],
-    },
-    {
-      type: "CUSTOM_VIEW",
-      render: () => (
-        <Text
-          style={{
-            alignSelf: "center",
-            fontSize: 18,
-            color: "#999",
-            marginBottom: 40,
-            marginTop: -30,
-            fontFamily,
-          }}
-        >
-          v1.2.3
-        </Text>
-      ),
-    },
-  ];
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <StatusBar barStyle="light-content" backgroundColor="#007AFF" />
-        <View style={styles.navBar}>
-          <Text style={styles.navBarTitle}>Settings</Text>
-        </View>
-        <SettingsScreen
-          data={this.settingsData}
-          globalTextStyle={{ fontFamily }}
-          scrollViewProps={{
-            refreshControl: (
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={() => {
-                  this.setState({ refreshing: true });
-                  setTimeout(() => this.setState({ refreshing: false }), 3000);
-                }}
-              />
-            ),
-          }}
+  return (
+    // Header Container
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar
+        hidden={false}
+        translucent={false}
+        backgroundColor="dodgerblue"
+      />
+      <SafeAreaView
+        style={{
+          marginTop: "8%",
+          height: "15%",
+          width: "100%",
+          borderTopColor: "lightgray",
+          borderTopWidth: 1,
+          borderBottomColor: "lightgray",
+          borderBottomWidth: 1,
+          alignItems: "center",
+          flexDirection: "row",
+        }}
+      >
+        <Image
+          style={{ height: 85, width: 85, marginLeft: "6%" }}
+          source={require("../../assets/images/avatar/DefaultAvatar.png")}
         />
-      </View>
-    );
-  }
+        <SafeAreaView style={{ marginLeft: "5%" }}>
+          <Text style={{ fontSize: responsiveFontSize(2.8), width: "100%" }}>
+            {tokenData.firstName || "N/A"} {tokenData.lastName || ""}
+          </Text>
+          <Text style={{ fontSize: responsiveFontSize(2.1) }}>
+            {tokenData.email || "N/A"}
+          </Text>
+        </SafeAreaView>
+      </SafeAreaView>
+      <SafeAreaView style={styles.TitleContainer}>
+        <Text style={styles.Title}>SELECTED CAREGIVER</Text>
+      </SafeAreaView>
+      <SafeAreaView></SafeAreaView>
+      <SafeAreaView style={styles.Box}>
+        <Text style={styles.BoxTitle}>Name</Text>
+        <Text style={styles.BoxSub}>
+          {selectedUser.firstName || ""} {selectedUser.lastName || "N/A"}
+        </Text>
+      </SafeAreaView>
+      <SafeAreaView style={styles.Box}>
+        <Text style={styles.BoxTitle}>Email</Text>
+        <Text style={styles.BoxSub}>{selectedUser.email || "N/A"}</Text>
+      </SafeAreaView>
+      <SafeAreaView style={styles.Box}>
+        <Text style={styles.BoxTitle}>Phone</Text>
+        <Text style={styles.BoxSub}>
+          {selectedUser.phone
+            ? "(" +
+              selectedUser.phone.substring(0, 3) +
+              ") " +
+              selectedUser.phone.substring(3, 6) +
+              "-" +
+              selectedUser.phone.substring(6)
+            : "N/A"}
+        </Text>
+      </SafeAreaView>
+      <SafeAreaView style={styles.TitleContainer}>
+        <Text style={styles.Title}>PHYSICIAN INFO</Text>
+      </SafeAreaView>
+      <SafeAreaView style={styles.Box}>
+        <Text style={styles.BoxTitle}>Name</Text>
+        <Text style={styles.BoxSub}>{tokenData.physName || "N/A"}</Text>
+      </SafeAreaView>
+      <SafeAreaView style={styles.Box}>
+        <Text style={styles.BoxTitle}>Phone</Text>
+        <Text style={styles.BoxSub}>
+          {"(" +
+            tokenData.physPhone.substring(0, 3) +
+            ") " +
+            tokenData.physPhone.substring(3, 6) +
+            "-" +
+            tokenData.physPhone.substring(6) || "N/A"}
+        </Text>
+      </SafeAreaView>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <TouchableOpacity
+          style={{ alignItems: "center", justifyContent: "center" }}
+          onPress={logOutButtonHandler}
+        >
+          <Text
+            style={{
+              color: "red",
+              fontSize: responsiveFontSize(2.5),
+              fontWeight: "bold",
+            }}
+          >
+            Log Out
+          </Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </SafeAreaView>
+  );
 }
 
-const statusBarHeight = Platform.OS === "ios" ? 35 : 0;
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  navBar: {
-    backgroundColor: "#007AFF",
-    height: 44 + statusBarHeight,
-    alignSelf: "stretch",
-    paddingTop: statusBarHeight,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  navBarTitle: {
-    color: "white",
-    fontFamily,
-    fontSize: 17,
-  },
-  heroContainer: {
-    marginTop: 40,
-    marginBottom: 50,
-    paddingVertical: 20,
-    justifyContent: "center",
-    alignItems: "center",
+  Box: {
+    height: "7%",
+    width: "100%",
     backgroundColor: "white",
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: "#ccc",
     flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderTopColor: "rgba(128,128,128,.1)",
+    borderTopWidth: 1,
+    borderBottomColor: "rgba(128,128,128,.1)",
+    borderBottomWidth: 1,
   },
-  heroImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    borderWidth: 3,
-    borderColor: "black",
-    marginHorizontal: 20,
+  Title: {
+    fontSize: responsiveFontSize(1.9),
+    color: "gray",
+    fontWeight: "500",
   },
-  heroTitle: {
-    fontFamily,
-    color: "black",
-    fontSize: 24,
+  TitleContainer: {
+    marginTop: "5%",
+    width: "100%",
+    justifyContent: "center",
+    height: "5%",
+    marginLeft: "4%",
   },
-  heroSubtitle: {
-    fontFamily,
-    color: "#999",
-    fontSize: 14,
+  BoxTitle: {
+    fontSize: responsiveFontSize(2.2),
+    fontWeight: "600",
+    marginLeft: "4%",
+  },
+  BoxSub: {
+    fontSize: responsiveFontSize(2.2),
+    marginRight: "4%",
+    color: "rgba(128,128,128,.8)",
   },
 });
