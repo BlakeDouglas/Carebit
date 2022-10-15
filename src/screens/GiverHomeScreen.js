@@ -353,7 +353,18 @@ export default function GiverHomeScreen({ navigation }) {
               width: "100%",
             }}
           >
-            <TouchableOpacity style={{ marginLeft: "8%" }}>
+            <TouchableOpacity
+              style={{ marginLeft: "4%", flexDirection: "row" }}
+            >
+              <Image
+                style={{
+                  height: 15,
+                  width: 15,
+                  marginRight: "3%",
+                  alignSelf: "center",
+                }}
+                source={require("../../assets/images/icons-caregivee-alert.imageset/icons-caregivee-alert.png")}
+              />
               <Text
                 style={{
                   color: "gray",
@@ -367,7 +378,7 @@ export default function GiverHomeScreen({ navigation }) {
             </TouchableOpacity>
             <TouchableOpacity
               style={{
-                marginRight: "8%",
+                marginRight: "4%",
                 //backgroundColor: "red",
                 alignItems: "flex-end",
                 justifyContent: "center",
