@@ -18,6 +18,7 @@ import {
 } from "../redux/actions";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as SecureStore from "expo-secure-store";
+import validator from "validator";
 
 export default function LoginScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -45,7 +46,7 @@ export default function LoginScreen({ navigation }) {
     if (!inputs.email) {
       handleError(" Please enter your email", "email");
       valid = false;
-    } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
+    } else if (!validator.isEmail(inputs.email)) {
       handleError(" Invalid email", "email");
       valid = false;
     }
@@ -166,7 +167,9 @@ export default function LoginScreen({ navigation }) {
                 keyboardType="email-address"
                 autoCapitalize="none"
                 error={errors.email}
-                onChangeText={(text) => handleChange(text, "email")}
+                onChangeText={(text) =>
+                  handleChange(validator.trim(text), "email")
+                }
                 onFocus={() => {
                   handleError(null, "email");
                 }}

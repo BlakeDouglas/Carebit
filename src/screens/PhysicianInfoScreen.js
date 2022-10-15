@@ -19,6 +19,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { setTokenData } from "../redux/actions";
+import validator from "validator";
 
 export default function PhysicianInfoScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -32,7 +33,7 @@ export default function PhysicianInfoScreen({ navigation }) {
 
   const [errors, setErrors] = useState({});
 
-  const validate = (tokenData) => {
+  const validate = () => {
     Keyboard.dismiss();
     let valid = true;
     if (!inputs.physName) {
@@ -137,7 +138,9 @@ export default function PhysicianInfoScreen({ navigation }) {
                 iconName="account-outline"
                 label="Physician's Name*"
                 error={errors.physName}
-                onChangeText={(text) => handleChange(text, "physName")}
+                onChangeText={(text) =>
+                  handleChange(validator.trim(text), "physName")
+                }
                 onFocus={() => {
                   handleError(null, "physName");
                 }}
@@ -165,7 +168,7 @@ export default function PhysicianInfoScreen({ navigation }) {
                     },
                   ]}
                   onPress={() => {
-                    validate(tokenData);
+                    validate();
                   }}
                 >
                   <Text style={GlobalStyle.ButtonText}>Create Account</Text>

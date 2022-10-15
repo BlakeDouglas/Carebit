@@ -16,6 +16,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import validator from "validator";
 
 export default function ModifiedCaregiveeAccountCreation({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -45,7 +46,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
     if (!inputs.email) {
       handleError(requiredText, "email");
       valid = false;
-    } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
+    } else if (!validator.isEmail(inputs.email)) {
       handleError(" Invalid email", "email");
       valid = false;
     }
@@ -66,21 +67,23 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
     } else if (
       !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
     ) {
-      handleError(" Invalid phone number", "phone");
+      handleError(" Invalid phone format", "phone");
       valid = false;
     }
-    if (!inputs.password) {
-      handleError(requiredText, "password");
+
+    if (!validator.isStrongPassword(inputs.password, { minSymbols: 0 })) {
       valid = false;
-    } else if (inputs.password.length < 8) {
-      handleError(" Too short (8 minimum)", "password");
-      valid = false;
-    } else if (!/[0-9]/.test(inputs.password)) {
-      handleError(" Must contain a number", "password");
-      valid = false;
-    } else if (!/[A-Z]/.test(inputs.password)) {
-      handleError(" Must contain capital", "password");
-      valid = false;
+      if (!inputs.password) {
+        handleError(requiredText, "password");
+      } else if (inputs.password.length < 8) {
+        handleError(" Too short (8 minimum)", "password");
+      } else if (!/[0-9]/.test(inputs.password)) {
+        handleError(" Must contain a number", "password");
+      } else if (!/[A-Z]/.test(inputs.password)) {
+        handleError(" Must contain capital", "password");
+      } else {
+        handleError(" Invalid password", "password");
+      }
     }
     if (valid) {
       toggleModal2();
@@ -271,7 +274,9 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                       iconName="account-outline"
                       label="Name*"
                       error={errors.firstName}
-                      onChangeText={(text) => handleChange(text, "firstName")}
+                      onChangeText={(text) =>
+                        handleChange(validator.trim(text), "firstName")
+                      }
                       onFocus={() => {
                         handleError(null, "firstName");
                       }}
@@ -282,7 +287,9 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                       placeholder="Last Name"
                       label="  "
                       error={errors.lastName}
-                      onChangeText={(text) => handleChange(text, "lastName")}
+                      onChangeText={(text) =>
+                        handleChange(validator.trim(text), "lastName")
+                      }
                       onFocus={() => {
                         handleError(null, "lastName");
                       }}
@@ -311,7 +318,9 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                   keyboardType="email-address"
                   autoCapitalize="none"
                   error={errors.email}
-                  onChangeText={(text) => handleChange(text, "email")}
+                  onChangeText={(text) =>
+                    handleChange(validator.trim(text), "email")
+                  }
                   onFocus={() => {
                     handleError(null, "email");
                   }}
