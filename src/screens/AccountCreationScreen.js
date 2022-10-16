@@ -250,6 +250,7 @@ export default function AccountCreationScreen({ navigation }) {
                   textInputStyle={{
                     color: "white",
                   }}
+                  placeholder={"Phone Number"}
                   codeTextStyle={{
                     color: "rgba(255, 255, 255, .5)",
                   }}
