@@ -228,40 +228,6 @@ export default function AccountCreationScreen({ navigation }) {
                     />
                   </View>
                 </View>
-<<<<<<< HEAD
-                <PhoneInput
-                  defaultValue={phoneNumber}
-                  defaultCode={"US"}
-                  pickerBackgroundColor={"#0000FF"}
-                  containerStyle={{
-                    backgroundColor: "transparent",
-                    marginTop: "8%",
-                    marginBottom: "8%",
-                    borderWidth: 1.0,
-                    borderColor: "rgba(255, 255, 255, .5)",
-                    alignItems: "center",
-                    width: "100%",
-                  }}
-                  textContainerStyle={{
-                    backgroundColor: "transparent",
-                    flexDirection: "row",
-                    paddingHorizontal: "3%",
-                    borderColor: "rgba(255, 255, 255, .5)",
-                  }}
-                  textInputStyle={{
-                    color: "white",
-                  }}
-                  placeholder={"Phone Number"}
-                  codeTextStyle={{
-                    color: "rgba(255, 255, 255, .5)",
-                  }}
-                  onChangeText={(text) =>
-                    // Removes everything but numbers, so it complies with the api
-                    // TODO: Handle this differently
-                    handleChange(text.replace(/[^0-9]+/g, ""), "phone")
-                  }
-                />
-=======
                 <View style={{ marginTop: "4%" }}>
                   <Text style={{ color: "white", marginBottom: "1%" }}>
                     Phone Number*
@@ -272,7 +238,6 @@ export default function AccountCreationScreen({ navigation }) {
                     pickerBackgroundColor={"white"}
                     containerStyle={{
                       backgroundColor: "transparent",
-
                       marginBottom: "4%",
                       borderWidth: 1.0,
                       borderColor: "rgba(255, 255, 255, .25)",
@@ -285,14 +250,16 @@ export default function AccountCreationScreen({ navigation }) {
                       paddingHorizontal: "3%",
                       borderColor: "rgba(255, 255, 255, .5)",
                     }}
-                    placeholder="(XXX) XXX - XXXX"
-                    placeholderTextColor="white"
                     textInputStyle={{
                       color: "white",
+                    }}
+                    textInputProps={{
+                      placeholderTextColor: "rgba(255, 255, 255, .5)",
                     }}
                     codeTextStyle={{
                       color: "rgba(255, 255, 255, .5)",
                     }}
+                    placeholder="(XXX) XXX - XXXX"
                     onChangeText={(text) =>
                       // Removes everything but numbers, so it complies with the api
                       // TODO: Handle this differently
@@ -300,7 +267,6 @@ export default function AccountCreationScreen({ navigation }) {
                     }
                   />
                 </View>
->>>>>>> e0b20b517cb546317508f08c23cd29edf533d2c2
                 <CustomTextInput
                   placeholder="example@domain.com"
                   iconName="email-outline"
