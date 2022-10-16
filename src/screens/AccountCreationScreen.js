@@ -228,37 +228,44 @@ export default function AccountCreationScreen({ navigation }) {
                     />
                   </View>
                 </View>
-                <PhoneInput
-                  defaultValue={phoneNumber}
-                  defaultCode={"US"}
-                  pickerBackgroundColor={"#0000FF"}
-                  containerStyle={{
-                    backgroundColor: "transparent",
-                    marginTop: "8%",
-                    marginBottom: "8%",
-                    borderWidth: 1.0,
-                    borderColor: "rgba(255, 255, 255, .5)",
-                    alignItems: "center",
-                    width: "100%",
-                  }}
-                  textContainerStyle={{
-                    backgroundColor: "transparent",
-                    flexDirection: "row",
-                    paddingHorizontal: "3%",
-                    borderColor: "rgba(255, 255, 255, .5)",
-                  }}
-                  textInputStyle={{
-                    color: "white",
-                  }}
-                  codeTextStyle={{
-                    color: "rgba(255, 255, 255, .5)",
-                  }}
-                  onChangeText={(text) =>
-                    // Removes everything but numbers, so it complies with the api
-                    // TODO: Handle this differently
-                    handleChange(text.replace(/[^0-9]+/g, ""), "phone")
-                  }
-                />
+                <View style={{ marginTop: "4%" }}>
+                  <Text style={{ color: "white", marginBottom: "1%" }}>
+                    Phone Number*
+                  </Text>
+                  <PhoneInput
+                    defaultValue={phoneNumber}
+                    defaultCode={"US"}
+                    pickerBackgroundColor={"white"}
+                    containerStyle={{
+                      backgroundColor: "transparent",
+
+                      marginBottom: "4%",
+                      borderWidth: 1.0,
+                      borderColor: "rgba(255, 255, 255, .25)",
+                      alignItems: "center",
+                      width: "100%",
+                    }}
+                    textContainerStyle={{
+                      backgroundColor: "transparent",
+                      flexDirection: "row",
+                      paddingHorizontal: "3%",
+                      borderColor: "rgba(255, 255, 255, .5)",
+                    }}
+                    placeholder="(XXX) XXX - XXXX"
+                    placeholderTextColor="white"
+                    textInputStyle={{
+                      color: "white",
+                    }}
+                    codeTextStyle={{
+                      color: "rgba(255, 255, 255, .5)",
+                    }}
+                    onChangeText={(text) =>
+                      // Removes everything but numbers, so it complies with the api
+                      // TODO: Handle this differently
+                      handleChange(text.replace(/[^0-9]+/g, ""), "phone")
+                    }
+                  />
+                </View>
                 <CustomTextInput
                   placeholder="example@domain.com"
                   iconName="email-outline"
