@@ -1,8 +1,14 @@
 // Credit for the code in this file goes to kymzTech's youtube tutorial
 
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  Image,
+  TextInput,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 const CustomTextInput = ({
@@ -15,6 +21,14 @@ const CustomTextInput = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [hidePassword, setHidePassword] = useState(password);
+  const imageFile = "../../assets/images/" + iconName + ".png";
+  const accountImage = require("../../assets/images/account-outline.png");
+  const phoneImage = require("../../assets/images/phone-outline.png");
+  const emailImage = require("../../assets/images/email-outline.png");
+  const lockImage = require("../../assets/images/lock-outline.png");
+  const eyeImage = require("../../assets/images/eye-outline.png");
+  const eyeOffImage = require("../../assets/images/eye-off-outline.png");
+
   return (
     <View style={{ marginBottom: "4%" }}>
       <View style={{ flexDirection: "row" }}>
@@ -37,13 +51,19 @@ const CustomTextInput = ({
           { borderColor: error ? "red" : "rgba(255, 255, 255, .25)" },
         ]}
       >
-        <Icon
-          name={iconName}
-          style={{
-            fontSize: responsiveFontSize(2.8),
-            color: "white",
-            marginRight: "3%",
-          }}
+        <Image
+          source={
+            iconName === "account-outline"
+              ? accountImage
+              : iconName === "phone-outline"
+              ? phoneImage
+              : iconName === "email-outline"
+              ? emailImage
+              : iconName === "lock-outline"
+              ? lockImage
+              : accountImage
+          }
+          style={{ height: 22, width: 22, marginRight: 10 }}
         />
 
         <TextInput
@@ -65,13 +85,16 @@ const CustomTextInput = ({
           {...props}
         />
         {password && (
-          <Icon
+          <TouchableOpacity
             onPress={() => {
               setHidePassword(!hidePassword);
             }}
-            style={{ fontSize: responsiveFontSize(2.8), color: "white" }}
-            name={hidePassword ? "eye-outline" : "eye-off-outline"}
-          />
+          >
+            <Image
+              source={hidePassword ? eyeOffImage : eyeImage}
+              style={{ height: 22, width: 22 }}
+            />
+          </TouchableOpacity>
         )}
       </View>
     </View>

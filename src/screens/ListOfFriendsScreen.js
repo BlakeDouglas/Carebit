@@ -18,7 +18,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
 import {
   resetSelectedData,
   setSelectedUser,
