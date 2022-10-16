@@ -239,7 +239,7 @@ export default function AccountCreationScreen({ navigation }) {
                     borderWidth: 1.0,
                     borderColor: "rgba(255, 255, 255, .5)",
                     alignItems: "center",
-                    wdith: "80%",
+                    width: "100%",
                   }}
                   textContainerStyle={{
                     backgroundColor: "transparent",
