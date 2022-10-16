@@ -11,6 +11,7 @@ import {
   Keyboard,
 } from "react-native";
 import CustomTextInput from "../utils/CustomTextInput";
+import PhoneInput from "react-native-phone-number-input";
 import React, { useEffect, useState, useCallback } from "react";
 import Modal from "react-native-modal";
 import GlobalStyle from "../utils/GlobalStyle";
@@ -305,23 +306,46 @@ export default function LinkUsersScreen({ navigation }) {
                     marginTop: "5%",
                   }}
                 >
-                  <CustomTextInput
-                    label={
-                      typeOfRequester === "caregivee"
+                  <View style={{ marginTop: "4%" }}>
+                    <Text style={{ color: "white", marginBottom: "1%" }}>
+                      {typeOfRequester === "caregivee"
                         ? "Caregivee's Phone Number"
-                        : "Caregiver's Phone Number"
-                    }
-                    placeholder="(XXX) XXX-XXXX"
-                    iconName="phone-outline"
-                    keyboardType="number-pad"
-                    error={errors.phone}
-                    onChangeText={(text) =>
-                      handleChange(text.replace(/[^0-9]+/g, ""), "phone")
-                    }
-                    onFocus={() => {
-                      handleError(null, "phone");
-                    }}
-                  />
+                        : "Caregiver's Phone Number"}
+                    </Text>
+                    <PhoneInput
+                      defaultCode={"US"}
+                      pickerBackgroundColor={"white"}
+                      containerStyle={{
+                        backgroundColor: "transparent",
+                        marginBottom: "4%",
+                        borderWidth: 1.0,
+                        borderColor: "rgba(255, 255, 255, .25)",
+                        alignItems: "center",
+                        width: "100%",
+                      }}
+                      textContainerStyle={{
+                        backgroundColor: "transparent",
+                        flexDirection: "row",
+                        paddingHorizontal: "3%",
+                        borderColor: "rgba(255, 255, 255, .5)",
+                      }}
+                      textInputStyle={{
+                        color: "white",
+                      }}
+                      textInputProps={{
+                        placeholderTextColor: "rgba(255, 255, 255, .5)",
+                      }}
+                      codeTextStyle={{
+                        color: "rgba(255, 255, 255, .5)",
+                      }}
+                      placeholder="(XXX) XXX - XXXX"
+                      onChangeText={(text) =>
+                        // Removes everything but numbers, so it complies with the api
+                        // TODO: Handle this differently
+                        handleChange(text.replace(/[^0-9]+/g, ""), "phone")
+                      }
+                    />
+                  </View>
                 </SafeAreaView>
                 <TouchableOpacity
                   style={[GlobalStyle.Button, { marginTop: "5%" }]}

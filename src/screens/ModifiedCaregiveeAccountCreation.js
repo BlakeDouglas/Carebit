@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Modal from "react-native-modal";
+import PhoneInput from "react-native-phone-number-input";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
@@ -289,21 +290,45 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                     />
                   </View>
                 </View>
-                <CustomTextInput
-                  placeholder="(XXX)-XXX-XXXX"
-                  iconName="phone-outline"
-                  label="Phone*"
-                  keyboardType="number-pad"
-                  error={errors.phone}
-                  onChangeText={(text) =>
-                    // Removes everything but numbers, so it complies with the api
-                    handleChange(text.replace(/[^0-9]+/g, ""), "phone")
-                  }
-                  onFocus={() => {
-                    handleError(null, "phone");
-                  }}
-                />
-
+                {/*==============NEW PHONE NUMBER BOX WITH COUNTRY CODE ============================*/}
+                <View style={{ marginTop: "4%" }}>
+                  <Text style={{ color: "white", marginBottom: "1%" }}>
+                    Phone*
+                  </Text>
+                  <PhoneInput
+                    defaultCode={"US"}
+                    pickerBackgroundColor={"white"}
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      marginBottom: "4%",
+                      borderWidth: 1.0,
+                      borderColor: "rgba(255, 255, 255, .25)",
+                      alignItems: "center",
+                      width: "100%",
+                    }}
+                    textContainerStyle={{
+                      backgroundColor: "transparent",
+                      flexDirection: "row",
+                      paddingHorizontal: "3%",
+                      borderColor: "rgba(255, 255, 255, .5)",
+                    }}
+                    textInputStyle={{
+                      color: "white",
+                    }}
+                    textInputProps={{
+                      placeholderTextColor: "rgba(255, 255, 255, .5)",
+                    }}
+                    codeTextStyle={{
+                      color: "rgba(255, 255, 255, .5)",
+                    }}
+                    placeholder="(XXX) XXX - XXXX"
+                    onChangeText={(text) =>
+                      // Removes everything but numbers, so it complies with the api
+                      // TODO: Handle this differently
+                      handleChange(text.replace(/[^0-9]+/g, ""), "phone")
+                    }
+                  />
+                </View>
                 <CustomTextInput
                   placeholder="example@domain.com"
                   iconName="email-outline"

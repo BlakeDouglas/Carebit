@@ -12,6 +12,7 @@ import {
 } from "react-native";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import PhoneInput from "react-native-phone-number-input";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import CustomTextInput from "../utils/CustomTextInput";
 import { useState } from "react";
@@ -142,20 +143,45 @@ export default function PhysicianInfoScreen({ navigation }) {
                   handleError(null, "physName");
                 }}
               />
-              <CustomTextInput
-                placeholder="(XXX) XXX-XXXX"
-                iconName="phone-outline"
-                label="Physician's Number*"
-                keyboardType="number-pad"
-                error={errors.physPhone}
-                onChangeText={(text) =>
-                  handleChange(text.replace(/[^0-9]+/g, ""), "physPhone")
-                }
-                onFocus={() => {
-                  handleError(null, "physPhone");
-                }}
-              />
-
+              {/*==============NEW PHONE NUMBER BOX WITH COUNTRY CODE ============================*/}
+              <View style={{ marginTop: "4%" }}>
+                <Text style={{ color: "white", marginBottom: "1%" }}>
+                  Physician's Number*
+                </Text>
+                <PhoneInput
+                  defaultCode={"US"}
+                  pickerBackgroundColor={"white"}
+                  containerStyle={{
+                    backgroundColor: "transparent",
+                    marginBottom: "4%",
+                    borderWidth: 1.0,
+                    borderColor: "rgba(255, 255, 255, .25)",
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                  textContainerStyle={{
+                    backgroundColor: "transparent",
+                    flexDirection: "row",
+                    paddingHorizontal: "3%",
+                    borderColor: "rgba(255, 255, 255, .5)",
+                  }}
+                  textInputStyle={{
+                    color: "white",
+                  }}
+                  textInputProps={{
+                    placeholderTextColor: "rgba(255, 255, 255, .5)",
+                  }}
+                  codeTextStyle={{
+                    color: "rgba(255, 255, 255, .5)",
+                  }}
+                  placeholder="(XXX) XXX - XXXX"
+                  onChangeText={(text) =>
+                    // Removes everything but numbers, so it complies with the api
+                    // TODO: Handle this differently
+                    handleChange(text.replace(/[^0-9]+/g, ""), "phone")
+                  }
+                />
+              </View>
               <View style={{ width: "100%", marginTop: "12%" }}>
                 <TouchableOpacity
                   style={[
