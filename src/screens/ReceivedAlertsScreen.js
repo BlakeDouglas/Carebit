@@ -178,24 +178,18 @@ export default function ReceivedAlertsScreen({ navigation }) {
           justifyContent: "space-evenly",
         }}
       >
-        <TouchableOpacity
-          onPress={() => {
-            // See json return
-            getAlerts();
+        <Text
+          style={{
+            color: "rgba(0,225,200,.6)",
+            fontWeight: "bold",
+            textAlign: "right",
+            fontSize: responsiveFontSize(2.3),
+            marginTop: "10%",
           }}
         >
-          <Text
-            style={{
-              color: "rgba(0,225,200,.6)",
-              fontWeight: "bold",
-              textAlign: "right",
-              fontSize: responsiveFontSize(2.3),
-              marginTop: "10%",
-            }}
-          >
-            OKAY
-          </Text>
-        </TouchableOpacity>
+          OKAY
+        </Text>
+
         <Text style={{ color: "grey", marginTop: "14%" }}>{dateTime}</Text>
       </SafeAreaView>
     </SafeAreaView>
