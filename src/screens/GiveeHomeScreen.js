@@ -30,6 +30,7 @@ export default function GiveeHomeScreen({ navigation }) {
   const args = {
     number,
     prompt: true,
+    skipCanOpen: true,
   };
   const [caregivee, setCaregivee] = useState(null);
   const [isModal1Visible, setModal1Visible] = useState(false);
