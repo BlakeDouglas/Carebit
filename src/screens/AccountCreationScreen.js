@@ -10,6 +10,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 
+import PhoneInput from "react-native-phone-number-input";
+
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { useState } from "react";
@@ -27,7 +29,6 @@ export default function AccountCreationScreen({ navigation }) {
   const dispatch = useDispatch();
 
   const requiredText = " Input required";
-
   // Content between this point and the return statement
   // are inspired by kymzTech's React Native Tutorial
 
@@ -40,6 +41,8 @@ export default function AccountCreationScreen({ navigation }) {
     type: "",
     mobilePlatform: "",
   });
+
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const [errors, setErrors] = useState({});
 
@@ -225,22 +228,37 @@ export default function AccountCreationScreen({ navigation }) {
                     />
                   </View>
                 </View>
-                <CustomTextInput
-                  placeholder="(XXX)-XXX-XXXX"
-                  iconName="phone-outline"
-                  label="Phone*"
-                  keyboardType="number-pad"
-                  error={errors.phone}
+                <PhoneInput
+                  defaultValue={phoneNumber}
+                  defaultCode={"US"}
+                  pickerBackgroundColor={"#0000FF"}
+                  containerStyle={{
+                    backgroundColor: "transparent",
+                    marginTop: "8%",
+                    marginBottom: "8%",
+                    borderWidth: 1.0,
+                    borderColor: "rgba(255, 255, 255, .5)",
+                    alignItems: "center",
+                    wdith: "80%",
+                  }}
+                  textContainerStyle={{
+                    backgroundColor: "transparent",
+                    flexDirection: "row",
+                    paddingHorizontal: "3%",
+                    borderColor: "rgba(255, 255, 255, .5)",
+                  }}
+                  textInputStyle={{
+                    color: "white",
+                  }}
+                  codeTextStyle={{
+                    color: "rgba(255, 255, 255, .5)",
+                  }}
                   onChangeText={(text) =>
                     // Removes everything but numbers, so it complies with the api
                     // TODO: Handle this differently
                     handleChange(text.replace(/[^0-9]+/g, ""), "phone")
                   }
-                  onFocus={() => {
-                    handleError(null, "phone");
-                  }}
                 />
-
                 <CustomTextInput
                   placeholder="example@domain.com"
                   iconName="email-outline"
