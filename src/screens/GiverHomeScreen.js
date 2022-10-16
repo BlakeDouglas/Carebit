@@ -308,6 +308,7 @@ export default function GiverHomeScreen({ navigation }) {
   const args = {
     number,
     prompt: true,
+    skipCanOpen: true,
   };
 
   const windowWidth = useWindowDimensions().width;
