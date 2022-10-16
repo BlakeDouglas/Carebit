@@ -56,7 +56,7 @@ export default function AuthenticationScreen({ navigation }) {
 
   const [request, response, promptAsync] = useAuthRequest(
     {
-      clientId: "238QS3",
+      clientId: "228DBB",
       scopes: [
         "activity",
         "heartrate",

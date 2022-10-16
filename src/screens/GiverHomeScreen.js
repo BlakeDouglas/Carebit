@@ -292,7 +292,7 @@ export default function GiverHomeScreen({ navigation }) {
       let battery = await deviceResponse.json();
       console.log("Battery response from devices:");
       console.log(battery);
-      setBatteryLevel(battery === [] ? battery[0].battery : "low");
+      setBatteryLevel(battery[0].battery);
     }
   };
   useEffect(() => {
