@@ -178,9 +178,15 @@ export default function GiverHomeScreen({ navigation }) {
   };
 
   const fetchData = async () => {
+    if (!selectedUser.caregiveeID) {
+      console.log("Aborting data pull (No selected user)");
+      return;
+    }
     try {
       const response = await fetch(
-        "https://www.carebit.xyz/caregivee/" + "B45W9J" + "/all/recent",
+        "https://www.carebit.xyz/caregivee/" +
+          selectedUser.caregiveeID +
+          "/all/recent",
         {
           method: "GET",
           headers: {
