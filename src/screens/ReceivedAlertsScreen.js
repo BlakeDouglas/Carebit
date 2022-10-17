@@ -2,17 +2,13 @@ import {
   StyleSheet,
   Text,
   SafeAreaView,
-  ImageBackground,
-  Keyboard,
-  StatusBar,
-  Platform,
   View,
   Image,
   FlatList,
   RefreshControl,
   TouchableOpacity,
 } from "react-native";
-import moment from "moment";
+
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 //const selectedUser = useSelector((state) => state.Reducers.selectedUser);
 import { useSelector } from "react-redux";
@@ -178,18 +174,29 @@ export default function ReceivedAlertsScreen({ navigation }) {
           justifyContent: "space-evenly",
         }}
       >
-        <Text
-          style={{
-            color: "rgba(0,225,200,.6)",
-            fontWeight: "bold",
-            textAlign: "right",
-            fontSize: responsiveFontSize(2.3),
-            marginTop: "10%",
-          }}
-        >
-          OKAY
-        </Text>
-
+        {ok === 1 ? (
+          <Text
+            style={{
+              color: "rgba(0,225,200,.6)",
+              fontWeight: "bold",
+              textAlign: "right",
+              fontSize: responsiveFontSize(2.3),
+              marginTop: "10%",
+            }}
+          >
+            OKAY
+          </Text>
+        ) : (
+          <Text
+            style={{
+              textAlign: "right",
+              fontSize: responsiveFontSize(2.3),
+              marginTop: "10%",
+            }}
+          >
+            {" "}
+          </Text>
+        )}
         <Text style={{ color: "grey", marginTop: "14%" }}>{dateTime}</Text>
       </SafeAreaView>
     </SafeAreaView>

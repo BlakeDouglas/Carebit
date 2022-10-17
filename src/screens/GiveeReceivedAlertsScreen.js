@@ -12,6 +12,7 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Modal from "react-native-modal";
+import { setTokenData } from "../redux/actions";
 
 const data_temp = [
   {
@@ -91,6 +92,32 @@ const data_temp = [
 export default function GiveeReceivedAlertsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const [data, setData] = useState([]);
+
+  const sendOk = async (alertID) => {
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/alerts/ok/" + alertID,
+        {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+        }
+      );
+      const json = await response.json();
+      if (json) {
+        console.log("Ok has been set");
+      }
+    } catch (error) {
+      console.log(
+        "Caught error from /alerts/ok/<int:alertID> in GiveeReceived: " + error
+      );
+    }
+  };
+
+  // Receive json of all notifications
   const getAlerts = async () => {
     try {
       const response = await fetch(
@@ -122,7 +149,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
     setModal1Visible(!isModal1Visible);
   };
 
-  const Item = ({ alertType, dateTime, body, title, ok }) => (
+  const Item = ({ alertType, dateTime, body, title, alertID, ok }) => (
     <SafeAreaView
       style={{
         justifyContent: "center",
@@ -197,7 +224,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                 onPress={() => {
                   console.log("Okay Pressed");
                   toggleModal1();
-                  getAlerts();
+                  sendOk(alertID);
                   //Set that they're okay and send it to the Giver's screen
                 }}
               >
@@ -379,6 +406,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
       dateTime={item.dateTime}
       body={item.body}
       title={item.title}
+      alertID={item.alertID}
       ok={item.ok}
     />
   );
