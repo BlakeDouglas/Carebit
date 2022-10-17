@@ -13,6 +13,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";
+import moment from "moment";
 import { useEffect } from "react";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
@@ -35,6 +36,7 @@ export default function GiveeHomeScreen({ navigation }) {
   const [caregivee, setCaregivee] = useState(null);
   const [isModal1Visible, setModal1Visible] = useState(false);
   const [isModal2Visible, setModal2Visible] = useState(false);
+  let date = moment().format("dddd, MMM D");
   const [isModal3Visible, setModal3Visible] = useState(false);
   const toggleModal1 = () => {
     setModal1Visible(!isModal1Visible);
@@ -784,12 +786,23 @@ export default function GiveeHomeScreen({ navigation }) {
             style={{
               //backgroundColor: "blue",
               alignSelf: "center",
+              alignItems: "center",
               height: "8%",
               width: "92%",
-              justifyContent: "center",
+              justifyContent: "space-between",
+              flexDirection: "row",
             }}
           >
             <Text style={styles.preferencesText}>Preferences</Text>
+            <Text
+              style={{
+                color: "darkgrey",
+                fontSize: responsiveFontSize(1.8),
+                marginRight: "2%",
+              }}
+            >
+              {date}
+            </Text>
           </SafeAreaView>
 
           <SafeAreaView
@@ -1165,5 +1178,6 @@ const styles = StyleSheet.create({
   preferencesText: {
     fontSize: responsiveFontSize(2.3),
     fontWeight: "500",
+    marginLeft: "2%",
   },
 });
