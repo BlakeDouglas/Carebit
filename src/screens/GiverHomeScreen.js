@@ -23,25 +23,30 @@ import * as Notifications from "expo-notifications";
 import { resetSelectedData, setSelectedUser } from "../redux/actions";
 
 let date = moment().format("dddd, MMM D");
-let batteryLevel;
 export default function GiverHomeScreen({ navigation }) {
-  const [steps, setSteps] = useState(0);
-  const [HeartBPM, setHeart] = useState(0);
-  const [HeartMax, setHeartMax] = useState(0);
-  const [HeartMin, setHeartMin] = useState(0);
-  const [HeartAvg, setHeartAvg] = useState(0);
-  const [BatteryLevel, setBatteryLevel] = useState("low");
+  const [dailySteps, setDailySteps] = useState(null);
+  const [hourlySteps, setHourlySteps] = useState(null);
+  const [HeartBPM, setHeart] = useState(null);
+  const [HeartMax, setHeartMax] = useState(null);
+  const [HeartMin, setHeartMin] = useState(null);
+  const [HeartAvg, setHeartAvg] = useState(null);
+  const [BatteryLevel, setBatteryLevel] = useState(null);
 
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
 
-  const [fitbitAccessToken, setFitbitAccessToken] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
 
-  const number = selectedUser.phone || null;
+  var number = selectedUser.phone || null;
+  var args = {
+    number,
+    prompt: true,
+    skipCanOpen: true,
+  };
+
   const [refreshing, setRefreshing] = React.useState(false);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -172,11 +177,10 @@ export default function GiverHomeScreen({ navigation }) {
     }
   };
 
-  const refreshFitbitAccessToken = async () => {
+  const fetchData = async () => {
     try {
       const response = await fetch(
-        "https://www.carebit.xyz/refreshFitbitToken/" +
-          selectedUser.caregiveeID,
+        "https://www.carebit.xyz/caregivee/" + "B45W9J" + "/all/recent",
         {
           method: "GET",
           headers: {
@@ -187,141 +191,48 @@ export default function GiverHomeScreen({ navigation }) {
         }
       );
       const json = await response.json();
-      if (json.access_token) setFitbitAccessToken(json.access_token);
-      else console.log("Refreshing error: " + json.error);
+      if (json.device) {
+        setBatteryLevel(json.device.battery);
+      }
+      if (json.heart) {
+        setHeart(json.heart.restingRate);
+        setHeartMin(json.heart.minHR);
+        setHeartAvg(json.heart.average);
+        setHeartMax(json.heart.maxHR);
+      }
+      if (json.steps) {
+        setHourlySteps(json.steps.hourlyTotal);
+        setDailySteps(json.steps.currentDayTotal);
+      }
     } catch (error) {
       console.log("Caught error in /refreshFitbitToken: " + error);
-    }
-  };
-  const fetchFitbitAccessToken = async () => {
-    if (!selectedUser.caregiveeID) {
-      console.log(
-        "Failed fetch because selectedUser not set. Will update when selectedUser is set."
-      );
-      return;
-    }
-    const url =
-      "https://www.carebit.xyz/getFitbitToken/" + selectedUser.caregiveeID;
-    try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-      });
-      const responseText = await response.text();
-      const json = JSON.parse(responseText);
-
-      if (!json.error) setFitbitAccessToken(json.fitbitToken);
-      else console.log("Error: " + json.error);
-    } catch (error) {
-      console.log("Caught error in /getFitbitToken: " + error);
-    }
-  };
-  const fetchData = async () => {
-    if (!fitbitAccessToken) {
-      // Seems that refresh has a cooldown. Switch this on if u get invalid token
-      // await refreshFitbitAccessToken();
-      await fetchFitbitAccessToken(selectedUser.caregiveeID);
-    } else {
-      let date_today = moment().format("YYYY[-]MM[-]DD");
-      //Get HeartRate
-      let heartResponse = await fetch(
-        "https://api.fitbit.com/1/user/" +
-          selectedUser.caregiveeID +
-          "/activities/heart/date/" +
-          date_today +
-          "/1d.json",
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + fitbitAccessToken,
-          },
-        }
-      );
-      let heart = await heartResponse.json();
-      console.log("Heart here");
-      console.log(heart);
-
-      // Checks for expired token
-      if (heart.errors) {
-        console.log("Refreshing ");
-        await refreshFitbitAccessToken(selectedUser.caregiveeID);
-        return;
-      }
-
-      setHeartAvg(heart["activities-heart"][0].value.restingHeartRate);
-      setHeartMax(heart["activities-heart"][0].value.heartRateZones[0].max);
-      setHeartMin(heart["activities-heart"][0].value.heartRateZones[0].min);
-      console.log("Heart max: ");
-      console.log(HeartMax);
-
-      //Get Steps
-      let stepsResponse = await fetch(
-        "https://api.fitbit.com/1/user/" +
-          selectedUser.caregiveeID +
-          "/activities/tracker/steps/date/" +
-          date_today +
-          "/1d.json",
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + fitbitAccessToken,
-          },
-        }
-      );
-      let json = await stepsResponse.json();
-      setSteps(json["activities-tracker-steps"][0].value);
-      console.log("Steps: " + steps);
-      //Get Battery
-      //TODO: implement levels for different battery icons. getBatteryIcon(level)
-      let deviceResponse = await fetch(
-        "https://api.fitbit.com/1/user/-/devices.json",
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + fitbitAccessToken,
-          },
-        }
-      );
-      let battery = await deviceResponse.json();
-      console.log("Battery response from devices:");
-      console.log(battery);
-      setBatteryLevel(battery[0].battery);
     }
   };
   useEffect(() => {
     registerForPushNotificationsAsync();
     getCaregiveeInfo();
+    // TODO: Do this on login / account creation
   }, []);
 
   useEffect(() => {
     getCaregiveeInfo();
     fetchData();
-  }, [fitbitAccessToken, selectedUser]);
-
-  const args = {
-    number,
-    prompt: true,
-    skipCanOpen: true,
-  };
+    number = selectedUser.phone || null;
+    args = {
+      number,
+      prompt: true,
+      skipCanOpen: true,
+    };
+  }, [selectedUser]);
 
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
-  console.log("Your true battery is here");
-  console.log(BatteryLevel);
 
   const isFocused = useIsFocused();
   // Auto refreshes every 10 seconds as long as the screen is focused
   useEffect(() => {
     const toggle = setInterval(() => {
       isFocused ? getCaregiveeInfo() : clearInterval(toggle);
-      console.log("Home screen focused? " + isFocused);
     }, 10000);
     return () => clearInterval(toggle);
   });
@@ -650,6 +561,7 @@ export default function GiverHomeScreen({ navigation }) {
               Last Recorded Activity
             </Text>
 
+            {/** TODO: Make time last gotten real */}
             <Text
               style={{
                 color: "darkgrey",
@@ -791,7 +703,7 @@ export default function GiverHomeScreen({ navigation }) {
                       fontWeight: "700",
                     }}
                   >
-                    {HeartAvg || "--"}
+                    {HeartBPM === null ? "--" : HeartBPM}
                   </Text>
                   <Text
                     style={{
@@ -813,6 +725,7 @@ export default function GiverHomeScreen({ navigation }) {
                     justifyContent: "flex-start",
                   }}
                 >
+                  {/* TODO: Also here */}
                   <Text style={styles.smallText}>14 mins ago</Text>
                 </SafeAreaView>
               </SafeAreaView>
@@ -855,7 +768,7 @@ export default function GiverHomeScreen({ navigation }) {
                     }}
                     numberOfLines={1}
                   >
-                    {steps}
+                    {hourlySteps === null ? "--" : hourlySteps}
                   </Text>
                 </SafeAreaView>
                 <SafeAreaView
@@ -1022,7 +935,7 @@ export default function GiverHomeScreen({ navigation }) {
                       fontWeight: "700",
                     }}
                   >
-                    {HeartMin}
+                    {HeartMin === null ? "--" : HeartMin}
                   </Text>
                 </SafeAreaView>
 
@@ -1071,7 +984,7 @@ export default function GiverHomeScreen({ navigation }) {
                       fontWeight: "700",
                     }}
                   >
-                    {HeartAvg || Math.floor((HeartMin + HeartMax) / 2)}
+                    {HeartAvg === null ? "--" : HeartAvg}
                   </Text>
                 </SafeAreaView>
 
@@ -1120,7 +1033,7 @@ export default function GiverHomeScreen({ navigation }) {
                       fontWeight: "700",
                     }}
                   >
-                    {HeartMax}
+                    {HeartMax === null ? "--" : HeartMax}
                   </Text>
                 </SafeAreaView>
 
@@ -1270,7 +1183,7 @@ export default function GiverHomeScreen({ navigation }) {
                     }}
                     numberOfLines={1}
                   >
-                    {steps}
+                    {dailySteps === null ? "--" : dailySteps}
                   </Text>
                 </SafeAreaView>
                 <SafeAreaView
@@ -1282,6 +1195,7 @@ export default function GiverHomeScreen({ navigation }) {
                     justifyContent: "flex-start",
                   }}
                 >
+                  {/* TODO: Also change here */}
                   <Text style={styles.smallText}>14 mins ago</Text>
                 </SafeAreaView>
               </SafeAreaView>
@@ -1341,7 +1255,9 @@ export default function GiverHomeScreen({ navigation }) {
                     justifyContent: "flex-start",
                   }}
                 >
-                  <Text style={styles.smallText}>{BatteryLevel}</Text>
+                  <Text style={styles.smallText}>
+                    {BatteryLevel === null ? "Unlinked" : BatteryLevel}
+                  </Text>
                 </SafeAreaView>
               </SafeAreaView>
             </SafeAreaView>
