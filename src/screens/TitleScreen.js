@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   SafeAreaView,
   Text,
   StatusBar,
@@ -19,9 +18,11 @@ import {
 
 export default function TitleScreen({ navigation }) {
   const dispatch = useDispatch();
+  // Sends user to RoleSelectScreen once they choose their account type
   const createAccountButtonHandler = () => {
     navigation.navigate("RoleSelectScreen");
   };
+  // Sends user to LoginScreen when they log out
   const loginButtonHandler = () => {
     navigation.navigate("LoginScreen");
   };
@@ -30,6 +31,7 @@ export default function TitleScreen({ navigation }) {
     fetchCredentials();
   }, []);
 
+  // Login endpoint
   const login = async (email, password) => {
     const body = JSON.stringify({ email, password });
     try {
@@ -55,7 +57,7 @@ export default function TitleScreen({ navigation }) {
       console.log("Caught error in /login in title screen: " + error);
     }
   };
-
+  // Endpoint for setting default person's data to view
   const getDefault = async (tokenJson) => {
     const body =
       tokenJson.type === "caregiver"
@@ -105,6 +107,8 @@ export default function TitleScreen({ navigation }) {
     }
   };
 
+  // Async Storage for user credentials
+  // Makes user not have to sign in every time they open the app
   const fetchCredentials = async (key) => {
     try {
       const credentials = await SecureStore.getItemAsync("carebitcredentials");
@@ -124,10 +128,15 @@ export default function TitleScreen({ navigation }) {
       style={GlobalStyle.Background}
     >
       <SafeAreaView style={{ flex: 1 }}>
+        {/* Set status bar color and properties. Fixes Android UI issue*/}
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
         <SafeAreaView style={GlobalStyle.Container}>
-          <Text style={GlobalStyle.Subtitle}>Welcome to</Text>
-          <Text style={GlobalStyle.Title}>Carebit</Text>
+          {/* Title Container */}
+          <SafeAreaView style={{ width: "100%", height: "22%" }}>
+            <Text style={GlobalStyle.Subtitle}>Welcome to</Text>
+            <Text style={GlobalStyle.Title}>Carebit</Text>
+          </SafeAreaView>
+          {/* Text body Container */}
           <SafeAreaView
             style={{
               height: "35%",
@@ -155,26 +164,28 @@ export default function TitleScreen({ navigation }) {
             </Text>
           </SafeAreaView>
 
-          <TouchableOpacity
-            style={GlobalStyle.Button}
-            onPress={createAccountButtonHandler}
-          >
-            <Text style={GlobalStyle.ButtonText}>Create an Account</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              GlobalStyle.Button,
-              { backgroundColor: "transparent", marginTop: "7%" },
-            ]}
-            onPress={loginButtonHandler}
-          >
-            <Text style={GlobalStyle.ButtonText}>Log In</Text>
-          </TouchableOpacity>
+          {/* Log in and make account button container */}
+          <SafeAreaView style={{ width: "100%", height: "22%" }}>
+            {/* Button to create an account along with onPress navigation */}
+            <TouchableOpacity
+              style={GlobalStyle.Button}
+              onPress={createAccountButtonHandler}
+            >
+              <Text style={GlobalStyle.ButtonText}>Create an Account</Text>
+            </TouchableOpacity>
+            {/* Log in button and navigation to log in page handler */}
+            <TouchableOpacity
+              style={[
+                GlobalStyle.Button,
+                { backgroundColor: "transparent", marginTop: "7%" },
+              ]}
+              onPress={loginButtonHandler}
+            >
+              <Text style={GlobalStyle.ButtonText}>Log In</Text>
+            </TouchableOpacity>
+          </SafeAreaView>
         </SafeAreaView>
       </SafeAreaView>
     </ImageBackground>
   );
 }
-
-const styles = StyleSheet.create({});
