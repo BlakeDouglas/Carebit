@@ -20,9 +20,19 @@ export default function GiveeSettingsScreen({ navigation }) {
     SecureStore.deleteItemAsync("carebitcredentials");
     dispatch(resetData());
   };
+  // Grab country code from phone number
   const physCountryCode = phone(tokenData.physPhone).countryCode;
+  // Separate phone number from country code
   const physNumber = tokenData.physPhone.substring(physCountryCode.length);
 
+  // Grab country code from phone number
+  let selectedCountryCode = selectedUser
+    ? phone(selectedUser.phone).countryCode
+    : null;
+  // Separate phone number from country code
+  let selectedNumber = selectedCountryCode
+    ? selectedUser.phone.substring(selectedCountryCode.length)
+    : null;
   return (
     // Header Container
     <SafeAreaView style={{ flex: 1 }}>
@@ -119,12 +129,15 @@ export default function GiveeSettingsScreen({ navigation }) {
         >
           <Text style={[styles.BoxSub, { textAlign: "right" }]}>
             {selectedUser.phone
-              ? "(" +
-                selectedUser.phone.substring(0, 3) +
-                ") " +
-                selectedUser.phone.substring(3, 6) +
-                "-" +
-                selectedUser.phone.substring(6)
+              ? selectedCountryCode === "+1"
+                ? selectedCountryCode +
+                  " (" +
+                  selectedNumber.substring(0, 3) +
+                  ") " +
+                  selectedNumber.substring(3, 6) +
+                  "-" +
+                  selectedNumber.substring(6)
+                : selectedCountryCode + " " + selectedNumber
               : "N/A"}
           </Text>
         </SafeAreaView>

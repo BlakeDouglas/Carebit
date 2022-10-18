@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { resetData, setSelectedUser, setTokenData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
-
+import phone from "phone";
 export default function GiverSettingsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
@@ -29,6 +29,21 @@ export default function GiverSettingsScreen({ navigation }) {
   const activityButtonHandler = () => {
     navigation.navigate("ActivityLevel");
   };
+  // Grab country code from phone number
+  let physCountryCode = selectedUser
+    ? phone(selectedUser.physPhone).countryCode
+    : null;
+  // Separate phone number from country code
+  let physNumber = physCountryCode
+    ? selectedUser.physPhone.substring(physCountryCode.length)
+    : null;
+
+  let selectedCountryCode = selectedUser
+    ? phone(selectedUser.phone).countryCode
+    : null;
+  let selectedNumber = selectedCountryCode
+    ? selectedUser.phone.substring(selectedCountryCode.length)
+    : null;
   return (
     // Header Container
     <SafeAreaView style={{ flex: 1 }}>
@@ -84,12 +99,15 @@ export default function GiverSettingsScreen({ navigation }) {
         <Text style={styles.BoxTitle}>Phone</Text>
         <Text style={styles.BoxSub}>
           {selectedUser.phone
-            ? "(" +
-              selectedUser.phone.substring(0, 3) +
-              ") " +
-              selectedUser.phone.substring(3, 6) +
-              "-" +
-              selectedUser.phone.substring(6)
+            ? selectedCountryCode === "+1"
+              ? selectedCountryCode +
+                " (" +
+                selectedNumber.substring(0, 3) +
+                ") " +
+                selectedNumber.substring(3, 6) +
+                "-" +
+                selectedNumber.substring(6)
+              : selectedCountryCode + " " + selectedNumber
             : "N/A"}
         </Text>
       </SafeAreaView>
@@ -106,12 +124,15 @@ export default function GiverSettingsScreen({ navigation }) {
         <Text style={styles.BoxTitle}>Phone</Text>
         <Text style={styles.BoxSub}>
           {selectedUser.physPhone
-            ? "(" +
-              selectedUser.physPhone.substring(0, 3) +
-              ") " +
-              selectedUser.physPhone.substring(3, 6) +
-              "-" +
-              selectedUser.physPhone.substring(6)
+            ? physCountryCode === "+1"
+              ? physCountryCode +
+                " (" +
+                physNumber.substring(0, 3) +
+                ") " +
+                physNumber.substring(3, 6) +
+                "-" +
+                physNumber.substring(6)
+              : physCountryCode + " " + physNumber
             : "N/A"}
         </Text>
       </SafeAreaView>

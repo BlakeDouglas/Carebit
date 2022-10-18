@@ -17,6 +17,7 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { setSelectedUser } from "../redux/actions";
 import { useIsFocused } from "@react-navigation/native";
+import phone from "phone";
 const RequestScreen = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -196,9 +197,13 @@ const RequestScreen = ({ navigation }) => {
   const renderItem = ({ item }) => {
     const backgroundColor =
       item.requestID === selectedId ? "#bfb6a5" : "#f3f2f1";
+    const countryCode = phone(item.phone).countryCode;
+    const phoneNumber = item.phone.substring(countryCode.length);
     return (
       <Item
         item={item}
+        countryCode={countryCode}
+        phoneNumber={phoneNumber}
         onPress={() => setSelectedId(item.requestID)}
         backgroundColor={{ backgroundColor }}
       />
@@ -330,18 +335,21 @@ const RequestScreen = ({ navigation }) => {
   );
 };
 
-const Item = ({ item, onPress, backgroundColor }) => (
+const Item = ({ item, phoneNumber, countryCode, onPress, backgroundColor }) => (
   <TouchableOpacity style={[styles.item, backgroundColor]} onPress={onPress}>
     <Text style={styles.name} numberOfLines={1}>
       {item.firstName} {item.lastName}
     </Text>
     <Text style={styles.phone}>
-      {"(" +
-        item.phone.substring(0, 3) +
-        ") " +
-        item.phone.substring(3, 6) +
-        "-" +
-        item.phone.substring(6)}
+      {countryCode === "+1"
+        ? countryCode +
+          " (" +
+          phoneNumber.substring(0, 3) +
+          ") " +
+          phoneNumber.substring(3, 6) +
+          "-" +
+          phoneNumber.substring(6)
+        : countryCode + " " + phoneNumber}
     </Text>
   </TouchableOpacity>
 );

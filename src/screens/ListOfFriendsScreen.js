@@ -24,6 +24,7 @@ import {
   setSelectedUser,
   setTokenData,
 } from "../redux/actions";
+import phone from "phone";
 
 const ListOfFriendsScreen = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
@@ -164,9 +165,13 @@ const ListOfFriendsScreen = ({ navigation }) => {
   const renderItem = ({ item }) => {
     const backgroundColor =
       item.requestID === selectedId ? "#bfb6a5" : "#f3f2f1";
+    const countryCode = phone(item.phone).countryCode;
+    const phoneNumber = item.phone.substring(countryCode.length);
     return (
       <Item
         item={item}
+        countryCode={countryCode}
+        phoneNumber={phoneNumber}
         onPress={() => setSelectedId(item.requestID)}
         backgroundColor={{ backgroundColor }}
       />
@@ -182,6 +187,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
     }, 10000);
     return () => clearInterval(toggle);
   });
+
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
@@ -304,19 +310,22 @@ const ListOfFriendsScreen = ({ navigation }) => {
   );
 };
 
-const Item = ({ item, onPress, backgroundColor }) => (
+const Item = ({ item, phoneNumber, countryCode, onPress, backgroundColor }) => (
   <SafeAreaView style={{ flex: 1 }}>
     <TouchableOpacity style={[styles.item, backgroundColor]} onPress={onPress}>
       <Text style={styles.name} numberOfLines={1}>
         {item.firstName} {item.lastName}
       </Text>
       <Text style={styles.phone}>
-        {"(" +
-          item.phone.substring(0, 3) +
-          ") " +
-          item.phone.substring(3, 6) +
-          "-" +
-          item.phone.substring(6)}
+        {countryCode === "+1"
+          ? countryCode +
+            " (" +
+            phoneNumber.substring(0, 3) +
+            ") " +
+            phoneNumber.substring(3, 6) +
+            "-" +
+            phoneNumber.substring(6)
+          : countryCode + " " + phoneNumber}
       </Text>
     </TouchableOpacity>
   </SafeAreaView>
