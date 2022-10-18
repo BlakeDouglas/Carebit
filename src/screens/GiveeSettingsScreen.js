@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { resetData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
-
+import phone from "phone";
 export default function GiveeSettingsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
@@ -20,6 +20,9 @@ export default function GiveeSettingsScreen({ navigation }) {
     SecureStore.deleteItemAsync("carebitcredentials");
     dispatch(resetData());
   };
+  const physCountryCode = phone(tokenData.physPhone).countryCode;
+  const physNumber = tokenData.physPhone.substring(physCountryCode.length);
+
   return (
     // Header Container
     <SafeAreaView style={{ flex: 1 }}>
@@ -158,12 +161,17 @@ export default function GiveeSettingsScreen({ navigation }) {
           }}
         >
           <Text style={[styles.BoxSub, { textAlign: "right" }]}>
-            {"(" +
-              tokenData.physPhone.substring(0, 3) +
-              ") " +
-              tokenData.physPhone.substring(3, 6) +
-              "-" +
-              tokenData.physPhone.substring(6) || "N/A"}
+            {tokenData.physPhone
+              ? physCountryCode === "+1"
+                ? physCountryCode +
+                  " (" +
+                  physNumber.substring(0, 3) +
+                  ") " +
+                  physNumber.substring(3, 6) +
+                  "-" +
+                  physNumber.substring(6)
+                : physCountryCode + " " + physNumber
+              : ""}
           </Text>
         </SafeAreaView>
       </SafeAreaView>
