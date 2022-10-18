@@ -19,6 +19,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { discovery } from "./AuthenticationScreen";
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
 import { setTokenData } from "../redux/actions";
+import { phone } from "phone";
 
 export default function LinkUsersScreen({ navigation }) {
   const handleChange = (text, input) => {
@@ -64,13 +65,17 @@ export default function LinkUsersScreen({ navigation }) {
   const validate = () => {
     Keyboard.dismiss();
     let valid = true;
-    if (!inputs.phone) {
-      handleError("  Input required", "phone");
+
+    let phoneData = phone(inputs.phone);
+
+    if (!phoneData.isValid) {
+      handleError(" Invalid Number", "phone");
       valid = false;
-    } else if (
-      !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
-    ) {
-      handleError("  Too Short", "phone");
+    } else {
+      inputs.phone = phoneData.phoneNumber;
+    }
+    if (inputs.phone === tokenData.phone) {
+      handleError("  Invalid Number", "phone");
       valid = false;
     }
 
@@ -311,16 +316,12 @@ export default function LinkUsersScreen({ navigation }) {
                         ? "Caregivee's Phone Number"
                         : "Caregiver's Phone Number"
                     }
-                    placeholder="(XXX) XXX-XXXX"
-                    iconName="phone-outline"
-                    keyboardType="number-pad"
                     error={errors.phone}
-                    onChangeText={(text) =>
-                      handleChange(text.replace(/[^0-9]+/g, ""), "phone")
-                    }
-                    onFocus={() => {
+                    onChangeFormattedText={(text) => {
+                      handleChange(text, "phone");
                       handleError(null, "phone");
                     }}
+                    phone
                   />
                 </SafeAreaView>
                 <TouchableOpacity

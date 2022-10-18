@@ -20,6 +20,7 @@ import { setTokenData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import validator from "validator";
+import { phone } from "phone";
 
 export default function AccountCreationScreen({ navigation }) {
   // These are the two tools of the redux state manager. Use them instead of hooks
@@ -65,14 +66,13 @@ export default function AccountCreationScreen({ navigation }) {
       valid = false;
     }
 
-    if (!inputs.phone) {
-      handleError(requiredText, "phone");
+    let phoneData = phone(inputs.phone);
+
+    if (!phoneData.isValid) {
+      handleError(" Invalid Number", "phone");
       valid = false;
-    } else if (
-      !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
-    ) {
-      handleError(" Invalid phone number", "phone");
-      valid = false;
+    } else {
+      inputs.phone = phoneData.phoneNumber;
     }
 
     if (!validator.isStrongPassword(inputs.password, { minSymbols: 0 })) {
@@ -226,19 +226,13 @@ export default function AccountCreationScreen({ navigation }) {
                   </View>
                 </View>
                 <CustomTextInput
-                  placeholder="(XXX)-XXX-XXXX"
-                  iconName="phone-outline"
                   label="Phone*"
-                  keyboardType="number-pad"
                   error={errors.phone}
-                  onChangeText={(text) =>
-                    // Removes everything but numbers, so it complies with the api
-                    // TODO: Handle this differently
-                    handleChange(text.replace(/[^0-9]+/g, ""), "phone")
-                  }
-                  onFocus={() => {
+                  onChangeFormattedText={(text) => {
+                    handleChange(text, "phone");
                     handleError(null, "phone");
                   }}
+                  phone
                 />
 
                 <CustomTextInput

@@ -10,12 +10,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import PhoneInput from "react-native-phone-number-input";
 
 const CustomTextInput = ({
   label,
   iconName,
   error,
   password,
+  phone,
   onFocus = () => {},
   ...props
 }) => {
@@ -30,7 +32,12 @@ const CustomTextInput = ({
   const eyeOffImage = require("../../assets/images/eye-off-outline.png");
 
   return (
-    <View style={{ marginBottom: "4%" }}>
+    <View
+      style={{
+        marginBottom: phone ? "0%" : "4%",
+        marginTop: phone ? "3%" : "0%",
+      }}
+    >
       <View style={{ flexDirection: "row" }}>
         <Text style={style.label}>{label}</Text>
         {error && (
@@ -45,58 +52,91 @@ const CustomTextInput = ({
           </Text>
         )}
       </View>
-      <View
-        style={[
-          style.inputContainer,
-          { borderColor: error ? "red" : "rgba(255, 255, 255, .25)" },
-        ]}
-      >
-        <Image
-          source={
-            iconName === "account-outline"
-              ? accountImage
-              : iconName === "phone-outline"
-              ? phoneImage
-              : iconName === "email-outline"
-              ? emailImage
-              : iconName === "lock-outline"
-              ? lockImage
-              : accountImage
-          }
-          style={{ height: 22, width: 22, marginRight: 10 }}
-        />
-
-        <TextInput
-          autoCorrect={false}
-          onFocus={() => {
-            onFocus();
-            setIsFocused(true);
+      {phone && (
+        <PhoneInput
+          {...props}
+          placeholder="(XXX) XXX-XXXX"
+          defaultCode={"US"}
+          placeholderTextColor="rgba(255, 255, 255, .5)"
+          containerStyle={{
+            backgroundColor: "transparent",
+            marginBottom: "4%",
+            borderWidth: 1.5,
+            borderColor: error ? "red" : "rgba(255, 255, 255, .25)",
+            alignItems: "center",
+            width: "100%",
           }}
-          onBlur={() => {
-            setIsFocused(false);
+          textContainerStyle={{
+            backgroundColor: "transparent",
           }}
-          style={{
+          textInputStyle={{
             color: "white",
-            flex: 1,
             fontSize: responsiveFontSize(2.15),
           }}
-          placeholderTextColor="rgba(255, 255, 255, .5)"
-          secureTextEntry={hidePassword}
-          {...props}
+          countryPickerButtonStyle={{
+            marginRight: "-6.5%",
+          }}
+          textInputProps={{
+            placeholderTextColor: "rgba(255, 255, 255, .5)",
+          }}
+          codeTextStyle={{
+            color: "white",
+            fontSize: responsiveFontSize(2),
+          }}
         />
-        {password && (
-          <TouchableOpacity
-            onPress={() => {
-              setHidePassword(!hidePassword);
+      )}
+      {!phone && (
+        <View
+          style={[
+            style.inputContainer,
+            { borderColor: error ? "red" : "rgba(255, 255, 255, .25)" },
+          ]}
+        >
+          <Image
+            source={
+              iconName === "account-outline"
+                ? accountImage
+                : iconName === "email-outline"
+                ? emailImage
+                : iconName === "lock-outline"
+                ? lockImage
+                : accountImage
+            }
+            style={{ height: 22, width: 22, marginRight: 10 }}
+          />
+
+          <TextInput
+            autoCorrect={false}
+            onFocus={() => {
+              onFocus();
+              setIsFocused(true);
             }}
-          >
-            <Image
-              source={hidePassword ? eyeOffImage : eyeImage}
-              style={{ height: 22, width: 22 }}
-            />
-          </TouchableOpacity>
-        )}
-      </View>
+            onBlur={() => {
+              setIsFocused(false);
+            }}
+            style={{
+              color: "white",
+              flex: 1,
+              fontSize: responsiveFontSize(2.15),
+            }}
+            placeholderTextColor="rgba(255, 255, 255, .5)"
+            secureTextEntry={hidePassword}
+            {...props}
+          />
+          {password && (
+            <TouchableOpacity
+              onPress={() => {
+                setHidePassword(!hidePassword);
+              }}
+            >
+              <Image
+                source={hidePassword ? eyeOffImage : eyeImage}
+                style={{ height: 22, width: 22 }}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
     </View>
   );
 };

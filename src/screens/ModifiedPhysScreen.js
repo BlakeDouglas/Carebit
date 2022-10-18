@@ -19,6 +19,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import validator from "validator";
+import { phone } from "phone";
 
 export default function ModifiedPhysScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -40,20 +41,18 @@ export default function ModifiedPhysScreen({ navigation, route }) {
   const validate = () => {
     Keyboard.dismiss();
     let valid = true;
+    let phoneData = phone(inputs.physPhone);
+
     if (!inputs.physName) {
       handleError(requiredText, "physName");
       valid = false;
     }
-    if (!inputs.physPhone) {
-      handleError(requiredText, "physPhone");
+
+    if (!phoneData.isValid) {
+      handleError(" Invalid Number", "physPhone");
       valid = false;
-    } else if (
-      !inputs.physPhone.match(
-        /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/
-      )
-    ) {
-      handleError(" Invalid phone number", "physPhone");
-      valid = false;
+    } else {
+      inputs.physPhone = phoneData.phoneNumber;
     }
     if (valid) {
       registerPhysician(inputs);
@@ -182,17 +181,13 @@ export default function ModifiedPhysScreen({ navigation, route }) {
                 }}
               />
               <CustomTextInput
-                placeholder="(XXX) XXX-XXXX"
-                iconName="phone-outline"
                 label="Physician's Number*"
-                keyboardType="number-pad"
                 error={errors.physPhone}
-                onChangeText={(text) =>
-                  handleChange(text.replace(/[^0-9]+/g, ""), "physPhone")
-                }
-                onFocus={() => {
+                onChangeFormattedText={(text) => {
+                  handleChange(text, "physPhone");
                   handleError(null, "physPhone");
                 }}
+                phone
               />
 
               <View style={{ width: "100%", marginTop: "12%" }}>
