@@ -25,10 +25,12 @@ let date = moment().format("dddd, MMM D");
 export default function GiverHomeScreen({ navigation }) {
   const [dailySteps, setDailySteps] = useState(null);
   const [hourlySteps, setHourlySteps] = useState(null);
+  const [StepsSyncTime, setStepsSyncTime] = useState(null);
   const [HeartBPM, setHeart] = useState(null);
   const [HeartMax, setHeartMax] = useState(null);
   const [HeartMin, setHeartMin] = useState(null);
   const [HeartAvg, setHeartAvg] = useState(null);
+  const [HeartSyncTime, setHeartSyncTime] = useState(null);
   const [BatteryLevel, setBatteryLevel] = useState(null);
   const [BatterySyncTime, setBatterySyncTime] = useState(null);
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
@@ -214,11 +216,25 @@ export default function GiverHomeScreen({ navigation }) {
         setHeartMin(json.heart.minHR);
         setHeartAvg(json.heart.average);
         setHeartMax(json.heart.maxHR);
+        let heartDate = json.heart.date;
+        let heartTime = json.heart.timeMeasured;
+        let heartLastSync = heartDate + " " + heartTime;
+        const currTime = moment().format("YYYY-MM-DD hh:mm:ss");
+        const range = moment.range(heartLastSync, currTime);
+        setHeartSyncTime(range.diff("minutes"));
+        console.log("Heart last sync: " + HeartSyncTime);
       }
       if (json.steps) {
         console.log(json.steps);
         setHourlySteps(json.steps.hourlyTotal);
         setDailySteps(json.steps.currentDayTotal);
+        let stepsDate = json.steps.date;
+        let stepsTime = json.steps.timeMeasured;
+        let stepsLastSync = stepsDate + " " + stepsTime;
+        const currTime = moment().format("YYYY-MM-DD hh:mm:ss");
+        const range = moment.range(stepsLastSync, currTime);
+        setStepsSyncTime(range.diff("minutes"));
+        console.log("Steps last sync: " + StepsSyncTime);
       }
     } catch (error) {
       console.log("Caught error in /refreshFitbitToken: " + error);
@@ -584,7 +600,7 @@ export default function GiverHomeScreen({ navigation }) {
                 fontSize: responsiveFontSize(1.8),
               }}
             >
-              14 mins ago
+              {BatterySyncTime} mins ago
             </Text>
           </SafeAreaView>
 
@@ -742,7 +758,7 @@ export default function GiverHomeScreen({ navigation }) {
                   }}
                 >
                   {/* TODO: Also here */}
-                  <Text style={styles.smallText}>14 mins ago</Text>
+                  <Text style={styles.smallText}>{HeartSyncTime} mins ago</Text>
                 </SafeAreaView>
               </SafeAreaView>
 
@@ -1212,7 +1228,7 @@ export default function GiverHomeScreen({ navigation }) {
                   }}
                 >
                   {/* TODO: Also change here */}
-                  <Text style={styles.smallText}>14 mins ago</Text>
+                  <Text style={styles.smallText}>{StepsSyncTime} mins ago</Text>
                 </SafeAreaView>
               </SafeAreaView>
 
