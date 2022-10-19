@@ -194,7 +194,6 @@ const ListOfFriendsScreen = ({ navigation }) => {
       );
       const json = await response.json();
       await getDefault();
-      navigation.navigate("HomeScreen");
     } catch (error) {
       console.log("Caught error in /deleteRequest: " + error);
     }

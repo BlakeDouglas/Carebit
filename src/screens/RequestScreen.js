@@ -87,7 +87,6 @@ const RequestScreen = ({ navigation }) => {
       );
       const json = await response.json();
       console.log("Result from delete: " + JSON.stringify(json));
-      navigation.navigate("HomeScreen");
     } catch (error) {
       console.log("Caught error in /deleteRequest: " + error);
     }
