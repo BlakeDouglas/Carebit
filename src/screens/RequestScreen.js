@@ -127,6 +127,44 @@ const RequestScreen = ({ navigation }) => {
     }
   };
 
+  const getDefault = async () => {
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/getDefaultRequest",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+          body: JSON.stringify({
+            caregiverID: tokenData.caregiverID,
+            caregiveeID: null,
+          }),
+        }
+      );
+      const responseText = await response.text();
+      const json = JSON.parse(responseText);
+
+      // Accounts for array return value and missing default scenarios
+      if (json.default) {
+        if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
+        else dispatch(setSelectedUser(json.default));
+      } else {
+        const array =
+          tokenJson[
+            tokenJson.type === "caregiver" ? "caregiveeID" : "caregiverID"
+          ];
+        const res = array.filter((iter) => iter.status === "accepted");
+        if (res[0]) dispatch(setSelectedUser(res[0]));
+        else dispatch(resetSelectedData());
+      }
+    } catch (error) {
+      console.log("Caught error in /getDefaultRequest on giverHome: " + error);
+    }
+  };
+
   const acceptRequest = async (tokenData, item) => {
     const body =
       tokenData.type === "caregivee"
@@ -146,8 +184,7 @@ const RequestScreen = ({ navigation }) => {
       if (json.request) {
         {
           if (!selectedUser.email) {
-            setDefault(item);
-            dispatch(setSelectedUser(item));
+            getDefault();
           }
           getRequests(tokenData);
         }
