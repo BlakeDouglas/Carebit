@@ -151,7 +151,9 @@ const ListOfFriendsScreen = ({ navigation }) => {
     }
   };
 
-  getRequests(tokenData);
+  useEffect(() => {
+    getRequests(tokenData);
+  }, []);
 
   const oppositeUser =
     tokenData.type === "caregiver" ? "caregivee" : "caregiver";

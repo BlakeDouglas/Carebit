@@ -186,8 +186,6 @@ const RequestScreen = ({ navigation }) => {
     }
   };
 
-  getRequests(tokenData);
-
   useEffect(() => {
     setData(
       backgroundData.filter(
@@ -195,6 +193,10 @@ const RequestScreen = ({ navigation }) => {
       )
     );
   }, [backgroundData]);
+
+  useEffect(() => {
+    getRequests(tokenData);
+  }, []);
 
   const renderItem = ({ item }) => {
     const backgroundColor =
