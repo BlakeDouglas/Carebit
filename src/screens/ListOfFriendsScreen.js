@@ -54,6 +54,45 @@ const ListOfFriendsScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
+  const getDefault = async () => {
+    const body =
+      tokenData.type === "caregiver"
+        ? {
+            caregiverID: tokenData.caregiverID,
+            caregiveeID: null,
+          }
+        : {
+            caregiverID: null,
+            caregiveeID: tokenData.caregiveeID,
+          };
+    try {
+      const response = await fetch(
+        "https://www.carebit.xyz/getDefaultRequest",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + tokenData.access_token,
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const responseText = await response.text();
+      const json = JSON.parse(responseText);
+
+      // Accounts for array return value
+      if (json.default) {
+        if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
+        else dispatch(setSelectedUser(json.default));
+      } else dispatch(resetSelectedData());
+    } catch (error) {
+      console.log(
+        "Caught error in /getDefaultRequest on ListOfFriendsScreen: " + error
+      );
+    }
+  };
+
   const setDefault = async (selected) => {
     const body =
       tokenData.type === "caregiver"
@@ -152,6 +191,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
         }
       );
       const json = await response.json();
+      await getDefault();
       navigation.navigate("HomeScreen");
     } catch (error) {
       console.log("Caught error in /deleteRequest: " + error);

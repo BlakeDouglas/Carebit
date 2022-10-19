@@ -53,7 +53,7 @@ export default function GiverHomeScreen({ navigation }) {
   };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    updateConnections();
+    getDefault();
     getCaregiveeInfo();
     wait(1000).then(() => setRefreshing(false));
   }, []);
@@ -85,7 +85,7 @@ export default function GiverHomeScreen({ navigation }) {
       );
     }
   };
-  const updateConnections = async () => {
+  const getDefault = async () => {
     try {
       const response = await fetch(
         "https://www.carebit.xyz/getDefaultRequest",
