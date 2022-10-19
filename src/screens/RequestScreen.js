@@ -146,8 +146,10 @@ const RequestScreen = ({ navigation }) => {
       const json = await response.json();
       if (json.request) {
         {
-          setDefault(item);
-          dispatch(setSelectedUser(item));
+          if (!selectedUser.email) {
+            setDefault(item);
+            dispatch(setSelectedUser(item));
+          }
           getRequests(tokenData);
         }
       } else {
