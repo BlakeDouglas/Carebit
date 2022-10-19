@@ -17,7 +17,6 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import call from "react-native-phone-call";
-import * as WebBrowser from "expo-web-browser";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { resetSelectedData, setSelectedUser } from "../redux/actions";
@@ -31,7 +30,7 @@ export default function GiverHomeScreen({ navigation }) {
   const [HeartMin, setHeartMin] = useState(null);
   const [HeartAvg, setHeartAvg] = useState(null);
   const [BatteryLevel, setBatteryLevel] = useState(null);
-
+  const [BatterySyncTime, setBatterySyncTime] = useState(null);
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
@@ -40,6 +39,10 @@ export default function GiverHomeScreen({ navigation }) {
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
 
+  const Moment = require("moment");
+  const MomentRange = require("moment-range");
+
+  const moment = MomentRange.extendMoment(Moment);
   var number = selectedUser.phone || null;
   var args = {
     number,
@@ -199,14 +202,21 @@ export default function GiverHomeScreen({ navigation }) {
       const json = await response.json();
       if (json.device) {
         setBatteryLevel(json.device.battery);
+        const lastSync = json.device.lastSyncTime;
+        const currTime = moment().format("YYYY-MM-DD hh:mm:ss");
+        const range = moment.range(lastSync, currTime);
+        setBatterySyncTime(range.diff("minutes"));
+        console.log(json.device);
       }
       if (json.heart) {
+        console.log(json.heart);
         setHeart(json.heart.restingRate);
         setHeartMin(json.heart.minHR);
         setHeartAvg(json.heart.average);
         setHeartMax(json.heart.maxHR);
       }
       if (json.steps) {
+        console.log(json.steps);
         setHourlySteps(json.steps.hourlyTotal);
         setDailySteps(json.steps.currentDayTotal);
       }
