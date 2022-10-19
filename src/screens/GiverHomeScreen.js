@@ -25,14 +25,15 @@ let date = moment().format("dddd, MMM D");
 export default function GiverHomeScreen({ navigation }) {
   const [dailySteps, setDailySteps] = useState(null);
   const [hourlySteps, setHourlySteps] = useState(null);
-  const [StepsSyncTime, setStepsSyncTime] = useState(null);
   const [HeartBPM, setHeart] = useState(null);
   const [HeartMax, setHeartMax] = useState(null);
   const [HeartMin, setHeartMin] = useState(null);
   const [HeartAvg, setHeartAvg] = useState(null);
-  const [HeartSyncTime, setHeartSyncTime] = useState(null);
   const [BatteryLevel, setBatteryLevel] = useState(null);
   const [BatterySyncTime, setBatterySyncTime] = useState(null);
+  const [HeartSyncTime, setHeartSyncTime] = useState(null);
+  const [StepsSyncTime, setStepsSyncTime] = useState(null);
+
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
@@ -182,6 +183,39 @@ export default function GiverHomeScreen({ navigation }) {
     }
   };
 
+  const calculateTime = (pullTime) => {
+    let currTime = moment().format("YYYY-MM-DD hh:mm:ss");
+    let range = moment.range(pullTime, currTime);
+
+    let diffDays = range.diff("days");
+    if (diffDays > 0) {
+      return diffDays + " Day" + (diffDays === 1 ? "" : "s") + " Ago";
+    }
+    let diffHours = range.diff("hours");
+
+    if (diffHours > 0) {
+      return diffHours + " Hour" + (diffHours === 1 ? "" : "s") + " Ago";
+    }
+
+    let diffMinutes = range.diff("minutes");
+
+    if (diffMinutes > 0) {
+      return diffMinutes + " Minute" + (diffMinutes === 1 ? "" : "s") + " Ago";
+    }
+
+    let diffSeconds = range.diff("seconds");
+
+    if (diffSeconds > 0) {
+      return diffSeconds + " Second" + (diffSeconds === 1 ? "" : "s") + " Ago";
+    }
+
+    if (diffSeconds === 0) {
+      return "Now";
+    }
+
+    return "Invalid Time";
+  };
+
   const fetchData = async () => {
     if (!selectedUser.caregiveeID) {
       console.log("Aborting data pull (No selected user)");
@@ -203,38 +237,27 @@ export default function GiverHomeScreen({ navigation }) {
       );
       const json = await response.json();
       if (json.device) {
+        console.log("Device: ", json.device);
         setBatteryLevel(json.device.battery);
-        const lastSync = json.device.lastSyncTime;
-        const currTime = moment().format("YYYY-MM-DD hh:mm:ss");
-        const range = moment.range(lastSync, currTime);
-        setBatterySyncTime(range.diff("minutes"));
-        console.log(json.device);
+        setBatterySyncTime(calculateTime(json.device.lastSyncTime));
       }
       if (json.heart) {
-        console.log(json.heart);
+        console.log("Heart: ", json.heart);
         setHeart(json.heart.restingRate);
         setHeartMin(json.heart.minHR);
         setHeartAvg(json.heart.average);
         setHeartMax(json.heart.maxHR);
-        let heartDate = json.heart.date;
-        let heartTime = json.heart.timeMeasured;
-        let heartLastSync = heartDate + " " + heartTime;
-        const currTime = moment().format("YYYY-MM-DD hh:mm:ss");
-        const range = moment.range(heartLastSync, currTime);
-        setHeartSyncTime(range.diff("minutes"));
-        console.log("Heart last sync: " + HeartSyncTime);
+        setHeartSyncTime(
+          calculateTime(json.heart.date + " " + json.heart.timeMeasured)
+        );
       }
       if (json.steps) {
-        console.log(json.steps);
+        console.log("Steps: ", json.steps);
         setHourlySteps(json.steps.hourlyTotal);
         setDailySteps(json.steps.currentDayTotal);
-        let stepsDate = json.steps.date;
-        let stepsTime = json.steps.timeMeasured;
-        let stepsLastSync = stepsDate + " " + stepsTime;
-        const currTime = moment().format("YYYY-MM-DD hh:mm:ss");
-        const range = moment.range(stepsLastSync, currTime);
-        setStepsSyncTime(range.diff("minutes"));
-        console.log("Steps last sync: " + StepsSyncTime);
+        setStepsSyncTime(
+          calculateTime(json.steps.date + " " + json.steps.timeMeasured)
+        );
       }
     } catch (error) {
       console.log("Caught error in /refreshFitbitToken: " + error);
@@ -592,15 +615,14 @@ export default function GiverHomeScreen({ navigation }) {
             >
               Last Recorded Activity
             </Text>
-
-            {/** TODO: Make time last gotten real */}
             <Text
               style={{
                 color: "darkgrey",
                 fontSize: responsiveFontSize(1.8),
               }}
             >
-              {BatterySyncTime} mins ago
+              {/** TODO: Is this the right field?*/}
+              {BatterySyncTime || ""}
             </Text>
           </SafeAreaView>
 
@@ -757,8 +779,7 @@ export default function GiverHomeScreen({ navigation }) {
                     justifyContent: "flex-start",
                   }}
                 >
-                  {/* TODO: Also here */}
-                  <Text style={styles.smallText}>{HeartSyncTime} mins ago</Text>
+                  <Text style={styles.smallText}>{HeartSyncTime || ""}</Text>
                 </SafeAreaView>
               </SafeAreaView>
 
@@ -811,7 +832,7 @@ export default function GiverHomeScreen({ navigation }) {
                     justifyContent: "flex-start",
                   }}
                 >
-                  <Text style={styles.smallText}>in past hour</Text>
+                  <Text style={styles.smallText}>{StepsSyncTime || ""}</Text>
                 </SafeAreaView>
               </SafeAreaView>
             </SafeAreaView>
@@ -1227,8 +1248,7 @@ export default function GiverHomeScreen({ navigation }) {
                     justifyContent: "flex-start",
                   }}
                 >
-                  {/* TODO: Also change here */}
-                  <Text style={styles.smallText}>{StepsSyncTime} mins ago</Text>
+                  <Text style={styles.smallText}>{StepsSyncTime || ""}</Text>
                 </SafeAreaView>
               </SafeAreaView>
 
