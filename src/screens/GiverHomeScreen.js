@@ -396,17 +396,38 @@ export default function GiverHomeScreen({ navigation }) {
                 >
                   Hello {tokenData.firstName || "N/A"}
                 </Text>
-                <Text
-                  style={{
-                    color: "black",
-                    fontSize: responsiveFontSize(2.2),
-                    fontWeight: "500",
-                    flexShrink: 1,
-                  }}
-                  numberOfLines={1}
-                >
-                  Your Caregiver is {selectedUser.firstName || "N/A"}
-                </Text>
+
+                {/* All users must have a phone number, otherwise there's no way to add them. Thus, no phone = no user */}
+                {/* The only way for us not to have a Caregivee is if we don't have anyone added */}
+                {/* Thus, send to add screen if no Caregivee exists */}
+                {selectedUser.phone ? (
+                  <Text
+                    style={{
+                      color: "black",
+                      fontSize: responsiveFontSize(2.2),
+                      fontWeight: "500",
+                    }}
+                    numberOfLines={1}
+                  >
+                    Your Caregivee is {selectedUser.firstName}
+                  </Text>
+                ) : (
+                  <TouchableOpacity>
+                    <Text
+                      style={{
+                        color: "dodgerblue",
+                        fontSize: responsiveFontSize(2.2),
+                        fontWeight: "500",
+                      }}
+                      numberOfLines={1}
+                      onPress={() => {
+                        navigation.navigate("AddScreen");
+                      }}
+                    >
+                      Click To Add A Caregivee
+                    </Text>
+                  </TouchableOpacity>
+                )}
               </SafeAreaView>
               <SafeAreaView
                 style={{
@@ -1347,10 +1368,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     height: "100%",
     width: "100%",
-    //backgroundColor: "orange",
-    //marginRight: "4%",
-    //marginTop: Platform.OS == "ios" ? "10%" : "5%",
-    //justifyContent: "center",
   },
   callText: {
     color: "dodgerblue",

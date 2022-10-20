@@ -151,6 +151,7 @@ export default function GiveeHomeScreen({ navigation }) {
       );
     }
   };
+
   const setCaregiveeInfo = async (newJson) => {
     try {
       const response = await fetch(
@@ -610,17 +611,39 @@ export default function GiveeHomeScreen({ navigation }) {
               >
                 Hello {tokenData.firstName || "N/A"}
               </Text>
-              <Text
-                style={{
-                  color: "black",
-                  fontSize: responsiveFontSize(2.2),
-                  fontWeight: "500",
-                  marginLeft: "4%",
-                }}
-                numberOfLines={1}
-              >
-                Your Caregiver is {selectedUser.firstName || "N/A"}
-              </Text>
+              {/* All users must have a phone number, otherwise there's no way to add them. Thus, no phone = no user */}
+              {/* The only way for us not to have a Caregiver is if we don't have anyone added */}
+              {/* Thus, send to add screen if no Caregiver exists */}
+              {selectedUser.phone ? (
+                <Text
+                  style={{
+                    color: "black",
+                    fontSize: responsiveFontSize(2.2),
+                    fontWeight: "500",
+                    marginLeft: "4%",
+                  }}
+                  numberOfLines={1}
+                >
+                  Your Caregiver is {selectedUser.firstName}
+                </Text>
+              ) : (
+                <TouchableOpacity>
+                  <Text
+                    style={{
+                      color: "dodgerblue",
+                      fontSize: responsiveFontSize(2.2),
+                      fontWeight: "500",
+                      marginLeft: "4%",
+                    }}
+                    numberOfLines={1}
+                    onPress={() => {
+                      navigation.navigate("AddScreen");
+                    }}
+                  >
+                    Click To Add A Caregiver
+                  </Text>
+                </TouchableOpacity>
+              )}
             </SafeAreaView>
             <SafeAreaView
               style={{

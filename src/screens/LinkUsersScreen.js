@@ -213,7 +213,7 @@ export default function LinkUsersScreen({ navigation }) {
                       justifyContent: "center",
                       height: "100%",
                       width: "100%",
-                      backgroundColor: "blue",
+                      //backgroundColor: "blue",
                     }}
                     onPress={() => {
                       toggleModal1();

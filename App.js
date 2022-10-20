@@ -319,21 +319,7 @@ const HomeStack = () => {
           })}
         />
         <Stack.Screen name="ActivityLevel" component={ActivityLevelScreen} />
-        <Stack.Screen
-          name="SettingsOverview"
-          component={SettingsOverviewScreen}
-          options={({ navigation }) => ({
-            headerTransparent: false,
-            headerTitleAlign: "center",
-            headerTitleStyle: {
-              color: "white",
-            },
-            headerStyle: {
-              backgroundColor: "dodgerblue",
-            },
-            headerTitle: "Alert Settings",
-          })}
-        />
+
         <Stack.Screen
           name="SettingsScreen"
           component={
