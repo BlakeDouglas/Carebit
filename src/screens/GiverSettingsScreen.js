@@ -62,13 +62,13 @@ export default function GiverSettingsScreen({ navigation }) {
             marginTop: "8%",
             height: "15%",
             width: "100%",
-            borderTopColor: "rgba(255,255,255,.8)",
+            borderTopColor: "rgba(255,255,255,0)",
             borderTopWidth: 1,
-            borderBottomColor: "rgba(255,255,255,.8)",
+            borderBottomColor: "rgba(255,255,255,0)",
             borderBottomWidth: 1,
             alignItems: "center",
             flexDirection: "row",
-            //backgroundColor: "rgba(255,255,255,.1)",
+            backgroundColor: "rgba(255,255,255,.1)",
           }}
         >
           <Image
@@ -84,13 +84,13 @@ export default function GiverSettingsScreen({ navigation }) {
             }}
           >
             <Text
-              style={{ fontSize: responsiveFontSize(2.8) }}
+              style={{ fontSize: responsiveFontSize(2.8), color: "white" }}
               numberOfLines={1}
             >
               {tokenData.firstName || ""} {tokenData.lastName || ""}
             </Text>
             <Text
-              style={{ fontSize: responsiveFontSize(2.1) }}
+              style={{ fontSize: responsiveFontSize(2.1), color: "white" }}
               numberOfLines={1}
             >
               {tokenData.email || "email error"}
@@ -129,7 +129,7 @@ export default function GiverSettingsScreen({ navigation }) {
                   </Text>
                 </SafeAreaView>
               </SafeAreaView>
-              <SafeAreaView style={styles.Box}>
+              <SafeAreaView style={styles.Box2}>
                 <Text style={styles.BoxTitle}>Phone</Text>
                 <SafeAreaView
                   style={{
@@ -173,7 +173,7 @@ export default function GiverSettingsScreen({ navigation }) {
                   {selectedUser.physName || "N/A"}
                 </Text>
               </SafeAreaView>
-              <SafeAreaView style={styles.Box}>
+              <SafeAreaView style={styles.Box2}>
                 <Text style={styles.BoxTitle}>Phone</Text>
                 <Text style={styles.BoxSub}>
                   {selectedUser.physPhone
@@ -227,14 +227,14 @@ export default function GiverSettingsScreen({ navigation }) {
                       height: 15,
                       width: 15,
                       marginLeft: "1%",
-                      tintColor: "black",
+                      //tintColor: "white",
                       alignSelf: "center",
                     }}
                     source={require("../../assets/images/icons-forward-light.imageset/icons-forward-light.png")}
                   />
                 </TouchableOpacity>
               </SafeAreaView>
-              <SafeAreaView style={styles.Box}>
+              <SafeAreaView style={styles.Box2}>
                 <Text style={styles.BoxTitle}>Custom Alert Settings</Text>
                 <TouchableOpacity
                   onPress={customAlertButtonHandler}
@@ -252,7 +252,7 @@ export default function GiverSettingsScreen({ navigation }) {
                       height: 15,
                       width: 15,
                       marginLeft: "1%",
-                      tintColor: "black",
+                      //tintColor: "black",
                     }}
                     source={require("../../assets/images/icons-forward-light.imageset/icons-forward-light.png")}
                   />
@@ -287,8 +287,10 @@ export default function GiverSettingsScreen({ navigation }) {
                   textAlign: "left",
                 }}
               >
-                Please select a Caregivee to view their data. If you don't have
-                a Caregivee added, you will need to add them first.
+                To begin monitoring a Caregivee's Fitbit data and access their
+                information, you must add them first. If the person you are
+                caring for has already sent you a request, you can accept it
+                below.
               </Text>
             </SafeAreaView>
 
@@ -302,10 +304,10 @@ export default function GiverSettingsScreen({ navigation }) {
               <TouchableOpacity
                 style={GlobalStyle.Button}
                 onPress={() => {
-                  navigation.navigate("ListOfFriendsScreen");
+                  navigation.navigate("RequestScreen");
                 }}
               >
-                <Text style={GlobalStyle.ButtonText}>Select Caregivee</Text>
+                <Text style={GlobalStyle.ButtonText}>View Requests</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[GlobalStyle.Button, { marginTop: "5%" }]}
@@ -346,13 +348,25 @@ const styles = StyleSheet.create({
   Box: {
     height: "37%",
     width: "100%",
-    backgroundColor: "rgba(255,255,255,.2)",
+    backgroundColor: "rgba(255,255,255,.1)",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderTopColor: "rgba(255,255,255,0)",
+    borderTopWidth: 0.5,
+    borderBottomColor: "rgba(255,255,255,0)",
+    borderBottomWidth: 0.5,
+  },
+  Box2: {
+    height: "37%",
+    width: "100%",
+    backgroundColor: "rgba(255,255,255,.1)",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     borderTopColor: "rgba(255,255,255,.8)",
     borderTopWidth: 0.5,
-    borderBottomColor: "rgba(255,255,255,.8)",
+    borderBottomColor: "rgba(255,255,255,0)",
     borderBottomWidth: 0.5,
   },
   Title: {
@@ -373,10 +387,11 @@ const styles = StyleSheet.create({
     fontSize: responsiveFontSize(2.2),
     fontWeight: "600",
     marginLeft: "4%",
+    color: "white",
   },
   BoxSub: {
     fontSize: responsiveFontSize(2.2),
     marginRight: "4%",
-    color: "black",
+    color: "white",
   },
 });
