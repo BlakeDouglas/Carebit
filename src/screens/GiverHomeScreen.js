@@ -184,7 +184,7 @@ export default function GiverHomeScreen({ navigation }) {
   };
 
   const calculateTime = (pullTime) => {
-    let currTime = moment().format("YYYY-MM-DD hh:mm:ss");
+    let currTime = moment().format("YYYY-MM-DD HH:mm:ss");
     let range = moment.range(pullTime, currTime);
 
     let diffDays = range.diff("days");
