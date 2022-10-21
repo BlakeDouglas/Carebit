@@ -20,6 +20,11 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import Modal from "react-native-modal";
 import call from "react-native-phone-call";
 import { resetSelectedData, setSelectedUser } from "../redux/actions";
+import {
+  caregiveeGetEndpoint,
+  caregiveeSetEndpoint,
+  getDefaultEndpoint,
+} from "../network/Carebitapi";
 
 export default function GiveeHomeScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -88,102 +93,63 @@ export default function GiveeHomeScreen({ navigation }) {
   }, []);
 
   const updateConnections = async () => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/getDefaultRequest",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-          body: JSON.stringify({
-            caregiverID: null,
-            caregiveeID: tokenData.caregiveeID,
-          }),
-        }
-      );
-      const responseText = await response.text();
-      const json = JSON.parse(responseText);
+    const params = {
+      auth: tokenData.access_token,
+      body: {
+        caregiverID: null,
+        caregiveeID: tokenData.caregiveeID,
+      },
+    };
+    const json = await getDefaultEndpoint(params);
 
-      // Accounts for array return value and missing default scenarios
-      if (json.default) {
-        if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
-        else dispatch(setSelectedUser(json.default));
-      } else {
-        const array =
-          tokenJson[
-            tokenJson.type === "caregiver" ? "caregiveeID" : "caregiverID"
-          ];
-        const res = array.filter((iter) => iter.status === "accepted");
-        if (res[0]) dispatch(setSelectedUser(res[0]));
-        else dispatch(resetSelectedData());
-      }
-    } catch (error) {
-      console.log("Caught error in /getDefaultRequest on giveeHome: " + error);
+    // Accounts for array return value and missing default scenarios
+    if (json.default) {
+      if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
+      else dispatch(setSelectedUser(json.default));
+    } else {
+      const array =
+        tokenJson[
+          tokenJson.type === "caregiver" ? "caregiveeID" : "caregiverID"
+        ];
+      const res = array.filter((iter) => iter.status === "accepted");
+      if (res[0]) dispatch(setSelectedUser(res[0]));
+      else dispatch(resetSelectedData());
     }
   };
 
   const getCaregiveeInfo = async () => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/caregivee/" + tokenData.caregiveeID,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
-      );
-      const json = await response.json();
-      if (json.caregivee) {
-        setCaregivee(json.caregivee);
-        setIsEnabledSleep(json.caregivee.sleep === 1);
-        setIsEnabledDisturb(json.caregivee.doNotDisturb === 1);
-        setIsEnabledMonitor(json.caregivee.monitoring === 1);
-      }
-    } catch (error) {
-      console.log(
-        "Caught error downloading from /caregivee/<caregiveeID>: " + error
-      );
+    const params = {
+      auth: tokenData.access_token,
+      targetID: tokenData.caregiveeID,
+    };
+    const json = await caregiveeGetEndpoint(params);
+    if (json.caregivee) {
+      setCaregivee(json.caregivee);
+      setIsEnabledSleep(json.caregivee.sleep === 1);
+      setIsEnabledDisturb(json.caregivee.doNotDisturb === 1);
+      setIsEnabledMonitor(json.caregivee.monitoring === 1);
     }
   };
 
   const setCaregiveeInfo = async (newJson) => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/caregivee/" + tokenData.caregiveeID,
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-          body: JSON.stringify({
-            ...caregivee,
-            ...newJson,
-            physCity: undefined,
-            physName: undefined,
-            physPhone: undefined,
-            physState: undefined,
-            physStreet: undefined,
-            physZip: undefined,
-            caregiveeID: undefined,
-            userID: undefined,
-          }),
-        }
-      );
-      const json = await response.json();
-      if (json.caregivee) setCaregivee(json.caregivee);
-    } catch (error) {
-      console.log(
-        "Caught error uploading to /caregivee/<caregiveeID>: " + error
-      );
-    }
+    const params = {
+      targetID: tokenData.caregiveeID,
+      auth: tokenData.access_token,
+      body: {
+        ...caregivee,
+        ...newJson,
+        physCity: undefined,
+        physName: undefined,
+        physPhone: undefined,
+        physState: undefined,
+        physStreet: undefined,
+        physZip: undefined,
+        caregiveeID: undefined,
+        userID: undefined,
+      },
+    };
+    const json = await caregiveeSetEndpoint(params);
+    if (json.caregivee) setCaregivee(json.caregivee);
   };
 
   // TODO: Move to login, redo caregivee field to accomodate. Will speed up things

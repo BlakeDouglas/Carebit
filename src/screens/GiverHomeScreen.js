@@ -20,6 +20,12 @@ import call from "react-native-phone-call";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { resetSelectedData, setSelectedUser } from "../redux/actions";
+import {
+  caregiveeGetEndpoint,
+  getDefaultEndpoint,
+  notificationTokenEndpoint,
+  recentFitbitDataEndpoint,
+} from "../network/Carebitapi";
 
 let date = moment().format("dddd, MMM D");
 export default function GiverHomeScreen({ navigation }) {
@@ -66,67 +72,31 @@ export default function GiverHomeScreen({ navigation }) {
 
   const getCaregiveeInfo = async () => {
     if (!selectedUser.email) return;
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/caregivee/" + selectedUser.caregiveeID,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
-      );
-      const json = await response.json();
-      if (json.caregivee) {
-        setIsEnabledSleep(json.caregivee.sleep === 1);
-        setIsEnabledDisturb(json.caregivee.doNotDisturb === 1);
-        setIsEnabledMonitor(json.caregivee.monitoring === 1);
-      }
-    } catch (error) {
-      console.log(
-        "Caught error downloading from /caregivee/<caregiveeID> in GiverHome: " +
-          error
-      );
+    const params = {
+      auth: tokenData.access_token,
+      targetID: selectedUser.caregiveeID,
+    };
+    const json = await caregiveeGetEndpoint(params);
+    if (json.caregivee) {
+      setIsEnabledSleep(json.caregivee.sleep === 1);
+      setIsEnabledDisturb(json.caregivee.doNotDisturb === 1);
+      setIsEnabledMonitor(json.caregivee.monitoring === 1);
     }
   };
-  const getDefault = async () => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/getDefaultRequest",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-          body: JSON.stringify({
-            caregiverID: tokenData.caregiverID,
-            caregiveeID: null,
-          }),
-        }
-      );
-      const responseText = await response.text();
-      const json = JSON.parse(responseText);
 
-      // Accounts for array return value and missing default scenarios
-      if (json.default) {
-        if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
-        else dispatch(setSelectedUser(json.default));
-      } else {
-        const array =
-          tokenJson[
-            tokenJson.type === "caregiver" ? "caregiveeID" : "caregiverID"
-          ];
-        const res = array.filter((iter) => iter.status === "accepted");
-        if (res[0]) dispatch(setSelectedUser(res[0]));
-        else dispatch(resetSelectedData());
-      }
-    } catch (error) {
-      console.log("Caught error in /getDefaultRequest on giverHome: " + error);
-    }
+  const getDefault = async () => {
+    const params = {
+      auth: tokenData.access_token,
+      body: {
+        caregiverID: tokenData.caregiverID,
+        caregiveeID: null,
+      },
+    };
+    const json = getDefaultEndpoint(params);
+
+    if (json.default) {
+      dispatch(setSelectedUser(json.default));
+    } else dispatch(resetSelectedData());
   };
   // Get Device expo-token-Notification
   async function registerForPushNotificationsAsync() {
@@ -162,25 +132,14 @@ export default function GiverHomeScreen({ navigation }) {
 
   // Stores expo-token-notification in user's database
   const storeMessageToken = async (token) => {
-    try {
-      let url =
-        "https://www.carebit.xyz/notificationToken/" +
-        tokenData.userID +
-        "/" +
-        token;
+    const params = {
+      payload: token,
+      selfID: tokenData.userID,
+      auth: tokenData.access_token,
+    };
 
-      let response = await fetch(url, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-      });
-      const json = await response.json();
-    } catch (error) {
-      console.log("Caught error in /notificationToken: " + error);
-    }
+    const json = await notificationTokenEndpoint(params);
+    // TODO: Implement error catching here
   };
 
   const calculateTime = (pullTime) => {
@@ -221,46 +180,36 @@ export default function GiverHomeScreen({ navigation }) {
       console.log("Aborting data pull (No selected user)");
       return;
     }
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/caregivee/" +
-          selectedUser.caregiveeID +
-          "/all/recent",
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
+    const params = {
+      auth: tokenData.access_token,
+      targetID: selectedUser.caregiveeID,
+      metric: "all",
+      period: "recent",
+    };
+    const json = await recentFitbitDataEndpoint(params);
+
+    if (json.device) {
+      console.log("Device: ", json.device);
+      setBatteryLevel(json.device.battery);
+      setBatterySyncTime(calculateTime(json.device.lastSyncTime));
+    }
+    if (json.heart) {
+      console.log("Heart: ", json.heart);
+      setHeart(json.heart.restingRate);
+      setHeartMin(json.heart.minHR);
+      setHeartAvg(json.heart.average);
+      setHeartMax(json.heart.maxHR);
+      setHeartSyncTime(
+        calculateTime(json.heart.date + " " + json.heart.timeMeasured)
       );
-      const json = await response.json();
-      if (json.device) {
-        console.log("Device: ", json.device);
-        setBatteryLevel(json.device.battery);
-        setBatterySyncTime(calculateTime(json.device.lastSyncTime));
-      }
-      if (json.heart) {
-        console.log("Heart: ", json.heart);
-        setHeart(json.heart.restingRate);
-        setHeartMin(json.heart.minHR);
-        setHeartAvg(json.heart.average);
-        setHeartMax(json.heart.maxHR);
-        setHeartSyncTime(
-          calculateTime(json.heart.date + " " + json.heart.timeMeasured)
-        );
-      }
-      if (json.steps) {
-        console.log("Steps: ", json.steps);
-        setHourlySteps(json.steps.hourlyTotal);
-        setDailySteps(json.steps.currentDayTotal);
-        setStepsSyncTime(
-          calculateTime(json.steps.date + " " + json.steps.timeMeasured)
-        );
-      }
-    } catch (error) {
-      console.log("Caught error in /refreshFitbitToken: " + error);
+    }
+    if (json.steps) {
+      console.log("Steps: ", json.steps);
+      setHourlySteps(json.steps.hourlyTotal);
+      setDailySteps(json.steps.currentDayTotal);
+      setStepsSyncTime(
+        calculateTime(json.steps.date + " " + json.steps.timeMeasured)
+      );
     }
   };
   useEffect(() => {

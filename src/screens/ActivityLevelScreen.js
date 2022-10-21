@@ -12,37 +12,24 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedUser } from "../redux/actions";
+import { activityEndpoint } from "../network/CarebitAPI";
 export default function AccountCreationScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
 
   const setActivity = async (level) => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/activity/" +
-          selectedUser.caregiveeID +
-          "/" +
-          level +
-          "/" +
-          tokenData.caregiverID,
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
-      );
-      const responseText = await response.text();
-      if (!responseText) {
-        dispatch(setSelectedUser({ ...selectedUser, healthProfile: level }));
-        navigation.goBack();
-      } else console.log("Error setting activity level");
-    } catch (error) {
-      console.log("Caught error in /activity: " + error);
-    }
+    const params = {
+      targetID: selectedUser.caregiveeID,
+      selfID: tokenData.caregiverID,
+      level: level,
+      auth: tokenData.access_token,
+    };
+    const responseText = await activityEndpoint(params);
+    if (!responseText) {
+      dispatch(setSelectedUser({ ...selectedUser, healthProfile: level }));
+      navigation.goBack();
+    } else console.log("Error setting activity level");
   };
   let doesSelectedUserExist = selectedUser.email !== "";
   return (

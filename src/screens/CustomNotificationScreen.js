@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { setSelectedUser, setTokenData } from "../redux/actions";
 import GlobalStyle from "../utils/GlobalStyle";
+import { thresholdsEndpoint } from "../network/Carebitapi";
 export default function CustomNotificationScreen({ navigation }) {
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
@@ -49,10 +50,10 @@ export default function CustomNotificationScreen({ navigation }) {
     setIsBattery(!isBattery);
   };
 
-  const range = (start, end) => {
+  const range = (start, end, mult = 1) => {
     var arr = [];
     for (let i = start; i <= end; i++) {
-      arr.push(i);
+      arr.push(i * mult);
     }
     return arr.map((num) => {
       return num.toString();
@@ -66,62 +67,25 @@ export default function CustomNotificationScreen({ navigation }) {
   const thresholdsAPI = async (type, newJson) => {
     if (type === "PUT" && !thresholds) type = "GET";
     if (!newJson) newJson = thresholds;
-    if (!selectedUser.email) return; // TODO: make sure this works
-    try {
-      let response = await fetch(
-        "https://www.carebit.xyz/thresholds/" + selectedUser.caregiveeID,
-        {
-          method: type,
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-          body: type === "PUT" ? JSON.stringify(newJson) : undefined,
-        }
-      );
-      const json = await response.json();
-      if (json.thresholds) {
-        setThresholds(json.thresholds);
-        dispatch(setSelectedUser({ ...selectedUser, healthProfile: 4 }));
-      }
-    } catch (error) {
-      console.log("Caught error in /thresholds: " + error);
+    if (!selectedUser.email) return; // Check if selected user is valid
+
+    const params = {
+      targetID: selectedUser.caregiveeID,
+      auth: tokenData.access_token,
+      type: type,
+      body: type === "PUT" ? JSON.stringify(newJson) : undefined,
+    };
+    const json = await thresholdsEndpoint(params);
+    if (json.thresholds) {
+      setThresholds(json.thresholds);
+      dispatch(setSelectedUser({ ...selectedUser, healthProfile: 4 }));
     }
   };
 
   const lowHeartLimits = range(25, 90);
   const highHeartLimits = range(90, 150);
   const noActivityLimit = range(1, 24);
-
-  const maxSteps = [
-    "500",
-    "750",
-    "1000",
-    "1250",
-    "1500",
-    "1750",
-    "2000",
-    "2250",
-    "2500",
-    "2750",
-    "3000",
-    "3250",
-    "3500",
-    "4000",
-    "4500",
-    "5000",
-    "5500",
-    "6000",
-    "6500",
-    "7000",
-    "7500",
-    "8000",
-    "8500",
-    "9000",
-    "9500",
-    "10000",
-  ];
+  const maxSteps = range(1, 40, 250);
 
   let doesSelectedUserExist = selectedUser.email !== "";
   return (

@@ -15,6 +15,7 @@ import {
   setSelectedUser,
   setTokenData,
 } from "../redux/actions";
+import { loginEndpoint, getDefaultEndpoint } from "../network/CarebitAPI";
 
 export default function TitleScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -32,29 +33,16 @@ export default function TitleScreen({ navigation }) {
   }, []);
 
   // Login endpoint
-  const login = async (email, password) => {
-    const body = JSON.stringify({ email, password });
-    try {
-      let response = await fetch("https://www.carebit.xyz/login", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: body,
-      });
-      const json = await response.json();
-      if (json.access_token !== undefined) {
-        getDefault(json);
-        if (json.caregiveeID && json.caregiveeID.length === 0)
-          json.caregiveeID = null;
-        dispatch(setTokenData(json));
-      } else {
-        SecureStore.deleteItemAsync("carebitcredentials");
-        console.log("Saved credentials are invalid. Removing...");
-      }
-    } catch (error) {
-      console.log("Caught error in /login in title screen: " + error);
+  const login = async (body) => {
+    const json = await loginEndpoint(body);
+    if (json.access_token !== undefined) {
+      getDefault(json);
+      if (json.caregiveeID && json.caregiveeID.length === 0)
+        json.caregiveeID = null;
+      dispatch(setTokenData(json));
+    } else {
+      SecureStore.deleteItemAsync("carebitcredentials");
+      console.log("Saved credentials are invalid. Removing...");
     }
   };
   // Endpoint for setting default person's data to view
@@ -63,48 +51,13 @@ export default function TitleScreen({ navigation }) {
       tokenJson.type === "caregiver"
         ? { caregiverID: tokenJson.caregiverID, caregiveeID: null }
         : { caregiverID: null, caregiveeID: tokenJson.caregiveeID };
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/getDefaultRequest",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenJson.access_token,
-          },
-          body: JSON.stringify(body),
-        }
-      );
-      const responseText = await response.text();
-      const json = JSON.parse(responseText);
+    const params = { auth: tokenJson.access_token, body: body };
+    const json = await getDefaultEndpoint(params);
 
-      // Accounts for array return value and missing default scenarios
-      if (json.default) {
-        if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
-        else dispatch(setSelectedUser(json.default));
-      } else {
-        const array =
-          tokenJson[
-            tokenJson.type === "caregiver" ? "caregiveeID" : "caregiverID"
-          ];
-        if (
-          array &&
-          array.length !== 0 &&
-          array.filter((iter) => iter.status === "accepted").length !== 0
-        ) {
-          dispatch(
-            setSelectedUser(
-              array.filter((iter) => iter.status === "accepted")[0]
-            )
-          );
-        } else dispatch(resetSelectedData());
-      }
-    } catch (error) {
-      console.log(
-        "Caught error in /getDefaultRequest on title screen: " + error
-      );
-    }
+    // Accounts for array return value and missing default scenarios
+    if (json.default) {
+      dispatch(setSelectedUser(json.default));
+    } else dispatch(resetSelectedData());
   };
 
   // Async Storage for user credentials
@@ -114,7 +67,7 @@ export default function TitleScreen({ navigation }) {
       const credentials = await SecureStore.getItemAsync("carebitcredentials");
       if (credentials) {
         const json = JSON.parse(credentials);
-        login(json.email, json.password, dispatch, true);
+        login({ email: json.email, password: json.password });
       }
     } catch (error) {
       console.log("Error accessing credentials: ", error);

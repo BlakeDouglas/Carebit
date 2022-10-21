@@ -15,6 +15,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
 import { phone } from "phone";
+import { createRequestEndpoint } from "../network/CarebitAPI";
 
 export default function AddScreen({ navigation: { goBack } }) {
   const handleChange = (text, input) => {
@@ -54,42 +55,30 @@ export default function AddScreen({ navigation: { goBack } }) {
   };
 
   const makeRequest = async () => {
-    const body =
-      tokenData.type === "caregivee"
-        ? {
-            caregiveePhone: tokenData.phone,
-            caregiverPhone: inputs.phone,
-            sender: tokenData.type,
-          }
-        : {
-            caregiverPhone: tokenData.phone,
-            caregiveePhone: inputs.phone,
-            sender: tokenData.type,
-          };
-    try {
-      const response = await fetch("https://www.carebit.xyz/createRequest", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify(body),
-      });
-      const json = await response.json();
-      if (json.error) {
-        console.log(json.error);
-        // TODO: Prettify these errors.
-        if (json.error === "This request already exists") {
-          handleError("  Already added", "phone");
-        } else {
-          handleError("  Not Found", "phone");
-        }
+    const params = {
+      auth: tokenData.access_token,
+      body:
+        tokenData.type === "caregivee"
+          ? {
+              caregiveePhone: tokenData.phone,
+              caregiverPhone: inputs.phone,
+              sender: tokenData.type,
+            }
+          : {
+              caregiverPhone: tokenData.phone,
+              caregiveePhone: inputs.phone,
+              sender: tokenData.type,
+            },
+    };
+    const json = await createRequestEndpoint(params);
+    if (json.error) {
+      if (json.error === "This request already exists") {
+        handleError("  Already added", "phone");
       } else {
-        goBack();
+        handleError("  Not Found", "phone");
       }
-    } catch (error) {
-      console.log("Caught error in /createRequest: " + error);
+    } else {
+      goBack();
     }
   };
 

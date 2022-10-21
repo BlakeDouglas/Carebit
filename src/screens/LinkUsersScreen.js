@@ -20,6 +20,7 @@ import { discovery } from "./AuthenticationScreen";
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
 import { setTokenData } from "../redux/actions";
 import { phone } from "phone";
+import { createRequestEndpoint } from "../network/Carebitapi";
 
 export default function LinkUsersScreen({ navigation }) {
   const handleChange = (text, input) => {
@@ -98,36 +99,23 @@ export default function LinkUsersScreen({ navigation }) {
             caregiveePhone: inputs.phone,
             sender: tokenData.type,
           };
-    try {
-      const response = await fetch("https://www.carebit.xyz/createRequest", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify(body),
-      });
-      const json = await response.json();
-      if (json.error) {
-        console.log(json.error);
-        // TODO: Prettify these errors.
-        if (json.error === "This request already exists") {
-          handleError("  Already added", "phone");
-        } else {
-          handleError("  Not Found", "phone");
-        }
+    const params = { auth: tokenData.access_token, body: body };
+    const json = await createRequestEndpoint(params);
+    if (json.error) {
+      if (json.error === "This request already exists") {
+        handleError("  Already added", "phone");
+      } else {
+        handleError("  Not Found", "phone");
       }
-      if (json.request)
-        Alert.alert(
-          "Sent!",
-          "Your request has been sent. Once accepted, you will be able to view their Fitbit data.",
-          [{ text: "Continue", onPress: () => console.log("Continue") }]
-        );
-      dispatch(setTokenData({ ...tokenData, caregiveeID: [json.request] }));
-    } catch (error) {
-      console.log("Caught error in /createRequest: " + error);
+      return;
     }
+    if (json.request)
+      Alert.alert(
+        "Sent!",
+        "Your request has been sent. Once accepted, you will be able to view their Fitbit data.",
+        [{ text: "Continue", onPress: () => console.log("Continue") }]
+      );
+    dispatch(setTokenData({ ...tokenData, caregiveeID: [json.request] }));
   };
 
   return (

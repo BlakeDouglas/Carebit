@@ -9,7 +9,7 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
-import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
+import { makeRedirectUri } from "expo-auth-session";
 import * as Linking from "expo-linking";
 import GlobalStyle from "../utils/GlobalStyle";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
@@ -17,27 +17,23 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { resetData, setTokenData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
+import { getAuthRequest } from "../network/Auth";
+import { caregiveeCreateEndpoint } from "../network/CarebitAPI";
 
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 
-export const discovery = {
-  authorizationEndpoint: "https://www.fitbit.com/oauth2/authorize",
-  tokenEndpoint: "https://api.fitbit.com/oauth2/token",
-  revocationEndpoint: "https://api.fitbit.com/oauth2/revoke",
-};
+export default function AuthenticationScreen({ navigation }) {
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const dispatch = useDispatch();
 
-export const makeCaregivee = async (code, tokenData, dispatch) => {
-  try {
-    const response = await fetch("https://www.carebit.xyz/caregivee/create", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + tokenData.access_token,
-      },
-      body: JSON.stringify({ userID: tokenData.userID, authCode: code }),
-    });
-    const json = await response.json();
+  const [request, response, promptAsync] = getAuthRequest();
+
+  const makeCaregivee = async (code) => {
+    const params = {
+      auth: tokenData.access_token,
+      body: { authCode: code, userID: tokenData.userID },
+    };
+    const json = await caregiveeCreateEndpoint(params);
 
     if (json.caregiveeID !== undefined) {
       dispatch(setTokenData({ ...tokenData, ...json, type: "caregivee" }));
@@ -45,42 +41,7 @@ export const makeCaregivee = async (code, tokenData, dispatch) => {
       Alert.alert("Error", json.error, json.error_0, [
         { text: "Ok", onPress: () => {}, style: "cancel" },
       ]);
-  } catch (error) {
-    console.log("Caught error in /caregivee/create: " + error);
-  }
-};
-
-export default function AuthenticationScreen({ navigation }) {
-  const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const dispatch = useDispatch();
-
-  const [request, response, promptAsync] = useAuthRequest(
-    {
-      clientId: "228DBB",
-      scopes: [
-        "activity",
-        "heartrate",
-        "location",
-        "nutrition",
-        "profile",
-        "settings",
-        "sleep",
-        "social",
-        "weight",
-        "oxygen_saturation",
-        "respiratory_rate",
-        "temperature",
-      ],
-      redirectUri: makeRedirectUri({
-        scheme: "carebit",
-        path: "callback",
-      }),
-
-      usePKCE: false,
-      extraParams: { prompt: "login" },
-    },
-    discovery
-  );
+  };
 
   const logOutButtonHandler = async () => {
     await SecureStore.deleteItemAsync("carebitcredentials");
@@ -89,7 +50,7 @@ export default function AuthenticationScreen({ navigation }) {
 
   React.useEffect(() => {
     if (response?.type === "success")
-      makeCaregivee(response.params.code, tokenData, dispatch);
+      makeCaregivee(response.params.code, tokenData);
   }, [response]);
 
   console.log(makeRedirectUri({ scheme: "carebit", path: "callback" }));

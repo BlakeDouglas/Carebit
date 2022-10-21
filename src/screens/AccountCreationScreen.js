@@ -21,6 +21,7 @@ import * as SecureStore from "expo-secure-store";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import validator from "validator";
 import { phone } from "phone";
+import { userEndpoint } from "../network/CarebitAPI";
 
 export default function AccountCreationScreen({ navigation }) {
   // These are the two tools of the redux state manager. Use them instead of hooks
@@ -96,48 +97,42 @@ export default function AccountCreationScreen({ navigation }) {
   };
 
   const register = async () => {
-    const output = {
-      ...inputs,
-      type: tokenData.type,
-      mobilePlatform: Platform.OS,
+    const params = {
+      auth: tokenData.access_token,
+      body: {
+        ...inputs,
+        type: tokenData.type,
+        mobilePlatform: Platform.OS,
+      },
     };
-    const body = {
+    const storageBody = {
       email: inputs.email,
       password: inputs.password,
     };
-    try {
-      let response = await fetch("https://www.carebit.xyz/user", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(output),
-      });
-      const json = await response.json();
-      if (json.access_token !== undefined) {
-        dispatch(
-          setTokenData({
-            ...tokenData,
-            ...json,
-            firstName: inputs.firstName,
-            lastName: inputs.lastName,
-            email: inputs.email,
-          })
-        );
-        SecureStore.setItemAsync("carebitcredentials", JSON.stringify(body));
-      } else if (json.error === "Phone number already exists.") {
-        handleError(" Phone number taken", "phone");
-        console.log(json.error);
-      } else if (json.error === "Email already exists.") {
-        handleError(" Email taken", "email");
-        console.log(json.error);
-      } else {
-        handleError(" Invalid email", "email");
-        console.log(json.error);
-      }
-    } catch (error) {
-      console.log("Caught error in /user: " + error);
+    const json = await userEndpoint(params);
+    if (json.access_token !== undefined) {
+      dispatch(
+        setTokenData({
+          ...tokenData,
+          ...json,
+          firstName: inputs.firstName,
+          lastName: inputs.lastName,
+          email: inputs.email,
+        })
+      );
+      SecureStore.setItemAsync(
+        "carebitcredentials",
+        JSON.stringify(storageBody)
+      );
+    } else if (json.error === "Phone number already exists.") {
+      handleError(" Phone number taken", "phone");
+      console.log(json.error);
+    } else if (json.error === "Email already exists.") {
+      handleError(" Email taken", "email");
+      console.log(json.error);
+    } else {
+      handleError(" Invalid email", "email");
+      console.log(json.error);
     }
   };
 

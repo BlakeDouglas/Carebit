@@ -13,6 +13,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Modal from "react-native-modal";
 import { setTokenData } from "../redux/actions";
+import { getAlertsEndpoint, setAlertOkEndpoint } from "../network/Carebitapi";
 
 const data_temp = [
   {
@@ -94,52 +95,23 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
   const [data, setData] = useState([]);
 
   const sendOk = async (alertID) => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/alerts/ok/" + alertID,
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
-      );
-      const json = await response.json();
-      if (json) {
-        console.log("Ok has been set");
-      }
-    } catch (error) {
-      console.log(
-        "Caught error from /alerts/ok/<int:alertID> in GiveeReceived: " + error
-      );
+    const params = { targetID: alertID, auth: tokenData.access_token };
+    const json = await setAlertOkEndpoint(params);
+    if (json) {
+      console.log("Ok has been set");
     }
   };
 
   // Receive json of all notifications
   const getAlerts = async () => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/alerts/" + tokenData.caregiveeID,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
-      );
-      const json = await response.json();
-      if (json) {
-        setData(json.alerts);
-        console.log(data);
-      }
-    } catch (error) {
-      console.log(
-        "Caught error from /alerts/<caregiveeID> in GiveeAlerts: " + error
-      );
+    const params = {
+      auth: tokenData.access_token,
+      targetID: tokenData.caregiveeID,
+    };
+    const json = await getAlertsEndpoint(params);
+    if (json) {
+      setData(json.alerts);
+      console.log(data);
     }
   };
 
