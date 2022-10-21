@@ -237,8 +237,14 @@ const RequestScreen = ({ navigation }) => {
   const renderItem = ({ item }) => {
     const backgroundColor =
       item.requestID === selectedId ? "#bfb6a5" : "#f3f2f1";
-    const countryCode = phone(item.phone).countryCode;
-    const phoneNumber = item.phone.substring(countryCode.length);
+    let countryCode = phone(item.phone).countryCode;
+    let phoneNumber;
+    if (!countryCode) {
+      countryCode = "+1";
+      phoneNumber = item.phone;
+    } else {
+      phoneNumber = item.phone.substring(countryCode.length);
+    }
     return (
       <Item
         item={item}
