@@ -853,7 +853,7 @@ export default function GiverHomeScreen({ navigation }) {
                     justifyContent: "flex-start",
                   }}
                 >
-                  <Text style={styles.smallText}>{StepsSyncTime || ""}</Text>
+                  <Text style={styles.smallText}>in past hour</Text>
                 </SafeAreaView>
               </SafeAreaView>
             </SafeAreaView>
