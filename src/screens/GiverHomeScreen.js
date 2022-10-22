@@ -13,7 +13,8 @@ import {
 import { useIsFocused } from "@react-navigation/native";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import moment from "moment";
+import Moment from "moment";
+import { extendMoment } from "moment-range";
 import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import call from "react-native-phone-call";
@@ -27,7 +28,6 @@ import {
   notificationTokenEndpoint,
 } from "../network/CarebitAPI";
 
-let date = moment().format("dddd, MMM D");
 export default function GiverHomeScreen({ navigation }) {
   const [dailySteps, setDailySteps] = useState(null);
   const [hourlySteps, setHourlySteps] = useState(null);
@@ -48,10 +48,9 @@ export default function GiverHomeScreen({ navigation }) {
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
 
-  const Moment = require("moment");
-  const MomentRange = require("moment-range");
+  const moment = extendMoment(Moment);
+  let date = moment().format("dddd, MMM D");
 
-  const moment = MomentRange.extendMoment(Moment);
   var number = selectedUser.phone || null;
   var args = {
     number,
@@ -194,7 +193,7 @@ export default function GiverHomeScreen({ navigation }) {
       setBatterySyncTime(calculateTime(json.device.lastSyncTime));
     }
     if (json.heart) {
-      //console.log("Heart: ", json.heart);
+      // console.log("Heart: ", json.heart);
       setHeart(json.heart.restingRate);
       setHeartMin(json.heart.minHR);
       setHeartAvg(json.heart.average);
@@ -204,7 +203,7 @@ export default function GiverHomeScreen({ navigation }) {
       );
     }
     if (json.steps) {
-      //console.log("Steps: ", json.steps);
+      // console.log("Steps: ", json.steps);
       setHourlySteps(json.steps.hourlyTotal);
       setDailySteps(json.steps.currentDayTotal);
       setStepsSyncTime(
