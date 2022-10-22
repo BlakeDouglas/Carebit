@@ -199,7 +199,11 @@ export default function GiverHomeScreen({ navigation }) {
       setHeartAvg(json.heart.average);
       setHeartMax(json.heart.maxHR);
       setHeartSyncTime(
-        calculateTime(json.heart.date + " " + json.heart.timeMeasured)
+        calculateTime(
+          json.heart.date +
+            (json.heart.timeMeasured.length === 7 ? " 0" : " ") +
+            json.heart.timeMeasured
+        )
       );
     }
     if (json.steps) {
@@ -207,7 +211,11 @@ export default function GiverHomeScreen({ navigation }) {
       setHourlySteps(json.steps.hourlyTotal);
       setDailySteps(json.steps.currentDayTotal);
       setStepsSyncTime(
-        calculateTime(json.steps.date + " " + json.steps.timeMeasured)
+        calculateTime(
+          json.steps.date +
+            (json.steps.timeMeasured.length === 7 ? " 0" : " ") +
+            json.steps.timeMeasured
+        )
       );
     }
   };
