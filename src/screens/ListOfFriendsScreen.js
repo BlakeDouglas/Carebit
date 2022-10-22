@@ -12,9 +12,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
-import * as React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
@@ -37,13 +35,18 @@ const ListOfFriendsScreen = ({ navigation }) => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
 
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const isFocused = useIsFocused();
+
+  // Stores only incoming requests
+  const [data, setData] = useState([]);
+  // Stores all requests
+  const [backgroundData, setBackgroundData] = useState(null);
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
     getRequests();
     wait(1000).then(() => setRefreshing(false));
@@ -54,6 +57,10 @@ const ListOfFriendsScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    if (!backgroundData || backgroundData.length === 0) {
+      setData([]);
+      return;
+    }
     setData(backgroundData.filter((iter) => iter.status === "accepted"));
   }, [backgroundData]);
 
@@ -61,15 +68,9 @@ const ListOfFriendsScreen = ({ navigation }) => {
   useEffect(() => {
     const toggle = setInterval(() => {
       isFocused ? getRequests() : clearInterval(toggle);
-      console.log("ListFriends focused? " + isFocused);
     }, 10000);
     return () => clearInterval(toggle);
   });
-
-  // Stores only incoming requests
-  const [data, setData] = useState([]);
-  // Stores all requests
-  const [backgroundData, setBackgroundData] = useState([]);
 
   const setSelected = () => {
     const selected = data.filter((iter) => iter.requestID === selectedId)[0];
@@ -123,8 +124,9 @@ const ListOfFriendsScreen = ({ navigation }) => {
     const json = await getRequestsEndpoint(params);
 
     // Check if the newly pulled data is different from the currently stored data
-    if (JSON.stringify(backgroundData) !== JSON.stringify(json.connections))
+    if (JSON.stringify(backgroundData) !== JSON.stringify(json.connections)) {
       setBackgroundData(json.connections);
+    }
   };
 
   const deleteConnection = async (rejectID) => {

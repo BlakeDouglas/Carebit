@@ -176,7 +176,6 @@ export default function GiverHomeScreen({ navigation }) {
 
   const fetchData = async () => {
     if (!selectedUser.caregiveeID) {
-      console.log("Aborting data pull (No selected user)");
       return;
     }
     const params = {

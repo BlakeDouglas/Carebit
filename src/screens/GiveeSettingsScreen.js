@@ -27,7 +27,9 @@ export default function GiveeSettingsScreen({ navigation }) {
   // Grab country code from phone number
   const physCountryCode = phone(tokenData.physPhone).countryCode;
   // Separate phone number from country code
-  const physNumber = tokenData.physPhone.substring(physCountryCode.length);
+  let physNumber;
+  if (!physCountryCode) physNumber = tokenData.physPhone;
+  else physNumber = tokenData.physPhone.substring(physCountryCode.length);
 
   // Grab country code from phone number
   let selectedCountryCode = selectedUser
