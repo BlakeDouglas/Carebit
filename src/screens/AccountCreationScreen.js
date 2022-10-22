@@ -98,19 +98,17 @@ export default function AccountCreationScreen({ navigation }) {
   };
 
   const register = async () => {
-    const params = {
-      auth: tokenData.access_token,
-      body: {
-        ...inputs,
-        type: tokenData.type,
-        mobilePlatform: Platform.OS,
-      },
+    const body = {
+      ...inputs,
+      type: tokenData.type,
+      mobilePlatform: Platform.OS,
     };
+
     const storageBody = {
       email: inputs.email,
       password: inputs.password,
     };
-    const json = await userEndpoint(params);
+    const json = await userEndpoint(body);
     if (json.access_token !== undefined) {
       dispatch(
         setTokenData({
