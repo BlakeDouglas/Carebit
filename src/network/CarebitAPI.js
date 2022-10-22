@@ -372,7 +372,7 @@ export async function notificationTokenEndpoint(params) {
     const responseText = await response.text();
     if (responseText.startsWith("<")) {
       throw "Server error in /notificationToken: " + responseText;
-    }
+    } else if (!responseText) return "";
     const json = JSON.parse(responseText);
     return json;
   } catch (error) {
