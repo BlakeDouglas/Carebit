@@ -16,6 +16,7 @@ import {
   setTokenData,
 } from "../redux/actions";
 import { loginEndpoint, getDefaultEndpoint } from "../network/CarebitAPI";
+import { deleteKeychain, getKeychain } from "../network/Auth";
 
 export default function TitleScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -41,7 +42,7 @@ export default function TitleScreen({ navigation }) {
         json.caregiveeID = null;
       dispatch(setTokenData(json));
     } else {
-      SecureStore.deleteItemAsync("carebitcredentials");
+      deleteKeychain();
       console.log("Saved credentials are invalid. Removing...");
     }
   };
@@ -62,9 +63,9 @@ export default function TitleScreen({ navigation }) {
 
   // Async Storage for user credentials
   // Makes user not have to sign in every time they open the app
-  const fetchCredentials = async (key) => {
+  const fetchCredentials = async () => {
     try {
-      const credentials = await SecureStore.getItemAsync("carebitcredentials");
+      const credentials = await getKeychain();
       if (credentials) {
         const json = JSON.parse(credentials);
         login({ email: json.email, password: json.password });

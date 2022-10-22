@@ -12,7 +12,11 @@ export async function loginEndpoint(body) {
       headers: headerSettings,
       body: JSON.stringify(body),
     });
-    const json = await response.json();
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /login: " + responseText;
+    }
+    const json = JSON.parse(responseText);
     return json;
   } catch (error) {
     console.log("Caught error in /login " + error);
@@ -30,10 +34,36 @@ export async function getDefaultEndpoint(params) {
       },
       body: JSON.stringify(params.body),
     });
-    const json = await response.json();
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /getDefaultRequest: " + responseText;
+    }
+    const json = JSON.parse(responseText);
     return json;
   } catch (error) {
     console.log("Caught error in /getDefaultRequest: " + error);
+  }
+}
+
+// Params: {auth, body}
+export async function setDefaultEndpoint(params) {
+  try {
+    const response = await fetch(`${urlBase}setDefaultRequest`, {
+      method: "PUT",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+      body: JSON.stringify(params.body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /setDefaultRequest: " + responseText;
+    }
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /setDefaultRequest: " + error);
   }
 }
 
@@ -48,7 +78,11 @@ export async function caregiveeCreateEndpoint(params) {
       },
       body: JSON.stringify(params.body),
     });
-    const json = await response.json();
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /caregivee/create: " + responseText;
+    }
+    const json = JSON.parse(responseText);
     return json;
   } catch (error) {
     console.log("Caught error in /caregivee/create: " + error);
@@ -57,14 +91,18 @@ export async function caregiveeCreateEndpoint(params) {
 
 // Params: {auth, body, targetID}
 export async function caregiveeSetEndpoint(params) {
-  const url = `${baseUrl}caregivee/${params.targetID}`;
+  const url = `${urlBase}caregivee/${params.targetID}`;
   try {
     const response = await fetch(url, {
       method: "PUT",
       headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
       body: JSON.stringify(params.body),
     });
-    const json = await response.json();
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /caregivee/<caregiveeID>: " + responseText;
+    }
+    const json = JSON.parse(responseText);
     return json;
   } catch (error) {
     console.log("Caught error uploading to /caregivee/<caregiveeID>: " + error);
@@ -73,13 +111,17 @@ export async function caregiveeSetEndpoint(params) {
 
 // Params: {auth, targetID}
 export async function caregiveeGetEndpoint(params) {
-  const url = `${baseUrl}caregivee/${params.targetID}`;
+  const url = `${urlBase}caregivee/${params.targetID}`;
   try {
     const response = await fetch(url, {
       method: "GET",
       headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
     });
-    const json = await response.json();
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /caregivee/<caregiveeID>: " + responseText;
+    }
+    const json = JSON.parse(responseText);
     return json;
   } catch (error) {
     console.log(
@@ -88,18 +130,19 @@ export async function caregiveeGetEndpoint(params) {
   }
 }
 
-// Params: {auth, body}
-export async function userEndpoint(params) {
+// Params: body
+export async function userEndpoint(body) {
   try {
     let response = await fetch(`${urlBase}user`, {
       method: "POST",
-      headers: {
-        ...headerSettings,
-        Authorization: "Bearer " + params.auth,
-      },
-      body: JSON.stringify(params.body),
+      headers: headerSettings,
+      body: JSON.stringify(body),
     });
-    const json = await response.json();
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /user: " + responseText;
+    }
+    const json = JSON.parse(responseText);
     return json;
   } catch (error) {
     console.log("Caught error in /user: " + error);
@@ -107,7 +150,7 @@ export async function userEndpoint(params) {
 }
 
 // Params: {auth, targetID, level, selfID}
-export async function activityEndpoint(params) {
+export async function setActivityEndpoint(params) {
   const url = `${urlBase}activity/${params.targetID}/${params.level}/${params.selfID}`;
   try {
     const response = await fetch(url, {
@@ -118,9 +161,33 @@ export async function activityEndpoint(params) {
       },
     });
     const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /activity: " + responseText;
+    }
     return responseText;
   } catch (error) {
     console.log("Caught error in /activity: " + error);
+  }
+}
+
+// Params: {auth, body}
+export async function setDefaultActivityEndpoint(params) {
+  try {
+    const response = await fetch(`${urlBase}/updateHealthProfile`, {
+      method: "PUT",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+      body: JSON.stringify(params.body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /updateHealthProfile: " + responseText;
+    }
+    return responseText;
+  } catch (error) {
+    console.log("Caught error in /updateHealthProfile: " + error);
   }
 }
 
@@ -135,26 +202,120 @@ export async function createRequestEndpoint(params) {
       },
       body: JSON.stringify(params.body),
     });
-    const json = await response.json();
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /createRequest: " + responseText;
+    }
+    const json = JSON.parse(responseText);
     return json;
   } catch (error) {
     console.log("Caught error in /createRequest: " + error);
   }
 }
 
-// Params: {auth, type (method), body, targetID}
+// Params: {auth, targetID}
+export async function deleteRequestEndpoint(params) {
+  try {
+    const response = await fetch(`${urlBase}deleteRequest/${params.targetID}`, {
+      method: "DELETE",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /deleteRequest: " + responseText;
+    }
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /deleteRequest: " + error);
+  }
+}
+
+// Params: {auth, body}
+export async function acceptRequestEndpoint(params) {
+  try {
+    const response = await fetch(`${urlBase}acceptRequest`, {
+      method: "PUT",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+      body: JSON.stringify(params.body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /acceptRequest: " + responseText;
+    }
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /acceptRequest: " + error);
+  }
+}
+
+// Params: {auth, body}
+export async function getRequestsEndpoint(params) {
+  try {
+    const response = await fetch(`${urlBase}getRequests`, {
+      method: "POST",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+      body: JSON.stringify(params.body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /getRequests: " + responseText;
+    }
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /getRequests: " + error);
+  }
+}
+
+// Params: {auth, type (method), body, targetID, selfID}
 export async function thresholdsEndpoint(params) {
-  const url = `${baseURL}thresholds/${params.targetID}`;
+  const url = `${urlBase}thresholds/${params.targetID}/${params.selfID}`;
   try {
     let response = await fetch(url, {
       method: params.type,
       headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
-      body: params.body,
+      body: JSON.stringify(params.body),
     });
-    const json = await response.json();
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /thresholds: " + responseText;
+    }
+    const json = JSON.parse(responseText);
     return json;
   } catch (error) {
     console.log("Caught error in /thresholds: " + error);
+  }
+}
+
+export async function physicianEndpoint(params) {
+  try {
+    let response = await fetch(`${urlBase}physician`, {
+      method: "PUT",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+      body: JSON.stringify(params.body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /physician: " + responseText;
+    }
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /physician: " + error);
   }
 }
 
@@ -168,7 +329,11 @@ export async function setAlertOkEndpoint(params) {
         Authorization: "Bearer " + params.auth,
       },
     });
-    const json = await response.json();
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /alerts/ok: " + responseText;
+    }
+    const json = JSON.parse(responseText);
     return json;
   } catch (error) {
     console.log("Caught error in /alerts/ok: " + error);
@@ -178,11 +343,15 @@ export async function setAlertOkEndpoint(params) {
 // Params: {auth, targetID}
 export async function getAlertsEndpoint(params) {
   try {
-    const response = await fetch(`${baseUrl}alerts/${params.targetID}`, {
+    const response = await fetch(`${urlBase}alerts/${params.targetID}`, {
       method: "GET",
       headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
     });
-    const json = await response.json();
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /alerts/<caregiveeID>: " + responseText;
+    }
+    const json = JSON.parse(responseText);
     return json;
   } catch (error) {
     console.log("Caught error from /alerts/<caregiveeID>: " + error);
@@ -192,8 +361,7 @@ export async function getAlertsEndpoint(params) {
 // Params: {payload, selfID, auth}
 export async function notificationTokenEndpoint(params) {
   try {
-    let url = `${baseUrl}notificationToken/${params.selfID}/${params.payload}`;
-
+    let url = `${urlBase}notificationToken/${params.selfID}/${params.payload}`;
     let response = await fetch(url, {
       method: "POST",
       headers: {
@@ -201,7 +369,11 @@ export async function notificationTokenEndpoint(params) {
         Authorization: "Bearer " + params.auth,
       },
     });
-    const json = await response.json();
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /notificationToken: " + responseText;
+    }
+    const json = JSON.parse(responseText);
     return json;
   } catch (error) {
     console.log("Caught error in /notificationToken: " + error);
@@ -212,7 +384,7 @@ export async function notificationTokenEndpoint(params) {
 export async function fitbitDataEndpoint(params) {
   try {
     const response = await fetch(
-      `${baseURL}caregivee/${params.targetID}/${params.metric}/${params.period}`,
+      `${urlBase}caregivee/${params.targetID}/${params.metric}/${params.period}`,
       {
         method: "GET",
         headers: {
@@ -221,7 +393,14 @@ export async function fitbitDataEndpoint(params) {
         },
       }
     );
-    const json = await response.json();
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw (
+        "Server error in /caregivee/<caregiveeID>/<metric>/recent: " +
+        responseText
+      );
+    }
+    const json = JSON.parse(responseText);
     return json;
   } catch (error) {
     console.log(

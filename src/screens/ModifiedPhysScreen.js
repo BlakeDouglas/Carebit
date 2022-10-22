@@ -20,6 +20,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import validator from "validator";
 import { phone } from "phone";
+import { getDefaultEndpoint, physicianEndpoint } from "../network/CarebitAPI";
 
 export default function ModifiedPhysScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -55,66 +56,40 @@ export default function ModifiedPhysScreen({ navigation, route }) {
       inputs.physPhone = phoneData.phoneNumber;
     }
     if (valid) {
-      registerPhysician(inputs);
+      registerPhysician();
     }
   };
 
-  const registerPhysician = async (inputs) => {
-    try {
-      let response = await fetch("https://www.carebit.xyz/physician", {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify({
-          ...inputs,
-          caregiveeID: route.params.caregiveeID,
-        }),
-      });
-      const json = await response.json();
-      if (json.cgvee) {
-        getDefault(tokenData);
-        navigation.navigate("ModifiedActivityScreen", route.params);
-      }
-    } catch (error) {
-      console.log("Caught error in /physician: " + error);
+  const registerPhysician = async () => {
+    const params = {
+      body: {
+        ...inputs,
+        caregiveeID: route.params.caregiveeID,
+      },
+      auth: tokenData.access_token,
+    };
+    const json = await physicianEndpoint(params);
+
+    // TODO: Error handling
+
+    if (json.cgvee) {
+      await getDefault();
+      navigation.navigate("ModifiedActivityScreen", route.params);
     }
   };
 
   const getDefault = async (tokenJson) => {
-    const body = { caregiverID: tokenJson.caregiverID, caregiveeID: null };
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/getDefaultRequest",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenJson.access_token,
-          },
-          body: JSON.stringify(body),
-        }
-      );
-      const responseText = await response.text();
-      const json = JSON.parse(responseText);
+    const params = {
+      auth: tokenJson.access_token,
+      body: { caregiverID: tokenJson.caregiverID, caregiveeID: null },
+    };
+    const json = await getDefaultEndpoint(params);
 
-      // Accounts for array return value and missing default scenarios
-      if (json.default) {
-        if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
-        else dispatch(setSelectedUser(json.default));
-      } else {
-        const array = tokenJson.caregiveeID;
-        const res = array.filter((iter) => iter.status === "accepted");
-        if (res[0]) dispatch(setSelectedUser(res[0]));
-        else dispatch(resetSelectedData());
-      }
-    } catch (error) {
-      console.log(
-        "Caught error in /getDefaultRequest on modified phys screen: " + error
-      );
+    // Accounts for array return value and missing default scenarios
+    if (json.default) {
+      dispatch(setSelectedUser(json.default));
+    } else {
+      dispatch(resetSelectedData());
     }
   };
 

@@ -10,14 +10,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { makeRedirectUri } from "expo-auth-session";
-import * as Linking from "expo-linking";
 import GlobalStyle from "../utils/GlobalStyle";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { resetData, setTokenData } from "../redux/actions";
-import * as SecureStore from "expo-secure-store";
-import { getAuthRequest } from "../network/Auth";
+import { deleteKeychain, getAuthRequest } from "../network/Auth";
 import { caregiveeCreateEndpoint } from "../network/CarebitAPI";
 
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
@@ -44,13 +42,13 @@ export default function AuthenticationScreen({ navigation }) {
   };
 
   const logOutButtonHandler = async () => {
-    await SecureStore.deleteItemAsync("carebitcredentials");
+    deleteKeychain();
     dispatch(resetData());
+    // TODO: Call /logout
   };
 
   React.useEffect(() => {
-    if (response?.type === "success")
-      makeCaregivee(response.params.code, tokenData);
+    if (response?.type === "success") makeCaregivee(response.params.code);
   }, [response]);
 
   console.log(makeRedirectUri({ scheme: "carebit", path: "callback" }));

@@ -7,10 +7,9 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
-import GlobalStyle from "../utils/GlobalStyle";
-import { Provider, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { deleteRequestEndpoint } from "../network/CarebitAPI";
 
 export default function SettingsOverviewScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -24,24 +23,10 @@ export default function SettingsOverviewScreen({ navigation }) {
     navigation.navigate("ActivityLevel", route.params);
   };
 
-  const deleteConnection = async (tokenData, rejectID) => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/deleteRequest/" + rejectID,
-        {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
-      );
-      const json = await response.json();
-      navigation.navigate("HomeScreen");
-    } catch (error) {
-      console.log("Caught error in /deleteRequest: " + error);
-    }
+  const deleteConnection = async (rejectID) => {
+    const params = { auth: tokenData.access_token, targetID: rejectID };
+    const json = await deleteRequestEndpoint(params);
+    navigation.navigate("HomeScreen");
   };
 
   const oppositeUser =
@@ -49,20 +34,14 @@ export default function SettingsOverviewScreen({ navigation }) {
   const onPressDelete = (item) => {
     console.log(item);
     Alert.alert(
-      "Remove " +
-        item.firstName +
-        " " +
-        item.lastName +
-        " as a " +
-        oppositeUser +
-        "?",
+      `Remove ${item.firstName} ${item.lastName} as a ${oppositeUser}?`,
       "",
       [
         { text: "Cancel", onPress: () => {}, style: "cancel" },
         {
           text: "Continue",
           onPress: () => {
-            deleteConnection(tokenData, item.requestID);
+            deleteConnection(item.requestID);
           },
         },
       ]

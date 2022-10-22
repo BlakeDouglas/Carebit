@@ -1,11 +1,9 @@
 import {
-  StyleSheet,
   Text,
   SafeAreaView,
   ImageBackground,
   Keyboard,
   StatusBar,
-  Platform,
   View,
   TouchableOpacity,
 } from "react-native";
@@ -13,16 +11,13 @@ import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
-import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import validator from "validator";
 import { phone } from "phone";
+import { userEndpoint } from "../network/CarebitAPI";
 
 export default function ModifiedCaregiveeAccountCreation({ navigation }) {
-  const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const dispatch = useDispatch();
-
   const requiredText = " Input required";
 
   // Content between this point and the return statement
@@ -39,7 +34,6 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
   });
 
   const [errors, setErrors] = useState({});
-  //console.log(tokenData);
   // Checks for formatting in text fields
   const validate = () => {
     Keyboard.dismiss();
@@ -91,36 +85,23 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
   };
 
   const registerShellCaregivee = async () => {
-    const output = {
+    const body = {
       ...inputs,
       type: "caregivee",
       mobilePlatform: "NA",
     };
-    try {
-      const response = await fetch("https://www.carebit.xyz/user", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(output),
-      });
-      const json = await response.json();
-      console.log("registerShellCaregivee: " + JSON.stringify(json));
-      if (json.access_token) {
-        navigation.navigate("ModifiedAuthScreen", { json });
-      } else if (json.error === "Phone number already exists.") {
-        handleError(" Phone number taken", "phone");
-        console.log(json.error);
-      } else if (json.error === "Email already exists.") {
-        handleError(" Email taken", "email");
-        console.log(json.error);
-      } else {
-        handleError(" Invalid email", "email");
-        console.log(json.error);
-      }
-    } catch (error) {
-      console.log("Caught error in /user: " + error);
+    const json = await userEndpoint(body);
+    if (json.access_token) {
+      navigation.navigate("ModifiedAuthScreen", { json });
+    } else if (json.error === "Phone number already exists.") {
+      handleError(" Phone number taken", "phone");
+      console.log(json.error);
+    } else if (json.error === "Email already exists.") {
+      handleError(" Email taken", "email");
+      console.log(json.error);
+    } else {
+      handleError(" Invalid email", "email");
+      console.log(json.error);
     }
   };
 

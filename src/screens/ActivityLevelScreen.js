@@ -12,7 +12,7 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedUser } from "../redux/actions";
-import { activityEndpoint } from "../network/CarebitAPI";
+import { setActivityEndpoint } from "../network/CarebitAPI";
 export default function AccountCreationScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
@@ -25,7 +25,7 @@ export default function AccountCreationScreen({ navigation, route }) {
       level: level,
       auth: tokenData.access_token,
     };
-    const responseText = await activityEndpoint(params);
+    const responseText = await setActivityEndpoint(params);
     if (!responseText) {
       dispatch(setSelectedUser({ ...selectedUser, healthProfile: level }));
       navigation.goBack();

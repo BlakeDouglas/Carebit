@@ -13,7 +13,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Modal from "react-native-modal";
 import { setTokenData } from "../redux/actions";
-import { getAlertsEndpoint, setAlertOkEndpoint } from "../network/Carebitapi";
+import { getAlertsEndpoint, setAlertOkEndpoint } from "../network/CarebitAPI";
 
 const data_temp = [
   {

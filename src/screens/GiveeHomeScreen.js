@@ -24,7 +24,7 @@ import {
   caregiveeGetEndpoint,
   caregiveeSetEndpoint,
   getDefaultEndpoint,
-} from "../network/Carebitapi";
+} from "../network/CarebitAPI";
 
 export default function GiveeHomeScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);

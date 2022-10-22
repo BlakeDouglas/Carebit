@@ -22,10 +22,10 @@ import * as Notifications from "expo-notifications";
 import { resetSelectedData, setSelectedUser } from "../redux/actions";
 import {
   caregiveeGetEndpoint,
+  fitbitDataEndpoint,
   getDefaultEndpoint,
   notificationTokenEndpoint,
-  recentFitbitDataEndpoint,
-} from "../network/Carebitapi";
+} from "../network/CarebitAPI";
 
 let date = moment().format("dddd, MMM D");
 export default function GiverHomeScreen({ navigation }) {
@@ -92,7 +92,7 @@ export default function GiverHomeScreen({ navigation }) {
         caregiveeID: null,
       },
     };
-    const json = getDefaultEndpoint(params);
+    const json = await getDefaultEndpoint(params);
 
     if (json.default) {
       dispatch(setSelectedUser(json.default));
@@ -186,15 +186,15 @@ export default function GiverHomeScreen({ navigation }) {
       metric: "all",
       period: "recent",
     };
-    const json = await recentFitbitDataEndpoint(params);
+    const json = await fitbitDataEndpoint(params);
 
     if (json.device) {
-      console.log("Device: ", json.device);
+      //console.log("Device: ", json.device);
       setBatteryLevel(json.device.battery);
       setBatterySyncTime(calculateTime(json.device.lastSyncTime));
     }
     if (json.heart) {
-      console.log("Heart: ", json.heart);
+      //console.log("Heart: ", json.heart);
       setHeart(json.heart.restingRate);
       setHeartMin(json.heart.minHR);
       setHeartAvg(json.heart.average);
@@ -204,7 +204,7 @@ export default function GiverHomeScreen({ navigation }) {
       );
     }
     if (json.steps) {
-      console.log("Steps: ", json.steps);
+      //console.log("Steps: ", json.steps);
       setHourlySteps(json.steps.hourlyTotal);
       setDailySteps(json.steps.currentDayTotal);
       setStepsSyncTime(

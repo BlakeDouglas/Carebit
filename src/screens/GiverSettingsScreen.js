@@ -14,13 +14,15 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { resetData, setSelectedUser, setTokenData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
 import phone from "phone";
+import { deleteKeychain } from "../network/Auth";
 export default function GiverSettingsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
   const logOutButtonHandler = async () => {
-    await SecureStore.deleteItemAsync("carebitcredentials");
+    deleteKeychain();
     dispatch(resetData());
+    // TODO: Call /logout
   };
 
   const customAlertButtonHandler = () => {

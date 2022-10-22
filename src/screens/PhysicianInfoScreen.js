@@ -21,6 +21,7 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { setTokenData } from "../redux/actions";
 import validator from "validator";
 import { phone } from "phone";
+import { physicianEndpoint } from "../network/CarebitAPI";
 
 export default function PhysicianInfoScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -29,18 +30,14 @@ export default function PhysicianInfoScreen({ navigation }) {
     physName: "",
     physPhone: "",
   });
-
-  const requiredText = " Input required";
-
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
   const [errors, setErrors] = useState({});
 
   const validate = () => {
     Keyboard.dismiss();
     let valid = true;
     let phoneData = phone(inputs.physPhone);
-
-    // TODO: More input validation
-
     if (!phoneData.isValid) {
       handleError(" Invalid Number", "physPhone");
       valid = false;
@@ -48,35 +45,28 @@ export default function PhysicianInfoScreen({ navigation }) {
       inputs.physPhone = phoneData.phoneNumber;
     }
     if (valid) {
-      registerPhysician(inputs, tokenData);
+      registerPhysician();
     }
   };
 
-  const registerPhysician = async (inputs, tokenData) => {
-    try {
-      let response = await fetch("https://www.carebit.xyz/physician", {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify({
-          ...inputs,
-          caregiveeID: tokenData.caregiveeID,
-        }),
-      });
-      const json = await response.json();
-      dispatch(
-        setTokenData({
-          ...tokenData,
-          physName: json.cgvee.physName,
-          physPhone: json.cgvee.physPhone,
-        })
-      );
-    } catch (error) {
-      console.log("Caught error in /physician: " + error);
-    }
+  const registerPhysician = async () => {
+    const params = {
+      body: {
+        ...inputs,
+        caregiveeID: route.params.caregiveeID,
+      },
+      auth: tokenData.access_token,
+    };
+    const json = await physicianEndpoint(params);
+
+    // TODO: Error handling
+    dispatch(
+      setTokenData({
+        ...tokenData,
+        physName: json.cgvee.physName,
+        physPhone: json.cgvee.physPhone,
+      })
+    );
   };
 
   const handleChange = (text, input) => {
@@ -87,8 +77,6 @@ export default function PhysicianInfoScreen({ navigation }) {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
 
-  const windowWidth = useWindowDimensions().width;
-  const windowHeight = useWindowDimensions().height;
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background03.png")}

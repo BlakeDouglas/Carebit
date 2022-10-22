@@ -12,67 +12,62 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { setTokenData } from "../redux/actions";
+import {
+  setActivityEndpoint,
+  setDefaultActivityEndpoint,
+} from "../network/CarebitAPI";
 export default function ModifiedActivityScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
 
   const setActivity = async (level) => {
-    let url = "https://www.carebit.xyz/";
-    let body;
+    let params = { level: level, auth: tokenData.access_token };
+    let responseText;
 
-    // In the case that we're going through the opt-out feature
+    // In case we're going through the opt-out feature
     if (route.params) {
-      url +=
-        "activity/" + route.params.caregiveeID + "/" + tokenData.caregiverID;
+      params.targetID = route.params.caregiveeID;
+      params.selfID = tokenData.caregiverID;
+      responseText = await setActivityEndpoint(params);
     }
+    // TODO: Ensure the [0] part of this part
     // Account creation, caregiver edition
     else if (tokenData.type === "caregiver") {
-      url +=
-        "activity/" + tokenData.caregiveeID[0] + "/" + tokenData.caregiverID;
+      params.targetID = tokenData.caregiveeID[0];
+      params.selfID = tokenData.caregiverID;
+      responseText = await setActivityEndpoint(params);
     }
-    // Account creation, caregivee edition
+    // Account creation, caregivee edition`
     else {
-      url += "updateHealthProfile";
-      body = {
-        caregiveeID: tokenData.caregiveeID,
-        healthProfile: level.toString(),
-      };
-    }
-    try {
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
+      params = {
+        auth: tokenData.access_token,
+        body: {
+          caregiveeID: tokenData.caregiveeID,
+          healthProfile: level.toString(),
         },
-        body: JSON.stringify(body),
-      });
-      const responseText = await response.text();
-      if (!responseText) {
-        // Sets caregiveeID to send to home screen
-        if (tokenData.type === "caregiver") {
-          dispatch(
-            setTokenData({
-              ...tokenData,
-              caregiveeID: [],
-            })
-          );
-        }
-        // Sets healthProfile to send to home screen
-        else {
-          dispatch(
-            setTokenData({
-              ...tokenData,
-              healthProfile: level,
-            })
-          );
-        }
-      } else
-        console.log("Error setting activity level\nResponse: ", responseText);
-    } catch (error) {
-      console.log("Caught error in /activity: " + error);
+      };
+      responseText = await setDefaultActivityEndpoint(params);
     }
+    if (!responseText) {
+      // Sets caregiveeID to send to home screen
+      if (tokenData.type === "caregiver") {
+        dispatch(
+          setTokenData({
+            ...tokenData,
+            caregiveeID: [],
+          })
+        );
+      }
+      // Sets healthProfile to send to home screen
+      else {
+        dispatch(
+          setTokenData({
+            ...tokenData,
+            healthProfile: level,
+          })
+        );
+      }
+    } else console.log("Error setting activity level: ", responseText);
   };
 
   return (

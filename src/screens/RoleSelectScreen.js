@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   StatusBar,
   SafeAreaView,
   Text,
@@ -67,5 +66,3 @@ export default function RoleSelectScreen({ navigation }) {
     </ImageBackground>
   );
 }
-
-const styles = StyleSheet.create({});

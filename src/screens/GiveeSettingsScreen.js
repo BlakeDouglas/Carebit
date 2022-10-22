@@ -14,13 +14,15 @@ import { resetData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
 import phone from "phone";
 import GlobalStyle from "../utils/GlobalStyle";
+import { deleteKeychain } from "../network/Auth";
 export default function GiveeSettingsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
   const logOutButtonHandler = async () => {
-    SecureStore.deleteItemAsync("carebitcredentials");
+    deleteKeychain();
     dispatch(resetData());
+    // TODO: Call /logout
   };
   // Grab country code from phone number
   const physCountryCode = phone(tokenData.physPhone).countryCode;

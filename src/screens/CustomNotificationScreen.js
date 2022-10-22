@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { setSelectedUser, setTokenData } from "../redux/actions";
 import GlobalStyle from "../utils/GlobalStyle";
-import { thresholdsEndpoint } from "../network/Carebitapi";
+import { thresholdsEndpoint } from "../network/CarebitAPI";
 export default function CustomNotificationScreen({ navigation }) {
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
@@ -71,12 +71,13 @@ export default function CustomNotificationScreen({ navigation }) {
 
     const params = {
       targetID: selectedUser.caregiveeID,
+      selfID: tokenData.caregiverID,
       auth: tokenData.access_token,
       type: type,
-      body: type === "PUT" ? JSON.stringify(newJson) : undefined,
+      body: type === "PUT" ? newJson : undefined,
     };
     const json = await thresholdsEndpoint(params);
-    if (json.thresholds) {
+    if (json && json.thresholds) {
       setThresholds(json.thresholds);
       dispatch(setSelectedUser({ ...selectedUser, healthProfile: 4 }));
     }

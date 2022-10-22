@@ -25,23 +25,47 @@ import {
   setTokenData,
 } from "../redux/actions";
 import phone from "phone";
+import {
+  deleteRequestEndpoint,
+  getDefaultEndpoint,
+  getRequestsEndpoint,
+  setDefaultEndpoint,
+} from "../network/CarebitAPI";
 
 const ListOfFriendsScreen = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
+
   const [refreshing, setRefreshing] = React.useState(false);
+  const isFocused = useIsFocused();
+
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    getRequests(tokenData);
+    getRequests();
     wait(1000).then(() => setRefreshing(false));
   }, []);
-  const typeOfRequester =
-    tokenData.type === "caregivee" ? "caregivee" : "caregiver";
+
+  useEffect(() => {
+    getRequests();
+  }, []);
+
+  useEffect(() => {
+    setData(backgroundData.filter((iter) => iter.status === "accepted"));
+  }, [backgroundData]);
+
+  // Auto refreshes every 10 seconds as long as the screen is focused
+  useEffect(() => {
+    const toggle = setInterval(() => {
+      isFocused ? getRequests() : clearInterval(toggle);
+      console.log("ListFriends focused? " + isFocused);
+    }, 10000);
+    return () => clearInterval(toggle);
+  });
+
   // Stores only incoming requests
   const [data, setData] = useState([]);
   // Stores all requests
@@ -65,32 +89,11 @@ const ListOfFriendsScreen = ({ navigation }) => {
             caregiverID: null,
             caregiveeID: tokenData.caregiveeID,
           };
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/getDefaultRequest",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-          body: JSON.stringify(body),
-        }
-      );
-      const responseText = await response.text();
-      const json = JSON.parse(responseText);
+    const params = { auth: tokenData.access_token, body: body };
+    const json = getDefaultEndpoint(params);
 
-      // Accounts for array return value
-      if (json.default) {
-        if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
-        else dispatch(setSelectedUser(json.default));
-      } else dispatch(resetSelectedData());
-    } catch (error) {
-      console.log(
-        "Caught error in /getDefaultRequest on ListOfFriendsScreen: " + error
-      );
-    }
+    if (json.default) dispatch(setSelectedUser(json.default));
+    else dispatch(resetSelectedData());
   };
 
   const setDefault = async (selected) => {
@@ -106,102 +109,47 @@ const ListOfFriendsScreen = ({ navigation }) => {
             caregiveeID: tokenData.caregiveeID,
             user: tokenData.type,
           };
-    console.log("Passing body to /setDefaultRequest: ", body);
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/setDefaultRequest",
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-          body: JSON.stringify(body),
-        }
-      );
-      const responseText = await response.text();
-      const json = JSON.parse(responseText);
-      console.log("Response from /setDefaultRequest: ", json.request);
-    } catch (error) {
-      console.log("Caught error in /setDefaultRequest: " + error);
-    }
+    const params = { auth: tokenData.access_token, body: body };
+    const json = await setDefaultEndpoint(params);
   };
 
-  const getRequests = async (tokenData) => {
+  const getRequests = async () => {
     const body =
       tokenData.type === "caregivee"
         ? { caregiveeID: tokenData.caregiveeID, caregiverID: null }
         : { caregiverID: tokenData.caregiverID, caregiveeID: null };
-    try {
-      const response = await fetch("https://www.carebit.xyz/getRequests", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify(body),
-      });
-      const json = await response.json();
-      if (JSON.stringify(backgroundData) !== JSON.stringify(json.connections))
-        setBackgroundData(json.connections);
-    } catch (error) {
-      console.log("Caught error in /getRequests: " + error);
-    }
+
+    const params = { auth: tokenData.access_token, body: body };
+    const json = await getRequestsEndpoint(params);
+
+    // Check if the newly pulled data is different from the currently stored data
+    if (JSON.stringify(backgroundData) !== JSON.stringify(json.connections))
+      setBackgroundData(json.connections);
   };
 
-  useEffect(() => {
-    getRequests(tokenData);
-  }, []);
-
-  const oppositeUser =
-    tokenData.type === "caregiver" ? "caregivee" : "caregiver";
+  const deleteConnection = async (rejectID) => {
+    const params = { auth: tokenData.access_token, targetID: rejectID };
+    const json = await deleteRequestEndpoint(params);
+    await getDefault();
+  };
 
   const onPressDelete = (item) => {
+    const oppositeUser =
+      tokenData.type === "caregiver" ? "caregivee" : "caregiver";
     Alert.alert(
-      "Remove " +
-        item.firstName +
-        " " +
-        item.lastName +
-        " as a " +
-        oppositeUser +
-        "?",
+      `Remove ${item.firstName} ${item.lastName} as a ${oppositeUser}?`,
       "",
       [
         { text: "Cancel", onPress: () => {}, style: "cancel" },
         {
           text: "Continue",
           onPress: () => {
-            deleteConnection(tokenData, item.requestID);
+            deleteConnection(item.requestID);
           },
         },
       ]
     );
   };
-  const deleteConnection = async (tokenData, rejectID) => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/deleteRequest/" + rejectID,
-        {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
-      );
-      const json = await response.json();
-      await getDefault();
-    } catch (error) {
-      console.log("Caught error in /deleteRequest: " + error);
-    }
-  };
-
-  useEffect(() => {
-    setData(backgroundData.filter((iter) => iter.status === "accepted"));
-  }, [backgroundData]);
 
   const renderItem = ({ item }) => {
     const backgroundColor =
@@ -225,15 +173,43 @@ const ListOfFriendsScreen = ({ navigation }) => {
     );
   };
 
-  const isFocused = useIsFocused();
-  // Auto refreshes every 10 seconds as long as the screen is focused
-  useEffect(() => {
-    const toggle = setInterval(() => {
-      isFocused ? getRequests(tokenData) : clearInterval(toggle);
-      console.log("ListFriends focused? " + isFocused);
-    }, 10000);
-    return () => clearInterval(toggle);
-  });
+  const Item = ({
+    item,
+    phoneNumber,
+    countryCode,
+    onPress,
+    backgroundColor,
+  }) => (
+    <SafeAreaView style={{ flex: 1 }}>
+      <TouchableOpacity
+        style={[styles.item, backgroundColor]}
+        onPress={onPress}
+      >
+        <Text style={styles.name} numberOfLines={1}>
+          {item.firstName} {item.lastName}
+        </Text>
+        <Text style={styles.phone}>
+          {countryCode === "+1"
+            ? `${countryCode} (${phoneNumber.substring(
+                0,
+                3
+              )}) ${phoneNumber.substring(3, 6)}-${phoneNumber.substring(6)}`
+            : `${countryCode} ${phoneNumber}`}
+        </Text>
+      </TouchableOpacity>
+    </SafeAreaView>
+  );
+
+  const Empty = () => {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>
+          No added {tokenData.type === "caregivee" ? "caregiver" : "caregivee"}s
+        </Text>
+        <Text style={styles.emptyText}>...</Text>
+      </View>
+    );
+  };
 
   return (
     <ImageBackground
@@ -258,7 +234,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
           }}
         >
           <Text style={{ fontSize: responsiveFontSize(4.3), color: "white" }}>
-            {typeOfRequester === "caregivee"
+            {tokenData.type === "caregivee"
               ? "Added Caregivers"
               : "Added Caregivees"}
           </Text>
@@ -354,39 +330,6 @@ const ListOfFriendsScreen = ({ navigation }) => {
         </View>
       </SafeAreaView>
     </ImageBackground>
-  );
-};
-
-const Item = ({ item, phoneNumber, countryCode, onPress, backgroundColor }) => (
-  <SafeAreaView style={{ flex: 1 }}>
-    <TouchableOpacity style={[styles.item, backgroundColor]} onPress={onPress}>
-      <Text style={styles.name} numberOfLines={1}>
-        {item.firstName} {item.lastName}
-      </Text>
-      <Text style={styles.phone}>
-        {countryCode === "+1"
-          ? countryCode +
-            " (" +
-            phoneNumber.substring(0, 3) +
-            ") " +
-            phoneNumber.substring(3, 6) +
-            "-" +
-            phoneNumber.substring(6)
-          : countryCode + " " + phoneNumber}
-      </Text>
-    </TouchableOpacity>
-  </SafeAreaView>
-);
-
-const Empty = () => {
-  const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const typeOfRequester2 =
-    tokenData.type === "caregivee" ? "caregiver" : "caregivee";
-  return (
-    <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>No added {typeOfRequester2}s</Text>
-      <Text style={styles.emptyText}>...</Text>
-    </View>
   );
 };
 

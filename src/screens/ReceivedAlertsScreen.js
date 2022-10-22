@@ -6,13 +6,12 @@ import {
   Image,
   FlatList,
   RefreshControl,
-  TouchableOpacity,
 } from "react-native";
 
 import { responsiveFontSize } from "react-native-responsive-dimensions";
-//const selectedUser = useSelector((state) => state.Reducers.selectedUser);
 import { useSelector } from "react-redux";
 import React, { useState } from "react";
+import { getAlertsEndpoint } from "../network/CarebitAPI";
 
 const data_temp = [
   {
@@ -89,6 +88,30 @@ const data_temp = [
   },
 ];
 export default function ReceivedAlertsScreen({ navigation }) {
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const [data, setData] = useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getAlerts();
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
+
+  const getAlerts = async () => {
+    const params = {
+      auth: tokenData.access_token,
+      targetID: tokenData.caregiveeID,
+    };
+    const json = await getAlertsEndpoint(params);
+    if (json) {
+      setData(json.alerts);
+      console.log(data);
+    }
+  };
+
   const Item = ({ alertType, dateTime, body, title, ok }) => (
     <SafeAreaView
       style={{
@@ -202,34 +225,6 @@ export default function ReceivedAlertsScreen({ navigation }) {
     </SafeAreaView>
   );
 
-  //const [data, setData] = useState([]);
-  const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const [data, setData] = useState([]);
-  const getAlerts = async () => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/alerts/" + tokenData.caregiveeID,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
-      );
-      const json = await response.json();
-      if (json) {
-        setData(json.alerts);
-        console.log(data);
-      }
-    } catch (error) {
-      console.log(
-        "Caught error from /alerts/<caregiveeID> in ReceivedAlerts: " + error
-      );
-    }
-  };
-
   const renderItem = ({ item }) => (
     <Item
       alertType={item.alertType}
@@ -248,16 +243,6 @@ export default function ReceivedAlertsScreen({ navigation }) {
       </View>
     );
   };
-
-  const [refreshing, setRefreshing] = React.useState(false);
-  const wait = (timeout) => {
-    return new Promise((resolve) => setTimeout(resolve, timeout));
-  };
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    getAlerts();
-    wait(1000).then(() => setRefreshing(false));
-  }, []);
 
   return (
     <SafeAreaView

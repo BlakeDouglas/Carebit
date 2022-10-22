@@ -22,6 +22,7 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import validator from "validator";
 import { phone } from "phone";
 import { userEndpoint } from "../network/CarebitAPI";
+import { setKeychain } from "../network/Auth";
 
 export default function AccountCreationScreen({ navigation }) {
   // These are the two tools of the redux state manager. Use them instead of hooks
@@ -120,10 +121,7 @@ export default function AccountCreationScreen({ navigation }) {
           email: inputs.email,
         })
       );
-      SecureStore.setItemAsync(
-        "carebitcredentials",
-        JSON.stringify(storageBody)
-      );
+      setKeychain(storageBody);
     } else if (json.error === "Phone number already exists.") {
       handleError(" Phone number taken", "phone");
       console.log(json.error);

@@ -20,7 +20,7 @@ import { discovery } from "./AuthenticationScreen";
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
 import { setTokenData } from "../redux/actions";
 import { phone } from "phone";
-import { createRequestEndpoint } from "../network/Carebitapi";
+import { createRequestEndpoint } from "../network/CarebitAPI";
 
 export default function LinkUsersScreen({ navigation }) {
   const handleChange = (text, input) => {

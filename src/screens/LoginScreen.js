@@ -17,11 +17,11 @@ import {
   setTokenData,
 } from "../redux/actions";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import * as SecureStore from "expo-secure-store";
 import validator from "validator";
+import { getDefaultEndpoint, loginEndpoint } from "../network/CarebitAPI";
+import { setKeychain } from "../network/Auth";
 
 export default function LoginScreen({ navigation }) {
-  const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
 
   const [inputs, setInputs] = useState({
@@ -62,32 +62,21 @@ export default function LoginScreen({ navigation }) {
   };
 
   const login = async (email, password) => {
-    const body = JSON.stringify({ email, password });
-    try {
-      let response = await fetch("https://www.carebit.xyz/login", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: body,
-      });
-      const json = await response.json();
-      if (json.access_token !== undefined) {
-        if (json.caregiveeID && json.caregiveeID.length === 0)
-          json.caregiveeID = null;
-        dispatch(setTokenData(json));
-        getDefault(json);
-        SecureStore.setItemAsync("carebitcredentials", body);
-      } else {
-        if (json.message === "Email not found")
-          handleError(" Email not found", "email");
-        else {
-          handleError(" Incorrect password", "password");
-        }
+    const body = { email: email, password: password };
+
+    const json = await loginEndpoint(body);
+    if (json.access_token !== undefined) {
+      if (json.caregiveeID && json.caregiveeID.length === 0)
+        json.caregiveeID = null;
+      getDefault(json);
+      dispatch(setTokenData(json));
+      setKeychain(body);
+    } else {
+      if (json.message === "Email not found")
+        handleError(" Email not found", "email");
+      else {
+        handleError(" Incorrect password", "password");
       }
-    } catch (error) {
-      console.log("Caught error in /login: " + error);
     }
   };
 
@@ -96,49 +85,16 @@ export default function LoginScreen({ navigation }) {
       tokenJson.type === "caregiver"
         ? { caregiverID: tokenJson.caregiverID, caregiveeID: null }
         : { caregiverID: null, caregiveeID: tokenJson.caregiveeID };
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/getDefaultRequest",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenJson.access_token,
-          },
-          body: JSON.stringify(body),
-        }
-      );
-      const responseText = await response.text();
-      const json = JSON.parse(responseText);
 
-      // Accounts for array return value and missing default scenarios
-      if (json.default) {
-        if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
-        else dispatch(setSelectedUser(json.default));
-      } else {
-        // Selects the appropriate connection list based on user type
-        const array =
-          tokenJson[
-            tokenJson.type === "caregiver" ? "caregiveeID" : "caregiverID"
-          ];
-        // Just a bunch of checks to see that we don't access any null/undefined elements
-        if (
-          array &&
-          array.length !== 0 &&
-          array.filter((iter) => iter.status === "accepted").length !== 0
-        ) {
-          dispatch(
-            setSelectedUser(
-              array.filter((iter) => iter.status === "accepted")[0]
-            )
-          );
-        } else dispatch(resetSelectedData());
-      }
-    } catch (error) {
-      console.log(
-        "Caught error in /getDefaultRequest on login screen: " + error
-      );
+    const params = { body: body, auth: tokenJson.access_token };
+
+    const json = await getDefaultEndpoint(params);
+
+    // Accounts for array return value and missing default scenarios
+    if (json.default) {
+      dispatch(setSelectedUser(json.default));
+    } else {
+      dispatch(resetSelectedData());
     }
   };
 

@@ -15,9 +15,15 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
-import { setSelectedUser } from "../redux/actions";
+import { resetSelectedData, setSelectedUser } from "../redux/actions";
 import { useIsFocused } from "@react-navigation/native";
 import phone from "phone";
+import {
+  acceptRequestEndpoint,
+  deleteRequestEndpoint,
+  getDefaultEndpoint,
+  getRequestsEndpoint,
+} from "../network/CarebitAPI";
 const RequestScreen = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -38,8 +44,8 @@ const RequestScreen = ({ navigation }) => {
         {
           text: "Continue",
           onPress: () => {
-            rejectRequest(tokenData, item.requestID);
-            getRequests(tokenData);
+            rejectRequest(item.requestID);
+            getRequests();
           },
         },
       ]
@@ -64,162 +70,83 @@ const RequestScreen = ({ navigation }) => {
         {
           text: "Allow",
           onPress: () => {
-            acceptRequest(tokenData, item);
-            getRequests(tokenData);
+            acceptRequest(item);
+            getRequests();
           },
         },
       ]
     );
   };
 
-  const rejectRequest = async (tokenData, rejectID) => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/deleteRequest/" + rejectID,
-        {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
-      );
-      const json = await response.json();
-      console.log("Result from delete: " + JSON.stringify(json));
-    } catch (error) {
-      console.log("Caught error in /deleteRequest: " + error);
-    }
-  };
-
-  const setDefault = async (selected) => {
-    const body =
-      tokenData.type === "caregiver"
-        ? {
-            caregiverID: tokenData.caregiverID,
-            caregiveeID: selected.caregiveeID,
-            user: tokenData.type,
-          }
-        : {
-            caregiverID: selected.caregiverID,
-            caregiveeID: tokenData.caregiveeID,
-            user: tokenData.type,
-          };
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/setDefaultRequest",
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-          body: JSON.stringify(body),
-        }
-      );
-      const responseText = await response.text();
-      const json = JSON.parse(responseText);
-    } catch (error) {
-      console.log(
-        "Caught error in /setDefaultRequest in requestScreen: " + error
-      );
-    }
+  const rejectRequest = async (rejectID) => {
+    const params = { auth: tokenData.access_token, targetID: rejectID };
+    const json = await deleteRequestEndpoint(params);
+    console.log("Result from delete: ", json);
   };
 
   const getDefault = async () => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/getDefaultRequest",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-          body: JSON.stringify({
-            caregiverID: tokenData.caregiverID,
-            caregiveeID: null,
-          }),
-        }
-      );
-      const responseText = await response.text();
-      const json = JSON.parse(responseText);
+    const params = {
+      auth: tokenData.access_token,
+      body: {
+        caregiverID: tokenData.caregiverID,
+        caregiveeID: null,
+      },
+    };
+    const json = await getDefaultEndpoint(params);
 
-      // Accounts for array return value and missing default scenarios
-      if (json.default) {
-        if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
-        else dispatch(setSelectedUser(json.default));
-      } else {
-        const array =
-          tokenJson[
-            tokenJson.type === "caregiver" ? "caregiveeID" : "caregiverID"
-          ];
-        const res = array.filter((iter) => iter.status === "accepted");
-        if (res[0]) dispatch(setSelectedUser(res[0]));
-        else dispatch(resetSelectedData());
-      }
-    } catch (error) {
-      console.log("Caught error in /getDefaultRequest on giverHome: " + error);
+    // Accounts for array return value and missing default scenarios
+    if (json.default) {
+      dispatch(setSelectedUser(json.default));
+    } else {
+      dispatch(resetSelectedData());
     }
   };
 
-  const acceptRequest = async (tokenData, item) => {
-    const body =
-      tokenData.type === "caregivee"
-        ? { caregiveeID: tokenData.caregiveeID, caregiverID: item.caregiverID }
-        : { caregiverID: tokenData.caregiverID, caregiveeID: item.caregiveeID };
-    try {
-      const response = await fetch("https://www.carebit.xyz/acceptRequest", {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify(body),
-      });
-      const json = await response.json();
-      if (json.request) {
-        {
-          if (!selectedUser.email) {
-            getDefault();
-          }
-          getRequests(tokenData);
+  const acceptRequest = async (item) => {
+    const params = {
+      auth: tokenData.access_token,
+      body:
+        tokenData.type === "caregivee"
+          ? {
+              caregiveeID: tokenData.caregiveeID,
+              caregiverID: item.caregiverID,
+            }
+          : {
+              caregiverID: tokenData.caregiverID,
+              caregiveeID: item.caregiveeID,
+            },
+    };
+
+    const json = await acceptRequestEndpoint(params);
+    if (json.request) {
+      {
+        // If there's no selected user after accepting, get one
+        if (!selectedUser.email) {
+          await getDefault();
         }
-      } else {
-        // TODO: Error case goes here
-        console.log("Caught error #2 in /acceptRequest. Failed accept.");
+        // Refresh the page to hide the request you just accepted
+        await getRequests();
       }
-    } catch (error) {
-      console.log("Caught error in /acceptRequest: " + error);
+    } else {
+      console.log("Caught error /acceptRequest. Failed accept.");
     }
   };
 
-  const getRequests = async (tokenData) => {
+  const getRequests = async () => {
     if (!tokenData.type) return;
-    const body =
-      tokenData.type === "caregivee"
-        ? { caregiveeID: tokenData.caregiveeID, caregiverID: null }
-        : { caregiverID: tokenData.caregiverID, caregiveeID: null };
-    try {
-      const response = await fetch("https://www.carebit.xyz/getRequests", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify(body),
-      });
-      const json = await response.json();
+    const params = {
+      auth: tokenData.access_token,
+      body:
+        tokenData.type === "caregivee"
+          ? { caregiveeID: tokenData.caregiveeID, caregiverID: null }
+          : { caregiverID: tokenData.caregiverID, caregiveeID: null },
+    };
 
-      if (JSON.stringify(backgroundData) !== JSON.stringify(json.connections))
-        setBackgroundData(json.connections);
-    } catch (error) {
-      console.log("Caught error in /getRequests: " + error);
-    }
+    const json = await getRequestsEndpoint(params);
+
+    // Only set the background data if there's new new data
+    if (JSON.stringify(backgroundData) !== JSON.stringify(json.connections))
+      setBackgroundData(json.connections);
   };
 
   useEffect(() => {
@@ -231,7 +158,7 @@ const RequestScreen = ({ navigation }) => {
   }, [backgroundData]);
 
   useEffect(() => {
-    getRequests(tokenData);
+    getRequests();
   }, []);
 
   const renderItem = ({ item }) => {
@@ -262,7 +189,7 @@ const RequestScreen = ({ navigation }) => {
   };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    getRequests(tokenData);
+    getRequests();
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
@@ -270,7 +197,7 @@ const RequestScreen = ({ navigation }) => {
   // Auto refreshes every 10 seconds as long as the screen is focused
   useEffect(() => {
     const toggle = setInterval(() => {
-      isFocused ? getRequests(tokenData) : clearInterval(toggle);
+      isFocused ? getRequests() : clearInterval(toggle);
       console.log("Request screen focused? " + isFocused);
     }, 10000);
     return () => clearInterval(toggle);
