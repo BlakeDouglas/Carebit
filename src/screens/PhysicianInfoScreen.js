@@ -53,7 +53,7 @@ export default function PhysicianInfoScreen({ navigation }) {
     const params = {
       body: {
         ...inputs,
-        caregiveeID: route.params.caregiveeID,
+        caregiveeID: tokenData.caregiveeID,
       },
       auth: tokenData.access_token,
     };
