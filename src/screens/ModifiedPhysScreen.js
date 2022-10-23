@@ -21,7 +21,11 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import validator from "validator";
 import { phone } from "phone";
 import { getDefaultEndpoint, physicianEndpoint } from "../network/CarebitAPI";
-
+import {
+  resetSelectedData,
+  setSelectedUser,
+  setTokenData,
+} from "../redux/actions";
 export default function ModifiedPhysScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
@@ -73,7 +77,7 @@ export default function ModifiedPhysScreen({ navigation, route }) {
     // TODO: Error handling
 
     if (json.cgvee) {
-      await getDefault();
+      await getDefault(tokenData);
       navigation.navigate("ModifiedActivityScreen", route.params);
     }
   };

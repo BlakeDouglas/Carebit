@@ -19,6 +19,7 @@ import { deleteKeychain, getAuthRequest } from "../network/Auth";
 import {
   acceptRequestEndpoint,
   createRequestEndpoint,
+  caregiveeCreateEndpoint,
 } from "../network/CarebitAPI";
 
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
@@ -37,6 +38,7 @@ export default function ModifiedAuthScreen({ navigation, route }) {
     }
   }, [response]);
 
+  console.log(route.params);
   const makeCaregivee = async (code, userID) => {
     const params = {
       auth: route.params.json.access_token,
@@ -54,7 +56,18 @@ export default function ModifiedAuthScreen({ navigation, route }) {
 
   const makeRequest = async () => {
     if (!tokenData.phone || !route.params.json.phone) return;
-
+    const body =
+      tokenData.type !== "caregiver"
+        ? {
+            caregiveePhone: tokenData.phone,
+            caregiverPhone: route.params.json.phone,
+            sender: tokenData.type,
+          }
+        : {
+            caregiverPhone: tokenData.phone,
+            caregiveePhone: route.params.json.phone,
+            sender: tokenData.type,
+          };
     const params = { auth: tokenData.access_token, body: body };
     const json = await createRequestEndpoint(params);
 
