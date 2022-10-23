@@ -178,7 +178,10 @@ export default function AccountCreationScreen({ navigation }) {
                 " Registration"}
             </Text>
           </View>
-          <KeyboardAwareScrollView style={{ flex: 1 }}>
+          <KeyboardAwareScrollView
+            style={{ flex: 1 }}
+            keyboardShouldPersistTaps="always"
+          >
             <View style={{ height: "80%", width: "100%" }}>
               <View
                 style={{

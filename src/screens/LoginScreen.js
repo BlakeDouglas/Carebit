@@ -106,7 +106,10 @@ export default function LoginScreen({ navigation }) {
     >
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
-        <KeyboardAwareScrollView style={{ flex: 1 }}>
+        <KeyboardAwareScrollView
+          style={{ flex: 1 }}
+          keyboardShouldPersistTaps="always"
+        >
           <SafeAreaView style={GlobalStyle.Container}>
             <Text style={GlobalStyle.Title}>Log into Carebit</Text>
             <SafeAreaView

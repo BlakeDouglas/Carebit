@@ -139,7 +139,7 @@ export default function ModifiedPhysScreen({ navigation, route }) {
               </Text>
             </View>
           </TouchableWithoutFeedback>
-          <KeyboardAwareScrollView>
+          <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
             <View
               style={{
                 marginTop: "6%",

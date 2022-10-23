@@ -109,7 +109,7 @@ export default function PhysicianInfoScreen({ navigation }) {
               </Text>
             </View>
           </TouchableWithoutFeedback>
-          <KeyboardAwareScrollView>
+          <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
             <View
               style={{
                 marginTop: "6%",
