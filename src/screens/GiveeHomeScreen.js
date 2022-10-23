@@ -24,6 +24,7 @@ import {
   caregiveeGetEndpoint,
   caregiveeSetEndpoint,
   getDefaultEndpoint,
+  fitbitDataEndpoint,
 } from "../network/CarebitAPI";
 
 export default function GiveeHomeScreen({ navigation }) {
@@ -38,6 +39,7 @@ export default function GiveeHomeScreen({ navigation }) {
     prompt: true,
     skipCanOpen: true,
   };
+  const [BatteryLevel, setBatteryLevel] = useState(null);
   const [caregivee, setCaregivee] = useState(null);
   const [isModal1Visible, setModal1Visible] = useState(false);
   const [isModal2Visible, setModal2Visible] = useState(false);
@@ -89,6 +91,7 @@ export default function GiveeHomeScreen({ navigation }) {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     updateConnections();
+    fetchData();
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
@@ -150,6 +153,26 @@ export default function GiveeHomeScreen({ navigation }) {
     };
     const json = await caregiveeSetEndpoint(params);
     if (json.caregivee) setCaregivee(json.caregivee);
+  };
+
+  // CHANGE ALL METRIC TO "device" TO OPTIMIZE
+  const fetchData = async () => {
+    const params = {
+      auth: tokenData.access_token,
+      targetID: tokenData.caregiveeID,
+      metric: "device",
+      period: "recent",
+    };
+    const json = await fitbitDataEndpoint(params);
+    if (!json) {
+      console.log("Aborting data pull (Internal server error)");
+      return;
+    }
+
+    if (json) {
+      setBatteryLevel(json.device.battery);
+      console.log(json.device.battery);
+    }
   };
 
   // TODO: Move to login, redo caregivee field to accomodate. Will speed up things
@@ -735,10 +758,22 @@ export default function GiveeHomeScreen({ navigation }) {
                   justifyContent: "flex-end",
                 }}
               >
-                <Image
-                  style={{ height: 30, width: 55 }}
-                  source={require("../../assets/images/battery-full.imageset/battery-full.png")}
-                />
+                {BatteryLevel === "High" ? (
+                  <Image
+                    style={{ height: 29, width: 51 }}
+                    source={require("../../assets/images/battery-full.imageset/battery-full.png")}
+                  />
+                ) : BatteryLevel === "Medium" ? (
+                  <Image
+                    style={{ height: 29, width: 51 }}
+                    source={require("../../assets/images/battery-medium.imageset/battery-medium.png")}
+                  />
+                ) : (
+                  <Image
+                    style={{ height: 29, width: 51 }}
+                    source={require("../../assets/images/battery-low.imageset/battery-low.png")}
+                  />
+                )}
               </SafeAreaView>
               <SafeAreaView
                 style={{
@@ -757,7 +792,7 @@ export default function GiveeHomeScreen({ navigation }) {
                     fontWeight: "500",
                   }}
                 >
-                  Full
+                  {BatteryLevel === null ? "Unlinked" : BatteryLevel}
                 </Text>
               </SafeAreaView>
             </SafeAreaView>

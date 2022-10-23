@@ -12,6 +12,7 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Modal from "react-native-modal";
+import moment from "moment";
 import { setTokenData } from "../redux/actions";
 import { getAlertsEndpoint, setAlertOkEndpoint } from "../network/CarebitAPI";
 
@@ -324,9 +325,10 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
         <SafeAreaView
           style={{
             marginLeft: "1%",
-            marginRight: "3%",
-            // backgroundColor: "red",
+            marginRight: "2%",
+            //backgroundColor: "red",
             justifyContent: "space-evenly",
+            flex: 1,
           }}
         >
           {ok === 0 ? (
@@ -367,7 +369,16 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
               {""} Okay {""}
             </Text>
           )}
-          <Text style={{ color: "grey", marginTop: "14%" }}>{dateTime}</Text>
+          <Text
+            style={{
+              alignSelf: "center",
+              textAlign: "center",
+              color: "grey",
+              marginTop: "14%",
+            }}
+          >
+            {moment(dateTime, ["HH:mm"]).format("hh:mm a")}
+          </Text>
         </SafeAreaView>
       </SafeAreaView>
     </SafeAreaView>
@@ -375,7 +386,10 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
   const renderItem = ({ item }) => (
     <Item
       alertType={item.alertType}
-      dateTime={item.dateTime}
+      dateTime={item.dateTime.substring(
+        item.dateTime.indexOf(" ") + 1,
+        item.dateTime.indexOf(":") + 3
+      )}
       body={item.body}
       title={item.title}
       alertID={item.alertID}
