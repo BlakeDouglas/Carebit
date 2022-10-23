@@ -185,6 +185,10 @@ export default function GiverHomeScreen({ navigation }) {
       period: "recent",
     };
     const json = await fitbitDataEndpoint(params);
+    if (!json) {
+      console.log("Aborting data pull (Internal server error)");
+      return;
+    }
 
     if (json.device) {
       //console.log("Device: ", json.device);
