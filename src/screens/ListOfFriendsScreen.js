@@ -128,6 +128,12 @@ const ListOfFriendsScreen = ({ navigation }) => {
   const deleteConnection = async (rejectID) => {
     const params = { auth: tokenData.access_token, targetID: rejectID };
     const json = await deleteRequestEndpoint(params);
+
+    if (json.error) console.log("Error on delete: ", json.error);
+    if (tokenData.type === "caregiver" && json.newCaregivee)
+      dispatch(setSelectedUser(json.newCaregivee));
+    if (tokenData.type === "caregivee" && json.newCaregiver)
+      dispatch(setSelectedUser(json.newCaregiver));
   };
 
   const onPressDelete = (item) => {
