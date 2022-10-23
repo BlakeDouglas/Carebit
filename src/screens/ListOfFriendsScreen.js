@@ -128,7 +128,6 @@ const ListOfFriendsScreen = ({ navigation }) => {
   const deleteConnection = async (rejectID) => {
     const params = { auth: tokenData.access_token, targetID: rejectID };
     const json = await deleteRequestEndpoint(params);
-    await getDefault();
   };
 
   const onPressDelete = (item) => {
@@ -141,8 +140,10 @@ const ListOfFriendsScreen = ({ navigation }) => {
         { text: "Cancel", onPress: () => {}, style: "cancel" },
         {
           text: "Continue",
-          onPress: () => {
-            deleteConnection(item.requestID);
+          onPress: async () => {
+            await deleteConnection(item.requestID);
+            await getRequests();
+            await getDefault();
           },
         },
       ]
