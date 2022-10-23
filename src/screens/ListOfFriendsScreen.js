@@ -41,7 +41,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
   // Stores only incoming requests
   const [data, setData] = useState([]);
   // Stores all requests
-  const [backgroundData, setBackgroundData] = useState(null);
+  const [backgroundData, setBackgroundData] = useState([]);
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -57,10 +57,6 @@ const ListOfFriendsScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    if (!backgroundData || backgroundData.length === 0) {
-      setData([]);
-      return;
-    }
     setData(backgroundData.filter((iter) => iter.status === "accepted"));
   }, [backgroundData]);
 

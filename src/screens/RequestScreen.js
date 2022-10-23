@@ -33,7 +33,7 @@ const RequestScreen = ({ navigation }) => {
   // Stores only incoming requests
   const [data, setData] = useState([]);
   // Stores all requests
-  const [backgroundData, setBackgroundData] = useState(null);
+  const [backgroundData, setBackgroundData] = useState([]);
 
   const onPressDelete = (item) => {
     Alert.alert(
@@ -150,10 +150,6 @@ const RequestScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (!backgroundData || backgroundData.length === 0) {
-      setData([]);
-      return;
-    }
     setData(
       backgroundData.filter(
         (iter) => iter.status === "pending" && iter.sender !== tokenData.type
