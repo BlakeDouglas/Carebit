@@ -69,9 +69,13 @@ const RequestScreen = ({ navigation }) => {
         { text: "Cancel", onPress: () => {}, style: "cancel" },
         {
           text: "Allow",
-          onPress: () => {
-            acceptRequest(item);
-            getRequests();
+          onPress: async () => {
+            await acceptRequest(item);
+            await getRequests();
+
+            if (!selectedUser.email) {
+              await getDefault();
+            }
           },
         },
       ]
@@ -118,18 +122,6 @@ const RequestScreen = ({ navigation }) => {
     };
 
     const json = await acceptRequestEndpoint(params);
-    if (json.request) {
-      {
-        // If there's no selected user after accepting, get one
-        if (!selectedUser.email) {
-          await getDefault();
-        }
-        // Refresh the page to hide the request you just accepted
-        await getRequests();
-      }
-    } else {
-      console.log("Caught error /acceptRequest. Failed accept.");
-    }
   };
 
   const getRequests = async () => {
