@@ -191,12 +191,12 @@ export default function GiverHomeScreen({ navigation }) {
     }
 
     if (json.device) {
-      //console.log("Device: ", json.device);
+      console.log("Device: ", json.device);
       setBatteryLevel(json.device.battery);
       setBatterySyncTime(calculateTime(json.device.lastSyncTime));
     }
     if (json.heart) {
-      // console.log("Heart: ", json.heart);
+      console.log("Heart: ", json.heart);
       setHeart(json.heart.restingRate);
       setHeartMin(json.heart.minHR);
       setHeartAvg(json.heart.average);
@@ -210,14 +210,14 @@ export default function GiverHomeScreen({ navigation }) {
       );
     }
     if (json.steps) {
-      // console.log("Steps: ", json.steps);
+      console.log("Steps: ", json.steps);
       setHourlySteps(json.steps.hourlyTotal);
       setDailySteps(json.steps.currentDayTotal);
       setStepsSyncTime(
         calculateTime(
           json.steps.date +
-            (json.steps.timeMeasured.length === 7 ? " 0" : " ") +
-            json.steps.timeMeasured
+            (json.steps.hourlyTime.length === 7 ? " 0" : " ") +
+            json.steps.hourlyTime
         )
       );
     }
@@ -243,11 +243,13 @@ export default function GiverHomeScreen({ navigation }) {
   const windowHeight = useWindowDimensions().height;
 
   const isFocused = useIsFocused();
-  // Auto refreshes every 10 seconds as long as the screen is focused
+
+  // Auto refreshes every 30 seconds as long as the screen is focused
   useEffect(() => {
     const toggle = setInterval(() => {
-      isFocused ? getCaregiveeInfo() : clearInterval(toggle);
-    }, 10000);
+      console.log("here");
+      isFocused ? getCaregiveeInfo() && fetchData() : clearInterval(toggle);
+    }, 30000);
     return () => clearInterval(toggle);
   });
 
