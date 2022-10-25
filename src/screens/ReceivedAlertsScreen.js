@@ -169,13 +169,14 @@ export default function ReceivedAlertsScreen({ navigation }) {
         style={{
           marginLeft: "3%",
           //height: "100%",
-          width: "58%",
+          width: "55%",
+          marginRight: "2%",
           //backgroundColor: "blue",
           marginVertical: "5%",
           justifyContent: "center",
         }}
       >
-        <Text style={{ fontSize: responsiveFontSize(2.4), fontWeight: "600" }}>
+        <Text style={{ fontSize: responsiveFontSize(2.2), fontWeight: "600" }}>
           {title}
         </Text>
         <Text
@@ -184,7 +185,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
             fontSize: responsiveFontSize(1.8),
             color: "gray",
           }}
-          numberOfLines={2}
+          numberOfLines={3}
         >
           {body}
         </Text>
