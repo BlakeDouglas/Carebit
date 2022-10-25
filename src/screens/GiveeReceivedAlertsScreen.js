@@ -9,7 +9,7 @@ import {
   RefreshControl,
 } from "react-native";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Modal from "react-native-modal";
 import moment from "moment";
@@ -112,16 +112,23 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
     };
     const json = await getAlertsEndpoint(params);
     if (json) {
-      setData(json.alerts.reverse());
+      //console.log(json);
+      setData(json.alerts.reverse().splice(0, 10));
       console.log(data);
     }
   };
+
+  useEffect(() => {
+    getAlerts();
+  }, []);
 
   const [isModal1Visible, setModal1Visible] = useState(false);
   const toggleModal1 = () => {
     console.log(isModal1Visible);
     setModal1Visible(!isModal1Visible);
   };
+  // Sends alertID to modal
+  const [okID, setOkID] = useState(null);
 
   const Item = ({ alertType, dateTime, body, title, alertID, ok }) => (
     <SafeAreaView
@@ -129,121 +136,6 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
         justifyContent: "center",
       }}
     >
-      <Modal
-        isVisible={isModal1Visible}
-        backdropOpacity={0.2}
-        useNativeDriverForBackdrop={true}
-        halertIDeModalContentWhileAnimating={true}
-        animationIn={"fadeIn"}
-        animationOut={"fadeOut"}
-      >
-        <View
-          style={{
-            alignSelf: "center",
-            height: "31%",
-            width: "75%",
-            backgroundColor: "white",
-            borderRadius: 8,
-            alignItems: "center",
-            justifyContent: "space-evenly",
-          }}
-        >
-          <SafeAreaView
-            style={{
-              alignItems: "center",
-              width: "90%",
-              height: "60%",
-              justifyContent: "space-evenly",
-            }}
-          >
-            <Text
-              style={{
-                fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2),
-              }}
-            >
-              Mark You're Okay
-            </Text>
-            <Text
-              style={{
-                fontSize: responsiveFontSize(1.8),
-                fontWeight: "400",
-                textAlign: "left",
-              }}
-            >
-              Would you like to mark that you're okay? Note that your Caregiver
-              will see this as well
-            </Text>
-          </SafeAreaView>
-          <SafeAreaView
-            style={{
-              height: "40%",
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "space-evenly",
-            }}
-          >
-            <SafeAreaView
-              style={{
-                height: "50%",
-                width: "100%",
-                alignItems: "center",
-                justifyContent: "center",
-                borderTopColor: "rgba(128, 128, 128, .2)",
-                borderTopwidth: 1,
-              }}
-            >
-              <TouchableOpacity
-                style={{ alignItems: "center", justifyContent: "center" }}
-                onPress={() => {
-                  console.log("Okay Pressed");
-                  toggleModal1();
-                  sendOk(alertID);
-                  //Set that they're okay and send it to the Giver's screen
-                }}
-              >
-                <Text
-                  style={{
-                    color: "rgba(0,225,200,.8)",
-                    fontSize: responsiveFontSize(2),
-                    fontWeight: "bold",
-                  }}
-                >
-                  Yes, I'm Okay
-                </Text>
-              </TouchableOpacity>
-            </SafeAreaView>
-            <SafeAreaView
-              style={{
-                height: "50%",
-                width: "100%",
-                alignItems: "center",
-                justifyContent: "center",
-                borderTopColor: "rgba(128, 128, 128, .2)",
-                borderTopwidth: 1,
-              }}
-            >
-              <TouchableOpacity
-                style={{ alignItems: "center", justifyContent: "center" }}
-                onPress={() => {
-                  toggleModal1();
-                  console.log("Cancel Pressed");
-                }}
-              >
-                <Text
-                  style={{
-                    color: "black",
-                    fontSize: responsiveFontSize(2),
-                    fontWeight: "bold",
-                  }}
-                >
-                  Cancel
-                </Text>
-              </TouchableOpacity>
-            </SafeAreaView>
-          </SafeAreaView>
-        </View>
-      </Modal>
       <SafeAreaView
         style={{
           marginVertical: "1%",
@@ -342,6 +234,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                 borderRadius: 5,
               }}
               onPress={() => {
+                setOkID(alertID);
                 toggleModal1();
                 console.log("Okay Pressed");
               }}
@@ -385,6 +278,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
       </SafeAreaView>
     </SafeAreaView>
   );
+
   const renderItem = ({ item }) => (
     <Item
       alertType={item.alertType}
@@ -414,6 +308,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
   };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
+
     getAlerts();
     wait(1000).then(() => setRefreshing(false));
   }, []);
@@ -427,6 +322,126 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
         //backgroundColor: "green",
       }}
     >
+      <Modal
+        isVisible={isModal1Visible}
+        backdropOpacity={0.2}
+        useNativeDriverForBackdrop={true}
+        hideModalContentWhileAnimating={true}
+        animationIn={"fadeIn"}
+        animationOut={"fadeOut"}
+      >
+        <View
+          style={{
+            alignSelf: "center",
+            height: "31%",
+            width: "75%",
+            backgroundColor: "white",
+            borderRadius: 8,
+            alignItems: "center",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <SafeAreaView
+            style={{
+              alignItems: "center",
+              width: "90%",
+              height: "60%",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: responsiveFontSize(2.2),
+              }}
+            >
+              Mark You're Okay
+            </Text>
+            <Text
+              style={{
+                fontSize: responsiveFontSize(1.8),
+                fontWeight: "400",
+                textAlign: "left",
+              }}
+            >
+              Would you like to mark that you're okay? Note that your Caregiver
+              will see this as well
+            </Text>
+          </SafeAreaView>
+          <SafeAreaView
+            style={{
+              height: "40%",
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <SafeAreaView
+              style={{
+                height: "50%",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                borderTopColor: "rgba(128, 128, 128, .2)",
+                borderTopwidth: 1,
+              }}
+            >
+              <TouchableOpacity
+                style={{ alignItems: "center", justifyContent: "center" }}
+                onPress={() => {
+                  toggleModal1();
+                  console.log("Okay button");
+                  console.log(okID);
+                  sendOk(okID);
+
+                  getAlerts();
+                  //Set that they're okay and send it to the Giver's screen
+                }}
+              >
+                <Text
+                  style={{
+                    color: "rgba(0,225,200,.8)",
+                    fontSize: responsiveFontSize(2),
+                    fontWeight: "bold",
+                  }}
+                >
+                  Yes, I'm Okay
+                </Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+            <SafeAreaView
+              style={{
+                height: "50%",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                borderTopColor: "rgba(128, 128, 128, .2)",
+                borderTopwidth: 1,
+              }}
+            >
+              <TouchableOpacity
+                style={{ alignItems: "center", justifyContent: "center" }}
+                onPress={() => {
+                  toggleModal1();
+                  console.log("Cancel Pressed");
+                  console.log("Inside modal ");
+                  console.log(okID);
+                }}
+              >
+                <Text
+                  style={{
+                    color: "black",
+                    fontSize: responsiveFontSize(2),
+                    fontWeight: "bold",
+                  }}
+                >
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+            </SafeAreaView>
+          </SafeAreaView>
+        </View>
+      </Modal>
       <SafeAreaView
         style={{
           width: "100%",
@@ -448,8 +463,8 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         ListEmptyComponent={Empty}
+        extraData={data}
         keyExtractor={(item) => item.alertID}
-        //backgroundColor="blue"
       />
     </SafeAreaView>
   );
