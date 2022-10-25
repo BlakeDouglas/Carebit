@@ -196,7 +196,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
             //height: "100%",
             width: "55%",
             marginRight: "2%",
-            //backgroundColor: "blue",
+
             marginVertical: "5%",
             justifyContent: "center",
           }}
@@ -236,7 +236,8 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
               }}
               onPress={() => {
                 setOkID(alertID);
-                setRenderAgain(!renderAgain);
+                //getAlerts();
+                wait(1000).then(() => setRenderAgain(!renderAgain));
                 toggleModal1();
                 console.log("Okay Pressed");
               }}
