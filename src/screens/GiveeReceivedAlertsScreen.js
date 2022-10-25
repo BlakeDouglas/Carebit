@@ -98,9 +98,10 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
   const sendOk = async (alertID) => {
     const params = { targetID: alertID, auth: tokenData.access_token };
     const json = await setAlertOkEndpoint(params);
-    if (json) {
+
+    if (!json) {
       console.log("Ok has been set");
-    }
+    } else console.log("Error setting Ok");
   };
 
   // Receive json of all notifications

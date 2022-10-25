@@ -324,17 +324,14 @@ export async function setAlertOkEndpoint(params) {
   try {
     const response = await fetch(`${urlBase}alerts/ok/${params.targetID}`, {
       method: "PUT",
-      headers: {
-        ...headerSettings,
-        Authorization: "Bearer " + params.auth,
-      },
+      headers: headerSettings,
     });
     const responseText = await response.text();
     if (responseText.startsWith("<")) {
       throw "Server error in /alerts/ok: " + responseText;
     }
-    const json = JSON.parse(responseText);
-    return json;
+    if (responseText === "") return responseText;
+    else return JSON.parse(responseText);
   } catch (error) {
     console.log("Caught error in /alerts/ok: " + error);
   }
