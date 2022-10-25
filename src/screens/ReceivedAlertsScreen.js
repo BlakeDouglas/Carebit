@@ -10,83 +10,10 @@ import {
 
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { useSelector } from "react-redux";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getAlertsEndpoint } from "../network/CarebitAPI";
 import moment from "moment";
-const data_temp = [
-  {
-    alertType: "lowHeartRateAlert",
-    dateTime: "12:50pm",
-    title: "Low Heart Rate",
-    body: "Name has low heart rate",
-    caregiveeID: "BH32L",
-    alertID: "1",
-    ok: 1,
-  },
-  {
-    alertType: "noStepsAlert",
-    dateTime: "1:15am",
-    title: "No Steps",
-    body: "Name has gone more than x hour(s) without steps",
-    total: "0",
-    alertID: "2",
-    ok: 0,
-  },
-  {
-    alertType: "noHeartRateAlert",
-    dateTime: "1:18am",
-    title: "Heart Rate Not Recorded",
-    body: "Name's heart rate hasn't been recorded for over 8 hour(s)",
-    total: "0",
-    alertID: "3",
-    ok: 0,
-  },
-  {
-    alertType: "highHeartRateAlert",
-    dateTime: "10:16am",
-    title: "High Heart Rate",
-    body: "Name's heart rate was 162",
-    total: "162",
-    alertID: "4",
-    ok: 0,
-  },
-  {
-    alertType: "tooManyStepsAlert",
-    dateTime: "12:50pm",
-    title: "Too Many Steps",
-    body: "Name has taken more than 865 steps in the past hour",
-    total: "865",
-    alertID: "5",
-    ok: 0,
-  },
-  {
-    alertType: "noSyncAlert",
-    dateTime: "1:15am",
-    title: "No Sync",
-    body: "Name has gone more than x hour(s) without syncing",
-    total: "0",
-    alertID: "6",
-    ok: 1,
-  },
-  {
-    alertType: "batteryAlert",
-    dateTime: "8:16am",
-    title: "Battery Warning",
-    body: "Their Fitbit is dead",
-    total: "8",
-    alertID: "7",
-    ok: 0,
-  },
-  {
-    alertType: "lowHeartRateAlert",
-    dateTime: "10:16am",
-    title: "Low Heart Rate",
-    body: "Name's heart rate was 62",
-    total: "62",
-    alertID: "8",
-    ok: 0,
-  },
-];
+
 export default function ReceivedAlertsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const [data, setData] = useState([]);
@@ -96,21 +23,26 @@ export default function ReceivedAlertsScreen({ navigation }) {
   };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    getAlerts();
+
+    tokenData.caregiveeID.length === 0 ? null : getAlerts();
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
   const getAlerts = async () => {
     const params = {
       auth: tokenData.access_token,
-      targetID: tokenData.caregiveeID,
+      targetID: tokenData.caregiveeID[0].caregiveeID,
     };
     const json = await getAlertsEndpoint(params);
     if (json) {
-      setData(json.alerts.reverse());
+      setData(json.alerts.reverse().splice(0, 10));
       console.log(data);
     }
   };
+
+  useEffect(() => {
+    getAlerts();
+  }, []);
 
   const Item = ({ alertType, dateTime, body, title, ok }) => (
     <SafeAreaView
@@ -120,7 +52,6 @@ export default function ReceivedAlertsScreen({ navigation }) {
         alignItems: "center",
         borderTopColor: "lightgrey",
         borderTopWidth: 1,
-        //backgroundColor: "red",
       }}
     >
       {alertType === "tooManyStepsAlert" && (
@@ -168,10 +99,8 @@ export default function ReceivedAlertsScreen({ navigation }) {
       <SafeAreaView
         style={{
           marginLeft: "3%",
-          //height: "100%",
-          width: "55%",
-          marginRight: "2%",
-          //backgroundColor: "blue",
+          width: "58%",
+          marginRight: "4%",
           marginVertical: "5%",
           justifyContent: "center",
         }}
@@ -194,7 +123,6 @@ export default function ReceivedAlertsScreen({ navigation }) {
         style={{
           marginLeft: "1%",
           marginRight: "3%",
-          // backgroundColor: "red",
           justifyContent: "space-evenly",
         }}
       >
