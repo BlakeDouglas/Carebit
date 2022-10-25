@@ -639,6 +639,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 height: "100%",
                 width: "28%",
                 justifyContent: "center",
+                flexShrink: 1,
                 //backgroundColor: "red",
               }}
             >
@@ -652,7 +653,10 @@ export default function GiveeHomeScreen({ navigation }) {
                   <Image
                     source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
                   />
-                  <Text style={styles.callText} numberOfLines={2}>
+                  <Text
+                    style={[styles.callText, { flexShrink: 1 }]}
+                    numberOfLines={2}
+                  >
                     Call {selectedUser.firstName || "N/A"}
                   </Text>
                 </TouchableOpacity>
