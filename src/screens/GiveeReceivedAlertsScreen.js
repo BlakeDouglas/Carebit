@@ -94,7 +94,7 @@ const data_temp = [
 export default function GiveeReceivedAlertsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const [data, setData] = useState([]);
-
+  const [renderAgain, setRenderAgain] = useState(false);
   const sendOk = async (alertID) => {
     const params = { targetID: alertID, auth: tokenData.access_token };
     const json = await setAlertOkEndpoint(params);
@@ -113,6 +113,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
     const json = await getAlertsEndpoint(params);
     if (json) {
       //console.log(json);
+      //setData([]);
       setData(json.alerts.reverse().splice(0, 10));
       console.log(data);
     }
@@ -235,6 +236,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
               }}
               onPress={() => {
                 setOkID(alertID);
+                setRenderAgain(!renderAgain);
                 toggleModal1();
                 console.log("Okay Pressed");
               }}
@@ -463,7 +465,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         ListEmptyComponent={Empty}
-        extraData={data}
+        extraData={renderAgain}
         keyExtractor={(item) => item.alertID}
       />
     </SafeAreaView>
