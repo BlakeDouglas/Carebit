@@ -344,11 +344,7 @@ export async function getAlertsEndpoint(params) {
       method: "GET",
       headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
     });
-    const responseText = await response.text();
-    if (responseText.startsWith("<")) {
-      throw "Server error in /alerts/<caregiveeID>: " + responseText;
-    }
-    const json = JSON.parse(responseText);
+    const json = await response.json();
     return json;
   } catch (error) {
     console.log("Caught error from /alerts/<caregiveeID>: " + error);
