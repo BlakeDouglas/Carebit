@@ -12,7 +12,7 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { useSelector } from "react-redux";
 import React, { useState } from "react";
 import { getAlertsEndpoint } from "../network/CarebitAPI";
-
+import moment from "moment";
 const data_temp = [
   {
     alertType: "lowHeartRateAlert",
@@ -220,7 +220,9 @@ export default function ReceivedAlertsScreen({ navigation }) {
             {" "}
           </Text>
         )}
-        <Text style={{ color: "grey", marginTop: "14%" }}>{dateTime}</Text>
+        <Text style={{ color: "grey", marginTop: "14%" }}>
+          {moment(dateTime, ["HH:mm"]).format("hh:mm a")}
+        </Text>
       </SafeAreaView>
     </SafeAreaView>
   );
@@ -228,7 +230,10 @@ export default function ReceivedAlertsScreen({ navigation }) {
   const renderItem = ({ item }) => (
     <Item
       alertType={item.alertType}
-      dateTime={item.dateTime}
+      dateTime={item.dateTime.substring(
+        item.dateTime.indexOf(" ") + 1,
+        item.dateTime.indexOf(":") + 3
+      )}
       body={item.body}
       title={item.title}
       ok={item.ok}
@@ -268,7 +273,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
         </Text>
       </SafeAreaView>
       <FlatList
-        data={data_temp}
+        data={data}
         renderItem={renderItem}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
