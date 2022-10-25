@@ -612,7 +612,11 @@ export default function GiverHomeScreen({ navigation }) {
               }}
             >
               {/** TODO: Is this the right field?*/}
-              {BatterySyncTime || ""}
+              {BatterySyncTime && StepsSyncTime
+                ? BatterySyncTime <= StepsSyncTime
+                  ? BatterySyncTime
+                  : StepsSyncTime
+                : ""}
             </Text>
           </SafeAreaView>
 
