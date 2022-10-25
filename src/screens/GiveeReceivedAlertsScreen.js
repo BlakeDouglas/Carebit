@@ -112,7 +112,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
     };
     const json = await getAlertsEndpoint(params);
     if (json) {
-      setData(json.alerts);
+      setData(json.alerts.reverse());
       console.log(data);
     }
   };
