@@ -35,7 +35,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
     };
     const json = await getAlertsEndpoint(params);
     if (json) {
-      setData(json.alerts.reverse().splice(0, 10));
+      setData(json.alerts.reverse().splice(0, 50));
       console.log(data);
     }
   };
