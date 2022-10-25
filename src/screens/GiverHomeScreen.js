@@ -31,6 +31,7 @@ import {
 export default function GiverHomeScreen({ navigation }) {
   const [dailySteps, setDailySteps] = useState(null);
   const [hourlySteps, setHourlySteps] = useState(null);
+  const [stepUpdate, setStepUpdate] = useState(null);
   const [HeartBPM, setHeart] = useState(null);
   const [HeartMax, setHeartMax] = useState(null);
   const [HeartMin, setHeartMin] = useState(null);
@@ -147,28 +148,28 @@ export default function GiverHomeScreen({ navigation }) {
 
     let diffDays = range.diff("days");
     if (diffDays > 0) {
-      return diffDays + " Day" + (diffDays === 1 ? "" : "s") + " Ago";
+      return diffDays + " day" + (diffDays === 1 ? "" : "s") + " ago";
     }
     let diffHours = range.diff("hours");
 
     if (diffHours > 0) {
-      return diffHours + " Hour" + (diffHours === 1 ? "" : "s") + " Ago";
+      return diffHours + " hour" + (diffHours === 1 ? "" : "s") + " ago";
     }
 
     let diffMinutes = range.diff("minutes");
 
     if (diffMinutes > 0) {
-      return diffMinutes + " Minute" + (diffMinutes === 1 ? "" : "s") + " Ago";
+      return diffMinutes + " minute" + (diffMinutes === 1 ? "" : "s") + " ago";
     }
 
     let diffSeconds = range.diff("seconds");
 
     if (diffSeconds > 0) {
-      return diffSeconds + " Second" + (diffSeconds === 1 ? "" : "s") + " Ago";
+      return diffSeconds + " second" + (diffSeconds === 1 ? "" : "s") + " ago";
     }
 
     if (diffSeconds === 0) {
-      return "Now";
+      return "now";
     }
 
     return "Invalid Time";
@@ -213,6 +214,13 @@ export default function GiverHomeScreen({ navigation }) {
       console.log("Steps: ", json.steps);
       setHourlySteps(json.steps.hourlyTotal);
       setDailySteps(json.steps.currentDayTotal);
+      setStepUpdate(
+        calculateTime(
+          json.steps.date +
+            (json.steps.timeMeasured.length === 7 ? " 0" : " ") +
+            json.steps.timeMeasured
+        )
+      );
       setStepsSyncTime(
         calculateTime(
           json.steps.date +
@@ -249,7 +257,7 @@ export default function GiverHomeScreen({ navigation }) {
     const toggle = setInterval(() => {
       console.log("here");
       isFocused ? getCaregiveeInfo() && fetchData() : clearInterval(toggle);
-    }, 30000);
+    }, 60000);
     return () => clearInterval(toggle);
   });
 
@@ -768,7 +776,7 @@ export default function GiverHomeScreen({ navigation }) {
               <SafeAreaView
                 style={{
                   backgroundColor: "whitesmoke",
-                  justifyContent: "center",
+                  //justifyContent: "center",
                   alignItems: "center",
                   height: "100%",
                   width: "43%",
@@ -790,8 +798,10 @@ export default function GiverHomeScreen({ navigation }) {
                   style={{
                     flexDirection: "row",
                     justifyContent: "center",
-                    alignItems: "center",
-                    height: "70%",
+                    alignItems: "flex-end",
+                    //backgroundColor: "blue",
+
+                    height: "55%",
                     width: "100%",
                   }}
                 >
@@ -808,13 +818,21 @@ export default function GiverHomeScreen({ navigation }) {
                 </SafeAreaView>
                 <SafeAreaView
                   style={{
-                    width: "100%",
-                    height: "30%",
+                    width: "92%",
+                    height: "45%",
                     alignItems: "center",
-                    justifyContent: "flex-start",
+                    justifyContent: "center",
                   }}
                 >
-                  <Text style={styles.smallText}>in past hour</Text>
+                  <Text style={styles.smallText} numberOfLines={2}>
+                    {stepUpdate
+                      ? stepUpdate.includes("hour", 0)
+                        ? "ask " +
+                          selectedUser.firstName.slice(0, 12) +
+                          " to sync"
+                        : "in past hour"
+                      : "in past hour"}
+                  </Text>
                 </SafeAreaView>
               </SafeAreaView>
             </SafeAreaView>
