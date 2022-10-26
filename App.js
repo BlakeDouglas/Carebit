@@ -251,7 +251,7 @@ const HomeStack = () => {
                             width: 28,
                             alignSelf: "center",
                           }}
-                          source={require("./assets/images/moreIcon/moreIcon.png")}
+                          source={require("./assets/images/moreIcon/menu.png")}
                         />
                       </TouchableOpacity>
                     }
@@ -274,6 +274,12 @@ const HomeStack = () => {
                     <Divider />
                     <Menu.Item
                       leadingIcon={require("./assets/images/avatar/outline_people_outline_white_24dp.png")}
+                      trailingIcon={({}) => (
+                        <Image
+                          source={require("./assets/images/alerts/alerts.png")}
+                          style={{ width: 25, height: 25, tintColor: "green" }}
+                        />
+                      )}
                       onPress={() => (
                         closeMenu(), navigation.navigate("RequestScreen")
                       )}
@@ -283,6 +289,7 @@ const HomeStack = () => {
                       }}
                       title="Requests"
                     />
+
                     <Divider />
                     <Menu.Item
                       leadingIcon={require("./assets/images/avatar/addUser.png")}

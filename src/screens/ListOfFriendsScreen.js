@@ -154,6 +154,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
             await deleteConnection(item.requestID);
             await getRequests();
             await getDefault();
+            setSelectedId(null);
           },
         },
       ]

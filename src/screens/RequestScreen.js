@@ -46,6 +46,7 @@ const RequestScreen = ({ navigation }) => {
           onPress: () => {
             rejectRequest(item.requestID);
             getRequests();
+            setSelectedId(null);
           },
         },
       ]
@@ -72,7 +73,7 @@ const RequestScreen = ({ navigation }) => {
           onPress: async () => {
             await acceptRequest(item);
             await getRequests();
-
+            setSelectedId(null);
             if (!selectedUser.email) {
               await getDefault();
             }
