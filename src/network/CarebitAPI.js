@@ -227,8 +227,9 @@ export async function deleteRequestEndpoint(params) {
     if (responseText.startsWith("<")) {
       throw "Server error in /deleteRequest: " + responseText;
     }
-    const json = JSON.parse(responseText);
-    return json;
+    if (responseText === "") {
+      return responseText;
+    }
   } catch (error) {
     console.log("Caught error in /deleteRequest: " + error);
   }
