@@ -101,6 +101,7 @@ const RequestScreen = ({ navigation }) => {
 
     // Accounts for array return value and missing default scenarios
     if (json.default) {
+      if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
       dispatch(setSelectedUser(json.default));
     } else {
       dispatch(resetSelectedData());
