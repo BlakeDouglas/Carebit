@@ -85,7 +85,7 @@ const RequestScreen = ({ navigation }) => {
   const rejectRequest = async (rejectID) => {
     const params = { auth: tokenData.access_token, targetID: rejectID };
     const json = await deleteRequestEndpoint(params);
-
+    if (json === "") return;
     if (json.error) console.log("Error on delete: ", json.error);
   };
 

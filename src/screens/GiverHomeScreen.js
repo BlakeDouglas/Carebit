@@ -97,6 +97,8 @@ export default function GiverHomeScreen({ navigation }) {
     if (json.default) {
       dispatch(setSelectedUser(json.default));
     } else dispatch(resetSelectedData());
+
+    if (json.error) console.log("Error getting default: ", json.error);
   };
   // Get Device expo-token-Notification
   async function registerForPushNotificationsAsync() {
