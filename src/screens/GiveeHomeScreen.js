@@ -13,7 +13,8 @@ import {
   useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";
-import moment from "moment";
+import Moment from "moment";
+import { extendMoment } from "moment-range";
 import { useEffect } from "react";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
@@ -43,6 +44,8 @@ export default function GiveeHomeScreen({ navigation }) {
   const [caregivee, setCaregivee] = useState(null);
   const [isModal1Visible, setModal1Visible] = useState(false);
   const [isModal2Visible, setModal2Visible] = useState(false);
+  const [update, setUpdate] = useState(null);
+  const moment = extendMoment(Moment);
   let date = moment().format("dddd, MMM D");
   const [isModal3Visible, setModal3Visible] = useState(false);
   const toggleModal1 = () => {
@@ -155,7 +158,40 @@ export default function GiveeHomeScreen({ navigation }) {
     if (json.caregivee) setCaregivee(json.caregivee);
   };
 
-  // CHANGE ALL METRIC TO "device" TO OPTIMIZE
+  const calculateTime = (pullTime) => {
+    let currTime = moment().format("YYYY-MM-DD HH:mm:ss");
+    let range = moment.range(pullTime, currTime);
+
+    let diffDays = range.diff("days");
+    if (diffDays > 0) {
+      return diffDays + " day" + (diffDays === 1 ? "" : "s") + " ago";
+    }
+    let diffHours = range.diff("hours");
+
+    if (diffHours > 0) {
+      return diffHours + " hour" + (diffHours === 1 ? "" : "s") + " ago";
+    }
+
+    let diffMinutes = range.diff("minutes");
+
+    if (diffMinutes > 0) {
+      return diffMinutes + " minute" + (diffMinutes === 1 ? "" : "s") + " ago";
+    }
+
+    let diffSeconds = range.diff("seconds");
+
+    if (diffSeconds > 0) {
+      return diffSeconds + " second" + (diffSeconds === 1 ? "" : "s") + " ago";
+    }
+
+    if (diffSeconds === 0) {
+      return "now";
+    }
+
+    return "Invalid Time";
+  };
+
+  // Returns device info (battery data)
   const fetchData = async () => {
     const params = {
       auth: tokenData.access_token,
@@ -171,6 +207,7 @@ export default function GiveeHomeScreen({ navigation }) {
 
     if (json) {
       setBatteryLevel(json.device.battery);
+      setUpdate(calculateTime(json.device.lastSyncTime));
       console.log(json.device.battery);
     }
   };
@@ -570,6 +607,26 @@ export default function GiveeHomeScreen({ navigation }) {
             width: windowWidth,
           }}
         >
+          {/* Shows reminder to sync to Fitbit if its been over an hour */}
+          <SafeAreaView
+            style={{
+              height: "3%",
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{ fontSize: responsiveFontSize(2), color: "red" }}
+              numberOfLines={1}
+            >
+              {update
+                ? update.includes("hour", 0) || update.includes("day", 0)
+                  ? "Reminder to sync to the Fitbit app"
+                  : ""
+                : ""}
+            </Text>
+          </SafeAreaView>
           <SafeAreaView
             style={{
               height: "10%",
@@ -577,13 +634,10 @@ export default function GiveeHomeScreen({ navigation }) {
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
-              marginTop: "2%",
-              //backgroundColor: "blue",
             }}
           >
             <SafeAreaView
               style={{
-                //backgroundColor: "green",
                 height: "100%",
                 width: "64%",
                 justifyContent: "center",
@@ -801,6 +855,7 @@ export default function GiveeHomeScreen({ navigation }) {
               </SafeAreaView>
             </SafeAreaView>
           </SafeAreaView>
+
           <SafeAreaView
             style={{
               borderBottomColor: "lightgray",
