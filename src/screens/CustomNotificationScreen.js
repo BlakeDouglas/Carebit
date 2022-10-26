@@ -50,13 +50,16 @@ export default function CustomNotificationScreen({ navigation }) {
     setIsBattery(!isBattery);
   };
 
-  const range = (start, end, mult = 1) => {
+  const range = (start, end, mult = 1, unit) => {
     var arr = [];
+    let addUnit = unit;
     for (let i = start; i <= end; i++) {
-      arr.push(i * mult);
+      let addUnit = unit;
+      i <= 1 ? (addUnit === " hours" ? (addUnit = " hour") : addUnit) : addUnit;
+      arr.push(i * mult + addUnit);
     }
     return arr.map((num) => {
-      return num.toString();
+      return num;
     });
   };
 
@@ -83,10 +86,10 @@ export default function CustomNotificationScreen({ navigation }) {
     }
   };
 
-  const lowHeartLimits = range(25, 90);
-  const highHeartLimits = range(90, 150);
-  const noActivityLimit = range(1, 24);
-  const maxSteps = range(1, 40, 250);
+  const lowHeartLimits = range(25, 90, 1, " bpm");
+  const highHeartLimits = range(90, 150, 1, " bpm");
+  const noActivityLimit = range(1, 24, 1, " hours");
+  const maxSteps = range(1, 40, 250, " steps");
 
   let doesSelectedUserExist = selectedUser.email !== "";
   return (
@@ -188,7 +191,9 @@ export default function CustomNotificationScreen({ navigation }) {
                   );
                 }}
                 dropdownIconPosition={"right"}
-                defaultValue={thresholds ? thresholds.lowHRThreshold : "N/A"}
+                defaultValue={
+                  thresholds ? thresholds.lowHRThreshold + " bpm" : "N/A"
+                }
                 disableAutoScroll={true}
                 //search={true}
                 selectedRowStyle={{ backgroundColor: "lightgray" }}
@@ -199,13 +204,16 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
                 data={lowHeartLimits}
                 onSelect={(selectedItem) => {
+                  // Removes everything that isn't a number
+                  let thresholdVal = selectedItem.replace(/\D/g, "");
+
                   thresholdsAPI("PUT", {
                     ...thresholds,
-                    lowHRThreshold: selectedItem,
+                    lowHRThreshold: thresholdVal,
                   });
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
-                  return selectedItem + " bpm";
+                  return selectedItem;
                 }}
                 rowTextForSelection={(item, index) => {
                   return item;
@@ -227,7 +235,9 @@ export default function CustomNotificationScreen({ navigation }) {
                   );
                 }}
                 dropdownIconPosition={"right"}
-                defaultValue={thresholds ? thresholds.highHRThreshold : "N/A"}
+                defaultValue={
+                  thresholds ? thresholds.highHRThreshold + " bpm" : "N/A"
+                }
                 disableAutoScroll={true}
                 selectedRowStyle={{ backgroundColor: "lightgray" }}
                 buttonStyle={styles.downButtonStyle}
@@ -237,13 +247,15 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
                 data={highHeartLimits}
                 onSelect={(selectedItem) => {
+                  // Removes everything that isn't a number
+                  let thresholdVal = selectedItem.replace(/\D/g, "");
                   thresholdsAPI("PUT", {
                     ...thresholds,
-                    highHRThreshold: selectedItem,
+                    highHRThreshold: thresholdVal,
                   });
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
-                  return selectedItem + " bpm";
+                  return selectedItem;
                 }}
                 rowTextForSelection={(item, index) => {
                   return item;
@@ -278,7 +290,9 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
                 dropdownIconPosition={"right"}
                 defaultValue={
-                  thresholds ? thresholds.timeWithoutHRThreshold : "N/A"
+                  thresholds
+                    ? thresholds.timeWithoutHRThreshold + " hours"
+                    : "N/A"
                 }
                 disableAutoScroll={true}
                 selectedRowStyle={{ backgroundColor: "lightgray" }}
@@ -289,15 +303,15 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
                 data={noActivityLimit}
                 onSelect={(selectedItem) => {
+                  // Removes everything that isn't a number
+                  let thresholdVal = selectedItem.replace(/\D/g, "");
                   thresholdsAPI("PUT", {
                     ...thresholds,
-                    timeWithoutHRThreshold: selectedItem,
+                    timeWithoutHRThreshold: thresholdVal,
                   });
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
-                  return selectedItem > 1
-                    ? selectedItem + " hours"
-                    : selectedItem + " hour";
+                  return selectedItem;
                 }}
                 rowTextForSelection={(item, index) => {
                   return item;
@@ -320,7 +334,9 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
                 dropdownIconPosition={"right"}
                 defaultValue={
-                  thresholds ? thresholds.timeWithoutStepsThreshold : "N/A"
+                  thresholds
+                    ? thresholds.timeWithoutStepsThreshold + " hours"
+                    : "N/A"
                 }
                 disableAutoScroll={true}
                 selectedRowStyle={{ backgroundColor: "lightgray" }}
@@ -331,15 +347,15 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
                 data={noActivityLimit}
                 onSelect={(selectedItem) => {
+                  // Removes everything that isn't a number
+                  let thresholdVal = selectedItem.replace(/\D/g, "");
                   thresholdsAPI("PUT", {
                     ...thresholds,
-                    timeWithoutStepsThreshold: selectedItem,
+                    timeWithoutStepsThreshold: thresholdVal,
                   });
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
-                  return selectedItem > 1
-                    ? selectedItem + " hours"
-                    : selectedItem + " hour";
+                  return selectedItem;
                 }}
                 rowTextForSelection={(item, index) => {
                   return item;
@@ -374,7 +390,9 @@ export default function CustomNotificationScreen({ navigation }) {
                   );
                 }}
                 dropdownIconPosition={"right"}
-                defaultValue={thresholds ? thresholds.stepThreshold : "N/A"}
+                defaultValue={
+                  thresholds ? thresholds.stepThreshold + " steps" : "N/A"
+                }
                 disableAutoScroll={true}
                 //search={true}
                 selectedRowStyle={{ backgroundColor: "lightgray" }}
@@ -385,13 +403,15 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
                 data={maxSteps}
                 onSelect={(selectedItem) => {
+                  // Removes everything that isn't a number
+                  let thresholdVal = selectedItem.replace(/\D/g, "");
                   thresholdsAPI("PUT", {
                     ...thresholds,
-                    stepThreshold: selectedItem,
+                    stepThreshold: thresholdVal,
                   });
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
-                  return selectedItem + " steps";
+                  return selectedItem;
                 }}
                 rowTextForSelection={(item, index) => {
                   return item;
