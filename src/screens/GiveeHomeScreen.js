@@ -208,7 +208,6 @@ export default function GiveeHomeScreen({ navigation }) {
     if (json) {
       setBatteryLevel(json.device.battery);
       setUpdate(calculateTime(json.device.lastSyncTime));
-      console.log(json.device.battery);
     }
   };
 

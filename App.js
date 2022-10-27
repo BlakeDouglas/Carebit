@@ -275,7 +275,9 @@ const HomeStack = () => {
                             justifyContent: "center",
                             alignItems: "center",
                           }}
-                          onPress={openMenu}
+                          // Need to check if there are any alerts everytime you open the menu
+                          // Helps handle accepting a request before a refresh
+                          onPress={() => (openMenu(), showAlert())}
                         >
                           <Image
                             style={{
@@ -330,8 +332,13 @@ const HomeStack = () => {
                           />
                         )
                       }
+                      // Close the menu, then get rid of the alert.
+                      // It will check again if there's an alert when the timer runs out
+                      // or when the menu is clicked again
                       onPress={() => (
-                        closeMenu(), navigation.navigate("RequestScreen")
+                        closeMenu(),
+                        setVisibleAlert(false),
+                        navigation.navigate("RequestScreen")
                       )}
                       titleStyle={{
                         color: "black",
@@ -341,6 +348,7 @@ const HomeStack = () => {
                     />
 
                     <Divider />
+
                     <Menu.Item
                       leadingIcon={require("./assets/images/avatar/addUser.png")}
                       onPress={() => (
