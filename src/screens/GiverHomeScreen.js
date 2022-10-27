@@ -96,7 +96,19 @@ export default function GiverHomeScreen({ navigation }) {
 
     if (json.default) {
       dispatch(setSelectedUser(json.default));
-    } else dispatch(resetSelectedData());
+    } else {
+      dispatch(resetSelectedData());
+      setBatteryLevel(null);
+      setBatterySyncTime(null);
+      setHeart(null);
+      setHeartMin(null);
+      setHeartAvg(null);
+      setHeartMax(null);
+      setHeartSyncTime(null);
+      setHourlySteps(null);
+      setDailySteps(null);
+      setStepUpdate(null);
+    }
 
     if (json.error) console.log("Error getting default: ", json.error);
   };

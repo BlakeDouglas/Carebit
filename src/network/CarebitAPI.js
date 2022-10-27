@@ -271,6 +271,7 @@ export async function acceptRequestEndpoint(params) {
     if (responseText.startsWith("<")) {
       throw "Server error in /acceptRequest: " + responseText;
     }
+    if (responseText === "") return "";
     const json = JSON.parse(responseText);
     return json;
   } catch (error) {

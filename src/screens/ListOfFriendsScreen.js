@@ -75,24 +75,6 @@ const ListOfFriendsScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
-  const getDefault = async () => {
-    const body =
-      tokenData.type === "caregiver"
-        ? {
-            caregiverID: tokenData.caregiverID,
-            caregiveeID: null,
-          }
-        : {
-            caregiverID: null,
-            caregiveeID: tokenData.caregiveeID,
-          };
-    const params = { auth: tokenData.access_token, body: body };
-    const json = getDefaultEndpoint(params);
-
-    if (json.default) dispatch(setSelectedUser(json.default));
-    else dispatch(resetSelectedData());
-  };
-
   const setDefault = async (selected) => {
     const body =
       tokenData.type === "caregiver"
@@ -108,6 +90,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
           };
     const params = { auth: tokenData.access_token, body: body };
     const json = await setDefaultEndpoint(params);
+    if (json.error) console.log("Error setting default: ", json.error);
   };
 
   const getRequests = async () => {
@@ -153,7 +136,6 @@ const ListOfFriendsScreen = ({ navigation }) => {
           onPress: async () => {
             await deleteConnection(item.requestID);
             await getRequests();
-            await getDefault();
             setSelectedId(null);
           },
         },
