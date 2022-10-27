@@ -77,6 +77,19 @@ const RequestScreen = ({ navigation }) => {
             if (!selectedUser.email) {
               await getDefault();
             }
+            Alert.alert(
+              "Accepted!",
+              typeOfRequester === "caregivee"
+                ? fullName +
+                    " is now added! You will be able to find them in the 'My Caregivee' tab"
+                : fullName +
+                    " is now added! You will be able to find them in the 'My Caregiver' tab"[
+                      {
+                        text: "Continue",
+                        onPress: () => console.log("Continue"),
+                      }
+                    ]
+            );
           },
         },
       ]

@@ -2,6 +2,7 @@ import {
   StyleSheet,
   Text,
   SafeAreaView,
+  Alert,
   StatusBar,
   ScrollView,
   ImageBackground,
@@ -79,6 +80,12 @@ export default function AddScreen({ navigation: { goBack } }) {
       }
     } else {
       goBack();
+      if (json.request)
+        Alert.alert(
+          "Sent!",
+          "Your request has been sent. Once accepted, you will be able to view their Fitbit data.",
+          [{ text: "Continue", onPress: () => console.log("Continue") }]
+        );
     }
   };
 
