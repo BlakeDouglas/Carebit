@@ -13,7 +13,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Modal from "react-native-modal";
 import moment from "moment";
-import { setTokenData } from "../redux/actions";
+import { setSelectedUser, setTokenData } from "../redux/actions";
 import { getAlertsEndpoint, setAlertOkEndpoint } from "../network/CarebitAPI";
 
 const data_temp = [
@@ -93,6 +93,7 @@ const data_temp = [
 
 export default function GiveeReceivedAlertsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const [data, setData] = useState([]);
 
   const sendOk = async (alertID) => {
@@ -109,6 +110,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
     const params = {
       auth: tokenData.access_token,
       targetID: tokenData.caregiveeID,
+      selfID: selectedUser.caregiverID,
     };
     const json = await getAlertsEndpoint(params);
     if (json) {

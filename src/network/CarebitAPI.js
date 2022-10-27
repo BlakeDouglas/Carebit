@@ -363,14 +363,19 @@ export async function setAlertOkEndpoint(params) {
 // Params: {auth, targetID}
 export async function getAlertsEndpoint(params) {
   try {
-    const response = await fetch(`${urlBase}alerts/${params.targetID}`, {
-      method: "GET",
-      headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
-    });
+    const response = await fetch(
+      `${urlBase}alerts/${params.targetID}/${params.selfID}`,
+      {
+        method: "GET",
+        headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
+      }
+    );
     const json = await response.json();
     return json;
   } catch (error) {
-    console.log("Caught error from /alerts/<caregiveeID>: " + error);
+    console.log(
+      "Caught error from /alerts/<caregiveeID>/<int:caregiverID>: " + error
+    );
   }
 }
 

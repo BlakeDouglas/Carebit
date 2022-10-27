@@ -16,6 +16,7 @@ import moment from "moment";
 
 export default function ReceivedAlertsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const [data, setData] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
   const wait = (timeout) => {
@@ -32,6 +33,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
     const params = {
       auth: tokenData.access_token,
       targetID: tokenData.caregiveeID[0].caregiveeID,
+      selfID: tokenData.caregiverID,
     };
     const json = await getAlertsEndpoint(params);
     if (json) {
