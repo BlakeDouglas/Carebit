@@ -149,6 +149,27 @@ export async function userEndpoint(body) {
   }
 }
 
+// Params: {auth, selfID}
+export async function getRequestCount(params) {
+  const url = `${urlBase}getRequestCount/${params.selfID}`;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /activity: " + responseText;
+    }
+    return responseText;
+  } catch (error) {
+    console.log("Caught error in /getRequestCount: " + error);
+  }
+}
+
 // Params: {auth, targetID, level, selfID}
 export async function setActivityEndpoint(params) {
   const url = `${urlBase}activity/${params.targetID}/${params.level}/${params.selfID}`;

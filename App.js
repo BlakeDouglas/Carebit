@@ -27,10 +27,10 @@ import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
 import { useFonts } from "expo-font";
-import * as React from "react";
+import React, { useEffect } from "react";
 import { Menu, Divider, Provider as Provider2 } from "react-native-paper";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
-
+import { getRequestCount } from "./src/network/CarebitAPI";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { setTokenData } from "./src/redux/actions";
@@ -194,9 +194,30 @@ const MiddleStack = () => {
 const HomeStack = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const [visible, setVisible] = React.useState(false);
+  const [visibleAlert, setVisibleAlert] = React.useState(false);
+  const showAlert = async () => {
+    const params = {
+      auth: tokenData.access_token,
+      selfID:
+        tokenData.type === "caregivee"
+          ? tokenData.caregiveeID
+          : tokenData.caregiverID,
+    };
+    const json = await getRequestCount(params);
+    const responseText = JSON.parse(json);
+    responseText.pendingRequestCount
+      ? setVisibleAlert(true)
+      : setVisibleAlert(false);
+  };
 
   const openMenu = () => setVisible(true);
-
+  useEffect(() => {
+    const toggle = setInterval(() => {
+      showAlert();
+      console.log("Unh");
+    }, 10000);
+    return () => clearInterval(toggle);
+  });
   const closeMenu = () => setVisible(false);
   return (
     <Stack.Navigator>
@@ -237,23 +258,37 @@ const HomeStack = () => {
                     visible={visible}
                     onDismiss={closeMenu}
                     anchor={
-                      <TouchableOpacity
-                        style={{
-                          alignSelf: "center",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                        onPress={openMenu}
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
                       >
-                        <Image
+                        <TouchableOpacity
                           style={{
-                            height: 28,
-                            width: 28,
                             alignSelf: "center",
+                            justifyContent: "center",
+                            alignItems: "center",
                           }}
-                          source={require("./assets/images/moreIcon/menu.png")}
-                        />
-                      </TouchableOpacity>
+                          onPress={openMenu}
+                        >
+                          <Image
+                            style={{
+                              height: 28,
+                              width: 28,
+                              alignSelf: "center",
+                            }}
+                            source={require("./assets/images/moreIcon/menu.png")}
+                          />
+                        </TouchableOpacity>
+                        {visibleAlert && (
+                          <Image
+                            source={require("./assets/images/alerts/shakeAlert.png")}
+                            style={{
+                              width: 20,
+                              height: 20,
+                              tintColor: "white",
+                            }}
+                          />
+                        )}
+                      </View>
                     }
                   >
                     <Menu.Item
@@ -274,12 +309,18 @@ const HomeStack = () => {
                     <Divider />
                     <Menu.Item
                       leadingIcon={require("./assets/images/avatar/outline_people_outline_white_24dp.png")}
-                      trailingIcon={({}) => (
-                        <Image
-                          source={require("./assets/images/alerts/alerts.png")}
-                          style={{ width: 25, height: 25, tintColor: "red" }}
-                        />
-                      )}
+                      trailingIcon={({}) =>
+                        visibleAlert && (
+                          <Image
+                            source={require("./assets/images/alerts/highPriority.png")}
+                            style={{
+                              width: 25,
+                              height: 25,
+                              tintColor: "dodgerblue",
+                            }}
+                          />
+                        )
+                      }
                       onPress={() => (
                         closeMenu(), navigation.navigate("RequestScreen")
                       )}
