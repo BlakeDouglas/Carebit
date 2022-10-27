@@ -146,9 +146,7 @@ export default function CustomNotificationScreen({ navigation }) {
       {doesSelectedUserExist && (
         <ScrollView>
           <SafeAreaView style={[styles.Box, { marginTop: "3%" }]}>
-            <Text style={[styles.Title, { margin: "4%" }]}>
-              Use Custom Alerts
-            </Text>
+            <Text style={styles.TitleNoSub}>Use Custom Alerts</Text>
             <Switch
               trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
               thumbColor={isCustom ? "white" : "white"}
@@ -166,7 +164,8 @@ export default function CustomNotificationScreen({ navigation }) {
           </SafeAreaView>
           {isCustom ? (
             <SafeAreaView style={[styles.Box, { marginTop: "5%" }]}>
-              <Text style={styles.Title}>Heart Rate Alerts</Text>
+              <Text style={styles.TitleNoSub}>Heart Rate Alerts</Text>
+
               <Switch
                 trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                 thumbColor={isCustom ? "white" : "white"}
@@ -178,8 +177,10 @@ export default function CustomNotificationScreen({ navigation }) {
           ) : null}
           {isHrAlerts && isCustom ? (
             <SafeAreaView style={styles.Box}>
-              <Text style={styles.Title}>Low Heart Rate</Text>
-
+              <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
+                <Text style={styles.Title}>Low Heart Rate</Text>
+                <Text style={styles.Example}>e.g. 60 bpm</Text>
+              </SafeAreaView>
               <SelectDropdown
                 renderDropdownIcon={(isOpened) => {
                   return (
@@ -223,7 +224,10 @@ export default function CustomNotificationScreen({ navigation }) {
           ) : null}
           {isHrAlerts && isCustom && (
             <SafeAreaView style={styles.Box}>
-              <Text style={styles.Title}>High Heart Rate</Text>
+              <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
+                <Text style={styles.Title}>High Heart Rate</Text>
+                <Text style={styles.Example}>e.g. 100 bpm</Text>
+              </SafeAreaView>
               <SelectDropdown
                 renderDropdownIcon={(isOpened) => {
                   return (
@@ -265,7 +269,7 @@ export default function CustomNotificationScreen({ navigation }) {
           )}
           {isCustom && (
             <SafeAreaView style={[styles.Box, { marginTop: "10%" }]}>
-              <Text style={styles.Title}>No Activity Alerts</Text>
+              <Text style={styles.TitleNoSub}>No Activity Alerts</Text>
               <Switch
                 trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                 thumbColor={isCustom ? "white" : "white"}
@@ -277,7 +281,10 @@ export default function CustomNotificationScreen({ navigation }) {
           )}
           {isActivityAlerts && isCustom && (
             <SafeAreaView style={styles.Box}>
-              <Text style={styles.Title}>Time Without Heart Rate</Text>
+              <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
+                <Text style={styles.Title}>Time Without Heart Rate</Text>
+                <Text style={styles.Example}>e.g. 1 hour</Text>
+              </SafeAreaView>
               <SelectDropdown
                 renderDropdownIcon={(isOpened) => {
                   return (
@@ -321,7 +328,10 @@ export default function CustomNotificationScreen({ navigation }) {
           )}
           {isActivityAlerts && isCustom && (
             <SafeAreaView style={styles.Box}>
-              <Text style={styles.Title}>Time Without Steps</Text>
+              <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
+                <Text style={styles.Title}>Time Without Heart Rate</Text>
+                <Text style={styles.Example}>e.g. 2 hours</Text>
+              </SafeAreaView>
               <SelectDropdown
                 renderDropdownIcon={(isOpened) => {
                   return (
@@ -366,7 +376,7 @@ export default function CustomNotificationScreen({ navigation }) {
 
           {isCustom && (
             <SafeAreaView style={[styles.Box, { marginTop: "10%" }]}>
-              <Text style={styles.Title}>Wandering Alerts</Text>
+              <Text style={styles.TitleNoSub}>Wandering Alerts</Text>
               <Switch
                 trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                 thumbColor={isWandering ? "white" : "white"}
@@ -378,7 +388,10 @@ export default function CustomNotificationScreen({ navigation }) {
           )}
           {isWandering && isCustom && (
             <SafeAreaView style={styles.Box}>
-              <Text style={styles.Title}>Max Steps in an Hour</Text>
+              <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
+                <Text style={styles.Title}>Max Steps in an Hour</Text>
+                <Text style={styles.Example}>e.g. 2000 Steps</Text>
+              </SafeAreaView>
               <SelectDropdown
                 renderDropdownIcon={(isOpened) => {
                   return (
@@ -422,7 +435,7 @@ export default function CustomNotificationScreen({ navigation }) {
           {isCustom && (
             <SafeAreaView>
               <SafeAreaView style={[styles.Box, { marginTop: "10%" }]}>
-                <Text style={styles.Title}>No Sync Alerts</Text>
+                <Text style={styles.TitleNoSub}>No Sync Alerts</Text>
                 <Switch
                   trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                   thumbColor={isSync ? "white" : "white"}
@@ -443,7 +456,7 @@ export default function CustomNotificationScreen({ navigation }) {
           {isCustom && (
             <SafeAreaView>
               <SafeAreaView style={[styles.Box, { marginTop: "5%" }]}>
-                <Text style={styles.Title}>Empty Battery Alerts</Text>
+                <Text style={styles.TitleNoSub}>Empty Battery Alerts</Text>
                 <Switch
                   trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                   thumbColor={isBattery ? "white" : "white"}
@@ -484,7 +497,19 @@ const styles = StyleSheet.create({
   Title: {
     fontSize: responsiveFontSize(2.2),
     fontWeight: "600",
+  },
+  TitleNoSub: {
+    fontSize: responsiveFontSize(2.2),
+    fontWeight: "600",
     margin: "4%",
+    alignSelf: "center",
+  },
+  Example: {
+    fontSize: responsiveFontSize(1.5),
+    color: "lightgrey",
+    fontWeight: "500",
+    marginLeft: "4%",
+    marginBottom: "2%",
   },
   Descriptive: {
     fontSize: responsiveFontSize(1.9),

@@ -291,9 +291,7 @@ export default function GiverHomeScreen({ navigation }) {
               width: "100%",
             }}
           >
-            <TouchableOpacity
-              style={{ marginLeft: "4%", flexDirection: "row" }}
-            >
+            <SafeAreaView style={{ marginLeft: "4%", flexDirection: "row" }}>
               <Image
                 style={{
                   height: 15,
@@ -313,7 +311,7 @@ export default function GiverHomeScreen({ navigation }) {
               >
                 0 Alerts Today
               </Text>
-            </TouchableOpacity>
+            </SafeAreaView>
             <TouchableOpacity
               style={{
                 marginRight: "4%",

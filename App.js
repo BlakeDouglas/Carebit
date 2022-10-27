@@ -277,7 +277,7 @@ const HomeStack = () => {
                       trailingIcon={({}) => (
                         <Image
                           source={require("./assets/images/alerts/alerts.png")}
-                          style={{ width: 25, height: 25, tintColor: "green" }}
+                          style={{ width: 25, height: 25, tintColor: "red" }}
                         />
                       )}
                       onPress={() => (
