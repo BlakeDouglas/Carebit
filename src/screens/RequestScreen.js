@@ -74,6 +74,9 @@ const RequestScreen = ({ navigation }) => {
             await acceptRequest(item);
             await getRequests();
             setSelectedId(null);
+            if (!selectedUser.email) {
+              await getDefault();
+            }
             Alert.alert(
               "Accepted!",
               typeOfRequester === "caregivee"
@@ -98,6 +101,24 @@ const RequestScreen = ({ navigation }) => {
     const json = await deleteRequestEndpoint(params);
     if (json === "") return;
     if (json.error) console.log("Error on delete: ", json.error);
+  };
+
+  const getDefault = async () => {
+    const params = {
+      auth: tokenData.access_token,
+      body: {
+        caregiverID: tokenData.caregiverID,
+        caregiveeID: null,
+      },
+    };
+    const json = await getDefaultEndpoint(params);
+
+    // Accounts for array return value and missing default scenarios
+    if (json.default) {
+      dispatch(setSelectedUser(json.default));
+    } else {
+      dispatch(resetSelectedData());
+    }
   };
 
   const acceptRequest = async (item) => {
