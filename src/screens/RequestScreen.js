@@ -140,7 +140,7 @@ const RequestScreen = ({ navigation }) => {
 
     if (json === "") return;
     if (json.error) {
-      console.log("Error on delete: ", json.error);
+      console.log("Error on accept: ", json.error);
       return;
     }
     if (tokenData.type === "caregiver" && json.newCaregivee)
