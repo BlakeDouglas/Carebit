@@ -195,6 +195,8 @@ const HomeStack = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const [visible, setVisible] = React.useState(false);
   const [visibleAlert, setVisibleAlert] = React.useState(false);
+
+  // Endpoint to check requests
   const showAlert = async () => {
     const params = {
       auth: tokenData.access_token,
@@ -205,16 +207,19 @@ const HomeStack = () => {
     };
     const json = await getRequestCount(params);
     const responseText = JSON.parse(json);
+
+    // Boolean to decide when to show the alert icons
     responseText.pendingRequestCount
       ? setVisibleAlert(true)
       : setVisibleAlert(false);
   };
 
   const openMenu = () => setVisible(true);
+  // Refreshes every x seconds to check if a friend request exists
+  // If one does, set visibleAlert to true to show the alert icons
   useEffect(() => {
     const toggle = setInterval(() => {
       showAlert();
-      console.log("Unh");
     }, 10000);
     return () => clearInterval(toggle);
   });
@@ -257,6 +262,9 @@ const HomeStack = () => {
                   <Menu
                     visible={visible}
                     onDismiss={closeMenu}
+                    // Sets color of the opened menu
+                    contentStyle={{ backgroundColor: "white" }}
+                    // Icons/Text shown to open the menu
                     anchor={
                       <View
                         style={{ flexDirection: "row", alignItems: "center" }}
@@ -291,6 +299,7 @@ const HomeStack = () => {
                       </View>
                     }
                   >
+                    {/* Items contained within the menu with functionality */}
                     <Menu.Item
                       leadingIcon={require("./assets/images/avatar/userList.png")}
                       onPress={() => (
