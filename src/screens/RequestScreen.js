@@ -79,16 +79,18 @@ const RequestScreen = ({ navigation }) => {
             }
             Alert.alert(
               "Accepted!",
-              typeOfRequester === "caregivee"
-                ? fullName +
-                    " is now added! You will be able to find them in the 'My Caregivee' tab"
-                : fullName +
-                    " is now added! You will be able to find them in the 'My Caregiver' tab"[
-                      {
-                        text: "Continue",
-                        onPress: () => console.log("Continue"),
-                      }
-                    ]
+              fullName +
+                " is now added! You will be able to find them in the " +
+                (typeOfRequester === "caregivee"
+                  ? "'My Caregivee'"
+                  : "'My Caregiver'") +
+                " tab",
+              [
+                {
+                  text: "Continue",
+                  onPress: () => console.log("Continue"),
+                },
+              ]
             );
           },
         },
@@ -145,9 +147,8 @@ const RequestScreen = ({ navigation }) => {
     }
     if (tokenData.type === "caregiver" && json.newCaregivee)
       dispatch(setSelectedUser(json.newCaregivee));
-    else if (tokenData.type === "caregivee" && json.newCaregiver)
+    if (tokenData.type === "caregivee" && json.newCaregiver)
       dispatch(setSelectedUser(json.newCaregiver));
-    else dispatch(resetSelectedData());
   };
 
   const getRequests = async () => {
@@ -216,7 +217,6 @@ const RequestScreen = ({ navigation }) => {
   useEffect(() => {
     const toggle = setInterval(() => {
       isFocused ? getRequests() : clearInterval(toggle);
-      console.log("Request screen focused? " + isFocused);
     }, 10000);
     return () => clearInterval(toggle);
   });

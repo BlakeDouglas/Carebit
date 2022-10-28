@@ -65,7 +65,6 @@ const App = () => {
 
 const RootNavigation = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  console.log("TokenData: ", tokenData);
   return (
     <NavigationContainer>
       {tokenData.access_token === "" ? (
@@ -483,18 +482,6 @@ const HomeStack = () => {
             headerStyle: {
               backgroundColor: "dodgerblue",
             },
-            headerRight: () => (
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={{ marginRight: "8%" }}
-              >
-                <Text
-                  style={{ fontSize: responsiveFontSize(2.3), color: "white" }}
-                >
-                  Done
-                </Text>
-              </TouchableOpacity>
-            ),
             headerTitle: "Alert History",
           })}
         />

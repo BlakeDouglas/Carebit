@@ -109,18 +109,8 @@ export default function GiveeHomeScreen({ navigation }) {
     const json = await getDefaultEndpoint(params);
 
     // Accounts for array return value and missing default scenarios
-    if (json.default) {
-      if (json.default[0]) dispatch(setSelectedUser(json.default[0]));
-      else dispatch(setSelectedUser(json.default));
-    } else {
-      const array =
-        tokenJson[
-          tokenJson.type === "caregiver" ? "caregiveeID" : "caregiverID"
-        ];
-      const res = array.filter((iter) => iter.status === "accepted");
-      if (res[0]) dispatch(setSelectedUser(res[0]));
-      else dispatch(resetSelectedData());
-    }
+    if (json.default) dispatch(setSelectedUser(json.default));
+    else dispatch(resetSelectedData());
   };
 
   const getCaregiveeInfo = async () => {
@@ -200,12 +190,13 @@ export default function GiveeHomeScreen({ navigation }) {
       period: "recent",
     };
     const json = await fitbitDataEndpoint(params);
-    if (!json) {
-      console.log("Aborting data pull (Internal server error)");
+
+    if (json.error) {
+      console.log("Error on battery data pull: ", json.error);
       return;
     }
 
-    if (json) {
+    if (json.device) {
       setBatteryLevel(json.device.battery);
       setUpdate(calculateTime(json.device.lastSyncTime));
     }

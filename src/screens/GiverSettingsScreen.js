@@ -15,14 +15,22 @@ import { resetData, setSelectedUser, setTokenData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
 import phone from "phone";
 import { deleteKeychain } from "../network/Auth";
+import { logoutEndpoint } from "../network/CarebitAPI";
 export default function GiverSettingsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
   const logOutButtonHandler = async () => {
+    const json = await logoutEndpoint({
+      auth: tokenData.access_token,
+      targetID: tokenData.userID,
+    });
+    if (json.error) {
+      console.log("Failed /logout: ", json.error);
+    }
+
     deleteKeychain();
     dispatch(resetData());
-    // TODO: Call /logout
   };
 
   const customAlertButtonHandler = () => {

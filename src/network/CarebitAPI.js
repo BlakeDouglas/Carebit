@@ -251,6 +251,7 @@ export async function deleteRequestEndpoint(params) {
     if (responseText === "") {
       return responseText;
     }
+    return JSON.parse(responseText);
   } catch (error) {
     console.log("Caught error in /deleteRequest: " + error);
   }
@@ -427,5 +428,23 @@ export async function fitbitDataEndpoint(params) {
     console.log(
       "Caught error in /caregivee/<caregiveeID>/<metric>/recent: " + error
     );
+  }
+}
+
+// Params: {auth, targetID}
+export async function logoutEndpoint(params) {
+  try {
+    const response = await fetch(`${urlBase}logout/${params.targetID}`, {
+      method: "DELETE",
+      headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /logout: " + responseText;
+    }
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error from /logout: " + error);
   }
 }

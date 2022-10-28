@@ -109,7 +109,24 @@ export default function AccountCreationScreen({ navigation }) {
       password: inputs.password,
     };
     const json = await userEndpoint(body);
-    if (json.access_token !== undefined) {
+    if (json.error) {
+      if (json.error === "Phone number already exists.") {
+        handleError(" Phone number taken", "phone");
+        console.log(json.error);
+      } else if (json.error === "Email already exists.") {
+        handleError(" Email taken", "email");
+        console.log(json.error);
+      } else if (json.error === "Phone length.") {
+        handleError(" Invalid phone", "phone");
+        console.log(json.error);
+      } else if (json.error === "Email is not valid") {
+        handleError(" Invalid email", "email");
+        console.log(json.error);
+      } else {
+        handleError(" Error creating account", "email");
+        console.log(json.error);
+      }
+    } else {
       dispatch(
         setTokenData({
           ...tokenData,
@@ -120,15 +137,6 @@ export default function AccountCreationScreen({ navigation }) {
         })
       );
       setKeychain(storageBody);
-    } else if (json.error === "Phone number already exists.") {
-      handleError(" Phone number taken", "phone");
-      console.log(json.error);
-    } else if (json.error === "Email already exists.") {
-      handleError(" Email taken", "email");
-      console.log(json.error);
-    } else {
-      handleError(" Invalid email", "email");
-      console.log(json.error);
     }
   };
 

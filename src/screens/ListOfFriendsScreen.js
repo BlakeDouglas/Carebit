@@ -54,10 +54,12 @@ const ListOfFriendsScreen = ({ navigation }) => {
 
   useEffect(() => {
     getRequests();
+    getDefault();
   }, []);
 
   useEffect(() => {
     setData(backgroundData.filter((iter) => iter.status === "accepted"));
+    getDefault();
   }, [backgroundData]);
 
   // Auto refreshes every 10 seconds as long as the screen is focused
@@ -87,7 +89,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
             caregiveeID: tokenData.caregiveeID,
           };
     const params = { auth: tokenData.access_token, body: body };
-    const json = getDefaultEndpoint(params);
+    const json = await getDefaultEndpoint(params);
 
     if (json.default) dispatch(setSelectedUser(json.default));
     else dispatch(resetSelectedData());

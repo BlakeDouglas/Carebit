@@ -20,6 +20,7 @@ import {
   acceptRequestEndpoint,
   createRequestEndpoint,
   caregiveeCreateEndpoint,
+  logoutEndpoint,
 } from "../network/CarebitAPI";
 
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
@@ -109,9 +110,16 @@ export default function ModifiedAuthScreen({ navigation, route }) {
   };
 
   const logOutButtonHandler = async () => {
+    const json = await logoutEndpoint({
+      auth: tokenData.access_token,
+      targetID: tokenData.userID,
+    });
+    if (json.error) {
+      console.log("Failed /logout: ", json.error);
+    }
+
     deleteKeychain();
     dispatch(resetData());
-    // TODO: Call /logout
   };
 
   return (

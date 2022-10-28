@@ -15,14 +15,22 @@ import * as SecureStore from "expo-secure-store";
 import phone from "phone";
 import GlobalStyle from "../utils/GlobalStyle";
 import { deleteKeychain } from "../network/Auth";
+import { logoutEndpoint } from "../network/CarebitAPI";
 export default function GiveeSettingsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
   const logOutButtonHandler = async () => {
+    const json = await logoutEndpoint({
+      auth: tokenData.access_token,
+      targetID: tokenData.userID,
+    });
+    if (json.error) {
+      console.log("Failed /logout: ", json.error);
+    }
+
     deleteKeychain();
     dispatch(resetData());
-    // TODO: Call /logout
   };
   // Grab country code from phone number
   const physCountryCode = phone(tokenData.physPhone).countryCode;

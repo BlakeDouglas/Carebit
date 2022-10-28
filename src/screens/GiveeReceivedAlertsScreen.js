@@ -107,13 +107,14 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
 
   // Receive json of all notifications
   const getAlerts = async () => {
+    if (!selectedUser.email) return;
     const params = {
       auth: tokenData.access_token,
       targetID: tokenData.caregiveeID,
       selfID: selectedUser.caregiverID,
     };
     const json = await getAlertsEndpoint(params);
-    if (json) {
+    if (json.alerts) {
       setData(json.alerts.reverse().splice(0, 50));
       console.log(data);
     }

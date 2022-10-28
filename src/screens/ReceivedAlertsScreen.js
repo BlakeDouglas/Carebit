@@ -24,15 +24,15 @@ export default function ReceivedAlertsScreen({ navigation }) {
   };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-
-    tokenData.caregiveeID.length === 0 ? null : getAlerts();
+    getAlerts();
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
   const getAlerts = async () => {
+    if (!selectedUser.caregiveeID) return;
     const params = {
       auth: tokenData.access_token,
-      targetID: tokenData.caregiveeID[0].caregiveeID,
+      targetID: selectedUser.caregiveeID,
       selfID: tokenData.caregiverID,
     };
     const json = await getAlertsEndpoint(params);

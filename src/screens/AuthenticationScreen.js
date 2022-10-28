@@ -16,7 +16,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { resetData, setTokenData } from "../redux/actions";
 import { deleteKeychain, getAuthRequest } from "../network/Auth";
-import { caregiveeCreateEndpoint } from "../network/CarebitAPI";
+import { caregiveeCreateEndpoint, logoutEndpoint } from "../network/CarebitAPI";
 
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 
@@ -42,9 +42,16 @@ export default function AuthenticationScreen({ navigation }) {
   };
 
   const logOutButtonHandler = async () => {
+    const json = await logoutEndpoint({
+      auth: tokenData.access_token,
+      targetID: tokenData.userID,
+    });
+    if (json.error) {
+      console.log("Failed /logout: ", json.error);
+    }
+
     deleteKeychain();
     dispatch(resetData());
-    // TODO: Call /logout
   };
 
   React.useEffect(() => {
