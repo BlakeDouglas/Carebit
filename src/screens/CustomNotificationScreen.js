@@ -25,8 +25,8 @@ export default function CustomNotificationScreen({ navigation }) {
   const [isCustom, setIsCustom] = useState(selectedUser.healthProfile === 4);
   const [isHrAlerts, setIsHrAlerts] = useState(true);
   const [isActivityAlerts, setIsActivityAlerts] = useState(true);
-  const [isWandering, setIsWandering] = useState(false);
-  const [isSync, setIsSync] = useState(false);
+  const [isWandering, setIsWandering] = useState(true);
+  const [isSync, setIsSync] = useState(true);
   const [isBattery, setIsBattery] = useState(true);
   const [thresholds, setThresholds] = useState(null);
 
@@ -329,7 +329,7 @@ export default function CustomNotificationScreen({ navigation }) {
           {isActivityAlerts && isCustom && (
             <SafeAreaView style={styles.Box}>
               <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
-                <Text style={styles.Title}>Time Without Heart Rate</Text>
+                <Text style={styles.Title}>Time Without Steps</Text>
                 <Text style={styles.Example}>e.g. 2 hours</Text>
               </SafeAreaView>
               <SelectDropdown
