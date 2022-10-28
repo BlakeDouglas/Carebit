@@ -298,7 +298,9 @@ export default function CustomNotificationScreen({ navigation }) {
                 dropdownIconPosition={"right"}
                 defaultValue={
                   thresholds
-                    ? thresholds.timeWithoutHRThreshold + " hours"
+                    ? thresholds.timeWithoutHRThreshold > 1
+                      ? thresholds.timeWithoutHRThreshold + " hours"
+                      : thresholds.timeWithoutHRThreshold + " hour"
                     : "N/A"
                 }
                 disableAutoScroll={true}
@@ -345,7 +347,9 @@ export default function CustomNotificationScreen({ navigation }) {
                 dropdownIconPosition={"right"}
                 defaultValue={
                   thresholds
-                    ? thresholds.timeWithoutStepsThreshold + " hours"
+                    ? thresholds.timeWithoutStepsThreshold > 1
+                      ? thresholds.timeWithoutStepsThreshold + " hours"
+                      : thresholds.timeWithoutStepsThreshold + " hour"
                     : "N/A"
                 }
                 disableAutoScroll={true}
