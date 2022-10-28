@@ -323,7 +323,7 @@ const HomeStack = () => {
                       trailingIcon={({}) =>
                         visibleAlert && (
                           <Image
-                            source={require("./assets/images/alerts/highPriority.png")}
+                            source={require("./assets/images/alerts/shakeAlert.png")}
                             style={{
                               width: 25,
                               height: 25,
