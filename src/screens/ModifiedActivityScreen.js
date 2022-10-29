@@ -7,6 +7,7 @@ import {
   StatusBar,
   Image,
   TouchableOpacity,
+  useWindowDimensions
 } from "react-native";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
@@ -15,7 +16,7 @@ import { setTokenData } from "../redux/actions";
 export default function ModifiedActivityScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
-
+  const {fontScale} = useWindowDimensions();
   const setActivity = async (level) => {
     let url = "https://www.carebit.xyz/";
     let body;
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
     marginTop: "5%",
   },
   DescriptiveText: {
-    fontSize: responsiveFontSize(2.2),
+    fontSize: responsiveFontSize(2.2) / fontScale,
     color: "white",
   },
   InnerContainers: {
@@ -203,13 +204,13 @@ const styles = StyleSheet.create({
     marginLeft: "6%",
     color: "black",
     fontWeight: "600",
-    fontSize: responsiveFontSize(2.4),
+    fontSize: responsiveFontSize(2.4) / fontScale,
   },
   InnerText: {
     marginLeft: "6%",
     marginTop: "2%",
     color: "darkgray",
     fontWeight: "400",
-    fontSize: responsiveFontSize(2.2),
+    fontSize: responsiveFontSize(2.2) / fontScale,
   },
 });

@@ -7,6 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
   RefreshControl,
+  useWindowDimensions
 } from "react-native";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import React, { useState } from "react";
@@ -90,6 +91,7 @@ const data_temp = [
 ];
 
 export default function GiveeReceivedAlertsScreen({ navigation }) {
+  const {fontScale} = useWindowDimensions();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const [data, setData] = useState([]);
 
@@ -185,14 +187,14 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2),
+                fontSize: responsiveFontSize(2.2) / fontScale,
               }}
             >
               Mark You're Okay
             </Text>
             <Text
               style={{
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.8) / fontScale,
                 fontWeight: "400",
                 textAlign: "left",
               }}
@@ -231,7 +233,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                 <Text
                   style={{
                     color: "rgba(0,225,200,.8)",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -259,7 +261,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -334,14 +336,14 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
           }}
         >
           <Text
-            style={{ fontSize: responsiveFontSize(2.4), fontWeight: "600" }}
+            style={{ fontSize: responsiveFontSize(2.4) / fontScale, fontWeight: "600" }}
           >
             {title}
           </Text>
           <Text
             style={{
               marginTop: "1%",
-              fontSize: responsiveFontSize(1.8),
+              fontSize: responsiveFontSize(1.8) / fontScale,
               color: "gray",
             }}
             numberOfLines={2}
@@ -376,7 +378,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                   fontWeight: "bold",
                   textAlign: "center",
                   margin: "2%",
-                  fontSize: responsiveFontSize(2.3),
+                  fontSize: responsiveFontSize(2.3) / fontScale,
                 }}
               >
                 Check-in
@@ -389,7 +391,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                 fontWeight: "bold",
                 textAlign: "center",
                 margin: "2%",
-                fontSize: responsiveFontSize(2.3),
+                fontSize: responsiveFontSize(2.3) / fontScale,
               }}
             >
               {""} Okay {""}
@@ -449,7 +451,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
           marginBottom: "6%",
         }}
       >
-        <Text style={{ fontSize: responsiveFontSize(2.5), fontWeight: "600" }}>
+        <Text style={{ fontSize: responsiveFontSize(2.5) /fontScale, fontWeight: "600" }}>
           Today
         </Text>
       </SafeAreaView>
@@ -474,7 +476,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     color: "black",
-    fontSize: responsiveFontSize(3.5),
+    fontSize: responsiveFontSize(3.5) / fontScale,
     alignSelf: "center",
   },
   emptyContainer: {

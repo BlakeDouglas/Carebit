@@ -6,6 +6,7 @@ import {
   StatusBar,
   Alert,
   TouchableOpacity,
+  useWindowDimensions
 } from "react-native";
 import React, { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
@@ -15,6 +16,8 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 export default function SettingsOverviewScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
+
+  const {fontScale} = useWindowDimensions();
 
   const customAlertButtonHandler = () => {
     navigation.navigate("CustomNotification", route.params);
@@ -182,7 +185,7 @@ export default function SettingsOverviewScreen({ navigation }) {
           <Text
             style={{
               color: "red",
-              fontSize: responsiveFontSize(2.5),
+              fontSize: responsiveFontSize(2.5) / fontscale,
               fontWeight: "bold",
             }}
           >
@@ -208,7 +211,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   Title: {
-    fontSize: responsiveFontSize(1.9),
+    fontSize: responsiveFontSize(1.9) / fontscale,
     color: "gray",
     fontWeight: "500",
   },
@@ -220,12 +223,12 @@ const styles = StyleSheet.create({
     marginLeft: "4%",
   },
   BoxTitle: {
-    fontSize: responsiveFontSize(2.2),
+    fontSize: responsiveFontSize(2.2) / fontscale,
     fontWeight: "600",
     marginLeft: "4%",
   },
   BoxSub: {
-    fontSize: responsiveFontSize(2.2),
+    fontSize: responsiveFontSize(2.2) / fontscale,
     marginRight: "4%",
     color: "rgba(128,128,128,.8)",
   },

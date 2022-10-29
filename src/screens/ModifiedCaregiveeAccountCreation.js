@@ -8,6 +8,7 @@ import {
   Platform,
   View,
   TouchableOpacity,
+  useWindowDimensions
 } from "react-native";
 import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -22,7 +23,7 @@ import { phone } from "phone";
 export default function ModifiedCaregiveeAccountCreation({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
-
+  const {fontScale} = useWindowDimensions();
   const requiredText = " Input required";
 
   // Content between this point and the return statement
@@ -172,14 +173,14 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2),
+                fontSize: responsiveFontSize(2.2) / fontScale,
               }}
             >
               Opting Out
             </Text>
             <Text
               style={{
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.8) / fontScale,
                 fontWeight: "400",
                 textAlign: "left",
               }}
@@ -216,7 +217,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -252,7 +253,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
             <Text
               style={[
                 GlobalStyle.Subtitle2,
-                { fontSize: responsiveFontSize(3.71) },
+                { fontSize: responsiveFontSize(3.71) / fontscale},
               ]}
             >
               Caregivee Registration

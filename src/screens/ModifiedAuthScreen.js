@@ -8,6 +8,7 @@ import {
   LogBox,
   StatusBar,
   TouchableOpacity,
+  useWindowDimensions
 } from "react-native";
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
 import * as Linking from "expo-linking";
@@ -187,6 +188,8 @@ export default function ModifiedAuthScreen({ navigation, route }) {
     dispatch(resetData());
   };
 
+  const {fontScale} = useWindowDimensions();
+
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background01.png")}
@@ -209,7 +212,7 @@ export default function ModifiedAuthScreen({ navigation, route }) {
               style={{ marginRight: "1%" }}
               source={require("../../assets/images/midCheck/icons-check.png")}
             />
-            <Text style={{ fontSize: responsiveFontSize(2.8), color: "white" }}>
+            <Text style={{ fontSize: responsiveFontSize(2.8) / fontScale, color: "white" }}>
               Account Created
             </Text>
           </SafeAreaView>
@@ -225,7 +228,7 @@ export default function ModifiedAuthScreen({ navigation, route }) {
               style={{
                 alignSelf: "center",
                 color: "white",
-                fontSize: responsiveFontSize(2.5),
+                fontSize: responsiveFontSize(2.5) / fontScale,
               }}
             >
               Link the Caregivee's Fitbit account to provide the Caregiver

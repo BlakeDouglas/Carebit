@@ -10,6 +10,7 @@ import {
   useWindowDimensions,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  useWindowDimensions
 } from "react-native";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -25,6 +26,8 @@ import { phone } from "phone";
 export default function PhysicianInfoScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
+  const {fontScale} = useWindowDimensions();
+
   const [inputs, setInputs] = useState({
     physName: "",
     physPhone: "",
@@ -114,7 +117,7 @@ export default function PhysicianInfoScreen({ navigation }) {
               <Text
                 style={[
                   GlobalStyle.Subtitle,
-                  { fontSize: responsiveFontSize(5.1) },
+                  { fontSize: responsiveFontSize(5.1) / fontScale },
                 ]}
               >
                 Physician Contact

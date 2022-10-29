@@ -26,6 +26,7 @@ export default function GiveeHomeScreen({ navigation }) {
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
+  const {fontScale} = useWindowDimensions();
   const dispatch = useDispatch();
   const number = selectedUser.phone || null;
   const args = {
@@ -229,7 +230,7 @@ export default function GiveeHomeScreen({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2),
+                fontSize: responsiveFontSize(2.2) / fontScale,
               }}
             >
               Sleep Mode
@@ -243,7 +244,7 @@ export default function GiveeHomeScreen({ navigation }) {
             ></SafeAreaView>
             <Text
               style={{
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.8) / fontScale,
                 fontWeight: "400",
                 textAlign: "left",
                 padding: 7,
@@ -282,7 +283,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -310,7 +311,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -352,7 +353,7 @@ export default function GiveeHomeScreen({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2),
+                fontSize: responsiveFontSize(2.2) / fontScale,
               }}
             >
               Do Not Disturb
@@ -366,7 +367,7 @@ export default function GiveeHomeScreen({ navigation }) {
             ></SafeAreaView>
             <Text
               style={{
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.8) / fontScale,
                 fontWeight: "400",
                 padding: 7,
                 textAlign: "left",
@@ -405,7 +406,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -433,7 +434,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -477,7 +478,7 @@ export default function GiveeHomeScreen({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2),
+                fontSize: responsiveFontSize(2.2) / fontScale,
               }}
             >
               Monitoring
@@ -491,7 +492,7 @@ export default function GiveeHomeScreen({ navigation }) {
             ></SafeAreaView>
             <Text
               style={{
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.8) / fontScale,
                 fontWeight: "400",
                 padding: 7,
                 textAlign: "left",
@@ -530,7 +531,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "red",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -558,7 +559,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -605,7 +606,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 style={{
                   marginLeft: "4%",
                   color: "darkgrey",
-                  fontSize: responsiveFontSize(1.9),
+                  fontSize: responsiveFontSize(1.9) / fontScale,
                 }}
                 numberOfLines={1}
               >
@@ -618,7 +619,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.2),
+                    fontSize: responsiveFontSize(2.2) / fontScale,
                     fontWeight: "500",
                     marginLeft: "4%",
                   }}
@@ -631,7 +632,7 @@ export default function GiveeHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "dodgerblue",
-                      fontSize: responsiveFontSize(2.2),
+                      fontSize: responsiveFontSize(2.2) / fontScale,
                       fontWeight: "500",
                       marginLeft: "4%",
                     }}
@@ -733,7 +734,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text style={styles.buttonBigText}>Alerts</Text>
                 <Text
                   style={{
-                    fontSize: responsiveFontSize(2.08),
+                    fontSize: responsiveFontSize(2.08) / fontScale,
                     color: "darkgrey",
                     fontWeight: "500",
                   }}
@@ -786,7 +787,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text style={[styles.buttonBigText]}>Battery</Text>
                 <Text
                   style={{
-                    fontSize: responsiveFontSize(2.08),
+                    fontSize: responsiveFontSize(2.08) / fontScale,
                     color: "darkgrey",
                     fontWeight: "500",
                   }}
@@ -820,7 +821,7 @@ export default function GiveeHomeScreen({ navigation }) {
             <Text
               style={{
                 color: "darkgrey",
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.8) / fontScale,
                 marginRight: "2%",
               }}
             >
@@ -1169,37 +1170,37 @@ const styles = StyleSheet.create({
 
   helloText: {
     color: "darkgrey",
-    fontSize: responsiveFontSize(2.15),
+    fontSize: responsiveFontSize(2.15) / fontScale,
     //fontWeight: "bold",
   },
 
   callText: {
     color: "dodgerblue",
-    fontSize: responsiveFontSize(2),
+    fontSize: responsiveFontSize(2) / fontScale,
     fontWeight: "bold",
     marginLeft: "2%",
   },
 
   buttonBigText: {
-    fontSize: responsiveFontSize(2.25),
+    fontSize: responsiveFontSize(2.25) / fontScale,
     fontWeight: "500",
   },
 
   buttonSmallText: {
-    fontSize: responsiveFontSize(2.08),
+    fontSize: responsiveFontSize(2.08) / fontScale,
     color: "darkgrey",
     fontWeight: "500",
     marginTop: "3%",
     marginBottom: "10%",
   },
   buttonSmallText2: {
-    fontSize: responsiveFontSize(2.08),
+    fontSize: responsiveFontSize(2.08) / fontScale,
     color: "darkgrey",
     fontWeight: "500",
     marginTop: "3%",
   },
   preferencesText: {
-    fontSize: responsiveFontSize(2.3),
+    fontSize: responsiveFontSize(2.3) / fontScale,
     fontWeight: "500",
     marginLeft: "2%",
   },

@@ -23,6 +23,7 @@ import { phone } from "phone";
 
 export default function ModifiedPhysScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const {fontScale} = useWindowDimensions();
   const dispatch = useDispatch();
   const [inputs, setInputs] = useState({
     physName: "",
@@ -153,7 +154,7 @@ export default function ModifiedPhysScreen({ navigation, route }) {
               <Text
                 style={[
                   GlobalStyle.Subtitle,
-                  { fontSize: responsiveFontSize(5.1) },
+                  { fontSize: responsiveFontSize(5.1) / fontScale },
                 ]}
               >
                 Physician Contact

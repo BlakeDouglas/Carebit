@@ -6,6 +6,7 @@ import {
   Image,
   ImageBackground,
   TouchableOpacity,
+  useWindowDimensions
 } from "react-native";
 import { React } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +19,7 @@ export default function GiveeSettingsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
+  const {fontScale} = useWindowDimensions();
   const logOutButtonHandler = async () => {
     SecureStore.deleteItemAsync("carebitcredentials");
     dispatch(resetData());
@@ -75,7 +77,7 @@ export default function GiveeSettingsScreen({ navigation }) {
           >
             <Text
               style={{
-                fontSize: responsiveFontSize(2.8),
+                fontSize: responsiveFontSize(2.8) / fontScale,
                 width: "100%",
                 color: "white",
               }}
@@ -84,7 +86,7 @@ export default function GiveeSettingsScreen({ navigation }) {
               {tokenData.firstName || ""} {tokenData.lastName || ""}
             </Text>
             <Text
-              style={{ fontSize: responsiveFontSize(2.1), color: "white" }}
+              style={{ fontSize: responsiveFontSize(2.1) / fontScale, color: "white" }}
               numberOfLines={1}
             >
               {tokenData.email || "email error"}
@@ -214,7 +216,7 @@ export default function GiveeSettingsScreen({ navigation }) {
             >
               <Text
                 style={{
-                  fontSize: responsiveFontSize(2.2),
+                  fontSize: responsiveFontSize(2.2) / fontScale,
                   //fontWeight: "600",
                   color: "white",
                   textAlign: "left",
@@ -268,7 +270,7 @@ export default function GiveeSettingsScreen({ navigation }) {
             <Text
               style={{
                 color: "red",
-                fontSize: responsiveFontSize(2.5),
+                fontSize: responsiveFontSize(2.5) / fontScale,
                 fontWeight: "bold",
               }}
             >
@@ -307,7 +309,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   Title: {
-    fontSize: responsiveFontSize(1.9),
+    fontSize: responsiveFontSize(1.9) / fontScale,
     color: "white",
     fontWeight: "500",
     marginLeft: "4%",
@@ -321,13 +323,13 @@ const styles = StyleSheet.create({
     marginLeft: "4%",
   },
   BoxTitle: {
-    fontSize: responsiveFontSize(2.2),
+    fontSize: responsiveFontSize(2.2) / fontScale,
     fontWeight: "600",
     marginLeft: "4%",
     color: "white",
   },
   BoxSub: {
-    fontSize: responsiveFontSize(2.2),
+    fontSize: responsiveFontSize(2.2) / fontScale,
     marginRight: "4%",
     color: "white",
   },

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
+  useWindowDimensions
 } from "react-native";
 import React, { useState } from "react";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
@@ -135,7 +136,7 @@ export default function AddScreen({ navigation: { goBack } }) {
               justifyContent: "center",
             }}
           >
-            <Text style={{ fontSize: responsiveFontSize(2.5), color: "white" }}>
+            <Text style={{ fontSize: responsiveFontSize(2.5) / fontScale, color: "white" }}>
               {typeOfRequester === "caregivee"
                 ? "Please enter your Caregivee's phone number to add them"
                 : "Please enter your Caregiver's phone number to add them"}

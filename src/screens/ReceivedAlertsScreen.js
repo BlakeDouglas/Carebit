@@ -7,12 +7,14 @@ import {
   FlatList,
   RefreshControl,
   TouchableOpacity,
+  useWindowDimensions
 } from "react-native";
 
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 //const selectedUser = useSelector((state) => state.Reducers.selectedUser);
 import { useSelector } from "react-redux";
 import React, { useState } from "react";
+import EStyleSheet from "react-native-extended-stylesheet";
 
 const data_temp = [
   {
@@ -89,6 +91,7 @@ const data_temp = [
   },
 ];
 export default function ReceivedAlertsScreen({ navigation }) {
+  const {fontScale} = useWindowDimensions();
   const Item = ({ alertType, dateTime, body, title, ok }) => (
     <SafeAreaView
       style={{
@@ -152,13 +155,13 @@ export default function ReceivedAlertsScreen({ navigation }) {
           justifyContent: "center",
         }}
       >
-        <Text style={{ fontSize: responsiveFontSize(2.4), fontWeight: "600" }}>
+        <Text style={{ fontSize: responsiveFontSize(2.4)  / fontScale, fontWeight: "600" }}>
           {title}
         </Text>
         <Text
           style={{
             marginTop: "1%",
-            fontSize: responsiveFontSize(1.8),
+            fontSize: responsiveFontSize(1.8)  / fontScale,
             color: "gray",
           }}
           numberOfLines={2}
@@ -180,7 +183,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
               color: "rgba(0,225,200,.6)",
               fontWeight: "bold",
               textAlign: "right",
-              fontSize: responsiveFontSize(2.3),
+              fontSize: responsiveFontSize(2.3)  / fontScale,
               marginTop: "10%",
             }}
           >
@@ -190,7 +193,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
           <Text
             style={{
               textAlign: "right",
-              fontSize: responsiveFontSize(2.3),
+              fontSize: responsiveFontSize(2.3)  / fontScale,
               marginTop: "10%",
             }}
           >
@@ -278,7 +281,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
           marginBottom: "6%",
         }}
       >
-        <Text style={{ fontSize: responsiveFontSize(2.5), fontWeight: "600" }}>
+        <Text style={{ fontSize: responsiveFontSize(2.5)  / fontScale, fontWeight: "600" }}>
           Today
         </Text>
       </SafeAreaView>
@@ -303,7 +306,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     color: "black",
-    fontSize: responsiveFontSize(3.5),
+    fontSize: responsiveFontSize(3.5)  / fontScale,
     alignSelf: "center",
   },
   emptyContainer: {

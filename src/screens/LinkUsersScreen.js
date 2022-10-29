@@ -8,6 +8,7 @@ import {
   StatusBar,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  useWindowDimensions,
   Keyboard,
 } from "react-native";
 import CustomTextInput from "../utils/CustomTextInput";
@@ -32,6 +33,7 @@ export default function LinkUsersScreen({ navigation }) {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
   const [errors, setErrors] = useState({});
+  const {fontScale} = useWindowDimensions();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
   const typeOfRequester =
@@ -173,14 +175,14 @@ export default function LinkUsersScreen({ navigation }) {
                 <Text
                   style={{
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(2.2),
+                    fontSize: responsiveFontSize(2.2) / fontScale,
                   }}
                 >
                   Warning
                 </Text>
                 <Text
                   style={{
-                    fontSize: responsiveFontSize(1.8),
+                    fontSize: responsiveFontSize(1.8) / fontScale,
                     fontWeight: "400",
                     textAlign: "left",
                   }}
@@ -223,7 +225,7 @@ export default function LinkUsersScreen({ navigation }) {
                     <Text
                       style={{
                         color: "dodgerblue",
-                        fontSize: responsiveFontSize(2),
+                        fontSize: responsiveFontSize(2) / fontScale,
                         fontWeight: "bold",
                       }}
                     >
@@ -251,7 +253,7 @@ export default function LinkUsersScreen({ navigation }) {
                     <Text
                       style={{
                         color: "dodgerblue",
-                        fontSize: responsiveFontSize(2),
+                        fontSize: responsiveFontSize(2) / fontScale,
                         fontWeight: "bold",
                       }}
                     >
@@ -268,7 +270,7 @@ export default function LinkUsersScreen({ navigation }) {
               <Text
                 style={[
                   GlobalStyle.Subtitle,
-                  { fontSize: responsiveFontSize(5.3) },
+                  { fontSize: responsiveFontSize(5.3) / fontscale},
                 ]}
               >
                 Connect to a Caregivee
@@ -296,7 +298,7 @@ export default function LinkUsersScreen({ navigation }) {
                 <Text
                   style={[
                     GlobalStyle.Text,
-                    { fontSize: responsiveFontSize(2.3) },
+                    { fontSize: responsiveFontSize(2.3) / fontscale},
                   ]}
                 >
                   Request a Caregivee for monitoring {"\n"}(recommended method)
@@ -337,7 +339,7 @@ export default function LinkUsersScreen({ navigation }) {
                 <Text
                   style={[
                     GlobalStyle.Text,
-                    { fontSize: responsiveFontSize(2.3) },
+                    { fontSize: responsiveFontSize(2.3) / fontscale},
                   ]}
                 >
                   Proceed without your Caregivee using the app

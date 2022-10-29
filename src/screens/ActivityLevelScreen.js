@@ -6,6 +6,7 @@ import {
   Platform,
   StatusBar,
   Image,
+  useWindowDimensions,
   TouchableOpacity,
 } from "react-native";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
@@ -15,6 +16,7 @@ import { setSelectedUser } from "../redux/actions";
 export default function AccountCreationScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
+  const {fontScale} = useWindowDimensions();
   const dispatch = useDispatch();
 
   const setActivity = async (level) => {
@@ -72,7 +74,7 @@ export default function AccountCreationScreen({ navigation, route }) {
                 }}
               >
                 <Text
-                  style={{ color: "white", fontSize: responsiveFontSize(3) }}
+                  style={{ color: "white", fontSize: responsiveFontSize(3) / fontScale }}
                 >
                   Please Choose a Caregivee First
                 </Text>
@@ -184,7 +186,7 @@ const styles = StyleSheet.create({
     marginTop: "5%",
   },
   DescriptiveText: {
-    fontSize: responsiveFontSize(2.2),
+    fontSize: responsiveFontSize(2.2) / fontScale,
     color: "white",
   },
   InnerContainers: {
@@ -211,13 +213,13 @@ const styles = StyleSheet.create({
     marginLeft: "6%",
     color: "black",
     fontWeight: "600",
-    fontSize: responsiveFontSize(2.4),
+    fontSize: responsiveFontSize(2.4) / fontScale,
   },
   InnerText: {
     marginLeft: "6%",
     marginTop: "2%",
     color: "darkgray",
     fontWeight: "400",
-    fontSize: responsiveFontSize(2.2),
+    fontSize: responsiveFontSize(2.2) / fontScale,
   },
 });
