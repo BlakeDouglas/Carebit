@@ -354,8 +354,9 @@ export async function setAlertOkEndpoint(params) {
     if (responseText.startsWith("<")) {
       throw "Server error in /alerts/ok: " + responseText;
     }
-    if (responseText === "") return responseText;
-    else return JSON.parse(responseText);
+    if (responseText === "") return "";
+    const json = JSON.parse(responseText);
+    return json;
   } catch (error) {
     console.log("Caught error in /alerts/ok: " + error);
   }
@@ -377,6 +378,25 @@ export async function getAlertsEndpoint(params) {
     console.log(
       "Caught error from /alerts/<caregiveeID>/<int:caregiverID>: " + error
     );
+  }
+}
+
+// Params: {auth, targetID}
+export async function setNoSyncAlert(params) {
+  try {
+    console.log(`${urlBase}noSyncAlert/${params.targetID}`);
+    const response = await fetch(`${urlBase}noSyncAlert/${params.targetID}`, {
+      method: "POST",
+      headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /noSyncAlert/<caregiveeID>: " + responseText;
+    }
+    if (responseText === "") return responseText;
+    else return JSON.parse(responseText);
+  } catch (error) {
+    console.log("Caught error in /noSyncAlert/<caregiveeID>: " + error);
   }
 }
 

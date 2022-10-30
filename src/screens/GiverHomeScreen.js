@@ -26,6 +26,7 @@ import {
   fitbitDataEndpoint,
   getDefaultEndpoint,
   notificationTokenEndpoint,
+  setNoSyncAlert,
 } from "../network/CarebitAPI";
 
 export default function GiverHomeScreen({ navigation }) {
@@ -40,7 +41,7 @@ export default function GiverHomeScreen({ navigation }) {
   const [BatterySyncTime, setBatterySyncTime] = useState(null);
   const [HeartSyncTime, setHeartSyncTime] = useState(null);
   const [StepsSyncTime, setStepsSyncTime] = useState(null);
-
+  const [StepAlert, setStepAlert] = useState(null);
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
@@ -189,6 +190,21 @@ export default function GiverHomeScreen({ navigation }) {
     return "Invalid Time";
   };
 
+  const noSyncAlert = async () => {
+    if (!selectedUser.caregiveeID) {
+      return;
+    }
+    const params = {
+      auth: tokenData.access_token,
+      targetID: selectedUser.caregiveeID,
+    };
+    const json = await setNoSyncAlert(params);
+    if (!json) {
+      console.log("Problem sending no sync alert");
+      return;
+    }
+  };
+
   const fetchData = async () => {
     if (!selectedUser.caregiveeID) {
       return;
@@ -228,6 +244,19 @@ export default function GiverHomeScreen({ navigation }) {
       console.log("Steps: ", json.steps);
       setHourlySteps(json.steps.hourlyTotal);
       setDailySteps(json.steps.currentDayTotal);
+
+      let currTime = moment().format("YYYY-MM-DD HH:mm:ss");
+      let pullTime =
+        json.steps.date +
+        (json.steps.timeMeasured.length === 7 ? " 0" : " ") +
+        json.steps.timeMeasured;
+      let range = moment.range(pullTime, currTime);
+      setStepAlert(range.diff("minutes"));
+      console.log(StepAlert);
+      if (StepAlert > 60) {
+        noSyncAlert();
+      }
+
       setStepUpdate(
         calculateTime(
           json.steps.date +
@@ -270,8 +299,9 @@ export default function GiverHomeScreen({ navigation }) {
   useEffect(() => {
     const toggle = setInterval(() => {
       console.log("here");
+      console.log(StepsSyncTime);
       isFocused ? getCaregiveeInfo() && fetchData() : clearInterval(toggle);
-    }, 60000);
+    }, 100000);
     return () => clearInterval(toggle);
   });
 

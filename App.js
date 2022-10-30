@@ -2,6 +2,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AccountCreationScreen from "./src/screens/AccountCreationScreen";
 import ActivityLevelScreen from "./src/screens/ActivityLevelScreen";
+import AddIntroScreen from "./src/screens/AddIntroScreen";
+import AddOptionsScreen from "./src/screens/AddOptionsScreen";
 import AddScreen from "./src/screens/AddScreen";
 import AuthenticationScreen from "./src/screens/AuthenticationScreen";
 import CustomNotificationScreen from "./src/screens/CustomNotificationScreen";
