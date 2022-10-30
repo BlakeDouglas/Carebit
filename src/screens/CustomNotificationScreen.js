@@ -21,7 +21,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 export default function CustomNotificationScreen({ navigation }) {
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
-  const {fontScale} = useWindowDimensions();
+  const fontScale = useWindowDimensions();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const [isCustom, setIsCustom] = useState(selectedUser.healthProfile === 4);
   const [isHrAlerts, setIsHrAlerts] = useState(true);
@@ -146,7 +146,12 @@ export default function CustomNotificationScreen({ navigation }) {
                 { marginLeft: "10%", marginRight: "10%", marginTop: "20%" },
               ]}
             >
-              <Text style={{ fontSize: responsiveFontSize(6) / fontScale, color: "white" }}>
+              <Text
+                style={{
+                  fontSize: responsiveFontSize(6) / fontScale,
+                  color: "white",
+                }}
+              >
                 Custom Alerts
               </Text>
 
@@ -159,7 +164,10 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
               >
                 <Text
-                  style={{ fontSize: responsiveFontSize(3) / fontScale, color: "white" }}
+                  style={{
+                    fontSize: responsiveFontSize(3) / fontScale,
+                    color: "white",
+                  }}
                 >
                   Please Choose a Caregivee First
                 </Text>

@@ -7,16 +7,18 @@ import {
   StatusBar,
   Image,
   TouchableOpacity,
-  useWindowDimensions
+  useWindowDimensions,
 } from "react-native";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { setTokenData } from "../redux/actions";
+
+const fontScale = useWindowDimensions();
 export default function ModifiedActivityScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
-  const {fontScale} = useWindowDimensions();
+
   const setActivity = async (level) => {
     let url = "https://www.carebit.xyz/";
     let body;

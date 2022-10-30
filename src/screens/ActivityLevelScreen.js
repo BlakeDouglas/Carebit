@@ -13,10 +13,12 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedUser } from "../redux/actions";
+
+const fontScale = useWindowDimensions();
 export default function AccountCreationScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
-  const {fontScale} = useWindowDimensions();
+
   const dispatch = useDispatch();
 
   const setActivity = async (level) => {
@@ -74,7 +76,10 @@ export default function AccountCreationScreen({ navigation, route }) {
                 }}
               >
                 <Text
-                  style={{ color: "white", fontSize: responsiveFontSize(3) / fontScale }}
+                  style={{
+                    color: "white",
+                    fontSize: responsiveFontSize(3) / fontScale,
+                  }}
                 >
                   Please Choose a Caregivee First
                 </Text>

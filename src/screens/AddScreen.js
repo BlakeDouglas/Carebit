@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
-  useWindowDimensions
+  useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
@@ -18,6 +18,7 @@ import CustomTextInput from "../utils/CustomTextInput";
 import { phone } from "phone";
 
 export default function AddScreen({ navigation: { goBack } }) {
+  const fontScale = useWindowDimensions();
   const handleChange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
   };
@@ -136,7 +137,12 @@ export default function AddScreen({ navigation: { goBack } }) {
               justifyContent: "center",
             }}
           >
-            <Text style={{ fontSize: responsiveFontSize(2.5) / fontScale, color: "white" }}>
+            <Text
+              style={{
+                fontSize: responsiveFontSize(2.5) / fontScale,
+                color: "white",
+              }}
+            >
               {typeOfRequester === "caregivee"
                 ? "Please enter your Caregivee's phone number to add them"
                 : "Please enter your Caregiver's phone number to add them"}

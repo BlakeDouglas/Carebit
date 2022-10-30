@@ -8,7 +8,7 @@ import {
   LogBox,
   StatusBar,
   TouchableOpacity,
-  useWindowDimensions
+  useWindowDimensions,
 } from "react-native";
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
 import * as Linking from "expo-linking";
@@ -54,7 +54,7 @@ export const makeCaregivee = async (code, tokenData, dispatch) => {
 export default function AuthenticationScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
-  const {fontScale} = useWindowDimensions();
+  const fontScale = useWindowDimensions();
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId: "228DBB",
@@ -116,7 +116,12 @@ export default function AuthenticationScreen({ navigation }) {
               style={{ marginRight: "1%" }}
               source={require("../../assets/images/midCheck/icons-check.png")}
             />
-            <Text style={{ fontSize: responsiveFontSize(2.8) / fontScale, color: "white" }}>
+            <Text
+              style={{
+                fontSize: responsiveFontSize(2.8) / fontScale,
+                color: "white",
+              }}
+            >
               Account Created
             </Text>
           </SafeAreaView>
