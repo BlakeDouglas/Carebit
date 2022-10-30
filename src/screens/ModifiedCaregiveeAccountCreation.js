@@ -6,6 +6,7 @@ import {
   StatusBar,
   View,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -32,7 +33,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
     type: "",
     mobilePlatform: "",
   });
-
+  const { fontScale } = useWindowDimensions();
   const [errors, setErrors] = useState({});
   // Checks for formatting in text fields
   const validate = () => {
@@ -153,14 +154,14 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2),
+                fontSize: responsiveFontSize(2.2) / fontScale,
               }}
             >
               Opting Out
             </Text>
             <Text
               style={{
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.8) / fontScale,
                 fontWeight: "400",
                 textAlign: "left",
               }}
@@ -197,7 +198,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -233,7 +234,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
             <Text
               style={[
                 GlobalStyle.Subtitle2,
-                { fontSize: responsiveFontSize(3.71) },
+                { fontSize: responsiveFontSize(3.71) / fontScale },
               ]}
             >
               Caregivee Registration
@@ -333,7 +334,14 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                   ]}
                   onPress={validate}
                 >
-                  <Text style={GlobalStyle.ButtonText}>Create Account</Text>
+                  <Text
+                    style={[
+                      GlobalStyle.ButtonText,
+                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                    ]}
+                  >
+                    Create Account
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>

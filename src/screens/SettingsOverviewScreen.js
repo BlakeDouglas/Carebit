@@ -6,6 +6,7 @@ import {
   StatusBar,
   Alert,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
@@ -14,7 +15,7 @@ import { deleteRequestEndpoint } from "../network/CarebitAPI";
 export default function SettingsOverviewScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
-
+  const { fontScale } = useWindowDimensions();
   const customAlertButtonHandler = () => {
     navigation.navigate("CustomNotification", route.params);
   };
@@ -58,25 +59,68 @@ export default function SettingsOverviewScreen({ navigation }) {
       />
 
       <SafeAreaView style={styles.TitleContainer}>
-        <Text style={styles.Title}>
+        <Text
+          style={[
+            styles.Title,
+            { fontSize: responsiveFontSize(1.9) / fontScale },
+          ]}
+        >
           {"SELECTED "}
           {tokenData.type === "caregivee" ? "CAREGIVER" : "CAREGIVEE"}
         </Text>
       </SafeAreaView>
       <SafeAreaView></SafeAreaView>
       <SafeAreaView style={styles.Box}>
-        <Text style={styles.BoxTitle}>Name</Text>
-        <Text style={styles.BoxSub}>
+        <Text
+          style={[
+            styles.BoxTitle,
+            { fontSize: responsiveFontSize(2.2) / fontScale },
+          ]}
+        >
+          Name
+        </Text>
+        <Text
+          style={[
+            styles.BoxSub,
+            { fontSize: responsiveFontSize(2.2) / fontScale },
+          ]}
+        >
           {selectedUser.firstName || "N/A"} {selectedUser.lastName || "N/A"}
         </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
-        <Text style={styles.BoxTitle}>Email</Text>
-        <Text style={styles.BoxSub}>{selectedUser.email || "N/A"}</Text>
+        <Text
+          style={[
+            styles.BoxTitle,
+            { fontSize: responsiveFontSize(2.2) / fontScale },
+          ]}
+        >
+          Email
+        </Text>
+        <Text
+          style={[
+            styles.BoxSub,
+            { fontSize: responsiveFontSize(2.2) / fontScale },
+          ]}
+        >
+          {selectedUser.email || "N/A"}
+        </Text>
       </SafeAreaView>
       <SafeAreaView style={styles.Box}>
-        <Text style={styles.BoxTitle}>Phone</Text>
-        <Text style={styles.BoxSub}>
+        <Text
+          style={[
+            styles.BoxTitle,
+            { fontSize: responsiveFontSize(2.2) / fontScale },
+          ]}
+        >
+          Phone
+        </Text>
+        <Text
+          style={[
+            styles.BoxSub,
+            { fontSize: responsiveFontSize(2.2) / fontScale },
+          ]}
+        >
           {"(" +
             selectedUser.phone.substring(0, 3) +
             ") " +
@@ -89,22 +133,71 @@ export default function SettingsOverviewScreen({ navigation }) {
       {tokenData.type === "caregiver" && (
         <>
           <SafeAreaView style={styles.TitleContainer}>
-            <Text style={styles.Title}>PHYSICIAN INFO</Text>
+            <Text
+              style={[
+                styles.Title,
+                { fontSize: responsiveFontSize(1.9) / fontScale },
+              ]}
+            >
+              PHYSICIAN INFO
+            </Text>
           </SafeAreaView>
           <SafeAreaView style={styles.Box}>
-            <Text style={styles.BoxTitle}>Name</Text>
-            <Text style={styles.BoxSub}>{selectedUser.physName || "N/A"}</Text>
+            <Text
+              style={[
+                styles.BoxTitle,
+                { fontSize: responsiveFontSize(2.2) / fontScale },
+              ]}
+            >
+              Name
+            </Text>
+            <Text
+              style={[
+                styles.BoxSub,
+                { fontSize: responsiveFontSize(2.2) / fontScale },
+              ]}
+            >
+              {selectedUser.physName || "N/A"}
+            </Text>
           </SafeAreaView>
           <SafeAreaView style={styles.Box}>
-            <Text style={styles.BoxTitle}>Phone</Text>
-            <Text style={styles.BoxSub}>{selectedUser.physPhone || "N/A"}</Text>
+            <Text
+              style={[
+                styles.BoxTitle,
+                { fontSize: responsiveFontSize(2.2) / fontScale },
+              ]}
+            >
+              Phone
+            </Text>
+            <Text
+              style={[
+                styles.BoxSub,
+                { fontSize: responsiveFontSize(2.2) / fontScale },
+              ]}
+            >
+              {selectedUser.physPhone || "N/A"}
+            </Text>
           </SafeAreaView>
 
           <SafeAreaView style={styles.TitleContainer}>
-            <Text style={styles.Title}>ALERTS</Text>
+            <Text
+              style={[
+                styles.Title,
+                { fontSize: responsiveFontSize(1.9) / fontScale },
+              ]}
+            >
+              ALERTS
+            </Text>
           </SafeAreaView>
           <SafeAreaView style={styles.Box}>
-            <Text style={styles.BoxTitle}>Activity Level</Text>
+            <Text
+              style={[
+                styles.BoxTitle,
+                { fontSize: responsiveFontSize(2.2) / fontScale },
+              ]}
+            >
+              Activity Level
+            </Text>
             <TouchableOpacity
               onPress={() => {
                 activityButtonHandler();
@@ -115,7 +208,14 @@ export default function SettingsOverviewScreen({ navigation }) {
                 flexDirection: "row",
               }}
             >
-              <Text style={styles.BoxSub}>Active</Text>
+              <Text
+                style={[
+                  styles.BoxSub,
+                  { fontSize: responsiveFontSize(2.2) / fontScale },
+                ]}
+              >
+                Active
+              </Text>
               <Image
                 style={{ height: 15, width: 15, marginLeft: "1%" }}
                 source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
@@ -123,7 +223,14 @@ export default function SettingsOverviewScreen({ navigation }) {
             </TouchableOpacity>
           </SafeAreaView>
           <SafeAreaView style={styles.Box}>
-            <Text style={styles.BoxTitle}>Custom Alert Settings</Text>
+            <Text
+              style={[
+                styles.BoxTitle,
+                { fontSize: responsiveFontSize(2.2) / fontScale },
+              ]}
+            >
+              Custom Alert Settings
+            </Text>
             <TouchableOpacity
               onPress={() => {
                 customAlertButtonHandler();
@@ -134,7 +241,12 @@ export default function SettingsOverviewScreen({ navigation }) {
                 flexDirection: "row",
               }}
             >
-              <Text style={styles.BoxSub}>
+              <Text
+                style={[
+                  styles.BoxSub,
+                  { fontSize: responsiveFontSize(2.2) / fontScale },
+                ]}
+              >
                 {selectedUser.healthProfile === 4 ? "On" : "Off"}
               </Text>
               <Image
@@ -161,7 +273,7 @@ export default function SettingsOverviewScreen({ navigation }) {
           <Text
             style={{
               color: "red",
-              fontSize: responsiveFontSize(2.5),
+              fontSize: responsiveFontSize(2.5) / fontScale,
               fontWeight: "bold",
             }}
           >

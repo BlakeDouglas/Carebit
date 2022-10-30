@@ -6,6 +6,7 @@ import {
   Image,
   FlatList,
   RefreshControl,
+  useWindowDimensions,
 } from "react-native";
 
 import { responsiveFontSize } from "react-native-responsive-dimensions";
@@ -22,6 +23,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
+  const { fontScale } = useWindowDimensions();
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     getAlerts();
@@ -107,13 +109,18 @@ export default function ReceivedAlertsScreen({ navigation }) {
           justifyContent: "center",
         }}
       >
-        <Text style={{ fontSize: responsiveFontSize(2.2), fontWeight: "600" }}>
+        <Text
+          style={{
+            fontSize: responsiveFontSize(2.2) / fontScale,
+            fontWeight: "600",
+          }}
+        >
           {title}
         </Text>
         <Text
           style={{
             marginTop: "1%",
-            fontSize: responsiveFontSize(1.8),
+            fontSize: responsiveFontSize(1.8) / fontScale,
             color: "gray",
           }}
           numberOfLines={3}
@@ -134,7 +141,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
               color: "rgba(0,225,200,.6)",
               fontWeight: "bold",
               textAlign: "right",
-              fontSize: responsiveFontSize(2.3),
+              fontSize: responsiveFontSize(2.3) / fontScale,
               marginTop: "10%",
             }}
           >
@@ -144,14 +151,20 @@ export default function ReceivedAlertsScreen({ navigation }) {
           <Text
             style={{
               textAlign: "right",
-              fontSize: responsiveFontSize(2.3),
+              fontSize: responsiveFontSize(2.3) / fontScale,
               marginTop: "10%",
             }}
           >
             {" "}
           </Text>
         )}
-        <Text style={{ color: "grey", marginTop: "14%" }}>
+        <Text
+          style={{
+            color: "grey",
+            marginTop: "14%",
+            fontSize: responsiveFontSize(2.1) / fontScale,
+          }}
+        >
           {moment(dateTime, ["HH:mm"]).format("hh:mm a")}
         </Text>
       </SafeAreaView>
@@ -174,8 +187,22 @@ export default function ReceivedAlertsScreen({ navigation }) {
   const Empty = () => {
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>No alerts</Text>
-        <Text style={styles.emptyText}>...</Text>
+        <Text
+          style={[
+            styles.emptyText,
+            { fontSize: responsiveFontSize(3.5) / fontScale },
+          ]}
+        >
+          No alerts
+        </Text>
+        <Text
+          style={[
+            styles.emptyText,
+            { fontSize: responsiveFontSize(3.5) / fontScale },
+          ]}
+        >
+          ...
+        </Text>
       </View>
     );
   };
@@ -199,7 +226,12 @@ export default function ReceivedAlertsScreen({ navigation }) {
           marginBottom: "6%",
         }}
       >
-        <Text style={{ fontSize: responsiveFontSize(2.5), fontWeight: "600" }}>
+        <Text
+          style={{
+            fontSize: responsiveFontSize(2.5) / fontScale,
+            fontWeight: "600",
+          }}
+        >
           Today
         </Text>
       </SafeAreaView>

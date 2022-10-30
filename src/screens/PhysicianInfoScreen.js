@@ -30,6 +30,7 @@ export default function PhysicianInfoScreen({ navigation }) {
     physName: "",
     physPhone: "",
   });
+  const { fontScale } = useWindowDimensions();
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
   const [errors, setErrors] = useState({});
@@ -102,7 +103,7 @@ export default function PhysicianInfoScreen({ navigation }) {
               <Text
                 style={[
                   GlobalStyle.Subtitle,
-                  { fontSize: responsiveFontSize(5.1) },
+                  { fontSize: responsiveFontSize(5.1) / fontScale },
                 ]}
               >
                 Physician Contact
@@ -151,7 +152,14 @@ export default function PhysicianInfoScreen({ navigation }) {
                     validate();
                   }}
                 >
-                  <Text style={GlobalStyle.ButtonText}>Create Account</Text>
+                  <Text
+                    style={[
+                      GlobalStyle.ButtonText,
+                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                    ]}
+                  >
+                    Create Account
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>

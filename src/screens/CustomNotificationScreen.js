@@ -8,6 +8,7 @@ import {
   ImageBackground,
   ScrollView,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -92,6 +93,7 @@ export default function CustomNotificationScreen({ navigation }) {
   const maxSteps = range(1, 40, 250, " steps");
 
   let doesSelectedUserExist = selectedUser.email !== "";
+  const { fontScale } = useWindowDimensions();
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar
@@ -112,7 +114,12 @@ export default function CustomNotificationScreen({ navigation }) {
                 { marginLeft: "10%", marginRight: "10%", marginTop: "20%" },
               ]}
             >
-              <Text style={{ fontSize: responsiveFontSize(6), color: "white" }}>
+              <Text
+                style={{
+                  fontSize: responsiveFontSize(6) / fontScale,
+                  color: "white",
+                }}
+              >
                 Custom Alerts
               </Text>
 
@@ -125,7 +132,10 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
               >
                 <Text
-                  style={{ fontSize: responsiveFontSize(3), color: "white" }}
+                  style={{
+                    fontSize: responsiveFontSize(3) / fontScale,
+                    color: "white",
+                  }}
                 >
                   Please Choose a Caregivee First
                 </Text>
@@ -136,7 +146,14 @@ export default function CustomNotificationScreen({ navigation }) {
                     navigation.navigate("ListOfFriendsScreen");
                   }}
                 >
-                  <Text style={GlobalStyle.ButtonText}>Select Caregivee</Text>
+                  <Text
+                    style={[
+                      GlobalStyle.ButtonText,
+                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                    ]}
+                  >
+                    Select Caregivee
+                  </Text>
                 </TouchableOpacity>
               </SafeAreaView>
             </SafeAreaView>
@@ -146,7 +163,14 @@ export default function CustomNotificationScreen({ navigation }) {
       {doesSelectedUserExist && (
         <ScrollView>
           <SafeAreaView style={[styles.Box, { marginTop: "3%" }]}>
-            <Text style={styles.TitleNoSub}>Use Custom Alerts</Text>
+            <Text
+              style={[
+                styles.TitleNoSub,
+                { fontSize: responsiveFontSize(2.2) / fontScale },
+              ]}
+            >
+              Use Custom Alerts
+            </Text>
             <Switch
               trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
               thumbColor={isCustom ? "white" : "white"}
@@ -156,7 +180,12 @@ export default function CustomNotificationScreen({ navigation }) {
             />
           </SafeAreaView>
           <SafeAreaView>
-            <Text style={styles.Descriptive}>
+            <Text
+              style={[
+                styles.Descriptive,
+                { fontSize: responsiveFontSize(1.9) / fontScale },
+              ]}
+            >
               {isCustom
                 ? "Turn off to use Activity Levels instead of Custom Thresholds for notifications"
                 : "Turn on to use Custom Thresholds instead of Activity Levels for notifications"}
@@ -164,7 +193,14 @@ export default function CustomNotificationScreen({ navigation }) {
           </SafeAreaView>
           {isCustom ? (
             <SafeAreaView style={[styles.Box, { marginTop: "5%" }]}>
-              <Text style={styles.TitleNoSub}>Heart Rate Alerts</Text>
+              <Text
+                style={[
+                  styles.TitleNoSub,
+                  { fontSize: responsiveFontSize(2.2) / fontScale },
+                ]}
+              >
+                Heart Rate Alerts
+              </Text>
 
               <Switch
                 trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
@@ -178,8 +214,22 @@ export default function CustomNotificationScreen({ navigation }) {
           {isHrAlerts && isCustom ? (
             <SafeAreaView style={styles.Box}>
               <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
-                <Text style={styles.Title}>Low Heart Rate</Text>
-                <Text style={styles.Example}>e.g. 60 bpm</Text>
+                <Text
+                  style={[
+                    styles.Title,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Low Heart Rate
+                </Text>
+                <Text
+                  style={[
+                    styles.Example,
+                    { fontSize: responsiveFontSize(1.5) / fontScale },
+                  ]}
+                >
+                  e.g. 60 bpm
+                </Text>
               </SafeAreaView>
               <SelectDropdown
                 renderDropdownIcon={(isOpened) => {
@@ -225,8 +275,22 @@ export default function CustomNotificationScreen({ navigation }) {
           {isHrAlerts && isCustom && (
             <SafeAreaView style={styles.Box}>
               <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
-                <Text style={styles.Title}>High Heart Rate</Text>
-                <Text style={styles.Example}>e.g. 100 bpm</Text>
+                <Text
+                  style={[
+                    styles.Title,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  High Heart Rate
+                </Text>
+                <Text
+                  style={[
+                    styles.Example,
+                    { fontSize: responsiveFontSize(1.5) / fontScale },
+                  ]}
+                >
+                  e.g. 100 bpm
+                </Text>
               </SafeAreaView>
               <SelectDropdown
                 renderDropdownIcon={(isOpened) => {
@@ -269,7 +333,14 @@ export default function CustomNotificationScreen({ navigation }) {
           )}
           {isCustom && (
             <SafeAreaView style={[styles.Box, { marginTop: "10%" }]}>
-              <Text style={styles.TitleNoSub}>No Activity Alerts</Text>
+              <Text
+                style={[
+                  styles.TitleNoSub,
+                  { fontSize: responsiveFontSize(2.2) / fontScale },
+                ]}
+              >
+                No Activity Alerts
+              </Text>
               <Switch
                 trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                 thumbColor={isCustom ? "white" : "white"}
@@ -282,8 +353,22 @@ export default function CustomNotificationScreen({ navigation }) {
           {isActivityAlerts && isCustom && (
             <SafeAreaView style={styles.Box}>
               <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
-                <Text style={styles.Title}>Time Without Heart Rate</Text>
-                <Text style={styles.Example}>e.g. 1 hour</Text>
+                <Text
+                  style={[
+                    styles.Title,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Time Without Heart Rate
+                </Text>
+                <Text
+                  style={[
+                    styles.Example,
+                    { fontSize: responsiveFontSize(1.5) / fontScale },
+                  ]}
+                >
+                  e.g. 1 hour
+                </Text>
               </SafeAreaView>
               <SelectDropdown
                 renderDropdownIcon={(isOpened) => {
@@ -331,8 +416,22 @@ export default function CustomNotificationScreen({ navigation }) {
           {isActivityAlerts && isCustom && (
             <SafeAreaView style={styles.Box}>
               <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
-                <Text style={styles.Title}>Time Without Steps</Text>
-                <Text style={styles.Example}>e.g. 2 hours</Text>
+                <Text
+                  style={[
+                    styles.Title,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Time Without Steps
+                </Text>
+                <Text
+                  style={[
+                    styles.Example,
+                    { fontSize: responsiveFontSize(1.5) / fontScale },
+                  ]}
+                >
+                  e.g. 2 hours
+                </Text>
               </SafeAreaView>
               <SelectDropdown
                 renderDropdownIcon={(isOpened) => {
@@ -380,7 +479,14 @@ export default function CustomNotificationScreen({ navigation }) {
 
           {isCustom && (
             <SafeAreaView style={[styles.Box, { marginTop: "10%" }]}>
-              <Text style={styles.TitleNoSub}>Wandering Alerts</Text>
+              <Text
+                style={[
+                  styles.TitleNoSub,
+                  { fontSize: responsiveFontSize(2.2) / fontScale },
+                ]}
+              >
+                Wandering Alerts
+              </Text>
               <Switch
                 trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                 thumbColor={isWandering ? "white" : "white"}
@@ -393,8 +499,22 @@ export default function CustomNotificationScreen({ navigation }) {
           {isWandering && isCustom && (
             <SafeAreaView style={styles.Box}>
               <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
-                <Text style={styles.Title}>Max Steps in an Hour</Text>
-                <Text style={styles.Example}>e.g. 2000 Steps</Text>
+                <Text
+                  style={[
+                    styles.Title,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Max Steps in an Hour
+                </Text>
+                <Text
+                  style={[
+                    styles.Example,
+                    { fontSize: responsiveFontSize(1.5) / fontScale },
+                  ]}
+                >
+                  e.g. 2000 Steps
+                </Text>
               </SafeAreaView>
               <SelectDropdown
                 renderDropdownIcon={(isOpened) => {
@@ -439,7 +559,14 @@ export default function CustomNotificationScreen({ navigation }) {
           {isCustom && (
             <SafeAreaView>
               <SafeAreaView style={[styles.Box, { marginTop: "10%" }]}>
-                <Text style={styles.TitleNoSub}>No Sync Alerts</Text>
+                <Text
+                  style={[
+                    styles.TitleNoSub,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  No Sync Alerts
+                </Text>
                 <Switch
                   trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                   thumbColor={isSync ? "white" : "white"}
@@ -449,7 +576,12 @@ export default function CustomNotificationScreen({ navigation }) {
                 />
               </SafeAreaView>
               <SafeAreaView>
-                <Text style={styles.Descriptive}>
+                <Text
+                  style={[
+                    styles.Descriptive,
+                    { fontSize: responsiveFontSize(1.9) / fontScale },
+                  ]}
+                >
                   We'll send you an alert after {selectedUser.firstName}'s
                   Fitbit hasn't synced for an hour
                 </Text>
@@ -460,7 +592,14 @@ export default function CustomNotificationScreen({ navigation }) {
           {isCustom && (
             <SafeAreaView>
               <SafeAreaView style={[styles.Box, { marginTop: "5%" }]}>
-                <Text style={styles.TitleNoSub}>Empty Battery Alerts</Text>
+                <Text
+                  style={[
+                    styles.TitleNoSub,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Empty Battery Alerts
+                </Text>
                 <Switch
                   trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                   thumbColor={isBattery ? "white" : "white"}
@@ -470,7 +609,12 @@ export default function CustomNotificationScreen({ navigation }) {
                 />
               </SafeAreaView>
               <SafeAreaView>
-                <Text style={styles.Descriptive}>
+                <Text
+                  style={[
+                    styles.Descriptive,
+                    { fontSize: responsiveFontSize(1.9) / fontScale },
+                  ]}
+                >
                   We'll send you an alert when {selectedUser.firstName}'s Fitbit
                   has no charge
                 </Text>

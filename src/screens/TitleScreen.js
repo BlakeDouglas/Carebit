@@ -4,6 +4,7 @@ import {
   StatusBar,
   ImageBackground,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import GlobalStyle from "../utils/GlobalStyle";
 import React, { useEffect } from "react";
@@ -87,8 +88,22 @@ export default function TitleScreen({ navigation }) {
         <SafeAreaView style={GlobalStyle.Container}>
           {/* Title Container */}
           <SafeAreaView style={{ width: "100%", height: "22%" }}>
-            <Text style={GlobalStyle.Subtitle}>Welcome to</Text>
-            <Text style={GlobalStyle.Title}>Carebit</Text>
+            <Text
+              style={[
+                GlobalStyle.Subtitle,
+                { fontSize: responsiveFontSize(6.3) / fontScale },
+              ]}
+            >
+              Welcome to
+            </Text>
+            <Text
+              style={[
+                GlobalStyle.Title,
+                { fontSize: responsiveFontSize(6.95) / fontScale },
+              ]}
+            >
+              Carebit
+            </Text>
           </SafeAreaView>
           {/* Text body Container */}
           <SafeAreaView
@@ -100,7 +115,12 @@ export default function TitleScreen({ navigation }) {
               marginBottom: "5%",
             }}
           >
-            <Text style={GlobalStyle.Text}>
+            <Text
+              style={[
+                GlobalStyle.Text,
+                { fontSize: responsiveFontSize(2.51) / fontScale },
+              ]}
+            >
               Carebit uses Fitbit devices to monitor the heart rate and activity
               of you or your loved one {"\n\n"}If you or your loved one's Fitbit
               is not set up, visit{" "}
@@ -110,6 +130,7 @@ export default function TitleScreen({ navigation }) {
                   GlobalStyle.Text,
                   {
                     textDecorationLine: "underline",
+                    fontSize: responsiveFontSize(2.51) / fontScale,
                   },
                 ]}
               >
@@ -125,7 +146,14 @@ export default function TitleScreen({ navigation }) {
               style={GlobalStyle.Button}
               onPress={createAccountButtonHandler}
             >
-              <Text style={GlobalStyle.ButtonText}>Create an Account</Text>
+              <Text
+                style={[
+                  GlobalStyle.ButtonText,
+                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                ]}
+              >
+                Create an Account
+              </Text>
             </TouchableOpacity>
             {/* Log in button and navigation to log in page handler */}
             <TouchableOpacity
@@ -135,7 +163,14 @@ export default function TitleScreen({ navigation }) {
               ]}
               onPress={loginButtonHandler}
             >
-              <Text style={GlobalStyle.ButtonText}>Log In</Text>
+              <Text
+                style={[
+                  GlobalStyle.ButtonText,
+                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                ]}
+              >
+                Log In
+              </Text>
             </TouchableOpacity>
           </SafeAreaView>
         </SafeAreaView>

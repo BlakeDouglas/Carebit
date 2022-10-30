@@ -4,6 +4,7 @@ import {
   Text,
   ImageBackground,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 
 import GlobalStyle from "../utils/GlobalStyle";
@@ -19,6 +20,7 @@ export default function RoleSelectScreen({ navigation }) {
     dispatch(setTokenData({ ...tokenData, type: "caregiver" }));
     navigation.navigate("AccountCreationScreen");
   };
+  const { fontScale } = useWindowDimensions();
 
   const caregiveeCreateAccountButtonHandler = () => {
     dispatch(setTokenData({ ...tokenData, type: "caregivee" }));
@@ -33,8 +35,22 @@ export default function RoleSelectScreen({ navigation }) {
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
         <SafeAreaView style={GlobalStyle.Container}>
-          <Text style={GlobalStyle.Subtitle}>Choose Your</Text>
-          <Text style={GlobalStyle.Title}>Role</Text>
+          <Text
+            style={[
+              GlobalStyle.Subtitle,
+              { fontSize: responsiveFontSize(6.3) / fontScale },
+            ]}
+          >
+            Choose Your
+          </Text>
+          <Text
+            style={[
+              GlobalStyle.Title,
+              { fontSize: responsiveFontSize(6.95) / fontScale },
+            ]}
+          >
+            Role
+          </Text>
           <SafeAreaView
             style={{
               height: "25%",
@@ -43,7 +59,12 @@ export default function RoleSelectScreen({ navigation }) {
               marginBottom: "5%",
             }}
           >
-            <Text style={GlobalStyle.Text}>
+            <Text
+              style={[
+                GlobalStyle.Text,
+                { fontSize: responsiveFontSize(2.51) / fontScale },
+              ]}
+            >
               To create your account, let us know if you're giving care or are
               being cared for
             </Text>
@@ -52,14 +73,28 @@ export default function RoleSelectScreen({ navigation }) {
             style={[GlobalStyle.Button, { marginBottom: "4%" }]}
             onPress={caregiverCreateAccountButtonHandler}
           >
-            <Text style={GlobalStyle.ButtonText}>I'm Caregiving</Text>
+            <Text
+              style={[
+                GlobalStyle.ButtonText,
+                { fontSize: responsiveFontSize(2.51) / fontScale },
+              ]}
+            >
+              I'm Caregiving
+            </Text>
           </TouchableOpacity>
           <Text />
           <TouchableOpacity
             style={GlobalStyle.Button}
             onPress={caregiveeCreateAccountButtonHandler}
           >
-            <Text style={GlobalStyle.ButtonText}>I'm Receiving Care</Text>
+            <Text
+              style={[
+                GlobalStyle.ButtonText,
+                { fontSize: responsiveFontSize(2.51) / fontScale },
+              ]}
+            >
+              I'm Receiving Care
+            </Text>
           </TouchableOpacity>
         </SafeAreaView>
       </SafeAreaView>

@@ -6,6 +6,7 @@ import {
   StatusBar,
   ImageBackground,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import { React } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
@@ -32,7 +33,7 @@ export default function GiverSettingsScreen({ navigation }) {
     deleteKeychain();
     dispatch(resetData());
   };
-
+  const { fontScale } = useWindowDimensions();
   const customAlertButtonHandler = () => {
     navigation.navigate("CustomNotification");
   };
@@ -94,13 +95,19 @@ export default function GiverSettingsScreen({ navigation }) {
             }}
           >
             <Text
-              style={{ fontSize: responsiveFontSize(2.8), color: "white" }}
+              style={{
+                fontSize: responsiveFontSize(2.8) / fontScale,
+                color: "white",
+              }}
               numberOfLines={1}
             >
               {tokenData.firstName || ""} {tokenData.lastName || ""}
             </Text>
             <Text
-              style={{ fontSize: responsiveFontSize(2.1), color: "white" }}
+              style={{
+                fontSize: responsiveFontSize(2.1) / fontScale,
+                color: "white",
+              }}
               numberOfLines={1}
             >
               {tokenData.email || "email error"}
@@ -119,10 +126,24 @@ export default function GiverSettingsScreen({ navigation }) {
                 //backgroundColor: "red",
               }}
             >
-              <Text style={styles.Title}>SELECTED CAREGIVEE</Text>
+              <Text
+                style={[
+                  styles.Title,
+                  { fontSize: responsiveFontSize(1.9) / fontScale },
+                ]}
+              >
+                SELECTED CAREGIVEE
+              </Text>
 
               <SafeAreaView style={styles.Box}>
-                <Text style={styles.BoxTitle}>Name</Text>
+                <Text
+                  style={[
+                    styles.BoxTitle,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Name
+                </Text>
                 <SafeAreaView
                   style={{
                     width: "80%",
@@ -131,7 +152,13 @@ export default function GiverSettingsScreen({ navigation }) {
                   }}
                 >
                   <Text
-                    style={[styles.BoxSub, { textAlign: "right" }]}
+                    style={[
+                      styles.BoxSub,
+                      {
+                        textAlign: "right",
+                        fontSize: responsiveFontSize(2.2) / fontScale,
+                      },
+                    ]}
                     numberOfLines={1}
                   >
                     {selectedUser.firstName || ""}{" "}
@@ -140,7 +167,14 @@ export default function GiverSettingsScreen({ navigation }) {
                 </SafeAreaView>
               </SafeAreaView>
               <SafeAreaView style={styles.Box2}>
-                <Text style={styles.BoxTitle}>Phone</Text>
+                <Text
+                  style={[
+                    styles.BoxTitle,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Phone
+                </Text>
                 <SafeAreaView
                   style={{
                     width: "80%",
@@ -148,7 +182,15 @@ export default function GiverSettingsScreen({ navigation }) {
                     justifyContent: "center",
                   }}
                 >
-                  <Text style={[styles.BoxSub, { textAlign: "right" }]}>
+                  <Text
+                    style={[
+                      styles.BoxSub,
+                      {
+                        textAlign: "right",
+                        fontSize: responsiveFontSize(2.2) / fontScale,
+                      },
+                    ]}
+                  >
                     {selectedUser.phone
                       ? selectedCountryCode === "+1"
                         ? selectedCountryCode +
@@ -175,17 +217,49 @@ export default function GiverSettingsScreen({ navigation }) {
                 //backgroundColor: "blue",
               }}
             >
-              <Text style={styles.Title}>PHYSICIAN INFO</Text>
+              <Text
+                style={[
+                  styles.Title,
+                  { fontSize: responsiveFontSize(1.9) / fontScale },
+                ]}
+              >
+                PHYSICIAN INFO
+              </Text>
 
               <SafeAreaView style={styles.Box}>
-                <Text style={styles.BoxTitle}>Name</Text>
-                <Text style={styles.BoxSub} numberOfLines={1}>
+                <Text
+                  style={[
+                    styles.BoxTitle,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Name
+                </Text>
+                <Text
+                  style={[
+                    styles.BoxSub,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                  numberOfLines={1}
+                >
                   {selectedUser.physName || "N/A"}
                 </Text>
               </SafeAreaView>
               <SafeAreaView style={styles.Box2}>
-                <Text style={styles.BoxTitle}>Phone</Text>
-                <Text style={styles.BoxSub}>
+                <Text
+                  style={[
+                    styles.BoxTitle,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Phone
+                </Text>
+                <Text
+                  style={[
+                    styles.BoxSub,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
                   {selectedUser.physPhone
                     ? physCountryCode === "+1"
                       ? physCountryCode +
@@ -211,10 +285,24 @@ export default function GiverSettingsScreen({ navigation }) {
                 //backgroundColor: "blue",
               }}
             >
-              <Text style={styles.Title}>ALERTS</Text>
+              <Text
+                style={[
+                  styles.Title,
+                  { fontSize: responsiveFontSize(1.9) / fontScale },
+                ]}
+              >
+                ALERTS
+              </Text>
 
               <SafeAreaView style={styles.Box}>
-                <Text style={styles.BoxTitle}>Activity Level</Text>
+                <Text
+                  style={[
+                    styles.BoxTitle,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Activity Level
+                </Text>
                 <TouchableOpacity
                   onPress={activityButtonHandler}
                   style={{
@@ -223,7 +311,12 @@ export default function GiverSettingsScreen({ navigation }) {
                     flexDirection: "row",
                   }}
                 >
-                  <Text style={styles.BoxSub}>
+                  <Text
+                    style={[
+                      styles.BoxSub,
+                      { fontSize: responsiveFontSize(2.2) / fontScale },
+                    ]}
+                  >
                     {selectedUser.healthProfile === 1
                       ? "Active"
                       : selectedUser.healthProfile === 2
@@ -245,7 +338,14 @@ export default function GiverSettingsScreen({ navigation }) {
                 </TouchableOpacity>
               </SafeAreaView>
               <SafeAreaView style={styles.Box2}>
-                <Text style={styles.BoxTitle}>Custom Alert Settings</Text>
+                <Text
+                  style={[
+                    styles.BoxTitle,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Custom Alert Settings
+                </Text>
                 <TouchableOpacity
                   onPress={customAlertButtonHandler}
                   style={{
@@ -254,7 +354,12 @@ export default function GiverSettingsScreen({ navigation }) {
                     flexDirection: "row",
                   }}
                 >
-                  <Text style={styles.BoxSub}>
+                  <Text
+                    style={[
+                      styles.BoxSub,
+                      { fontSize: responsiveFontSize(2.2) / fontScale },
+                    ]}
+                  >
                     {selectedUser.healthProfile === 4 ? "On" : "Off"}
                   </Text>
                   <Image
@@ -291,7 +396,7 @@ export default function GiverSettingsScreen({ navigation }) {
             >
               <Text
                 style={{
-                  fontSize: responsiveFontSize(2.2),
+                  fontSize: responsiveFontSize(2.2) / fontScale,
                   //fontWeight: "600",
                   color: "white",
                   textAlign: "left",
@@ -317,7 +422,14 @@ export default function GiverSettingsScreen({ navigation }) {
                   navigation.navigate("RequestScreen");
                 }}
               >
-                <Text style={GlobalStyle.ButtonText}>View Requests</Text>
+                <Text
+                  style={[
+                    GlobalStyle.ButtonText,
+                    { fontSize: responsiveFontSize(2.51) / fontScale },
+                  ]}
+                >
+                  View Requests
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[GlobalStyle.Button, { marginTop: "5%" }]}
@@ -325,7 +437,14 @@ export default function GiverSettingsScreen({ navigation }) {
                   navigation.navigate("AddScreen");
                 }}
               >
-                <Text style={GlobalStyle.ButtonText}>Add Caregivee</Text>
+                <Text
+                  style={[
+                    GlobalStyle.ButtonText,
+                    { fontSize: responsiveFontSize(2.51) / fontScale },
+                  ]}
+                >
+                  Add Caregivee
+                </Text>
               </TouchableOpacity>
             </SafeAreaView>
           </SafeAreaView>
@@ -341,7 +460,7 @@ export default function GiverSettingsScreen({ navigation }) {
             <Text
               style={{
                 color: "red",
-                fontSize: responsiveFontSize(2.5),
+                fontSize: responsiveFontSize(2.5) / fontScale,
                 fontWeight: "bold",
               }}
             >

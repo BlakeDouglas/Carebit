@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  useWindowDimensions,
 } from "react-native";
 import CustomTextInput from "../utils/CustomTextInput";
 import React, { useEffect, useState, useCallback } from "react";
@@ -37,7 +38,7 @@ export default function LinkUsersScreen({ navigation }) {
   const dispatch = useDispatch();
   const typeOfRequester =
     tokenData.type === "caregivee" ? "caregiver" : "caregivee";
-
+  const { fontScale } = useWindowDimensions();
   const createButtonAlert = () =>
     Alert.alert(
       "Warning",
@@ -161,14 +162,14 @@ export default function LinkUsersScreen({ navigation }) {
                 <Text
                   style={{
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(2.2),
+                    fontSize: responsiveFontSize(2.2) / fontScale,
                   }}
                 >
                   Warning
                 </Text>
                 <Text
                   style={{
-                    fontSize: responsiveFontSize(1.8),
+                    fontSize: responsiveFontSize(1.8) / fontScale,
                     fontWeight: "400",
                     textAlign: "left",
                   }}
@@ -211,7 +212,7 @@ export default function LinkUsersScreen({ navigation }) {
                     <Text
                       style={{
                         color: "dodgerblue",
-                        fontSize: responsiveFontSize(2),
+                        fontSize: responsiveFontSize(2) / fontScale,
                         fontWeight: "bold",
                       }}
                     >
@@ -239,7 +240,7 @@ export default function LinkUsersScreen({ navigation }) {
                     <Text
                       style={{
                         color: "dodgerblue",
-                        fontSize: responsiveFontSize(2),
+                        fontSize: responsiveFontSize(2) / fontScale,
                         fontWeight: "bold",
                       }}
                     >
@@ -256,7 +257,7 @@ export default function LinkUsersScreen({ navigation }) {
               <Text
                 style={[
                   GlobalStyle.Subtitle,
-                  { fontSize: responsiveFontSize(5.3) },
+                  { fontSize: responsiveFontSize(5.3) / fontScale },
                 ]}
               >
                 Connect to a Caregivee
@@ -284,7 +285,7 @@ export default function LinkUsersScreen({ navigation }) {
                 <Text
                   style={[
                     GlobalStyle.Text,
-                    { fontSize: responsiveFontSize(2.3) },
+                    { fontSize: responsiveFontSize(2.3) / fontScale },
                   ]}
                 >
                   Request a Caregivee for monitoring {"\n"}(recommended method)
@@ -316,7 +317,14 @@ export default function LinkUsersScreen({ navigation }) {
                   style={[GlobalStyle.Button, { marginTop: "5%" }]}
                   onPress={validate}
                 >
-                  <Text style={GlobalStyle.ButtonText}>Send Request</Text>
+                  <Text
+                    style={[
+                      GlobalStyle.ButtonText,
+                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                    ]}
+                  >
+                    Send Request
+                  </Text>
                 </TouchableOpacity>
               </SafeAreaView>
               <SafeAreaView
@@ -325,7 +333,7 @@ export default function LinkUsersScreen({ navigation }) {
                 <Text
                   style={[
                     GlobalStyle.Text,
-                    { fontSize: responsiveFontSize(2.3) },
+                    { fontSize: responsiveFontSize(2.3) / fontScale },
                   ]}
                 >
                   Proceed without your Caregivee using the app
@@ -334,7 +342,14 @@ export default function LinkUsersScreen({ navigation }) {
                   style={[GlobalStyle.Button, { marginTop: "8%" }]}
                   onPress={toggleModal1}
                 >
-                  <Text style={GlobalStyle.ButtonText}>Opt Out</Text>
+                  <Text
+                    style={[
+                      GlobalStyle.ButtonText,
+                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                    ]}
+                  >
+                    Opt Out
+                  </Text>
                 </TouchableOpacity>
               </SafeAreaView>
             </SafeAreaView>

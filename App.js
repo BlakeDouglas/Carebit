@@ -25,7 +25,14 @@ import RequestScreen from "./src/screens/RequestScreen";
 import RoleSelectScreen from "./src/screens/RoleSelectScreen";
 import SettingsOverviewScreen from "./src/screens/SettingsOverviewScreen";
 import TitleScreen from "./src/screens/TitleScreen";
-import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Platform,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
 import { useFonts } from "expo-font";
@@ -36,6 +43,7 @@ import { getRequestCount } from "./src/network/CarebitAPI";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { setTokenData } from "./src/redux/actions";
+import { getFontScale } from "react-native/Libraries/Utilities/PixelRatio";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAu69cdb30ONSKMcrIrL7P4YT0ghQoNEdg",
@@ -107,6 +115,7 @@ const AuthStack = () => {
 // Stack of screens to handle little things between authentication and the home screen,
 // like phys data, first-time instructions, etc
 const MiddleStack = () => {
+  const { fontScale } = useWindowDimensions();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
   return (
@@ -144,7 +153,7 @@ const MiddleStack = () => {
                 >
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2.5),
+                      fontSize: responsiveFontSize(2.5) / fontScale,
                       color: "white",
                     }}
                   >
@@ -214,7 +223,7 @@ const HomeStack = () => {
       ? setVisibleAlert(true)
       : setVisibleAlert(false);
   };
-
+  const { fontScale } = useWindowDimensions();
   const openMenu = () => setVisible(true);
   // Refreshes every x seconds to check if a friend request exists
   // If one does, set visibleAlert to true to show the alert icons
@@ -244,6 +253,7 @@ const HomeStack = () => {
             headerTitleAlign: "center",
             headerTitleStyle: {
               color: "white",
+              fontSize: responsiveFontSize(2.5) / fontScale,
             },
             headerStyle: {
               backgroundColor: "dodgerblue",
@@ -310,7 +320,7 @@ const HomeStack = () => {
                       )}
                       titleStyle={{
                         color: "black",
-                        fontSize: responsiveFontSize(1.9),
+                        fontSize: responsiveFontSize(1.9) / fontScale,
                       }}
                       title={
                         tokenData.type === "caregivee"
@@ -328,6 +338,7 @@ const HomeStack = () => {
                             style={{
                               width: 25,
                               height: 25,
+
                               tintColor: "dodgerblue",
                             }}
                           />
@@ -343,7 +354,7 @@ const HomeStack = () => {
                       )}
                       titleStyle={{
                         color: "black",
-                        fontSize: responsiveFontSize(1.9),
+                        fontSize: responsiveFontSize(1.9) / fontScale,
                       }}
                       title="Requests"
                     />
@@ -357,7 +368,7 @@ const HomeStack = () => {
                       )}
                       titleStyle={{
                         color: "black",
-                        fontSize: responsiveFontSize(1.9),
+                        fontSize: responsiveFontSize(1.9) / fontScale,
                       }}
                       title={
                         tokenData.type === "caregivee"
@@ -398,6 +409,7 @@ const HomeStack = () => {
             headerTitleAlign: "center",
             headerTitleStyle: {
               color: "white",
+              fontSize: responsiveFontSize(2.5) / fontScale,
             },
             headerStyle: {
               backgroundColor: "dodgerblue",
@@ -413,6 +425,7 @@ const HomeStack = () => {
             headerTitleAlign: "center",
             headerTitleStyle: {
               color: "white",
+              fontSize: responsiveFontSize(2.5) / fontScale,
             },
             headerStyle: {
               backgroundColor: "dodgerblue",
@@ -428,6 +441,7 @@ const HomeStack = () => {
             headerTitleAlign: "center",
             headerTitleStyle: {
               color: "white",
+              fontSize: responsiveFontSize(2.5) / fontScale,
             },
             headerStyle: {
               backgroundColor: "dodgerblue",
@@ -458,6 +472,7 @@ const HomeStack = () => {
             headerTitleAlign: "center",
             headerTitleStyle: {
               color: "white",
+              fontSize: responsiveFontSize(2.5) / fontScale,
             },
             headerStyle: {
               backgroundColor: "dodgerblue",
@@ -480,6 +495,7 @@ const HomeStack = () => {
             headerTitleAlign: "center",
             headerTitleStyle: {
               color: "white",
+              fontSize: responsiveFontSize(2.5) / fontScale,
             },
             headerStyle: {
               backgroundColor: "dodgerblue",

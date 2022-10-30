@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
+  useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
@@ -88,7 +89,7 @@ export default function AddScreen({ navigation: { goBack } }) {
         );
     }
   };
-
+  const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
@@ -114,7 +115,15 @@ export default function AddScreen({ navigation: { goBack } }) {
               alignItems: "center",
             }}
           >
-            <Text style={[GlobalStyle.Subtitle, { alignSelf: "center" }]}>
+            <Text
+              style={[
+                GlobalStyle.Subtitle,
+                {
+                  alignSelf: "center",
+                  fontSize: responsiveFontSize(6.3) / fontScale,
+                },
+              ]}
+            >
               {typeOfRequester === "caregivee"
                 ? "Add Caregivee"
                 : "Add Caregiver"}
@@ -131,7 +140,12 @@ export default function AddScreen({ navigation: { goBack } }) {
               justifyContent: "center",
             }}
           >
-            <Text style={{ fontSize: responsiveFontSize(2.5), color: "white" }}>
+            <Text
+              style={{
+                fontSize: responsiveFontSize(2.5) / fontScale,
+                color: "white",
+              }}
+            >
               {typeOfRequester === "caregivee"
                 ? "Please enter your Caregivee's phone number to add them"
                 : "Please enter your Caregiver's phone number to add them"}
@@ -165,7 +179,14 @@ export default function AddScreen({ navigation: { goBack } }) {
                 style={[GlobalStyle.Button, { marginTop: "8%" }]}
                 onPress={validate}
               >
-                <Text style={GlobalStyle.ButtonText}>Send Request</Text>
+                <Text
+                  style={[
+                    GlobalStyle.ButtonText,
+                    { fontSize: responsiveFontSize(2.51) / fontScale },
+                  ]}
+                >
+                  Send Request
+                </Text>
               </TouchableOpacity>
             </SafeAreaView>
           </SafeAreaView>

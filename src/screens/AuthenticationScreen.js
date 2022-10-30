@@ -8,6 +8,7 @@ import {
   LogBox,
   StatusBar,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import { makeRedirectUri } from "expo-auth-session";
 import GlobalStyle from "../utils/GlobalStyle";
@@ -57,7 +58,7 @@ export default function AuthenticationScreen({ navigation }) {
   React.useEffect(() => {
     if (response?.type === "success") makeCaregivee(response.params.code);
   }, [response]);
-
+  const { fontScale } = useWindowDimensions();
   console.log(makeRedirectUri({ scheme: "carebit", path: "callback" }));
   return (
     <ImageBackground
@@ -81,7 +82,12 @@ export default function AuthenticationScreen({ navigation }) {
               style={{ marginRight: "1%" }}
               source={require("../../assets/images/midCheck/icons-check.png")}
             />
-            <Text style={{ fontSize: responsiveFontSize(2.8), color: "white" }}>
+            <Text
+              style={{
+                fontSize: responsiveFontSize(2.8) / fontScale,
+                color: "white",
+              }}
+            >
               Account Created
             </Text>
           </SafeAreaView>
@@ -97,7 +103,7 @@ export default function AuthenticationScreen({ navigation }) {
               style={{
                 alignSelf: "center",
                 color: "white",
-                fontSize: responsiveFontSize(2.5),
+                fontSize: responsiveFontSize(2.5) / fontScale,
               }}
             >
               To allow your Caregiver to monitor you, you'll need to link your
@@ -118,7 +124,14 @@ export default function AuthenticationScreen({ navigation }) {
                 promptAsync();
               }}
             >
-              <Text style={GlobalStyle.ButtonText}>Link Fitbit</Text>
+              <Text
+                style={[
+                  GlobalStyle.ButtonText,
+                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                ]}
+              >
+                Link Fitbit
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -130,7 +143,14 @@ export default function AuthenticationScreen({ navigation }) {
                 logOutButtonHandler();
               }}
             >
-              <Text style={GlobalStyle.ButtonText}>Cancel</Text>
+              <Text
+                style={[
+                  GlobalStyle.ButtonText,
+                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                ]}
+              >
+                Cancel
+              </Text>
             </TouchableOpacity>
           </SafeAreaView>
         </SafeAreaView>

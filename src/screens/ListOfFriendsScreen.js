@@ -10,6 +10,7 @@ import {
   ImageBackground,
   RefreshControl,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { useState, useEffect, useCallback } from "react";
@@ -42,7 +43,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
   const [data, setData] = useState([]);
   // Stores all requests
   const [backgroundData, setBackgroundData] = useState([]);
-
+  const { fontScale } = useWindowDimensions();
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
@@ -198,10 +199,21 @@ const ListOfFriendsScreen = ({ navigation }) => {
         style={[styles.item, backgroundColor]}
         onPress={onPress}
       >
-        <Text style={styles.name} numberOfLines={1}>
+        <Text
+          style={[
+            styles.name,
+            { fontSize: responsiveFontSize(2.2) / fontScale },
+          ]}
+          numberOfLines={1}
+        >
           {item.firstName} {item.lastName}
         </Text>
-        <Text style={styles.phone}>
+        <Text
+          style={[
+            styles.phone,
+            { fontSize: responsiveFontSize(1.8) / fontScale },
+          ]}
+        >
           {countryCode === "+1"
             ? `${countryCode} (${phoneNumber.substring(
                 0,
@@ -216,10 +228,22 @@ const ListOfFriendsScreen = ({ navigation }) => {
   const Empty = () => {
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>
+        <Text
+          style={[
+            styles.emptyText,
+            { fontSize: responsiveFontSize(3.5) / fontScale },
+          ]}
+        >
           No added {tokenData.type === "caregivee" ? "caregiver" : "caregivee"}s
         </Text>
-        <Text style={styles.emptyText}>...</Text>
+        <Text
+          style={[
+            styles.emptyText,
+            { fontSize: responsiveFontSize(3.5) / fontScale },
+          ]}
+        >
+          ...
+        </Text>
       </View>
     );
   };
@@ -246,7 +270,12 @@ const ListOfFriendsScreen = ({ navigation }) => {
             marginTop: "10%",
           }}
         >
-          <Text style={{ fontSize: responsiveFontSize(4.3), color: "white" }}>
+          <Text
+            style={{
+              fontSize: responsiveFontSize(4.3) / fontScale,
+              color: "white",
+            }}
+          >
             {tokenData.type === "caregivee"
               ? "Added Caregivers"
               : "Added Caregivees"}
@@ -294,7 +323,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
                     textAlign: "center",
                     color: "white",
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(3),
+                    fontSize: responsiveFontSize(3) / fontScale,
                   }}
                 >
                   Select
@@ -332,7 +361,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
                     textAlign: "center",
                     color: "red",
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(3),
+                    fontSize: responsiveFontSize(3) / fontScale,
                   }}
                 >
                   Delete

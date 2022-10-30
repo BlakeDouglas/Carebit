@@ -30,6 +30,7 @@ import {
 } from "../network/CarebitAPI";
 
 export default function GiverHomeScreen({ navigation }) {
+  const { fontScale } = useWindowDimensions();
   const [dailySteps, setDailySteps] = useState(null);
   const [hourlySteps, setHourlySteps] = useState(null);
   const [stepUpdate, setStepUpdate] = useState(null);
@@ -347,7 +348,7 @@ export default function GiverHomeScreen({ navigation }) {
                 style={{
                   color: "gray",
                   fontWeight: "bold",
-                  //marginVertical: Platform.OS === "ios" ? "10%" : "8%",
+                  fontSize: responsiveFontSize(2) / fontScale,
                   justifyContent: "center",
                 }}
               >
@@ -369,7 +370,7 @@ export default function GiverHomeScreen({ navigation }) {
                 style={{
                   color: "dodgerblue",
                   fontWeight: "bold",
-                  //marginVertical: Platform.OS === "ios" ? "1%" : "8%",
+                  fontSize: responsiveFontSize(2) / fontScale,
                 }}
               >
                 View History
@@ -401,7 +402,7 @@ export default function GiverHomeScreen({ navigation }) {
                   style={{
                     flexShrink: 1,
                     color: "darkgrey",
-                    fontSize: responsiveFontSize(1.9),
+                    fontSize: responsiveFontSize(1.9) / fontScale,
                   }}
                   numberOfLines={1}
                 >
@@ -415,7 +416,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(2.2),
+                      fontSize: responsiveFontSize(2.2) / fontScale,
                       fontWeight: "500",
                     }}
                     numberOfLines={1}
@@ -427,7 +428,7 @@ export default function GiverHomeScreen({ navigation }) {
                     <Text
                       style={{
                         color: "dodgerblue",
-                        fontSize: responsiveFontSize(2.2),
+                        fontSize: responsiveFontSize(2.2) / fontScale,
                         fontWeight: "500",
                       }}
                       numberOfLines={1}
@@ -477,7 +478,13 @@ export default function GiverHomeScreen({ navigation }) {
                         source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
                       />
                       <Text
-                        style={[styles.callText, { flexShrink: 1 }]}
+                        style={[
+                          styles.callText,
+                          {
+                            flexShrink: 1,
+                            fontSize: responsiveFontSize(2) / fontScale,
+                          },
+                        ]}
                         numberOfLines={2}
                       >
                         Call {selectedUser.firstName || "N/A"}
@@ -524,7 +531,7 @@ export default function GiverHomeScreen({ navigation }) {
               <Text
                 style={{
                   fontWeight: "bold",
-                  fontSize: responsiveFontSize(2.1),
+                  fontSize: responsiveFontSize(2.1) / fontScale,
                   fontWeight: "800",
                 }}
                 numberOfLines={1}
@@ -568,7 +575,7 @@ export default function GiverHomeScreen({ navigation }) {
                 style={{
                   color: "white",
                   fontWeight: "bold",
-                  fontSize: responsiveFontSize(2.1),
+                  fontSize: responsiveFontSize(2.1) / fontScale,
                   fontWeight: "800",
                 }}
                 numberOfLines={1}
@@ -612,7 +619,7 @@ export default function GiverHomeScreen({ navigation }) {
                 style={{
                   color: "white",
                   fontWeight: "bold",
-                  fontSize: responsiveFontSize(2.1),
+                  fontSize: responsiveFontSize(2.1) / fontScale,
                   fontWeight: "800",
                 }}
                 numberOfLines={1}
@@ -642,7 +649,7 @@ export default function GiverHomeScreen({ navigation }) {
             <Text
               style={{
                 color: "black",
-                fontSize: responsiveFontSize(2.2),
+                fontSize: responsiveFontSize(2.2) / fontScale,
               }}
             >
               Last Recorded Activity
@@ -650,7 +657,7 @@ export default function GiverHomeScreen({ navigation }) {
             <Text
               style={{
                 color: "darkgrey",
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.8) / fontScale,
               }}
             >
               {/** TODO: Is this the right field?*/}
@@ -700,7 +707,7 @@ export default function GiverHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.25),
+                    fontSize: responsiveFontSize(2.25) / fontScale,
                     marginLeft: "5%",
                   }}
                 >
@@ -736,7 +743,7 @@ export default function GiverHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.25),
+                    fontSize: responsiveFontSize(2.25) / fontScale,
                     marginLeft: "5%",
                     //marginVertical: "3%",
                   }}
@@ -789,7 +796,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.5),
+                      fontSize: responsiveFontSize(4.5) / fontScale,
                       fontWeight: "700",
                     }}
                   >
@@ -798,7 +805,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(2),
+                      fontSize: responsiveFontSize(2) / fontScale,
                       marginLeft: "3%",
                       fontWeight: "600",
                     }}
@@ -815,7 +822,14 @@ export default function GiverHomeScreen({ navigation }) {
                     justifyContent: "flex-start",
                   }}
                 >
-                  <Text style={styles.smallText}>{HeartSyncTime || ""}</Text>
+                  <Text
+                    style={[
+                      styles.smallText,
+                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                    ]}
+                  >
+                    {HeartSyncTime || ""}
+                  </Text>
                 </SafeAreaView>
               </SafeAreaView>
 
@@ -854,7 +868,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.5),
+                      fontSize: responsiveFontSize(4.5) / fontScale,
                       fontWeight: "700",
                     }}
                     numberOfLines={1}
@@ -870,7 +884,13 @@ export default function GiverHomeScreen({ navigation }) {
                     justifyContent: "center",
                   }}
                 >
-                  <Text style={styles.smallText} numberOfLines={2}>
+                  <Text
+                    style={[
+                      styles.smallText,
+                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                    ]}
+                    numberOfLines={2}
+                  >
                     {stepUpdate
                       ? stepUpdate.includes("hour", 0)
                         ? "ask " +
@@ -902,7 +922,7 @@ export default function GiverHomeScreen({ navigation }) {
             <Text
               style={{
                 color: "black",
-                fontSize: responsiveFontSize(2.2),
+                fontSize: responsiveFontSize(2.2) / fontScale,
 
                 marginLeft: "4%",
               }}
@@ -913,7 +933,7 @@ export default function GiverHomeScreen({ navigation }) {
             <Text
               style={{
                 color: "darkgrey",
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.8) / fontScale,
                 marginRight: "4%",
               }}
             >
@@ -969,7 +989,7 @@ export default function GiverHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.25),
+                    fontSize: responsiveFontSize(2.25) / fontScale,
                     marginLeft: "3%",
                     //marginVertical: "3%",
                   }}
@@ -979,7 +999,7 @@ export default function GiverHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "darkgrey",
-                    fontSize: responsiveFontSize(1.8),
+                    fontSize: responsiveFontSize(1.8) / fontScale,
                     marginRight: "5%",
                   }}
                 >
@@ -1030,7 +1050,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.5),
+                      fontSize: responsiveFontSize(4.5) / fontScale,
                       fontWeight: "700",
                     }}
                   >
@@ -1047,7 +1067,14 @@ export default function GiverHomeScreen({ navigation }) {
                     // backgroundColor: "yellow",
                   }}
                 >
-                  <Text style={[styles.smallText]}>min</Text>
+                  <Text
+                    style={[
+                      styles.smallText,
+                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                    ]}
+                  >
+                    min
+                  </Text>
                 </SafeAreaView>
               </SafeAreaView>
               <SafeAreaView
@@ -1079,7 +1106,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.5),
+                      fontSize: responsiveFontSize(4.5) / fontScale,
                       fontWeight: "700",
                     }}
                   >
@@ -1096,7 +1123,14 @@ export default function GiverHomeScreen({ navigation }) {
                     //backgroundColor: "yellow",
                   }}
                 >
-                  <Text style={[styles.smallText]}>avg</Text>
+                  <Text
+                    style={[
+                      styles.smallText,
+                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                    ]}
+                  >
+                    avg
+                  </Text>
                 </SafeAreaView>
               </SafeAreaView>
               <SafeAreaView
@@ -1128,7 +1162,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.5),
+                      fontSize: responsiveFontSize(4.5) / fontScale,
                       fontWeight: "700",
                     }}
                   >
@@ -1145,7 +1179,14 @@ export default function GiverHomeScreen({ navigation }) {
                     // backgroundColor: "yellow",
                   }}
                 >
-                  <Text style={[styles.smallText]}>max</Text>
+                  <Text
+                    style={[
+                      styles.smallText,
+                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                    ]}
+                  >
+                    max
+                  </Text>
                 </SafeAreaView>
               </SafeAreaView>
             </SafeAreaView>
@@ -1188,7 +1229,7 @@ export default function GiverHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.25),
+                    fontSize: responsiveFontSize(2.25) / fontScale,
                     marginLeft: "5%",
                   }}
                 >
@@ -1224,7 +1265,7 @@ export default function GiverHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.25),
+                    fontSize: responsiveFontSize(2.25) / fontScale,
                     marginLeft: "5%",
                     //marginVertical: "3%",
                   }}
@@ -1277,7 +1318,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.5),
+                      fontSize: responsiveFontSize(4.5) / fontScale,
                       fontWeight: "700",
                     }}
                     numberOfLines={1}
@@ -1294,7 +1335,14 @@ export default function GiverHomeScreen({ navigation }) {
                     justifyContent: "flex-start",
                   }}
                 >
-                  <Text style={styles.smallText}>{StepsSyncTime || ""}</Text>
+                  <Text
+                    style={[
+                      styles.smallText,
+                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                    ]}
+                  >
+                    {StepsSyncTime || ""}
+                  </Text>
                 </SafeAreaView>
               </SafeAreaView>
 
@@ -1353,7 +1401,12 @@ export default function GiverHomeScreen({ navigation }) {
                     justifyContent: "flex-start",
                   }}
                 >
-                  <Text style={styles.smallText}>
+                  <Text
+                    style={[
+                      styles.smallText,
+                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                    ]}
+                  >
                     {BatteryLevel === null ? "Unlinked" : BatteryLevel}
                   </Text>
                 </SafeAreaView>
@@ -1365,7 +1418,7 @@ export default function GiverHomeScreen({ navigation }) {
     </SafeAreaView>
   );
 }
-
+//const { fontScale } = useWindowDimensions();
 const styles = StyleSheet.create({
   caregiveeText: {
     color: "black",

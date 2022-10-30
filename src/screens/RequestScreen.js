@@ -9,6 +9,7 @@ import {
   ImageBackground,
   RefreshControl,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { useEffect } from "react";
@@ -52,6 +53,7 @@ const RequestScreen = ({ navigation }) => {
       ]
     );
   };
+  const { fontScale } = useWindowDimensions();
 
   const onPressAdd = (item) => {
     const typeOfRequester =
@@ -243,7 +245,12 @@ const RequestScreen = ({ navigation }) => {
             marginTop: "10%",
           }}
         >
-          <Text style={{ fontSize: responsiveFontSize(4.3), color: "white" }}>
+          <Text
+            style={{
+              fontSize: responsiveFontSize(4.3) / fontScale,
+              color: "white",
+            }}
+          >
             All Incoming Requests
           </Text>
         </SafeAreaView>
@@ -281,7 +288,7 @@ const RequestScreen = ({ navigation }) => {
                   style={{
                     color: "darkred",
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(2.8),
+                    fontSize: responsiveFontSize(2.8) / fontScale,
                   }}
                 >
                   Reject
@@ -312,7 +319,7 @@ const RequestScreen = ({ navigation }) => {
                   style={{
                     color: "green",
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(2.8),
+                    fontSize: responsiveFontSize(2.8) / fontScale,
                   }}
                 >
                   Accept
@@ -328,10 +335,15 @@ const RequestScreen = ({ navigation }) => {
 
 const Item = ({ item, phoneNumber, countryCode, onPress, backgroundColor }) => (
   <TouchableOpacity style={[styles.item, backgroundColor]} onPress={onPress}>
-    <Text style={styles.name} numberOfLines={1}>
+    <Text
+      style={[styles.name, { fontSize: responsiveFontSize(2.2) / fontScale }]}
+      numberOfLines={1}
+    >
       {item.firstName} {item.lastName}
     </Text>
-    <Text style={styles.phone}>
+    <Text
+      style={[styles.phone, { fontSize: responsiveFontSize(1.8) / fontScale }]}
+    >
       {countryCode === "+1"
         ? countryCode +
           " (" +
@@ -348,8 +360,22 @@ const Item = ({ item, phoneNumber, countryCode, onPress, backgroundColor }) => (
 const Empty = () => {
   return (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>Your inbox is empty</Text>
-      <Text style={styles.emptyText}>...</Text>
+      <Text
+        style={[
+          styles.emptyText,
+          { fontSize: responsiveFontSize(3.5) / fontScale },
+        ]}
+      >
+        Your inbox is empty
+      </Text>
+      <Text
+        style={[
+          styles.emptyText,
+          { fontSize: responsiveFontSize(3.5) / fontScale },
+        ]}
+      >
+        ...
+      </Text>
     </View>
   );
 };

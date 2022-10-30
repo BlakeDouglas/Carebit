@@ -7,6 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
   RefreshControl,
+  useWindowDimensions,
 } from "react-native";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import React, { useState, useEffect } from "react";
@@ -123,7 +124,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
   useEffect(() => {
     getAlerts();
   }, []);
-
+  const { fontScale } = useWindowDimensions();
   const [isModal1Visible, setModal1Visible] = useState(false);
   const toggleModal1 = () => {
     console.log(isModal1Visible);
@@ -203,14 +204,17 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
           }}
         >
           <Text
-            style={{ fontSize: responsiveFontSize(2.2), fontWeight: "600" }}
+            style={{
+              fontSize: responsiveFontSize(2.2) / fontScale,
+              fontWeight: "600",
+            }}
           >
             {title}
           </Text>
           <Text
             style={{
               marginTop: "1%",
-              fontSize: responsiveFontSize(1.8),
+              fontSize: responsiveFontSize(1.8) / fontScale,
               color: "gray",
             }}
             numberOfLines={3}
@@ -249,7 +253,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                   fontWeight: "bold",
                   textAlign: "center",
                   margin: "2%",
-                  fontSize: responsiveFontSize(2.3),
+                  fontSize: responsiveFontSize(2.3) / fontScale,
                 }}
               >
                 Check-in
@@ -262,7 +266,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                 fontWeight: "bold",
                 textAlign: "center",
                 margin: "2%",
-                fontSize: responsiveFontSize(2.3),
+                fontSize: responsiveFontSize(2.3) / fontScale,
               }}
             >
               {""} Okay {""}
@@ -274,6 +278,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
               textAlign: "center",
               color: "grey",
               marginTop: "14%",
+              fontSize: responsiveFontSize(2.1) / fontScale,
             }}
           >
             {moment(dateTime, ["HH:mm"]).format("hh:mm a")}
@@ -300,8 +305,22 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
   const Empty = () => {
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>No alerts</Text>
-        <Text style={styles.emptyText}>...</Text>
+        <Text
+          style={[
+            styles.emptyText,
+            { fontSize: responsiveFontSize(3.5) / fontScale },
+          ]}
+        >
+          No alerts
+        </Text>
+        <Text
+          style={[
+            styles.emptyText,
+            { fontSize: responsiveFontSize(3.5) / fontScale },
+          ]}
+        >
+          ...
+        </Text>
       </View>
     );
   };
@@ -356,14 +375,14 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2),
+                fontSize: responsiveFontSize(2.2) / fontScale,
               }}
             >
               Mark You're Okay
             </Text>
             <Text
               style={{
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.8) / fontScale,
                 fontWeight: "400",
                 textAlign: "left",
               }}
@@ -405,7 +424,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                 <Text
                   style={{
                     color: "rgba(0,225,200,.8)",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -435,7 +454,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -456,7 +475,12 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
           marginBottom: "6%",
         }}
       >
-        <Text style={{ fontSize: responsiveFontSize(2.5), fontWeight: "600" }}>
+        <Text
+          style={{
+            fontSize: responsiveFontSize(2.5) / fontScale,
+            fontWeight: "600",
+          }}
+        >
           Today
         </Text>
       </SafeAreaView>

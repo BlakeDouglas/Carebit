@@ -4,6 +4,7 @@ import {
   StatusBar,
   ImageBackground,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import GlobalStyle from "../utils/GlobalStyle";
 import React, { useEffect } from "react";
@@ -16,7 +17,7 @@ export default function AddIntroScreen({ navigation }) {
   const ContinueButtonHandler = () => {
     navigation.navigate("AddOptionsScreen");
   };
-
+  const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background03.png")}
@@ -41,7 +42,15 @@ export default function AddIntroScreen({ navigation }) {
               alignSelf: "center",
             }}
           >
-            <Text style={[GlobalStyle.Subtitle, { textAlign: "center" }]}>
+            <Text
+              style={[
+                GlobalStyle.Subtitle,
+                {
+                  textAlign: "center",
+                  fontSize: responsiveFontSize(6.3) / fontScale,
+                },
+              ]}
+            >
               Using Carebit
             </Text>
           </SafeAreaView>
@@ -58,10 +67,8 @@ export default function AddIntroScreen({ navigation }) {
             <Text
               style={{
                 color: "white",
-                fontSize: responsiveFontSize(2.4),
-                //marginTop: "8%",
+                fontSize: responsiveFontSize(2.4) / fontScale,
                 alignSelf: "center",
-                //textAlign: "center",
               }}
             >
               {"To use Carebit, you must add an account that is connected to your Caregivee's Fitbit." +
@@ -77,7 +84,14 @@ export default function AddIntroScreen({ navigation }) {
               style={GlobalStyle.Button}
               onPress={ContinueButtonHandler}
             >
-              <Text style={GlobalStyle.ButtonText}>Continue</Text>
+              <Text
+                style={[
+                  GlobalStyle.ButtonText,
+                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                ]}
+              >
+                Continue
+              </Text>
             </TouchableOpacity>
           </SafeAreaView>
         </SafeAreaView>

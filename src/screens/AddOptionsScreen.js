@@ -4,6 +4,7 @@ import {
   StatusBar,
   ImageBackground,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import GlobalStyle from "../utils/GlobalStyle";
 import React, { useEffect } from "react";
@@ -23,7 +24,7 @@ export default function AddOptionsScreen({ navigation }) {
   const ContinueButtonHandler = () => {
     navigation.navigate("LinkUsersScreen");
   };
-
+  const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
@@ -48,7 +49,15 @@ export default function AddOptionsScreen({ navigation }) {
               alignSelf: "center",
             }}
           >
-            <Text style={[GlobalStyle.Subtitle, { textAlign: "center" }]}>
+            <Text
+              style={[
+                GlobalStyle.Subtitle,
+                {
+                  textAlign: "center",
+                  fontSize: responsiveFontSize(6.3) / fontScale,
+                },
+              ]}
+            >
               App Options
             </Text>
           </SafeAreaView>
@@ -63,7 +72,7 @@ export default function AddOptionsScreen({ navigation }) {
             <Text
               style={{
                 color: "white",
-                fontSize: responsiveFontSize(3),
+                fontSize: responsiveFontSize(3) / fontScale,
                 textAlign: "center",
                 textDecorationLine: "underline",
               }}
@@ -73,7 +82,7 @@ export default function AddOptionsScreen({ navigation }) {
             <Text
               style={{
                 color: "white",
-                fontSize: responsiveFontSize(2.3),
+                fontSize: responsiveFontSize(2.3) / fontScale,
                 marginTop: "5%",
                 alignSelf: "center",
                 textAlign: "left",
@@ -93,7 +102,7 @@ export default function AddOptionsScreen({ navigation }) {
             <Text
               style={{
                 color: "white",
-                fontSize: responsiveFontSize(3),
+                fontSize: responsiveFontSize(3) / fontScale,
                 textAlign: "center",
                 textDecorationLine: "underline",
               }}
@@ -103,7 +112,7 @@ export default function AddOptionsScreen({ navigation }) {
             <Text
               style={{
                 color: "white",
-                fontSize: responsiveFontSize(2.3),
+                fontSize: responsiveFontSize(2.3) / fontScale,
                 marginTop: "5%",
                 alignSelf: "center",
                 textAlign: "left",
@@ -121,7 +130,14 @@ export default function AddOptionsScreen({ navigation }) {
               style={GlobalStyle.Button}
               onPress={ContinueButtonHandler}
             >
-              <Text style={GlobalStyle.ButtonText}>Continue</Text>
+              <Text
+                style={[
+                  GlobalStyle.ButtonText,
+                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                ]}
+              >
+                Continue
+              </Text>
             </TouchableOpacity>
           </SafeAreaView>
         </SafeAreaView>

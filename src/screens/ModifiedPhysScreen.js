@@ -107,6 +107,7 @@ export default function ModifiedPhysScreen({ navigation, route }) {
 
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
+  const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background03.png")}
@@ -132,7 +133,7 @@ export default function ModifiedPhysScreen({ navigation, route }) {
               <Text
                 style={[
                   GlobalStyle.Subtitle,
-                  { fontSize: responsiveFontSize(5.1) },
+                  { fontSize: responsiveFontSize(5.1) / fontScale },
                 ]}
               >
                 Physician Contact
@@ -181,7 +182,14 @@ export default function ModifiedPhysScreen({ navigation, route }) {
                     validate();
                   }}
                 >
-                  <Text style={GlobalStyle.ButtonText}>Create Account</Text>
+                  <Text
+                    style={[
+                      GlobalStyle.ButtonText,
+                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                    ]}
+                  >
+                    Create Account
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>

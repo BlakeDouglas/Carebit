@@ -111,7 +111,14 @@ export default function LoginScreen({ navigation }) {
           keyboardShouldPersistTaps="always"
         >
           <SafeAreaView style={GlobalStyle.Container}>
-            <Text style={GlobalStyle.Title}>Log into Carebit</Text>
+            <Text
+              style={[
+                GlobalStyle.Title,
+                { fontSize: responsiveFontSize(6.95) / fontScale },
+              ]}
+            >
+              Log into Carebit
+            </Text>
             <SafeAreaView
               style={{
                 height: "60%",
@@ -155,7 +162,14 @@ export default function LoginScreen({ navigation }) {
                 ]}
                 onPress={validate}
               >
-                <Text style={GlobalStyle.ButtonText}>Log In</Text>
+                <Text
+                  style={[
+                    GlobalStyle.ButtonText,
+                    { fontSize: responsiveFontSize(2.51) / fontScale },
+                  ]}
+                >
+                  Log In
+                </Text>
               </TouchableOpacity>
               <Text></Text>
             </SafeAreaView>

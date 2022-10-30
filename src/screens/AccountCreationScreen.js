@@ -8,6 +8,7 @@ import {
   Platform,
   View,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -147,7 +148,7 @@ export default function AccountCreationScreen({ navigation }) {
   const handleError = (errorMessage, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
-
+  const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background03.png")}
@@ -178,7 +179,7 @@ export default function AccountCreationScreen({ navigation }) {
             <Text
               style={[
                 GlobalStyle.Subtitle2,
-                { fontSize: responsiveFontSize(3.71) },
+                { fontSize: responsiveFontSize(3.71) / fontScale },
               ]}
             >
               {tokenData.type.charAt(0).toUpperCase() +
@@ -283,7 +284,14 @@ export default function AccountCreationScreen({ navigation }) {
                   ]}
                   onPress={validate}
                 >
-                  <Text style={GlobalStyle.ButtonText}>Create Account</Text>
+                  <Text
+                    style={[
+                      GlobalStyle.ButtonText,
+                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                    ]}
+                  >
+                    Create Account
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
