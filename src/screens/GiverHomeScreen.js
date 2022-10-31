@@ -253,6 +253,9 @@ export default function GiverHomeScreen({ navigation }) {
         json.steps.timeMeasured;
       let range = moment.range(pullTime, currTime);
       setStepAlert(range.diff("minutes"));
+      console.log("Make sure this is changing every hour");
+      console.log("lastHourMeasured: " + lastHourMeasured);
+      console.log("json timeMeasured: " + json.steps.timeMeasured.slice(0, 2));
       if (
         StepAlert > 60 &&
         json.steps.timeMeasured.slice(0, 2) !== lastHourMeasured
