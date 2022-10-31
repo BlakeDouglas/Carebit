@@ -18,6 +18,7 @@ import {
 } from "../redux/actions";
 import { loginEndpoint, getDefaultEndpoint } from "../network/CarebitAPI";
 import { deleteKeychain, getKeychain } from "../network/Auth";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 export default function TitleScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -75,7 +76,7 @@ export default function TitleScreen({ navigation }) {
       console.log("Error accessing credentials: ", error);
     }
   };
-
+  const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background01.png")}
