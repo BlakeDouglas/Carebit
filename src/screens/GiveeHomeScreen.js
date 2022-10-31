@@ -214,6 +214,7 @@ export default function GiveeHomeScreen({ navigation }) {
   // TODO: Move to login, redo caregivee field to accomodate. Will speed up things
   useEffect(() => {
     getCaregiveeInfo();
+    fetchData();
   }, []);
 
   const { fontScale } = useWindowDimensions();
