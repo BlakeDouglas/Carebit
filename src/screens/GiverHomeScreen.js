@@ -96,6 +96,16 @@ export default function GiverHomeScreen({ navigation }) {
     };
     const json = await getDefaultEndpoint(params);
 
+    if (json.error) {
+      console.log(
+        "Error getting default: ",
+        json.error,
+        "\nAfter sending params: ",
+        params
+      );
+      return;
+    }
+
     if (json.default) {
       dispatch(setSelectedUser(json.default));
     } else {

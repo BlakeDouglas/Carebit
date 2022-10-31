@@ -57,6 +57,16 @@ export default function TitleScreen({ navigation }) {
     const params = { auth: tokenJson.access_token, body: body };
     const json = await getDefaultEndpoint(params);
 
+    if (json.error) {
+      console.log(
+        "Error getting default: ",
+        json.error,
+        "\nAfter sending params: ",
+        params
+      );
+      return;
+    }
+
     // Accounts for array return value and missing default scenarios
     if (json.default) {
       dispatch(setSelectedUser(json.default));

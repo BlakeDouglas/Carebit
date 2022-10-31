@@ -105,14 +105,31 @@ const RequestScreen = ({ navigation }) => {
   };
 
   const getDefault = async () => {
+    const body =
+      tokenData.type === "caregiver"
+        ? {
+            caregiverID: tokenData.caregiverID,
+            caregiveeID: null,
+          }
+        : {
+            caregiverID: null,
+            caregiveeID: tokenData.caregiveeID,
+          };
     const params = {
       auth: tokenData.access_token,
-      body: {
-        caregiverID: tokenData.caregiverID,
-        caregiveeID: null,
-      },
+      body: body,
     };
     const json = await getDefaultEndpoint(params);
+
+    if (json.error) {
+      console.log(
+        "Error getting default: ",
+        json.error,
+        "\nAfter sending params: ",
+        params
+      );
+      return;
+    }
 
     // Accounts for array return value and missing default scenarios
     if (json.default) {
