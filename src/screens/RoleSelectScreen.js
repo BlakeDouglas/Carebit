@@ -8,7 +8,7 @@ import {
 } from "react-native";
 
 import GlobalStyle from "../utils/GlobalStyle";
-
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { useSelector, useDispatch } from "react-redux";
 import { setTokenData } from "../redux/actions";
 

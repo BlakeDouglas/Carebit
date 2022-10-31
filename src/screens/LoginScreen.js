@@ -6,6 +6,7 @@ import {
   StatusBar,
   Keyboard,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
@@ -20,7 +21,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import validator from "validator";
 import { getDefaultEndpoint, loginEndpoint } from "../network/CarebitAPI";
 import { setKeychain } from "../network/Auth";
-
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
 
@@ -97,7 +98,7 @@ export default function LoginScreen({ navigation }) {
       dispatch(resetSelectedData());
     }
   };
-
+  const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}

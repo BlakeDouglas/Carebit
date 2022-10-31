@@ -200,7 +200,7 @@ export default function GiverHomeScreen({ navigation }) {
       targetID: selectedUser.caregiveeID,
     };
     const json = await setNoSyncAlert(params);
-    if (!json) {
+    if (json) {
       console.log("Problem sending no sync alert");
       return;
     }
