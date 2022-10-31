@@ -3,7 +3,7 @@
     "name": "Carebit",
     "slug": "carebit",
     "scheme": "carebit",
-    "owner": "bdouglas",
+    "owner": "carebit",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/appicon.png",
