@@ -93,17 +93,17 @@ const ListOfFriendsScreen = ({ navigation }) => {
     const json = await getDefaultEndpoint(params);
 
     if (json.error) {
-      console.log(
-        "Error getting default: ",
-        json.error,
-        "\nAfter sending params: ",
-        params
-      );
+      if (json.error.startsWith("request not")) {
+        dispatch(resetSelectedData());
+      } else {
+        console.log("Error getting default: ", json.error);
+      }
       return;
     }
 
-    if (json.default) dispatch(setSelectedUser(json.default));
-    else dispatch(resetSelectedData());
+    if (json.default) {
+      dispatch(setSelectedUser(json.default));
+    }
   };
 
   const setDefault = async (selected) => {
