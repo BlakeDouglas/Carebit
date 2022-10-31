@@ -53,7 +53,6 @@ const RequestScreen = ({ navigation }) => {
       ]
     );
   };
-  const { fontScale } = useWindowDimensions();
 
   const onPressAdd = (item) => {
     const typeOfRequester =
@@ -193,6 +192,7 @@ const RequestScreen = ({ navigation }) => {
     } else {
       phoneNumber = item.phone.substring(countryCode.length);
     }
+
     return (
       <Item
         item={item}
@@ -200,6 +200,7 @@ const RequestScreen = ({ navigation }) => {
         phoneNumber={phoneNumber}
         onPress={() => setSelectedId(item.requestID)}
         backgroundColor={{ backgroundColor }}
+        fontScale={fontScale}
       />
     );
   };
@@ -223,6 +224,7 @@ const RequestScreen = ({ navigation }) => {
     return () => clearInterval(toggle);
   });
 
+  const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
@@ -333,7 +335,14 @@ const RequestScreen = ({ navigation }) => {
   );
 };
 
-const Item = ({ item, phoneNumber, countryCode, onPress, backgroundColor }) => (
+const Item = ({
+  item,
+  phoneNumber,
+  countryCode,
+  onPress,
+  backgroundColor,
+  fontScale,
+}) => (
   <TouchableOpacity style={[styles.item, backgroundColor]} onPress={onPress}>
     <Text
       style={[styles.name, { fontSize: responsiveFontSize(2.2) / fontScale }]}
@@ -358,6 +367,7 @@ const Item = ({ item, phoneNumber, countryCode, onPress, backgroundColor }) => (
 );
 
 const Empty = () => {
+  const { fontScale } = useWindowDimensions();
   return (
     <View style={styles.emptyContainer}>
       <Text
