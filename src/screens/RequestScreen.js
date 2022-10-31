@@ -74,10 +74,8 @@ const RequestScreen = ({ navigation }) => {
           onPress: async () => {
             await acceptRequest(item);
             await getRequests();
+            await getDefault();
             setSelectedId(null);
-            if (!selectedUser.email) {
-              await getDefault();
-            }
             Alert.alert(
               "Accepted!",
               fullName +
