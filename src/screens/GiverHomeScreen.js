@@ -46,7 +46,7 @@ export default function GiverHomeScreen({ navigation }) {
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
-
+  const [lastHourMeasured, setLastHourMeasured] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
@@ -253,8 +253,11 @@ export default function GiverHomeScreen({ navigation }) {
         json.steps.timeMeasured;
       let range = moment.range(pullTime, currTime);
       setStepAlert(range.diff("minutes"));
-      console.log(StepAlert);
-      if (StepAlert > 60) {
+      if (
+        StepAlert > 60 &&
+        json.steps.timeMeasured.slice(0, 2) !== lastHourMeasured
+      ) {
+        setLastHourMeasured(json.steps.timeMeasured.slice(0, 2));
         noSyncAlert();
       }
 
@@ -892,7 +895,8 @@ export default function GiverHomeScreen({ navigation }) {
                     numberOfLines={2}
                   >
                     {stepUpdate
-                      ? stepUpdate.includes("hour", 0)
+                      ? stepUpdate.includes("hour", 0) ||
+                        stepUpdate.includes("day", 0)
                         ? "ask " +
                           selectedUser.firstName.slice(0, 12) +
                           " to sync"
