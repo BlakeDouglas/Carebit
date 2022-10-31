@@ -1385,10 +1385,10 @@ export default function GiverHomeScreen({ navigation }) {
                       { fontSize: responsiveFontSize(1.8) / fontScale },
                     ]}
                   >
-                    {isEnabledMonitor
+                    {!isEnabledMonitor
+                      ? ""
+                      : StepsSyncTime
                       ? StepsSyncTime
-                        ? StepsSyncTime
-                        : ""
                       : ""}
                   </Text>
                 </SafeAreaView>
