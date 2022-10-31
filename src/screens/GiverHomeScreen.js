@@ -265,12 +265,20 @@ export default function GiverHomeScreen({ navigation }) {
       setStepAlert(range.diff("minutes"));
       console.log("Make sure this is changing every hour");
       console.log("lastHourMeasured: " + lastHourMeasured);
-      console.log("json timeMeasured: " + json.steps.timeMeasured.slice(0, 2));
+      console.log(
+        "json timeMeasured: " +
+          json.steps.timeMeasured.slice(0, json.steps.timeMeasured.indexOf(":"))
+      );
       if (
         StepAlert > 60 &&
-        json.steps.timeMeasured.slice(0, 2) !== lastHourMeasured
+        json.steps.timeMeasured.slice(
+          0,
+          json.steps.timeMeasured.indexOf(":")
+        ) !== lastHourMeasured
       ) {
-        setLastHourMeasured(json.steps.timeMeasured.slice(0, 2));
+        setLastHourMeasured(
+          json.steps.timeMeasured.slice(0, json.steps.timeMeasured.indexOf(":"))
+        );
         noSyncAlert();
       }
 
@@ -816,7 +824,7 @@ export default function GiverHomeScreen({ navigation }) {
                       fontWeight: "700",
                     }}
                   >
-                    {HeartBPM === null ? "--" : HeartBPM}
+                    {HeartBPM === null || !isEnabledMonitor ? "--" : HeartBPM}
                   </Text>
                   <Text
                     style={{
@@ -844,7 +852,11 @@ export default function GiverHomeScreen({ navigation }) {
                       { fontSize: responsiveFontSize(1.8) / fontScale },
                     ]}
                   >
-                    {HeartSyncTime || ""}
+                    {!isEnabledMonitor
+                      ? ""
+                      : HeartSyncTime
+                      ? HeartSyncTime
+                      : ""}
                   </Text>
                 </SafeAreaView>
               </SafeAreaView>
@@ -889,7 +901,11 @@ export default function GiverHomeScreen({ navigation }) {
                     }}
                     numberOfLines={1}
                   >
-                    {hourlySteps === null ? "--" : hourlySteps}
+                    {isEnabledMonitor
+                      ? hourlySteps === null
+                        ? "--"
+                        : hourlySteps
+                      : "--"}
                   </Text>
                 </SafeAreaView>
                 <SafeAreaView
@@ -1071,7 +1087,11 @@ export default function GiverHomeScreen({ navigation }) {
                       fontWeight: "700",
                     }}
                   >
-                    {HeartMin === null ? "--" : HeartMin}
+                    {isEnabledMonitor
+                      ? HeartMin === null
+                        ? "--"
+                        : HeartMin
+                      : "--"}
                   </Text>
                 </SafeAreaView>
 
@@ -1127,7 +1147,11 @@ export default function GiverHomeScreen({ navigation }) {
                       fontWeight: "700",
                     }}
                   >
-                    {HeartAvg === null ? "--" : HeartAvg}
+                    {isEnabledMonitor
+                      ? HeartAvg === null
+                        ? "--"
+                        : HeartAvg
+                      : "--"}
                   </Text>
                 </SafeAreaView>
 
@@ -1183,7 +1207,11 @@ export default function GiverHomeScreen({ navigation }) {
                       fontWeight: "700",
                     }}
                   >
-                    {HeartMax === null ? "--" : HeartMax}
+                    {isEnabledMonitor
+                      ? HeartMax === null
+                        ? "--"
+                        : HeartMax
+                      : "--"}
                   </Text>
                 </SafeAreaView>
 
@@ -1340,7 +1368,11 @@ export default function GiverHomeScreen({ navigation }) {
                     }}
                     numberOfLines={1}
                   >
-                    {dailySteps === null ? "--" : dailySteps}
+                    {isEnabledMonitor
+                      ? dailySteps === null
+                        ? "--"
+                        : dailySteps
+                      : "--"}
                   </Text>
                 </SafeAreaView>
                 <SafeAreaView
@@ -1358,7 +1390,11 @@ export default function GiverHomeScreen({ navigation }) {
                       { fontSize: responsiveFontSize(1.8) / fontScale },
                     ]}
                   >
-                    {StepsSyncTime || ""}
+                    {isEnabledMonitor
+                      ? StepsSyncTime
+                        ? StepsSyncTime
+                        : ""
+                      : ""}
                   </Text>
                 </SafeAreaView>
               </SafeAreaView>
@@ -1424,7 +1460,11 @@ export default function GiverHomeScreen({ navigation }) {
                       { fontSize: responsiveFontSize(1.8) / fontScale },
                     ]}
                   >
-                    {BatteryLevel === null ? "Unlinked" : BatteryLevel}
+                    {isEnabledMonitor
+                      ? BatteryLevel === null
+                        ? "Unlinked"
+                        : BatteryLevel
+                      : "Paused"}
                   </Text>
                 </SafeAreaView>
               </SafeAreaView>
