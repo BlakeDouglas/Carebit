@@ -72,7 +72,7 @@ export default function GiverHomeScreen({ navigation }) {
   }, []);
 
   const getCaregiveeInfo = async () => {
-    if (!selectedUser.email) return;
+    if (!selectedUser.caregiveeID) return;
     const params = {
       auth: tokenData.access_token,
       targetID: selectedUser.caregiveeID,
@@ -97,17 +97,7 @@ export default function GiverHomeScreen({ navigation }) {
 
     if (json.error) {
       if (json.error.startsWith("request not")) {
-        dispatch(resetSelectedData());
-        setBatteryLevel(null);
-        setBatterySyncTime(null);
-        setHeart(null);
-        setHeartMin(null);
-        setHeartAvg(null);
-        setHeartMax(null);
-        setHeartSyncTime(null);
-        setHourlySteps(null);
-        setDailySteps(null);
-        setStepUpdate(null);
+        reset();
       } else {
         console.log("Error getting default: ", json.error);
       }
@@ -117,6 +107,27 @@ export default function GiverHomeScreen({ navigation }) {
     if (json.default) {
       dispatch(setSelectedUser(json.default));
     }
+  };
+
+  const reset = () => {
+    dispatch(resetSelectedData());
+    setBatteryLevel(null);
+    setBatterySyncTime(null);
+    setHeart(null);
+    setHeartMin(null);
+    setHeartAvg(null);
+    setHeartMax(null);
+    setHeartSyncTime(null);
+    setHourlySteps(null);
+    setDailySteps(null);
+    setStepUpdate(null);
+    setStepsSyncTime(null);
+    setHeartSyncTime(null);
+    setStepAlert(null);
+    setLastHourMeasured(null);
+    setIsEnabledSleep(false);
+    setIsEnabledDisturb(false);
+    setIsEnabledMonitor(true);
   };
   // Get Device expo-token-Notification
   async function registerForPushNotificationsAsync() {
@@ -300,8 +311,12 @@ export default function GiverHomeScreen({ navigation }) {
   }, []);
 
   useEffect(() => {
-    getCaregiveeInfo();
-    fetchData();
+    // When selected user changes, either reset or fetch data depending on whether selected user is valid
+    if (selectedUser.caregiveeID) {
+      getCaregiveeInfo();
+      fetchData();
+    } else reset();
+
     number = selectedUser.phone || null;
     args = {
       number,
