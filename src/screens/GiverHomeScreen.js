@@ -123,7 +123,6 @@ export default function GiverHomeScreen({ navigation }) {
     setStepUpdate(null);
     setStepsSyncTime(null);
     setHeartSyncTime(null);
-    setStepAlert(null);
     setLastHourMeasured(null);
     setIsEnabledSleep(false);
     setIsEnabledDisturb(false);
@@ -277,13 +276,11 @@ export default function GiverHomeScreen({ navigation }) {
 
       if (
         StepAlert >= 60 &&
-        json.steps.timeMeasured.slice(
-          0,
-          json.steps.timeMeasured.indexOf(":")
-        ) !== lastHourMeasured
+        json.steps.hourlyTime.slice(0, json.steps.hourlyTime.indexOf(":")) !==
+          lastHourMeasured
       ) {
         setLastHourMeasured(
-          json.steps.timeMeasured.slice(0, json.steps.timeMeasured.indexOf(":"))
+          json.steps.hourlyTime.slice(0, json.steps.hourlyTime.indexOf(":"))
         );
         noSyncAlert();
       }
