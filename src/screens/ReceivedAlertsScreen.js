@@ -140,7 +140,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
             style={{
               color: "rgba(0,225,200,.6)",
               fontWeight: "bold",
-              textAlign: "right",
+              textAlign: "center",
               fontSize: responsiveFontSize(2.3) / fontScale,
               marginTop: "10%",
             }}

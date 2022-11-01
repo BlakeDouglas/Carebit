@@ -42,7 +42,6 @@ export default function GiverHomeScreen({ navigation }) {
   const [BatterySyncTime, setBatterySyncTime] = useState(null);
   const [HeartSyncTime, setHeartSyncTime] = useState(null);
   const [StepsSyncTime, setStepsSyncTime] = useState(null);
-  const [StepAlert, setStepAlert] = useState(null);
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
@@ -254,18 +253,19 @@ export default function GiverHomeScreen({ navigation }) {
       let currTime = moment().format("YYYY-MM-DD HH:mm:ss");
       let pullTime =
         json.steps.date +
-        (json.steps.timeMeasured.length === 7 ? " 0" : " ") +
-        json.steps.timeMeasured;
+        (json.steps.hourlyTime.length === 7 ? " 0" : " ") +
+        json.steps.hourlyTime;
       let range = moment.range(pullTime, currTime);
-      setStepAlert(range.diff("minutes"));
+      let StepAlert = range.diff("minutes");
       console.log("Make sure this is changing every hour");
       console.log("lastHourMeasured: " + lastHourMeasured);
       console.log(
         "json timeMeasured: " +
           json.steps.timeMeasured.slice(0, json.steps.timeMeasured.indexOf(":"))
       );
+
       if (
-        StepAlert > 60 &&
+        StepAlert >= 60 &&
         json.steps.timeMeasured.slice(
           0,
           json.steps.timeMeasured.indexOf(":")
