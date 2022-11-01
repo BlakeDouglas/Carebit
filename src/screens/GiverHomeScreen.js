@@ -45,7 +45,7 @@ export default function GiverHomeScreen({ navigation }) {
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
-  const [lastHourMeasured, setLastHourMeasured] = useState(null);
+  const [lastTimeMeasured, setLastTimeMeasured] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
@@ -123,7 +123,7 @@ export default function GiverHomeScreen({ navigation }) {
     setStepUpdate(null);
     setStepsSyncTime(null);
     setHeartSyncTime(null);
-    setLastHourMeasured(null);
+    setLastTimeMeasured(null);
     setIsEnabledSleep(false);
     setIsEnabledDisturb(false);
     setIsEnabledMonitor(true);
@@ -260,6 +260,8 @@ export default function GiverHomeScreen({ navigation }) {
       setHourlySteps(json.steps.hourlyTotal);
       setDailySteps(json.steps.currentDayTotal);
 
+      // Returns the difference in minutes between the last time the
+      // Fitbit sunk and right now
       let currTime = moment().format("YYYY-MM-DD HH:mm:ss");
       let pullTime =
         json.steps.date +
@@ -267,12 +269,11 @@ export default function GiverHomeScreen({ navigation }) {
         json.steps.hourlyTime;
       let range = moment.range(pullTime, currTime);
       let StepAlert = range.diff("minutes");
-      console.log("Make sure this is changing every hour");
-      console.log("lastHourMeasured: " + lastHourMeasured);
-      console.log("json timeMeasured: " + json.steps.timeMeasured);
+
+      // If it's been over an hour since a sync, send a no sync alert
       // If the last sync time hasn't changed, don't send the alert again
-      if (StepAlert >= 60 && json.steps.hourlyTime !== lastHourMeasured) {
-        setLastHourMeasured(json.steps.hourlyTime);
+      if (StepAlert >= 60 && json.steps.hourlyTime !== lastTimeMeasured) {
+        setLastTimeMeasured(json.steps.hourlyTime);
         noSyncAlert();
       }
 
@@ -318,7 +319,7 @@ export default function GiverHomeScreen({ navigation }) {
 
   const isFocused = useIsFocused();
 
-  // Auto refreshes every 30 seconds as long as the screen is focused
+  // Auto refreshes every x milliseconds as long as the screen is focused
   useEffect(() => {
     const toggle = setInterval(() => {
       console.log("here");
