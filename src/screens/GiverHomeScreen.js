@@ -269,19 +269,10 @@ export default function GiverHomeScreen({ navigation }) {
       let StepAlert = range.diff("minutes");
       console.log("Make sure this is changing every hour");
       console.log("lastHourMeasured: " + lastHourMeasured);
-      console.log(
-        "json timeMeasured: " +
-          json.steps.timeMeasured.slice(0, json.steps.timeMeasured.indexOf(":"))
-      );
-
-      if (
-        StepAlert >= 60 &&
-        json.steps.hourlyTime.slice(0, json.steps.hourlyTime.indexOf(":")) !==
-          lastHourMeasured
-      ) {
-        setLastHourMeasured(
-          json.steps.hourlyTime.slice(0, json.steps.hourlyTime.indexOf(":"))
-        );
+      console.log("json timeMeasured: " + json.steps.timeMeasured);
+      // If the last sync time hasn't changed, don't send the alert again
+      if (StepAlert >= 60 && json.steps.hourlyTime !== lastHourMeasured) {
+        setLastHourMeasured(json.steps.hourlyTime);
         noSyncAlert();
       }
 
