@@ -16,7 +16,7 @@ import React, { useState } from "react";
 import Moment from "moment";
 import { extendMoment } from "moment-range";
 import { useEffect } from "react";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import Modal from "react-native-modal";
 import call from "react-native-phone-call";
@@ -35,6 +35,7 @@ export default function GiveeHomeScreen({ navigation }) {
   const windowHeight = useWindowDimensions().height;
   const dispatch = useDispatch();
   const number = selectedUser.phone || null;
+  const [refreshing, setRefreshing] = React.useState(false);
   const args = {
     number,
     prompt: true,
@@ -42,12 +43,13 @@ export default function GiveeHomeScreen({ navigation }) {
   };
   const [BatteryLevel, setBatteryLevel] = useState(null);
   const [caregivee, setCaregivee] = useState(null);
+  const [update, setUpdate] = useState(null);
+
+  // Booleans to display the 3 different alerts (sleep, dnd, monitoring)
   const [isModal1Visible, setModal1Visible] = useState(false);
   const [isModal2Visible, setModal2Visible] = useState(false);
-  const [update, setUpdate] = useState(null);
-  const moment = extendMoment(Moment);
-  let date = moment().format("dddd, MMM D");
   const [isModal3Visible, setModal3Visible] = useState(false);
+  // Toggles to set the 3 different alerts as true/false
   const toggleModal1 = () => {
     setModal1Visible(!isModal1Visible);
   };
@@ -58,22 +60,13 @@ export default function GiveeHomeScreen({ navigation }) {
     setModal3Visible(!isModal3Visible);
   };
 
+  // Underlying boolean values for the privacy modes
+  // Value used to determine slider position as well
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
-  const toggleSwitchSleep = () => {
-    // toggleSleep();
-    toggleModal1();
-  };
-  const toggleSwitchDisturb = () => {
-    // toggleDisturb();
-    toggleModal2();
-  };
-  const toggleSwitchMonitor = () => {
-    // toggleMonitor();
-    toggleModal3();
-  };
 
+  // Used to toggle privacy modes back to their original state
   const toggleSleep = () => {
     setIsEnabledSleep(!isEnabledSleep);
     setCaregiveeInfo({ sleep: 0 });
@@ -87,10 +80,16 @@ export default function GiveeHomeScreen({ navigation }) {
     setCaregiveeInfo({ monitoring: 1 });
   };
 
-  const [refreshing, setRefreshing] = React.useState(false);
+  // Store the current date
+  const moment = extendMoment(Moment);
+  let date = moment().format("dddd, MMM D");
+
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
+
+  // When the user refreshes the page, it calls these functions
+  // Sets refreshing prop to false after x seconds
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     updateConnections();
@@ -98,6 +97,7 @@ export default function GiveeHomeScreen({ navigation }) {
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
+  // Finds default caregiver to display data
   const updateConnections = async () => {
     const params = {
       auth: tokenData.access_token,
@@ -122,6 +122,7 @@ export default function GiveeHomeScreen({ navigation }) {
     }
   };
 
+  // Used to set the default values for privacy modes based off of last selection
   const getCaregiveeInfo = async () => {
     const params = {
       auth: tokenData.access_token,
@@ -136,6 +137,7 @@ export default function GiveeHomeScreen({ navigation }) {
     }
   };
 
+  // Endpoint to send privacy values to backend
   const setCaregiveeInfo = async (newJson) => {
     const params = {
       targetID: tokenData.caregiveeID,
@@ -157,6 +159,7 @@ export default function GiveeHomeScreen({ navigation }) {
     if (json.caregivee) setCaregivee(json.caregivee);
   };
 
+  // Function to calculate time between last sync and the current time
   const calculateTime = (pullTime) => {
     let currTime = moment().format("YYYY-MM-DD HH:mm:ss");
     let range = moment.range(pullTime, currTime);
@@ -225,7 +228,7 @@ export default function GiveeHomeScreen({ navigation }) {
         translucent={false}
         backgroundColor="dodgerblue"
       />
-
+      {/* Sleep toggle switch pop up window for confirmation/decline */}
       <Modal
         isVisible={isModal1Visible}
         backdropOpacity={0.5}
@@ -349,6 +352,7 @@ export default function GiveeHomeScreen({ navigation }) {
         </View>
       </Modal>
 
+      {/* DnD toggle switch pop up window for confirmation/decline */}
       <Modal
         isVisible={isModal2Visible}
         backdropOpacity={0.5}
@@ -472,6 +476,7 @@ export default function GiveeHomeScreen({ navigation }) {
         </View>
       </Modal>
 
+      {/* Monitoring toggle switch pop up window for confirmation/decline */}
       <Modal
         isVisible={isModal3Visible}
         backdropOpacity={0.5}
@@ -596,7 +601,7 @@ export default function GiveeHomeScreen({ navigation }) {
           </SafeAreaView>
         </View>
       </Modal>
-
+      {/* Container for all visible data */}
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -604,7 +609,7 @@ export default function GiveeHomeScreen({ navigation }) {
       >
         <SafeAreaView
           style={{
-            height: windowHeight - 50,
+            height: windowHeight - 30,
             width: windowWidth,
           }}
         >
@@ -631,6 +636,8 @@ export default function GiveeHomeScreen({ navigation }) {
                 : ""}
             </Text>
           </SafeAreaView>
+
+          {/* Greeting/phone container */}
           <SafeAreaView
             style={{
               height: "10%",
@@ -660,7 +667,7 @@ export default function GiveeHomeScreen({ navigation }) {
               </Text>
               {/* All users must have a phone number, otherwise there's no way to add them. Thus, no phone = no user */}
               {/* The only way for us not to have a Caregiver is if we don't have anyone added */}
-              {/* Thus, send to add screen if no Caregiver exists */}
+              {/* Thus, send to add screen if no Caregiver exists. (Only exception is having requests) */}
               {selectedUser.phone ? (
                 <Text
                   style={{
@@ -692,15 +699,17 @@ export default function GiveeHomeScreen({ navigation }) {
                 </TouchableOpacity>
               )}
             </SafeAreaView>
+
+            {/* Phone container */}
             <SafeAreaView
               style={{
                 height: "100%",
                 width: "28%",
                 justifyContent: "center",
                 flexShrink: 1,
-                //backgroundColor: "red",
               }}
             >
+              {/* Only display phone/name if a phone number exists. Can't call null */}
               {number && (
                 <TouchableOpacity
                   style={styles.callBody}
@@ -712,13 +721,13 @@ export default function GiveeHomeScreen({ navigation }) {
                     source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
                   />
                   <Text
-                    style={[
-                      styles.callText,
-                      {
-                        flexShrink: 1,
-                        fontSize: responsiveFontSize(2) / fontScale,
-                      },
-                    ]}
+                    style={{
+                      flexShrink: 1,
+                      fontSize: responsiveFontSize(2) / fontScale,
+                      color: "dodgerblue",
+                      fontWeight: "bold",
+                      marginLeft: "2%",
+                    }}
                     numberOfLines={2}
                   >
                     Call {selectedUser.firstName || "N/A"}
@@ -728,17 +737,18 @@ export default function GiveeHomeScreen({ navigation }) {
             </SafeAreaView>
           </SafeAreaView>
 
+          {/* Large Card Container for alerts/battery  */}
           <SafeAreaView
             style={{
               flexDirection: "row",
               height: "19%",
               width: "100%",
-              //backgroundColor: "red",
               justifyContent: "space-evenly",
               alignItems: "center",
               marginTop: "5%",
             }}
           >
+            {/* Container for alerts */}
             <SafeAreaView
               style={[
                 styles.alertBody,
@@ -758,7 +768,6 @@ export default function GiveeHomeScreen({ navigation }) {
             >
               <SafeAreaView
                 style={{
-                  // backgroundColor: "blue",
                   marginTop: "5%",
                   height: "40%",
                   width: "100%",
@@ -773,16 +782,16 @@ export default function GiveeHomeScreen({ navigation }) {
                   }}
                 >
                   <Image
-                    style={styles.imagesBody}
+                    style={{ height: 45, width: 45 }}
                     source={require("../../assets/images/icons-alert-big-color.imageset/icons-alert-big-color.png")}
                   />
                 </TouchableOpacity>
               </SafeAreaView>
+
               <SafeAreaView
                 style={{
                   height: "40%",
                   width: "100%",
-                  //backgroundColor: "red",
                   alignItems: "center",
                   justifyContent: "space-evenly",
                 }}
@@ -806,6 +815,8 @@ export default function GiveeHomeScreen({ navigation }) {
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
+
+            {/* Container for battery */}
             <SafeAreaView
               style={[
                 styles.chatBody,
@@ -825,7 +836,6 @@ export default function GiveeHomeScreen({ navigation }) {
             >
               <SafeAreaView
                 style={{
-                  // backgroundColor: "blue",
                   marginTop: "5%",
                   height: "40%",
                   width: "100%",
@@ -854,7 +864,6 @@ export default function GiveeHomeScreen({ navigation }) {
                 style={{
                   height: "40%",
                   width: "100%",
-                  //backgroundColor: "red",
                   alignItems: "center",
                   justifyContent: "space-evenly",
                 }}
@@ -880,6 +889,7 @@ export default function GiveeHomeScreen({ navigation }) {
             </SafeAreaView>
           </SafeAreaView>
 
+          {/* Grey divider */}
           <SafeAreaView
             style={{
               borderBottomColor: "lightgray",
@@ -889,9 +899,9 @@ export default function GiveeHomeScreen({ navigation }) {
             }}
           ></SafeAreaView>
 
+          {/* Preferences/date container */}
           <SafeAreaView
             style={{
-              //backgroundColor: "blue",
               alignSelf: "center",
               alignItems: "center",
               height: "8%",
@@ -901,10 +911,11 @@ export default function GiveeHomeScreen({ navigation }) {
             }}
           >
             <Text
-              style={[
-                styles.preferencesText,
-                { fontSize: responsiveFontSize(2.3) / fontScale },
-              ]}
+              style={{
+                fontWeight: "500",
+                marginLeft: "2%",
+                fontSize: responsiveFontSize(2.3) / fontScale,
+              }}
             >
               Preferences
             </Text>
@@ -919,6 +930,7 @@ export default function GiveeHomeScreen({ navigation }) {
             </Text>
           </SafeAreaView>
 
+          {/* Sleep mode Container */}
           <SafeAreaView
             style={[
               styles.bottomRowBody,
@@ -956,37 +968,26 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 height: "100%",
                 width: "75%",
-                //backgroundColor: "green",
                 flexDirection: "row",
-                //justifyContent: "center",
                 alignItems: "center",
               }}
             >
               {isEnabledSleep ? (
                 <Image
-                  style={[
-                    styles.imagesBody,
-                    {
-                      marginLeft: "5%",
-                      marginRight: "5%",
-                    },
-                  ]}
+                  style={styles.imagesBody}
                   source={require("../../assets/images/icons-caregivee-sleep-on.imageset/icons-caregivee-sleep-on.png")}
                 />
               ) : (
                 <Image
-                  style={[
-                    styles.imagesBody,
-                    { marginLeft: "5%", marginRight: "5%" },
-                  ]}
+                  style={styles.imagesBody}
                   source={require("../../assets/images/icons-caregivee-sleep-off.imageset/icons-caregivee-sleep-off.png")}
                 />
               )}
+              {/* Middle text container */}
               <SafeAreaView
                 style={{
                   marginLeft: "4%",
                   alignSelf: "center",
-                  //backgroundColor: "red",
                   height: "100%",
                   width: "40%",
                   justifyContent: "center",
@@ -1003,7 +1004,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 </Text>
                 <Text
                   style={[
-                    styles.buttonSmallText2,
+                    styles.buttonSmallText,
                     { fontSize: responsiveFontSize(2.08) / fontScale },
                   ]}
                 >
@@ -1011,10 +1012,10 @@ export default function GiveeHomeScreen({ navigation }) {
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
+            {/* Sleep toggle switch */}
             <SafeAreaView
               style={{
                 marginRight: "4%",
-                //backgroundColor: "blue",
                 height: "100%",
                 width: "20%",
                 justifyContent: "center",
@@ -1024,14 +1025,13 @@ export default function GiveeHomeScreen({ navigation }) {
                 trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                 thumbColor={isEnabledSleep ? "white" : "white"}
                 style={styles.switchBody}
-                onValueChange={
-                  !isEnabledSleep ? toggleSwitchSleep : toggleSleep
-                }
+                onValueChange={!isEnabledSleep ? toggleModal1 : toggleSleep}
                 value={isEnabledSleep}
               />
             </SafeAreaView>
           </SafeAreaView>
 
+          {/* Do Not Disturb Container */}
           <SafeAreaView
             style={[
               styles.bottomRowBody,
@@ -1054,35 +1054,27 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 height: "100%",
                 width: "75%",
-                //backgroundColor: "green",
                 flexDirection: "row",
-                //justifyContent: "center",
                 alignItems: "center",
               }}
             >
               {isEnabledDisturb ? (
                 <Image
-                  style={[
-                    styles.imagesBody,
-                    { marginLeft: "5%", marginRight: "5%" },
-                  ]}
+                  style={styles.imagesBody}
                   source={require("../../assets/images/icons-caregivee-dnd-on.imageset/icons-caregivee-dnd-on.png")}
                 />
               ) : (
                 <Image
-                  style={[
-                    styles.imagesBody,
-                    { marginLeft: "5%", marginRight: "5%" },
-                  ]}
+                  style={styles.imagesBody}
                   source={require("../../assets/images/icons-caregivee-dnd-off.imageset/icons-caregivee-dnd-off.png")}
                 />
               )}
+              {/* Middle text container */}
               <SafeAreaView
                 style={{
                   marginLeft: "4%",
                   alignSelf: "center",
                   justifyContent: "center",
-                  //backgroundColor: "red",
                   height: "100%",
                   width: "60%",
                 }}
@@ -1097,7 +1089,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 </Text>
                 <Text
                   style={[
-                    styles.buttonSmallText2,
+                    styles.buttonSmallText,
                     { fontSize: responsiveFontSize(2.08) / fontScale },
                   ]}
                 >
@@ -1105,6 +1097,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
+            {/* DnD toggle switch container */}
             <SafeAreaView
               style={{
                 height: "100%",
@@ -1117,13 +1110,12 @@ export default function GiveeHomeScreen({ navigation }) {
                 trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                 thumbColor={isEnabledDisturb ? "white" : "white"}
                 style={styles.switchBody}
-                onValueChange={
-                  !isEnabledDisturb ? toggleSwitchDisturb : toggleDisturb
-                }
+                onValueChange={!isEnabledDisturb ? toggleModal2 : toggleDisturb}
                 value={isEnabledDisturb}
               />
             </SafeAreaView>
           </SafeAreaView>
+          {/* Monitoring container */}
           <SafeAreaView
             style={[
               styles.bottomRowBody,
@@ -1146,35 +1138,27 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 height: "100%",
                 width: "75%",
-                //backgroundColor: "green",
                 flexDirection: "row",
-                //justifyContent: "center",
                 alignItems: "center",
               }}
             >
               {isEnabledMonitor ? (
                 <Image
-                  style={[
-                    styles.imagesBody,
-                    { marginLeft: "5%", marginRight: "5%" },
-                  ]}
+                  style={styles.imagesBody}
                   source={require("../../assets/images/icons-caregivee-monitor-on.imageset/icons-caregivee-monitor-on.png")}
                 />
               ) : (
                 <Image
-                  style={[
-                    styles.imagesBody,
-                    { marginLeft: "5%", marginRight: "5%" },
-                  ]}
+                  style={styles.imagesBody}
                   source={require("../../assets/images/icons-caregivee-monitor-off.imageset/icons-caregivee-monitor-off.png")}
                 />
               )}
+              {/* Middle text container */}
               <SafeAreaView
                 style={{
                   marginLeft: "4%",
                   alignSelf: "center",
                   justifyContent: "center",
-                  //backgroundColor: "red",
                   height: "100%",
                   width: "60%",
                 }}
@@ -1189,7 +1173,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 </Text>
                 <Text
                   style={[
-                    styles.buttonSmallText2,
+                    styles.buttonSmallText,
                     { fontSize: responsiveFontSize(2.08) / fontScale },
                   ]}
                 >
@@ -1197,10 +1181,10 @@ export default function GiveeHomeScreen({ navigation }) {
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
+            {/* Monitoring toggle switch container */}
             <SafeAreaView
               style={{
                 marginRight: "4%",
-                //backgroundColor: "blue",
                 height: "100%",
                 width: "20%",
                 justifyContent: "center",
@@ -1210,9 +1194,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                 thumbColor={isEnabledMonitor ? "white" : "white"}
                 style={styles.switchBody}
-                onValueChange={
-                  isEnabledMonitor ? toggleSwitchMonitor : toggleMonitor
-                }
+                onValueChange={isEnabledMonitor ? toggleModal3 : toggleMonitor}
                 value={isEnabledMonitor}
               />
             </SafeAreaView>
@@ -1224,16 +1206,6 @@ export default function GiveeHomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  mainBody: {
-    height: "100%",
-    width: "100%",
-    backgroundColor: "whitesmoke",
-  },
-
-  mediumTopBody: {
-    flexDirection: "row",
-    marginBottom: "7.8%",
-  },
   callBody: {
     alignItems: "center",
     flexDirection: "row",
@@ -1241,16 +1213,9 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS == "ios" ? "10%" : "5%",
     justifyContent: "center",
   },
-  mediumBody: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "33%",
-  },
   alertBody: {
     backgroundColor: "white",
     alignItems: "center",
-    //justifyContent: "center",
     height: "100%",
     width: "43%",
     borderRadius: 5,
@@ -1258,7 +1223,6 @@ const styles = StyleSheet.create({
   chatBody: {
     backgroundColor: "white",
     alignItems: "center",
-    //justifyContent: "center",
     height: "100%",
     width: "43%",
     borderRadius: 5,
@@ -1266,16 +1230,11 @@ const styles = StyleSheet.create({
   imagesBody: {
     width: 45,
     height: 45,
+    marginLeft: "5%",
+    marginRight: "5%",
   },
-
   switchBody: {
     transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
-  },
-  bottomBody: {
-    height: "90%",
-    width: "100%",
-    justifyContent: "space-evenly",
-    alignItems: "center",
   },
   bottomRowBody: {
     width: "92%",
@@ -1287,41 +1246,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderRadius: 5,
   },
-
-  helloText: {
-    color: "darkgrey",
-    fontSize: responsiveFontSize(2.15),
-    //fontWeight: "bold",
-  },
-
-  callText: {
-    color: "dodgerblue",
-    fontSize: responsiveFontSize(2),
-    fontWeight: "bold",
-    marginLeft: "2%",
-  },
-
   buttonBigText: {
     fontSize: responsiveFontSize(2.25),
     fontWeight: "500",
   },
-
   buttonSmallText: {
-    fontSize: responsiveFontSize(2.08),
     color: "darkgrey",
     fontWeight: "500",
     marginTop: "3%",
-    marginBottom: "10%",
-  },
-  buttonSmallText2: {
-    fontSize: responsiveFontSize(2.08),
-    color: "darkgrey",
-    fontWeight: "500",
-    marginTop: "3%",
-  },
-  preferencesText: {
-    fontSize: responsiveFontSize(2.3),
-    fontWeight: "500",
-    marginLeft: "2%",
   },
 });

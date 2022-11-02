@@ -312,6 +312,7 @@ const HomeStack = () => {
                       </View>
                     }
                   >
+                    <Divider />
                     {/* Items contained within the menu with functionality */}
                     <Menu.Item
                       leadingIcon={require("./assets/images/avatar/userList.png")}
