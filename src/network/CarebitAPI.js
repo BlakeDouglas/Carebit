@@ -89,6 +89,30 @@ export async function caregiveeCreateEndpoint(params) {
   }
 }
 
+// Params: {auth, targetID, selfID}
+export async function alertCounter(params) {
+  const url = `${urlBase}alertCounter/${params.targetID}/${params.selfID}`;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw (
+        "Server error in /alertCounter/<caregiveeID>/<caregiverID>: " +
+        responseText
+      );
+    }
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log(
+      "Caught error from /alertCounter/<caregiveeID>/<caregiverID>: " + error
+    );
+  }
+}
+
 // Params: {auth, body, targetID}
 export async function caregiveeSetEndpoint(params) {
   const url = `${urlBase}caregivee/${params.targetID}`;

@@ -26,6 +26,7 @@ import {
   caregiveeSetEndpoint,
   getDefaultEndpoint,
   fitbitDataEndpoint,
+  alertCounter,
 } from "../network/CarebitAPI";
 
 export default function GiveeHomeScreen({ navigation }) {
@@ -80,6 +81,8 @@ export default function GiveeHomeScreen({ navigation }) {
     setCaregiveeInfo({ monitoring: 1 });
   };
 
+  const [counter, setCounter] = useState(null);
+
   // Store the current date
   const moment = extendMoment(Moment);
   let date = moment().format("dddd, MMM D");
@@ -94,6 +97,7 @@ export default function GiveeHomeScreen({ navigation }) {
     setRefreshing(true);
     updateConnections();
     fetchData();
+    getAlertCounter();
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
@@ -119,6 +123,25 @@ export default function GiveeHomeScreen({ navigation }) {
 
     if (json.default) {
       dispatch(setSelectedUser(json.default));
+    }
+  };
+
+  // Receive a count of how many alerts are present
+  const getAlertCounter = async () => {
+    if (!selectedUser.caregiveeID) {
+      return;
+    }
+    const params = {
+      auth: tokenData.access_token,
+      targetID: tokenData.caregiveeID,
+      selfID: selectedUser.caregiverID,
+    };
+    const json = await alertCounter(params);
+    if (json) {
+      setCounter(json.counter);
+    } else {
+      console.log("Failed to get alertCounter");
+      return;
     }
   };
 
@@ -218,6 +241,7 @@ export default function GiveeHomeScreen({ navigation }) {
   useEffect(() => {
     getCaregiveeInfo();
     fetchData();
+    getAlertCounter();
   }, []);
 
   const { fontScale } = useWindowDimensions();
@@ -811,7 +835,7 @@ export default function GiveeHomeScreen({ navigation }) {
                     fontWeight: "500",
                   }}
                 >
-                  0 Today
+                  {counter ? counter : "0"} Today
                 </Text>
               </SafeAreaView>
             </SafeAreaView>

@@ -27,6 +27,7 @@ import {
   getDefaultEndpoint,
   notificationTokenEndpoint,
   setNoSyncAlert,
+  alertCounter,
 } from "../network/CarebitAPI";
 
 export default function GiverHomeScreen({ navigation }) {
@@ -46,8 +47,10 @@ export default function GiverHomeScreen({ navigation }) {
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
   const [lastTimeMeasured, setLastTimeMeasured] = useState(null);
+  const [counter, setCounter] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
+
   const dispatch = useDispatch();
 
   const moment = extendMoment(Moment);
@@ -205,6 +208,24 @@ export default function GiverHomeScreen({ navigation }) {
     return "Invalid Time";
   };
 
+  const getAlertCounter = async () => {
+    if (!selectedUser.caregiveeID) {
+      return;
+    }
+    const params = {
+      auth: tokenData.access_token,
+      targetID: selectedUser.caregiveeID,
+      selfID: tokenData.caregiverID,
+    };
+    const json = await alertCounter(params);
+    if (json) {
+      setCounter(json.counter);
+    } else {
+      console.log("Failed to get alertCounter");
+      return;
+    }
+  };
+
   const noSyncAlert = async () => {
     if (!selectedUser.caregiveeID) {
       return;
@@ -304,6 +325,7 @@ export default function GiverHomeScreen({ navigation }) {
     if (selectedUser.caregiveeID) {
       getCaregiveeInfo();
       fetchData();
+      getAlertCounter();
     } else reset();
 
     number = selectedUser.phone || null;
@@ -324,7 +346,9 @@ export default function GiverHomeScreen({ navigation }) {
     const toggle = setInterval(() => {
       console.log("here");
       console.log(StepsSyncTime);
-      isFocused ? getCaregiveeInfo() && fetchData() : clearInterval(toggle);
+      isFocused
+        ? getCaregiveeInfo() && fetchData() && getAlertCounter()
+        : clearInterval(toggle);
     }, 100000);
     return () => clearInterval(toggle);
   });
@@ -375,7 +399,7 @@ export default function GiverHomeScreen({ navigation }) {
                   justifyContent: "center",
                 }}
               >
-                0 Alerts Today
+                {counter ? counter : "0"} Alerts Today
               </Text>
             </SafeAreaView>
             <TouchableOpacity
