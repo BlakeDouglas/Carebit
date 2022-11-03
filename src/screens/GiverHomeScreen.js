@@ -317,6 +317,7 @@ export default function GiverHomeScreen({ navigation }) {
   useEffect(() => {
     registerForPushNotificationsAsync();
     getCaregiveeInfo();
+    getAlertCounter();
     // TODO: Do this on login / account creation
   }, []);
 
