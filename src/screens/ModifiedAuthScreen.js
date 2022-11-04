@@ -15,7 +15,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { resetData } from "../redux/actions";
+import { resetData, setTokenData } from "../redux/actions";
 import { deleteKeychain, getAuthRequest } from "../network/Auth";
 import {
   acceptRequestEndpoint,
@@ -26,7 +26,7 @@ import {
 
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 
-export default function ModifiedAuthScreen({ navigation, route }) {
+export default function ModifiedAuthScreen({ navigation }) {
   console.log(makeRedirectUri({ scheme: "carebit", path: "callback" }));
 
   const dispatch = useDispatch();
@@ -36,14 +36,13 @@ export default function ModifiedAuthScreen({ navigation, route }) {
 
   React.useEffect(() => {
     if (response?.type === "success") {
-      makeCaregivee(response.params.code, route.params.json.userID);
+      makeCaregivee(response.params.code, tokenData.optedUser.userID);
     }
   }, [response]);
 
-  console.log(route.params);
   const makeCaregivee = async (code, userID) => {
     const params = {
-      auth: route.params.json.access_token,
+      auth: tokenData.optedUser.access_token,
       body: { authCode: code, userID: userID },
     };
     const json = await caregiveeCreateEndpoint(params);
@@ -57,17 +56,17 @@ export default function ModifiedAuthScreen({ navigation, route }) {
   };
 
   const makeRequest = async () => {
-    if (!tokenData.phone || !route.params.json.phone) return;
+    if (!tokenData.phone || !tokenData.optedUser.phone) return;
     const body =
       tokenData.type !== "caregiver"
         ? {
             caregiveePhone: tokenData.phone,
-            caregiverPhone: route.params.json.phone,
+            caregiverPhone: tokenData.optedUser.phone,
             sender: tokenData.type,
           }
         : {
             caregiverPhone: tokenData.phone,
-            caregiveePhone: route.params.json.phone,
+            caregiveePhone: tokenData.optedUser.phone,
             sender: tokenData.type,
           };
     const params = { auth: tokenData.access_token, body: body };
@@ -92,7 +91,7 @@ export default function ModifiedAuthScreen({ navigation, route }) {
 
   const acceptRequest = async (caregiveeID, caregiverID) => {
     const params = {
-      auth: route.params.json.access_token,
+      auth: tokenData.optedUser.access_token,
       body: {
         caregiveeID: caregiveeID,
         caregiverID: caregiverID,
@@ -100,7 +99,13 @@ export default function ModifiedAuthScreen({ navigation, route }) {
     };
     const json = await acceptRequestEndpoint(params);
     if (json.request.caregiveeID) {
-      navigation.navigate("ModifiedPhysScreen", json.request);
+      dispatch(
+        setTokenData({
+          ...tokenData,
+          optedUser: { ...tokenData.optedUser, request: json.request },
+          authPhase: 4,
+        })
+      );
     }
     if (json.error) console.log("Error accepting request: ", json.error);
   };

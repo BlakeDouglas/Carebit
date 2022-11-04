@@ -154,6 +154,7 @@ export default function AccountCreationScreen({ navigation }) {
           firstName: inputs.firstName,
           lastName: inputs.lastName,
           email: inputs.email,
+          authPhase: tokenData.type === "caregiver" ? 1 : 6,
         })
       );
       // Stores user/password in async storage to not have to log in every time

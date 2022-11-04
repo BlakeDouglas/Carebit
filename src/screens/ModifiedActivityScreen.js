@@ -17,7 +17,7 @@ import {
   setActivityEndpoint,
   setDefaultActivityEndpoint,
 } from "../network/CarebitAPI";
-export default function ModifiedActivityScreen({ navigation, route }) {
+export default function ModifiedActivityScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
   const { fontScale } = useWindowDimensions();
@@ -26,19 +26,12 @@ export default function ModifiedActivityScreen({ navigation, route }) {
     let responseText;
 
     // In case we're going through the opt-out feature
-    if (route.params) {
-      params.targetID = route.params.caregiveeID;
+    if (tokenData.authPhase === 5) {
+      params.targetID = tokenData.optedUser.request.caregiveeID;
       params.selfID = tokenData.caregiverID;
       responseText = await setActivityEndpoint(params);
     }
-    // TODO: Ensure the [0] part of this part
-    // Account creation, caregiver edition
-    else if (tokenData.type === "caregiver") {
-      params.targetID = tokenData.caregiveeID[0];
-      params.selfID = tokenData.caregiverID;
-      responseText = await setActivityEndpoint(params);
-    }
-    // Account creation, caregivee edition`
+    // Account creation, caregivee edition, authPhase = 8, will be set to 9 after calling /updateHealthProfile
     else {
       params = {
         auth: tokenData.access_token,
@@ -50,24 +43,15 @@ export default function ModifiedActivityScreen({ navigation, route }) {
       responseText = await setDefaultActivityEndpoint(params);
     }
     if (!responseText) {
-      // Sets caregiveeID to send to home screen
-      if (tokenData.type === "caregiver") {
-        dispatch(
-          setTokenData({
-            ...tokenData,
-            caregiveeID: [],
-          })
-        );
-      }
-      // Sets healthProfile to send to home screen
-      else {
-        dispatch(
-          setTokenData({
-            ...tokenData,
-            healthProfile: level,
-          })
-        );
-      }
+      // Send to 2 (giverhome) for opt-out, and 9 (giveehome) for normal givee account creation
+      const newPhase = tokenData.authPhase === 5 ? 2 : 9;
+      dispatch(
+        setTokenData({
+          ...tokenData,
+          authPhase: newPhase,
+          optedUser: undefined,
+        })
+      );
     } else console.log("Error setting activity level: ", responseText);
   };
 

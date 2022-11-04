@@ -66,6 +66,7 @@ export default function PhysicianInfoScreen({ navigation }) {
         ...tokenData,
         physName: json.cgvee.physName,
         physPhone: json.cgvee.physPhone,
+        authPhase: 8,
       })
     );
   };

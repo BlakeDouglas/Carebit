@@ -26,19 +26,13 @@ import {
   setSelectedUser,
   setTokenData,
 } from "../redux/actions";
-export default function ModifiedPhysScreen({ navigation, route }) {
+export default function ModifiedPhysScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
   const [inputs, setInputs] = useState({
     physName: "",
     physPhone: "",
   });
-  console.log("\nData on Modified Phy Screen: ");
-  console.log(route.params);
-  console.log("Above\n\n");
-  console.log("Token Data on ModPhys");
-  console.log(tokenData);
-  console.log("Info above \n\n");
   const requiredText = " Input required";
 
   const [errors, setErrors] = useState({});
@@ -68,7 +62,7 @@ export default function ModifiedPhysScreen({ navigation, route }) {
     const params = {
       body: {
         ...inputs,
-        caregiveeID: route.params.caregiveeID,
+        caregiveeID: tokenData.optedUser.request.caregiveeID,
       },
       auth: tokenData.access_token,
     };
@@ -78,7 +72,7 @@ export default function ModifiedPhysScreen({ navigation, route }) {
 
     if (json.cgvee) {
       await getDefault(tokenData);
-      navigation.navigate("ModifiedActivityScreen", route.params);
+      dispatch(setTokenData({ ...tokenData, authPhase: 5 }));
     }
   };
 

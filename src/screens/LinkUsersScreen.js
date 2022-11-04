@@ -39,26 +39,6 @@ export default function LinkUsersScreen({ navigation }) {
   const typeOfRequester =
     tokenData.type === "caregivee" ? "caregiver" : "caregivee";
   const { fontScale } = useWindowDimensions();
-  const createButtonAlert = () =>
-    Alert.alert(
-      "Warning",
-      "You will need to sign into your caregivee's Fitbit device.\nOnly continue if you know their Fitbit credentials.",
-      [
-        {
-          text: "Cancel",
-          onPress: () => {
-            console.log("Cancel Pressed");
-          },
-          style: "cancel",
-        },
-        {
-          text: "OK",
-          onPress: () => {
-            navigation.navigate("ModifiedCaregiveeAccountCreation");
-          },
-        },
-      ]
-    );
   const [isModal1Visible, setModal1Visible] = useState(false);
   const toggleModal1 = () => {
     setModal1Visible(!isModal1Visible);
@@ -206,6 +186,7 @@ export default function LinkUsersScreen({ navigation }) {
                     }}
                     onPress={() => {
                       toggleModal1();
+                      dispatch(setTokenData({ ...tokenData, authPhase: 10 }));
                       navigation.navigate("ModifiedCaregiveeAccountCreation");
                     }}
                   >

@@ -77,14 +77,12 @@ const RootNavigation = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   return (
     <NavigationContainer>
-      {tokenData.access_token === "" ? (
+      {tokenData.authPhase === 0 ? (
         <AuthStack />
-      ) : (tokenData.type === "caregivee" &&
-          (!tokenData.physName || !tokenData.healthProfile)) ||
-        !tokenData.caregiveeID ? (
-        <MiddleStack />
-      ) : (
+      ) : tokenData.authPhase === 2 || tokenData.authPhase === 9 ? (
         <HomeStack />
+      ) : (
+        <MiddleStack />
       )}
     </NavigationContainer>
   );
@@ -127,13 +125,13 @@ const MiddleStack = () => {
           title: "",
         }}
       >
-        {tokenData.type !== "caregiver" && !tokenData.caregiveeID && (
+        {tokenData.authPhase === 6 && (
           <Stack.Screen
             name="AuthenticationScreen"
             component={AuthenticationScreen}
           />
         )}
-        {tokenData.type === "caregiver" && !tokenData.caregiveeID && (
+        {tokenData.authPhase === 1 && (
           <Stack.Screen
             name="LinkUsersScreen"
             component={LinkUsersScreen}
@@ -147,7 +145,7 @@ const MiddleStack = () => {
               headerRight: () => (
                 <TouchableOpacity
                   onPress={() =>
-                    dispatch(setTokenData({ ...tokenData, caregiveeID: [] }))
+                    dispatch(setTokenData({ ...tokenData, authPhase: 2 }))
                   }
                   style={{ marginRight: "8%" }}
                 >
@@ -164,33 +162,32 @@ const MiddleStack = () => {
             })}
           />
         )}
-        {tokenData.type === "caregiver" && tokenData.caregiveeID === null && (
+        {tokenData.authPhase === 10 && (
           <Stack.Screen
             name="ModifiedCaregiveeAccountCreation"
             component={ModifiedCaregiveeAccountCreation}
           />
         )}
 
-        {tokenData.type === "caregiver" && tokenData.caregiveeID === null && (
+        {tokenData.authPhase === 3 && (
           <Stack.Screen
             name="ModifiedAuthScreen"
             component={ModifiedAuthScreen}
           />
         )}
-        {tokenData.type === "caregiver" && tokenData.caregiveeID === null && (
+        {tokenData.authPhase === 4 && (
           <Stack.Screen
             name="ModifiedPhysScreen"
             component={ModifiedPhysScreen}
           />
         )}
-        {tokenData.type === "caregivee" && !tokenData.physName && (
+        {tokenData.authPhase === 7 && (
           <Stack.Screen
             name="PhysicianInfoScreen"
             component={PhysicianInfoScreen}
           />
         )}
-        {((tokenData.type === "caregiver" && tokenData.caregiveeID === null) ||
-          (tokenData.type === "caregivee" && !tokenData.healthProfile)) && (
+        {(tokenData.authPhase === 5 || tokenData.authPhase === 8) && (
           <Stack.Screen
             name="ModifiedActivityScreen"
             component={ModifiedActivityScreen}
