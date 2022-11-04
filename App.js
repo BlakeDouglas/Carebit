@@ -230,6 +230,10 @@ const HomeStack = () => {
     }, 10000);
     return () => clearInterval(toggle);
   });
+
+  useEffect(() => {
+    showAlert();
+  });
   const closeMenu = () => setVisible(false);
   return (
     <Stack.Navigator>
@@ -309,7 +313,6 @@ const HomeStack = () => {
                       </View>
                     }
                   >
-                    <Divider />
                     {/* Items contained within the menu with functionality */}
                     <Menu.Item
                       leadingIcon={require("./assets/images/avatar/userList.png")}
