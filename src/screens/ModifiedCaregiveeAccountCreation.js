@@ -17,8 +17,10 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import validator from "validator";
 import { phone } from "phone";
 import { userEndpoint } from "../network/CarebitAPI";
+import { useSelector } from "react-redux";
 
 export default function ModifiedCaregiveeAccountCreation({ navigation }) {
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
   const requiredText = " Input required";
 
   // Content between this point and the return statement
@@ -90,6 +92,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
       ...inputs,
       type: "caregivee",
       mobilePlatform: "NA",
+      caregiverID: tokenData.caregiverID,
     };
     const json = await userEndpoint(body);
     if (json.access_token) {
