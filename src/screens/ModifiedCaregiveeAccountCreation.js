@@ -93,6 +93,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
       ...inputs,
       type: "caregivee",
       mobilePlatform: "NA",
+      caregiverID: tokenData.caregiverID,
     };
     const json = await userEndpoint(body);
     if (json.access_token) {

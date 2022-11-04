@@ -119,6 +119,7 @@ export default function AccountCreationScreen({ navigation }) {
       ...inputs,
       type: tokenData.type,
       mobilePlatform: Platform.OS,
+      caregiverID: null,
     };
 
     const storageBody = {
