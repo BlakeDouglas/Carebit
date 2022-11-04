@@ -35,7 +35,9 @@ export default function AuthenticationScreen({ navigation }) {
     const json = await caregiveeCreateEndpoint(params);
 
     if (json.caregiveeID !== undefined) {
-      dispatch(setTokenData({ ...tokenData, ...json, type: "caregivee" }));
+      dispatch(
+        setTokenData({ ...tokenData, ...json, type: "caregivee", authPhase: 7 })
+      );
     } else
       Alert.alert("Error", json.error, json.error_0, [
         { text: "Ok", onPress: () => {}, style: "cancel" },

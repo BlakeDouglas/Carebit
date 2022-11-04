@@ -90,13 +90,20 @@ export default function LinkUsersScreen({ navigation }) {
       }
       return;
     }
-    if (json.request)
+    if (json.request) {
       Alert.alert(
         "Sent!",
         "Your request has been sent. Once accepted, you will be able to view their Fitbit data.",
-        [{ text: "Continue", onPress: () => console.log("Continue") }]
+        [
+          {
+            text: "Continue",
+            onPress: () => {
+              dispatch(setTokenData({ ...tokenData, authPhase: 2 }));
+            },
+          },
+        ]
       );
-    dispatch(setTokenData({ ...tokenData, caregiveeID: [json.request] }));
+    }
   };
 
   return (
@@ -187,7 +194,6 @@ export default function LinkUsersScreen({ navigation }) {
                     onPress={() => {
                       toggleModal1();
                       dispatch(setTokenData({ ...tokenData, authPhase: 10 }));
-                      navigation.navigate("ModifiedCaregiveeAccountCreation");
                     }}
                   >
                     <Text
