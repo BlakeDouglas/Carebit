@@ -243,7 +243,7 @@ export default function GiveeHomeScreen({ navigation }) {
     getCaregiveeInfo();
     fetchData();
     getAlertCounter();
-  }, []);
+  }, [selectedUser]);
 
   const { fontScale } = useWindowDimensions();
   return (
