@@ -173,6 +173,48 @@ export async function userEndpoint(body) {
   }
 }
 
+// Params: {auth, targetID, time}
+export async function getLastNoSyncAlert(params) {
+  const url = `${urlBase}lastSyncAlert/${params.targetID}/${params.time}`;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /lastSyncAlert: " + responseText;
+    }
+    return responseText;
+  } catch (error) {
+    console.log("Caught error in /lastSyncAlert: " + error);
+  }
+}
+
+// Params: {auth, targetID, time}
+export async function setLastNoSyncAlert(params) {
+  const url = `${urlBase}lastSyncAlert/${params.targetID}/${params.time}`;
+  try {
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /lastSyncAlert: " + responseText;
+    }
+    return responseText;
+  } catch (error) {
+    console.log("Caught error in /lastSyncAlert: " + error);
+  }
+}
+
 // Params: {auth, selfID}
 export async function getRequestCount(params) {
   const url = `${urlBase}getRequestCount/${params.selfID}`;
@@ -408,7 +450,6 @@ export async function getAlertsEndpoint(params) {
 // Params: {auth, targetID}
 export async function setNoSyncAlert(params) {
   try {
-    console.log(`${urlBase}noSyncAlert/${params.targetID}`);
     const response = await fetch(`${urlBase}noSyncAlert/${params.targetID}`, {
       method: "POST",
       headers: { ...headerSettings, Authorization: "Bearer " + params.auth },

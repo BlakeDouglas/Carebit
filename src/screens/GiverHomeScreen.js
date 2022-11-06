@@ -28,6 +28,8 @@ import {
   notificationTokenEndpoint,
   setNoSyncAlert,
   alertCounter,
+  getLastNoSyncAlert,
+  setLastNoSyncAlert,
 } from "../network/CarebitAPI";
 
 export default function GiverHomeScreen({ navigation }) {
@@ -226,6 +228,41 @@ export default function GiverHomeScreen({ navigation }) {
     }
   };
 
+  const getLastSyncTime = async (syncTime) => {
+    if (!selectedUser.caregiveeID) {
+      return;
+    }
+    const params = {
+      auth: tokenData.access_token,
+      targetID: selectedUser.caregiveeID,
+      time: syncTime,
+    };
+    const responseText = await getLastNoSyncAlert(params);
+    const json = JSON.parse(responseText);
+    if (!json) {
+      console.log("Problem getting last sync time");
+      return;
+    }
+    setLastTimeMeasured(json.lastSyncAlert);
+  };
+
+  const setLastSyncTime = async (syncTime) => {
+    console.log(syncTime);
+    if (!selectedUser.caregiveeID) {
+      return;
+    }
+    const params = {
+      auth: tokenData.access_token,
+      targetID: selectedUser.caregiveeID,
+      time: syncTime,
+    };
+    const json = await setLastNoSyncAlert(params);
+    if (json) {
+      console.log("Problem setting last sync time");
+      return;
+    }
+  };
+
   const noSyncAlert = async () => {
     if (!selectedUser.caregiveeID) {
       return;
@@ -291,10 +328,16 @@ export default function GiverHomeScreen({ navigation }) {
       let range = moment.range(pullTime, currTime);
       let StepAlert = range.diff("minutes");
 
+      // GET ignores the parameter. Should return last time noSync alert was sent
+      // Stores this value in lastTimeMeasured
+      getLastSyncTime(json.steps.hourlyTime);
       // If it's been over an hour since a sync, send a no sync alert
       // If the last sync time hasn't changed, don't send the alert again
-      if (StepAlert >= 60 && json.steps.hourlyTime !== lastTimeMeasured) {
-        setLastTimeMeasured(json.steps.hourlyTime);
+      console.log("Last sync time from endpoint: ");
+      console.log(lastTimeMeasured);
+      if (StepAlert >= 60 && lastTimeMeasured !== json.steps.hourlyTime) {
+        setLastSyncTime(json.steps.hourlyTime);
+        console.log("Setting new last sync time");
         noSyncAlert();
       }
 
