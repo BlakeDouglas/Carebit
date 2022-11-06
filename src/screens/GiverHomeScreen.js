@@ -48,7 +48,6 @@ export default function GiverHomeScreen({ navigation }) {
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
-  const [lastTimeMeasured, setLastTimeMeasured] = useState(null);
   const [counter, setCounter] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
@@ -128,7 +127,6 @@ export default function GiverHomeScreen({ navigation }) {
     setStepUpdate(null);
     setStepsSyncTime(null);
     setHeartSyncTime(null);
-    setLastTimeMeasured(null);
     setIsEnabledSleep(false);
     setIsEnabledDisturb(false);
     setIsEnabledMonitor(true);
@@ -243,7 +241,7 @@ export default function GiverHomeScreen({ navigation }) {
       console.log("Problem getting last sync time");
       return;
     }
-    setLastTimeMeasured(json.lastSyncAlert);
+    return json.lastSyncAlert;
   };
 
   const setLastSyncTime = async (syncTime) => {
@@ -329,13 +327,10 @@ export default function GiverHomeScreen({ navigation }) {
       let StepAlert = range.diff("minutes");
 
       // GET ignores the parameter. Should return last time noSync alert was sent
-      // Stores this value in lastTimeMeasured
-      getLastSyncTime(json.steps.hourlyTime);
+      let syncTime = await getLastSyncTime(json.steps.hourlyTime);
       // If it's been over an hour since a sync, send a no sync alert
       // If the last sync time hasn't changed, don't send the alert again
-      console.log("Last sync time from endpoint: ");
-      console.log(lastTimeMeasured);
-      if (StepAlert >= 60 && lastTimeMeasured !== json.steps.hourlyTime) {
+      if (StepAlert >= 60 && syncTime !== json.steps.hourlyTime) {
         setLastSyncTime(json.steps.hourlyTime);
         console.log("Setting new last sync time");
         noSyncAlert();
