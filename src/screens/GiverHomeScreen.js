@@ -721,7 +721,6 @@ export default function GiverHomeScreen({ navigation }) {
             <SafeAreaView
               style={{
                 flexDirection: "row",
-                //backgroundColor: "red",
                 justifyContent: "space-evenly",
                 height: "25%",
                 width: "100%",
@@ -807,7 +806,6 @@ export default function GiverHomeScreen({ navigation }) {
                 height: "75%",
                 flexDirection: "row",
                 justifyContent: "space-evenly",
-                //backgroundColor: "green",
               }}
             >
               <SafeAreaView
@@ -838,7 +836,6 @@ export default function GiverHomeScreen({ navigation }) {
                     alignItems: "center",
                     width: "100%",
                     height: "70%",
-                    //backgroundColor: "blue",
                   }}
                 >
                   <Text
@@ -1036,7 +1033,6 @@ export default function GiverHomeScreen({ navigation }) {
               <SafeAreaView
                 style={{
                   flexDirection: "row",
-                  //backgroundColor: "red",
                   height: "100%",
                   width: "90%",
                   alignItems: "center",
@@ -1048,7 +1044,6 @@ export default function GiverHomeScreen({ navigation }) {
                     color: "black",
                     fontSize: responsiveFontSize(2.25) / fontScale,
                     marginLeft: "3%",
-                    //marginVertical: "3%",
                   }}
                 >
                   Heart Rate Summary

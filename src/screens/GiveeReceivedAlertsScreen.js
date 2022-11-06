@@ -156,7 +156,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
   // Sends alertID to modal
   const [okID, setOkID] = useState(null);
 
-  const Item = ({ alertType, dateTime, body, title, alertID, ok }) => (
+  const Item = ({ alertType, time, date, body, title, alertID, ok }) => (
     <SafeAreaView
       style={{
         justifyContent: "center",
@@ -237,7 +237,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
           <Text
             style={{
               marginTop: "1%",
-              fontSize: responsiveFontSize(1.8) / fontScale,
+              fontSize: responsiveFontSize(2) / fontScale,
               color: "gray",
             }}
             numberOfLines={3}
@@ -249,7 +249,6 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
           style={{
             marginLeft: "1%",
             marginRight: "2%",
-            //backgroundColor: "red",
             justifyContent: "space-evenly",
             flex: 1,
           }}
@@ -300,11 +299,20 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
               alignSelf: "center",
               textAlign: "center",
               color: "grey",
-              marginTop: "14%",
-              fontSize: responsiveFontSize(2.1) / fontScale,
+              marginTop: "5%",
+              fontSize: responsiveFontSize(1.9) / fontScale,
             }}
           >
-            {moment(dateTime, ["HH:mm"]).format("hh:mm a")}
+            {moment(time, ["HH:mm"]).format("h:mm a")}
+          </Text>
+          <Text
+            style={{
+              color: "grey",
+              alignSelf: "center",
+              fontSize: responsiveFontSize(1.9) / fontScale,
+            }}
+          >
+            {moment(date, ["MM:DD"]).format("MMM DD")}
           </Text>
         </SafeAreaView>
       </SafeAreaView>
@@ -314,10 +322,11 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
   const renderItem = ({ item }) => (
     <Item
       alertType={item.alertType}
-      dateTime={item.dateTime.substring(
+      time={item.dateTime.substring(
         item.dateTime.indexOf(" ") + 1,
         item.dateTime.indexOf(":") + 3
       )}
+      date={item.dateTime.substring(5, item.dateTime.indexOf(" "))}
       body={item.body}
       title={item.title}
       alertID={item.alertID}

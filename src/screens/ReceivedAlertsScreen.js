@@ -48,7 +48,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
     getAlerts();
   }, []);
 
-  const Item = ({ alertType, dateTime, body, title, ok }) => (
+  const Item = ({ alertType, time, date, body, title, ok }) => (
     <SafeAreaView
       style={{
         marginVertical: "1%",
@@ -161,11 +161,20 @@ export default function ReceivedAlertsScreen({ navigation }) {
         <Text
           style={{
             color: "grey",
-            marginTop: "14%",
-            fontSize: responsiveFontSize(2.1) / fontScale,
+            marginTop: "5%",
+            fontSize: responsiveFontSize(1.9) / fontScale,
           }}
         >
-          {moment(dateTime, ["HH:mm"]).format("hh:mm a")}
+          {moment(time, ["HH:mm"]).format("h:mm a")}
+        </Text>
+        <Text
+          style={{
+            color: "grey",
+            alignSelf: "center",
+            fontSize: responsiveFontSize(1.9) / fontScale,
+          }}
+        >
+          {moment(date, ["MM:DD"]).format("MMM DD")}
         </Text>
       </SafeAreaView>
     </SafeAreaView>
@@ -174,10 +183,11 @@ export default function ReceivedAlertsScreen({ navigation }) {
   const renderItem = ({ item }) => (
     <Item
       alertType={item.alertType}
-      dateTime={item.dateTime.substring(
+      time={item.dateTime.substring(
         item.dateTime.indexOf(" ") + 1,
         item.dateTime.indexOf(":") + 3
       )}
+      date={item.dateTime.substring(5, item.dateTime.indexOf(" "))}
       body={item.body}
       title={item.title}
       ok={item.ok}
