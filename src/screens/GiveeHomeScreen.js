@@ -128,7 +128,7 @@ export default function GiveeHomeScreen({ navigation }) {
 
   // Receive a count of how many alerts are present
   const getAlertCounter = async () => {
-    if (!selectedUser.caregiveeID) {
+    if (!selectedUser.caregiverID) {
       return;
     }
     const params = {
@@ -138,6 +138,7 @@ export default function GiveeHomeScreen({ navigation }) {
     };
     const json = await alertCounter(params);
     if (json) {
+      console.log(json);
       setCounter(json.counter);
     } else {
       console.log("Failed to get alertCounter");
