@@ -7,6 +7,7 @@ const initialState = {
     phone: "",
     type: "",
     userID: null,
+    authPhase: 0,
   },
 
   // TODO: Need to remove requestID, sender, status from the /login response. Not sure about /getRequest
