@@ -7,63 +7,108 @@ import {
   Alert,
   LogBox,
   StatusBar,
+  TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
-import * as Linking from "expo-linking";
 import GlobalStyle from "../utils/GlobalStyle";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { resetData, setTokenData } from "../redux/actions";
-import * as SecureStore from "expo-secure-store";
-import {response} from '../network/Authprocess';
-import { makeRequest } from "../network/Carebitapi";
-export default function ModifiedAuthScreen({ navigation, route }) {
+import { deleteKeychain, getAuthRequest } from "../network/Auth";
+import {
+  acceptRequestEndpoint,
+  createRequestEndpoint,
+  caregiveeCreateEndpoint,
+  logoutEndpoint,
+} from "../network/CarebitAPI";
+
+LogBox.ignoreLogs(["EventEmitter.removeListener"]);
+
+export default function ModifiedAuthScreen({ navigation }) {
   console.log(makeRedirectUri({ scheme: "carebit", path: "callback" }));
 
   const dispatch = useDispatch();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
 
- 
-  React.useEffect(async () => {
+  const [request, response, promptAsync] = getAuthRequest();
+
+  React.useEffect(() => {
     if (response?.type === "success") {
-      console.log(
-        "\nSuccess on Fitbit Auth. Data being sent to makeCaregivee: "
-      );
-    
-      const json  = await makeCaregivee(response.params.code, route.params.json.userID);
-
-      if (json.caregiveeID !== undefined) {
-        const makeRequest_json  = await makeRequest(tokenData, route);
-
-        if (makeRequest_json.error) {
-          console.log(makeRequest_json.error);
-          // TODO: Prettify these errors.
-          if (makeRequest_json.error === "This request already exists") {
-            handleError("  Already added", "phone");
-          } else {
-            handleError("  Not Found", "phone");
-          }
-        }
-  
-        if (makeRequest_json.request) {
-          const json = await acceptRequest(json.request.caregiveeID, tokenData.caregiverID);
-          if (json.request.caregiveeID) {
-            console.log("acceptRequest" + JSON.stringify(json));
-            navigation.navigate("ModifiedPhysScreen", json.request);
-          }
-          if (json.error)
-            console.log("Error is probably invalid uri in backend. Maybe not tho");
-        }
-      } else
-        Alert.alert("Error", json.error, json.error_0, [
-          { text: "Ok", onPress: () => {}, style: "cancel" },
-        ]);
+      makeCaregivee(response.params.code, tokenData.optedUser.userID);
     }
   }, [response]);
 
- 
+  const makeCaregivee = async (code, userID) => {
+    const params = {
+      auth: tokenData.optedUser.access_token,
+      body: { authCode: code, userID: userID },
+    };
+    const json = await caregiveeCreateEndpoint(params);
+
+    if (json.caregiveeID !== undefined) {
+      await makeRequest();
+    } else
+      Alert.alert("Error", json.error, json.error_0, [
+        { text: "Ok", onPress: () => {}, style: "cancel" },
+      ]);
+  };
+
+  const makeRequest = async () => {
+    if (!tokenData.phone || !tokenData.optedUser.phone) return;
+    const body =
+      tokenData.type !== "caregiver"
+        ? {
+            caregiveePhone: tokenData.phone,
+            caregiverPhone: tokenData.optedUser.phone,
+            sender: tokenData.type,
+          }
+        : {
+            caregiverPhone: tokenData.phone,
+            caregiveePhone: tokenData.optedUser.phone,
+            sender: tokenData.type,
+          };
+    const params = { auth: tokenData.access_token, body: body };
+    const json = await createRequestEndpoint(params);
+
+    if (json.error) {
+      if (json.error === "This request already exists") {
+        handleError("  Already added", "phone");
+      } else {
+        handleError("  Not Found", "phone");
+      }
+    }
+
+    if (json.request) {
+      console.log("\nSending accept request: ");
+      console.log(json.request.caregiveeID);
+      console.log(tokenData.caregiverID);
+      console.log("End of sent\n\n");
+      await acceptRequest(json.request.caregiveeID, tokenData.caregiverID);
+    }
+  };
+
+  const acceptRequest = async (caregiveeID, caregiverID) => {
+    const params = {
+      auth: tokenData.optedUser.access_token,
+      body: {
+        caregiveeID: caregiveeID,
+        caregiverID: caregiverID,
+      },
+    };
+    const json = await acceptRequestEndpoint(params);
+    if (json.request.caregiveeID) {
+      dispatch(
+        setTokenData({
+          ...tokenData,
+          optedUser: { ...tokenData.optedUser, request: json.request },
+          authPhase: 4,
+        })
+      );
+    }
+    if (json.error) console.log("Error accepting request: ", json.error);
+  };
 
   const [errors, setErrors] = useState({});
   const handleError = (errorMessage, input) => {
@@ -71,10 +116,18 @@ export default function ModifiedAuthScreen({ navigation, route }) {
   };
 
   const logOutButtonHandler = async () => {
-    await SecureStore.deleteItemAsync("carebitcredentials");
+    const json = await logoutEndpoint({
+      auth: tokenData.access_token,
+      targetID: tokenData.userID,
+    });
+    if (json.error) {
+      console.log("Failed /logout: ", json.error);
+    }
+
+    deleteKeychain();
     dispatch(resetData());
   };
-
+  const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background01.png")}
@@ -97,7 +150,12 @@ export default function ModifiedAuthScreen({ navigation, route }) {
               style={{ marginRight: "1%" }}
               source={require("../../assets/images/midCheck/icons-check.png")}
             />
-            <Text style={{ fontSize: responsiveFontSize(2.8), color: "white" }}>
+            <Text
+              style={{
+                fontSize: responsiveFontSize(2.8) / fontScale,
+                color: "white",
+              }}
+            >
               Account Created
             </Text>
           </SafeAreaView>
@@ -113,7 +171,7 @@ export default function ModifiedAuthScreen({ navigation, route }) {
               style={{
                 alignSelf: "center",
                 color: "white",
-                fontSize: responsiveFontSize(2.5),
+                fontSize: responsiveFontSize(2.5) / fontScale,
               }}
             >
               Link the Caregivee's Fitbit account to provide the Caregiver
@@ -134,19 +192,37 @@ export default function ModifiedAuthScreen({ navigation, route }) {
                 promptAsync();
               }}
             >
-              <Text style={GlobalStyle.ButtonText}>Link Fitbit</Text>
+              <Text
+                style={[
+                  GlobalStyle.ButtonText,
+                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                ]}
+              >
+                Link Fitbit
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[
                 GlobalStyle.Button,
-                { marginTop: 20, backgroundColor: "transparent" },
+                {
+                  marginTop: 20,
+                  backgroundColor: "transparent",
+                  fontSize: responsiveFontSize(2.51) / fontScale,
+                },
               ]}
               onPress={() => {
                 logOutButtonHandler();
               }}
             >
-              <Text style={GlobalStyle.ButtonText}>Cancel</Text>
+              <Text
+                style={[
+                  GlobalStyle.ButtonText,
+                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                ]}
+              >
+                Cancel
+              </Text>
             </TouchableOpacity>
           </SafeAreaView>
         </SafeAreaView>

@@ -7,27 +7,53 @@ import {
   StatusBar,
   Image,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { setTokenData } from "../redux/actions";
-export default function AccountCreationScreen({ navigation, route }) {
+import {
+  setActivityEndpoint,
+  setDefaultActivityEndpoint,
+} from "../network/CarebitAPI";
+export default function ModifiedActivityScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
+  const { fontScale } = useWindowDimensions();
+  const setActivity = async (level) => {
+    let params = { level: level, auth: tokenData.access_token };
+    let responseText;
 
-  const handleSetActivity = async (level, ) =>{
-    const responseText = await setActivity(level, route, tokenData);
+    // In case we're going through the opt-out feature
+    if (tokenData.authPhase === 5) {
+      params.targetID = tokenData.optedUser.request.caregiveeID;
+      params.selfID = tokenData.caregiverID;
+      responseText = await setActivityEndpoint(params);
+    }
+    // Account creation, caregivee edition, authPhase = 8, will be set to 9 after calling /updateHealthProfile
+    else {
+      params = {
+        auth: tokenData.access_token,
+        body: {
+          caregiveeID: tokenData.caregiveeID,
+          healthProfile: level.toString(),
+        },
+      };
+      responseText = await setDefaultActivityEndpoint(params);
+    }
     if (!responseText) {
+      // Send to 2 (giverhome) for opt-out, and 9 (giveehome) for normal givee account creation
+      const newPhase = tokenData.authPhase === 5 ? 2 : 9;
       dispatch(
         setTokenData({
           ...tokenData,
-          healthProfile: level,
+          authPhase: newPhase,
+          optedUser: undefined,
         })
       );
-    } else console.log("Error setting activity level");
-  }
-
+    } else console.log("Error setting activity level: ", responseText);
+  };
 
   return (
     <ImageBackground
@@ -45,10 +71,22 @@ export default function AccountCreationScreen({ navigation, route }) {
               { marginLeft: "10%", marginRight: "10%" },
             ]}
           >
-            <Text style={GlobalStyle.Subtitle}>Activity Level</Text>
+            <Text
+              style={[
+                GlobalStyle.Subtitle,
+                { fontSize: responsiveFontSize(6.3) / fontScale },
+              ]}
+            >
+              Activity Level
+            </Text>
 
             <SafeAreaView style={styles.TextBox}>
-              <Text style={styles.DescriptiveText}>
+              <Text
+                style={[
+                  styles.DescriptiveText,
+                  { fontSize: responsiveFontSize(2.2) / fontScale },
+                ]}
+              >
                 Choose the usual level of activity for this account
               </Text>
             </SafeAreaView>
@@ -64,12 +102,26 @@ export default function AccountCreationScreen({ navigation, route }) {
               <TouchableOpacity
                 style={styles.InnerContainers}
                 onPress={() => {
-                  handleSetActivity(3);
+                  setActivity(1);
                 }}
               >
                 <SafeAreaView>
-                  <Text style={styles.InnerTitle}>Active</Text>
-                  <Text style={styles.InnerText}>Living an active life</Text>
+                  <Text
+                    style={[
+                      styles.InnerTitle,
+                      { fontSize: responsiveFontSize(2.4) / fontScale },
+                    ]}
+                  >
+                    Active
+                  </Text>
+                  <Text
+                    style={[
+                      styles.InnerText,
+                      { fontSize: responsiveFontSize(2.2) / fontScale },
+                    ]}
+                  >
+                    Living an active life
+                  </Text>
                 </SafeAreaView>
                 <Image
                   style={{ height: 15, width: 15, marginRight: "5%" }}
@@ -80,12 +132,24 @@ export default function AccountCreationScreen({ navigation, route }) {
               <TouchableOpacity
                 style={styles.InnerContainers}
                 onPress={() => {
-                  handleSetActivity(2);
+                  setActivity(2);
                 }}
               >
                 <SafeAreaView>
-                  <Text style={styles.InnerTitle}>Sedentary</Text>
-                  <Text style={styles.InnerText}>
+                  <Text
+                    style={[
+                      styles.InnerTitle,
+                      { fontSize: responsiveFontSize(2.4) / fontScale },
+                    ]}
+                  >
+                    Sedentary
+                  </Text>
+                  <Text
+                    style={[
+                      styles.InnerText,
+                      { fontSize: responsiveFontSize(2.2) / fontScale },
+                    ]}
+                  >
                     Not active, but not homebound
                   </Text>
                 </SafeAreaView>
@@ -97,12 +161,26 @@ export default function AccountCreationScreen({ navigation, route }) {
               <TouchableOpacity
                 style={styles.InnerContainers}
                 onPress={() => {
-                  handleSetActivity(1);
+                  setActivity(3);
                 }}
               >
                 <SafeAreaView>
-                  <Text style={styles.InnerTitle}>Homebound</Text>
-                  <Text style={styles.InnerText}>Unable to leave home</Text>
+                  <Text
+                    style={[
+                      styles.InnerTitle,
+                      { fontSize: responsiveFontSize(2.4) / fontScale },
+                    ]}
+                  >
+                    Homebound
+                  </Text>
+                  <Text
+                    style={[
+                      styles.InnerText,
+                      { fontSize: responsiveFontSize(2.2) / fontScale },
+                    ]}
+                  >
+                    Unable to leave home
+                  </Text>
                 </SafeAreaView>
 
                 <Image

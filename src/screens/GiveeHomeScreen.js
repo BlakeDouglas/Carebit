@@ -13,13 +13,21 @@ import {
   useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";
+import Moment from "moment";
+import { extendMoment } from "moment-range";
 import { useEffect } from "react";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import Modal from "react-native-modal";
 import call from "react-native-phone-call";
 import { resetSelectedData, setSelectedUser } from "../redux/actions";
-import { updateConnections, getCaregiveeInfo, setCaregiveeInfo } from "../network/Carebitapi";
+import {
+  caregiveeGetEndpoint,
+  caregiveeSetEndpoint,
+  getDefaultEndpoint,
+  fitbitDataEndpoint,
+  alertCounter,
+} from "../network/CarebitAPI";
 
 export default function GiveeHomeScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -27,15 +35,22 @@ export default function GiveeHomeScreen({ navigation }) {
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
   const dispatch = useDispatch();
-  const number = selectedUser.phone || "0";
+  const number = selectedUser.phone || null;
+  const [refreshing, setRefreshing] = React.useState(false);
   const args = {
     number,
     prompt: true,
+    skipCanOpen: true,
   };
+  const [BatteryLevel, setBatteryLevel] = useState(null);
   const [caregivee, setCaregivee] = useState(null);
+  const [update, setUpdate] = useState(null);
+
+  // Booleans to display the 3 different alerts (sleep, dnd, monitoring)
   const [isModal1Visible, setModal1Visible] = useState(false);
   const [isModal2Visible, setModal2Visible] = useState(false);
   const [isModal3Visible, setModal3Visible] = useState(false);
+  // Toggles to set the 3 different alerts as true/false
   const toggleModal1 = () => {
     setModal1Visible(!isModal1Visible);
   };
@@ -46,75 +61,190 @@ export default function GiveeHomeScreen({ navigation }) {
     setModal3Visible(!isModal3Visible);
   };
 
+  // Underlying boolean values for the privacy modes
+  // Value used to determine slider position as well
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
-  const toggleSwitchSleep = () => {
-    // toggleSleep();
-    toggleModal1();
-  };
-  const toggleSwitchDisturb = () => {
-    // toggleDisturb();
-    toggleModal2();
-  };
-  const toggleSwitchMonitor = () => {
-    // toggleMonitor();
-    toggleModal3();
-  };
 
+  // Used to toggle privacy modes back to their original state
   const toggleSleep = () => {
     setIsEnabledSleep(!isEnabledSleep);
-    setCaregiveeInfo({ sleep: 0 }, tokenData);
+    setCaregiveeInfo({ sleep: 0 });
   };
   const toggleDisturb = () => {
     setIsEnabledDisturb(!isEnabledDisturb);
-    setCaregiveeInfo({ doNotDisturb: 0 }, tokenData);
+    setCaregiveeInfo({ doNotDisturb: 0 });
   };
   const toggleMonitor = () => {
     setIsEnabledMonitor(!isEnabledMonitor);
-    setCaregiveeInfo({ monitoring: 1 }, tokenData);
+    setCaregiveeInfo({ monitoring: 1 });
   };
 
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [counter, setCounter] = useState(null);
+
+  // Store the current date
+  const moment = extendMoment(Moment);
+  let date = moment().format("dddd, MMM D");
+
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
+
+  // When the user refreshes the page, it calls these functions
+  // Sets refreshing prop to false after x seconds
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    handleUpdateConnections();
+    updateConnections();
+    fetchData();
+    getAlertCounter();
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
-  const handleUpdateConnections = async(tokenData) => {
-    const json  = updateConnections(tokenData);
-    if (json.connections) {
-      let selected = null;
-      // Pull new data from the same user if possible.
-      selected = json.connections.find(
-        (iter) => iter.email === selectedUser.email
-      );
+  // Finds default caregiver to display data
+  const updateConnections = async () => {
+    const params = {
+      auth: tokenData.access_token,
+      body: {
+        caregiverID: null,
+        caregiveeID: tokenData.caregiveeID,
+      },
+    };
+    const json = await getDefaultEndpoint(params);
 
-      // If you cant find, then it was deleted. Find the first Accepted alternative
-      if (!selected)
-        selected = json.connections.find(
-          (iter) => iter.status === "Accepted"
-        );
-
-      // If you could find one, set it. Otherwise, reset the state
-      if (selected) dispatch(setSelectedUser(selected));
-      else dispatch(resetSelectedData());
+    if (json.error) {
+      if (json.error.startsWith("request not")) {
+        dispatch(resetSelectedData());
+      } else {
+        console.log("Error getting default: ", json.error);
+      }
+      return;
     }
-  }
- 
 
- 
-  
+    if (json.default) {
+      dispatch(setSelectedUser(json.default));
+    }
+  };
+
+  // Receive a count of how many alerts are present
+  const getAlertCounter = async () => {
+    if (!selectedUser.caregiveeID) {
+      return;
+    }
+    const params = {
+      auth: tokenData.access_token,
+      targetID: tokenData.caregiveeID,
+      selfID: selectedUser.caregiverID,
+    };
+    const json = await alertCounter(params);
+    if (json) {
+      setCounter(json.counter);
+    } else {
+      console.log("Failed to get alertCounter");
+      return;
+    }
+  };
+
+  // Used to set the default values for privacy modes based off of last selection
+  const getCaregiveeInfo = async () => {
+    const params = {
+      auth: tokenData.access_token,
+      targetID: tokenData.caregiveeID,
+    };
+    const json = await caregiveeGetEndpoint(params);
+    if (json.caregivee) {
+      setCaregivee(json.caregivee);
+      setIsEnabledSleep(json.caregivee.sleep === 1);
+      setIsEnabledDisturb(json.caregivee.doNotDisturb === 1);
+      setIsEnabledMonitor(json.caregivee.monitoring === 1);
+    }
+  };
+
+  // Endpoint to send privacy values to backend
+  const setCaregiveeInfo = async (newJson) => {
+    const params = {
+      targetID: tokenData.caregiveeID,
+      auth: tokenData.access_token,
+      body: {
+        ...caregivee,
+        ...newJson,
+        physCity: undefined,
+        physName: undefined,
+        physPhone: undefined,
+        physState: undefined,
+        physStreet: undefined,
+        physZip: undefined,
+        caregiveeID: undefined,
+        userID: undefined,
+      },
+    };
+    const json = await caregiveeSetEndpoint(params);
+    if (json.caregivee) setCaregivee(json.caregivee);
+  };
+
+  // Function to calculate time between last sync and the current time
+  const calculateTime = (pullTime) => {
+    let currTime = moment().format("YYYY-MM-DD HH:mm:ss");
+    let range = moment.range(pullTime, currTime);
+
+    let diffDays = range.diff("days");
+    if (diffDays > 0) {
+      return diffDays + " day" + (diffDays === 1 ? "" : "s") + " ago";
+    }
+    let diffHours = range.diff("hours");
+
+    if (diffHours > 0) {
+      return diffHours + " hour" + (diffHours === 1 ? "" : "s") + " ago";
+    }
+
+    let diffMinutes = range.diff("minutes");
+
+    if (diffMinutes > 0) {
+      return diffMinutes + " minute" + (diffMinutes === 1 ? "" : "s") + " ago";
+    }
+
+    let diffSeconds = range.diff("seconds");
+
+    if (diffSeconds > 0) {
+      return diffSeconds + " second" + (diffSeconds === 1 ? "" : "s") + " ago";
+    }
+
+    if (diffSeconds === 0) {
+      return "now";
+    }
+
+    return "Invalid Time";
+  };
+
+  // Returns device info (battery data)
+  const fetchData = async () => {
+    const params = {
+      auth: tokenData.access_token,
+      targetID: tokenData.caregiveeID,
+      metric: "device",
+      period: "recent",
+    };
+    const json = await fitbitDataEndpoint(params);
+
+    if (json.error) {
+      console.log("Error on battery data pull: ", json.error);
+      return;
+    }
+
+    if (json.device) {
+      setBatteryLevel(json.device.battery);
+      setUpdate(calculateTime(json.device.lastSyncTime));
+    }
+  };
 
   // TODO: Move to login, redo caregivee field to accomodate. Will speed up things
   useEffect(() => {
     getCaregiveeInfo();
+    fetchData();
+    getAlertCounter();
   }, []);
 
+  const { fontScale } = useWindowDimensions();
   return (
     <View style={{ height: windowHeight, width: windowWidth }}>
       <StatusBar
@@ -122,7 +252,7 @@ export default function GiveeHomeScreen({ navigation }) {
         translucent={false}
         backgroundColor="dodgerblue"
       />
-
+      {/* Sleep toggle switch pop up window for confirmation/decline */}
       <Modal
         isVisible={isModal1Visible}
         backdropOpacity={0.5}
@@ -153,7 +283,7 @@ export default function GiveeHomeScreen({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2),
+                fontSize: responsiveFontSize(2.2) / fontScale,
               }}
             >
               Sleep Mode
@@ -167,14 +297,14 @@ export default function GiveeHomeScreen({ navigation }) {
             ></SafeAreaView>
             <Text
               style={{
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.8) / fontScale,
                 fontWeight: "400",
                 textAlign: "left",
+                padding: 7,
               }}
             >
-              Turning on Sleep Mode will inform{" "}
-              {selectedUser.firstName || "N/A"} that you are going to sleep.
-              They will not receive alerts.
+              Turning on Sleep Mode will inform your caregiver(s) that you are
+              going to sleep. They will not receive alerts.
             </Text>
           </SafeAreaView>
           <SafeAreaView
@@ -200,13 +330,13 @@ export default function GiveeHomeScreen({ navigation }) {
                 onPress={() => {
                   toggleModal1();
                   setIsEnabledSleep((isEnabledSleep) => true);
-                  setCaregiveeInfo({ sleep: 1 }, tokenData);
+                  setCaregiveeInfo({ sleep: 1 });
                 }}
               >
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -234,7 +364,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -246,6 +376,7 @@ export default function GiveeHomeScreen({ navigation }) {
         </View>
       </Modal>
 
+      {/* DnD toggle switch pop up window for confirmation/decline */}
       <Modal
         isVisible={isModal2Visible}
         backdropOpacity={0.5}
@@ -276,7 +407,7 @@ export default function GiveeHomeScreen({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2),
+                fontSize: responsiveFontSize(2.2) / fontScale,
               }}
             >
               Do Not Disturb
@@ -290,15 +421,14 @@ export default function GiveeHomeScreen({ navigation }) {
             ></SafeAreaView>
             <Text
               style={{
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.8) / fontScale,
                 fontWeight: "400",
-
+                padding: 7,
                 textAlign: "left",
               }}
             >
-              Turning on Do Not Disturb will inform{" "}
-              {selectedUser.firstName || "N/A"} that you do not want to be
-              called. They will not receive alerts.
+              Turning on Do Not Disturb will inform your caregiver(s) that you
+              do not want to be called. They will not receive alerts.
             </Text>
           </SafeAreaView>
           <SafeAreaView
@@ -324,13 +454,13 @@ export default function GiveeHomeScreen({ navigation }) {
                 onPress={() => {
                   toggleModal2();
                   setIsEnabledDisturb((isEnabledDisturb) => true);
-                  setCaregiveeInfo({ doNotDisturb: 1 }, tokenData);
+                  setCaregiveeInfo({ doNotDisturb: 1 });
                 }}
               >
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -358,7 +488,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -370,6 +500,7 @@ export default function GiveeHomeScreen({ navigation }) {
         </View>
       </Modal>
 
+      {/* Monitoring toggle switch pop up window for confirmation/decline */}
       <Modal
         isVisible={isModal3Visible}
         backdropOpacity={0.5}
@@ -402,7 +533,7 @@ export default function GiveeHomeScreen({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2),
+                fontSize: responsiveFontSize(2.2) / fontScale,
               }}
             >
               Monitoring
@@ -416,14 +547,14 @@ export default function GiveeHomeScreen({ navigation }) {
             ></SafeAreaView>
             <Text
               style={{
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.8) / fontScale,
                 fontWeight: "400",
-
+                padding: 7,
                 textAlign: "left",
               }}
             >
-              Pausing Monitoring will prevent {selectedUser.firstName || "N/A"}{" "}
-              from receiving any of your health data, including alerts.
+              Pausing Monitoring will prevent your caregiver(s) from receiving
+              any of your health data, including alerts.
             </Text>
           </SafeAreaView>
           <SafeAreaView
@@ -449,13 +580,13 @@ export default function GiveeHomeScreen({ navigation }) {
                 onPress={() => {
                   toggleModal3();
                   setIsEnabledMonitor((isEnabledMonitor) => false);
-                  setCaregiveeInfo({ monitoring: 0 }, tokenData);
+                  setCaregiveeInfo({ monitoring: 0 });
                 }}
               >
                 <Text
                   style={{
                     color: "red",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -483,7 +614,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -494,7 +625,7 @@ export default function GiveeHomeScreen({ navigation }) {
           </SafeAreaView>
         </View>
       </Modal>
-
+      {/* Container for all visible data */}
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -502,10 +633,35 @@ export default function GiveeHomeScreen({ navigation }) {
       >
         <SafeAreaView
           style={{
-            height: windowHeight - 50,
+            height: windowHeight - 30,
             width: windowWidth,
           }}
         >
+          {/* Shows reminder to sync to Fitbit if its been over an hour */}
+          <SafeAreaView
+            style={{
+              height: "3%",
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: responsiveFontSize(2) / fontScale,
+                color: "red",
+              }}
+              numberOfLines={1}
+            >
+              {update
+                ? update.includes("hour", 0) || update.includes("day", 0)
+                  ? "Reminder to sync to the Fitbit app"
+                  : ""
+                : ""}
+            </Text>
+          </SafeAreaView>
+
+          {/* Greeting/phone container */}
           <SafeAreaView
             style={{
               height: "10%",
@@ -513,74 +669,110 @@ export default function GiveeHomeScreen({ navigation }) {
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
-              marginTop: "2%",
-              //backgroundColor: "blue",
             }}
           >
             <SafeAreaView
               style={{
-                //backgroundColor: "green",
                 height: "100%",
-                width: "66%",
+                width: "64%",
                 justifyContent: "center",
+                marginRight: "2%",
               }}
             >
               <Text
                 style={{
                   marginLeft: "4%",
                   color: "darkgrey",
-                  fontSize: responsiveFontSize(1.9),
-                }}
-              >
-                Hello {tokenData.firstName || "N/A"}
-              </Text>
-              <Text
-                style={{
-                  color: "black",
-                  fontSize: responsiveFontSize(2.2),
-                  fontWeight: "500",
-                  marginLeft: "4%",
+                  fontSize: responsiveFontSize(1.9) / fontScale,
                 }}
                 numberOfLines={1}
               >
-                Your Caregiver is {selectedUser.firstName || "N/A"}
+                Hello {tokenData.firstName || "N/A"}
               </Text>
+              {/* All users must have a phone number, otherwise there's no way to add them. Thus, no phone = no user */}
+              {/* The only way for us not to have a Caregiver is if we don't have anyone added */}
+              {/* Thus, send to add screen if no Caregiver exists. (Only exception is having requests) */}
+              {selectedUser.phone ? (
+                <Text
+                  style={{
+                    color: "black",
+                    fontSize: responsiveFontSize(2.2) / fontScale,
+                    fontWeight: "500",
+                    marginLeft: "4%",
+                  }}
+                  numberOfLines={1}
+                >
+                  Your Caregiver is {selectedUser.firstName}
+                </Text>
+              ) : (
+                <TouchableOpacity>
+                  <Text
+                    style={{
+                      color: "dodgerblue",
+                      fontSize: responsiveFontSize(2.2) / fontScale,
+                      fontWeight: "500",
+                      marginLeft: "4%",
+                    }}
+                    numberOfLines={1}
+                    onPress={() => {
+                      navigation.navigate("AddScreen");
+                    }}
+                  >
+                    Click To Add A Caregiver
+                  </Text>
+                </TouchableOpacity>
+              )}
             </SafeAreaView>
+
+            {/* Phone container */}
             <SafeAreaView
               style={{
                 height: "100%",
                 width: "28%",
                 justifyContent: "center",
-                //backgroundColor: "red",
+                flexShrink: 1,
               }}
             >
-              <TouchableOpacity
-                style={styles.callBody}
-                onPress={() => {
-                  call(args).catch(console.error);
-                }}
-              >
-                <Image
-                  source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
-                />
-                <Text style={styles.callText} numberOfLines={2}>
-                  Call {selectedUser.firstName || "N/A"}
-                </Text>
-              </TouchableOpacity>
+              {/* Only display phone/name if a phone number exists. Can't call null */}
+              {number && (
+                <TouchableOpacity
+                  style={styles.callBody}
+                  onPress={() => {
+                    call(args).catch(console.error);
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
+                  />
+                  <Text
+                    style={{
+                      flexShrink: 1,
+                      fontSize: responsiveFontSize(2) / fontScale,
+                      color: "dodgerblue",
+                      fontWeight: "bold",
+                      marginLeft: "2%",
+                    }}
+                    numberOfLines={2}
+                  >
+                    Call {selectedUser.firstName || "N/A"}
+                  </Text>
+                </TouchableOpacity>
+              )}
             </SafeAreaView>
           </SafeAreaView>
 
+          {/* Large Card Container for alerts/battery  */}
           <SafeAreaView
             style={{
               flexDirection: "row",
               height: "19%",
               width: "100%",
-              //backgroundColor: "red",
               justifyContent: "space-evenly",
               alignItems: "center",
               marginTop: "5%",
             }}
           >
+            {/* Container for alerts */}
             <SafeAreaView
               style={[
                 styles.alertBody,
@@ -600,7 +792,6 @@ export default function GiveeHomeScreen({ navigation }) {
             >
               <SafeAreaView
                 style={{
-                  // backgroundColor: "blue",
                   marginTop: "5%",
                   height: "40%",
                   width: "100%",
@@ -610,34 +801,46 @@ export default function GiveeHomeScreen({ navigation }) {
               >
                 <TouchableOpacity
                   style={{ alignItems: "center", justifyContent: "center" }}
+                  onPress={() => {
+                    navigation.navigate("ReceivedAlertsScreen");
+                  }}
                 >
                   <Image
-                    style={styles.imagesBody}
+                    style={{ height: 45, width: 45 }}
                     source={require("../../assets/images/icons-alert-big-color.imageset/icons-alert-big-color.png")}
                   />
                 </TouchableOpacity>
               </SafeAreaView>
+
               <SafeAreaView
                 style={{
                   height: "40%",
                   width: "100%",
-                  //backgroundColor: "red",
                   alignItems: "center",
                   justifyContent: "space-evenly",
                 }}
               >
-                <Text style={styles.buttonBigText}>Alerts</Text>
+                <Text
+                  style={[
+                    styles.buttonBigText,
+                    { fontSize: responsiveFontSize(2.25) / fontScale },
+                  ]}
+                >
+                  Alerts
+                </Text>
                 <Text
                   style={{
-                    fontSize: responsiveFontSize(2.08),
+                    fontSize: responsiveFontSize(2.08) / fontScale,
                     color: "darkgrey",
                     fontWeight: "500",
                   }}
                 >
-                  0 Today
+                  {counter ? counter : "0"} Today
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
+
+            {/* Container for battery */}
             <SafeAreaView
               style={[
                 styles.chatBody,
@@ -657,7 +860,6 @@ export default function GiveeHomeScreen({ navigation }) {
             >
               <SafeAreaView
                 style={{
-                  // backgroundColor: "blue",
                   marginTop: "5%",
                   height: "40%",
                   width: "100%",
@@ -665,33 +867,53 @@ export default function GiveeHomeScreen({ navigation }) {
                   justifyContent: "flex-end",
                 }}
               >
-                <Image
-                  style={{ height: 30, width: 55 }}
-                  source={require("../../assets/images/battery-full.imageset/battery-full.png")}
-                />
+                {BatteryLevel === "High" ? (
+                  <Image
+                    style={{ height: 29, width: 51 }}
+                    source={require("../../assets/images/battery-full.imageset/battery-full.png")}
+                  />
+                ) : BatteryLevel === "Medium" ? (
+                  <Image
+                    style={{ height: 29, width: 51 }}
+                    source={require("../../assets/images/battery-medium.imageset/battery-medium.png")}
+                  />
+                ) : (
+                  <Image
+                    style={{ height: 29, width: 51 }}
+                    source={require("../../assets/images/battery-low.imageset/battery-low.png")}
+                  />
+                )}
               </SafeAreaView>
               <SafeAreaView
                 style={{
                   height: "40%",
                   width: "100%",
-                  //backgroundColor: "red",
                   alignItems: "center",
                   justifyContent: "space-evenly",
                 }}
               >
-                <Text style={[styles.buttonBigText]}>Battery</Text>
+                <Text
+                  style={[
+                    styles.buttonBigText,
+                    { fontSize: responsiveFontSize(2.25) / fontScale },
+                  ]}
+                >
+                  Battery
+                </Text>
                 <Text
                   style={{
-                    fontSize: responsiveFontSize(2.08),
+                    fontSize: responsiveFontSize(2.08) / fontScale,
                     color: "darkgrey",
                     fontWeight: "500",
                   }}
                 >
-                  Full
+                  {BatteryLevel === null ? "Unlinked" : BatteryLevel}
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
           </SafeAreaView>
+
+          {/* Grey divider */}
           <SafeAreaView
             style={{
               borderBottomColor: "lightgray",
@@ -701,18 +923,38 @@ export default function GiveeHomeScreen({ navigation }) {
             }}
           ></SafeAreaView>
 
+          {/* Preferences/date container */}
           <SafeAreaView
             style={{
-              //backgroundColor: "blue",
               alignSelf: "center",
+              alignItems: "center",
               height: "8%",
               width: "92%",
-              justifyContent: "center",
+              justifyContent: "space-between",
+              flexDirection: "row",
             }}
           >
-            <Text style={styles.preferencesText}>Preferences</Text>
+            <Text
+              style={{
+                fontWeight: "500",
+                marginLeft: "2%",
+                fontSize: responsiveFontSize(2.3) / fontScale,
+              }}
+            >
+              Preferences
+            </Text>
+            <Text
+              style={{
+                color: "darkgrey",
+                fontSize: responsiveFontSize(1.8) / fontScale,
+                marginRight: "2%",
+              }}
+            >
+              {date}
+            </Text>
           </SafeAreaView>
 
+          {/* Sleep mode Container */}
           <SafeAreaView
             style={[
               styles.bottomRowBody,
@@ -750,37 +992,26 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 height: "100%",
                 width: "75%",
-                //backgroundColor: "green",
                 flexDirection: "row",
-                //justifyContent: "center",
                 alignItems: "center",
               }}
             >
               {isEnabledSleep ? (
                 <Image
-                  style={[
-                    styles.imagesBody,
-                    {
-                      marginLeft: "5%",
-                      marginRight: "5%",
-                    },
-                  ]}
+                  style={styles.imagesBody}
                   source={require("../../assets/images/icons-caregivee-sleep-on.imageset/icons-caregivee-sleep-on.png")}
                 />
               ) : (
                 <Image
-                  style={[
-                    styles.imagesBody,
-                    { marginLeft: "5%", marginRight: "5%" },
-                  ]}
+                  style={styles.imagesBody}
                   source={require("../../assets/images/icons-caregivee-sleep-off.imageset/icons-caregivee-sleep-off.png")}
                 />
               )}
+              {/* Middle text container */}
               <SafeAreaView
                 style={{
                   marginLeft: "4%",
                   alignSelf: "center",
-                  //backgroundColor: "red",
                   height: "100%",
                   width: "40%",
                   justifyContent: "center",
@@ -790,19 +1021,25 @@ export default function GiveeHomeScreen({ navigation }) {
                   style={[
                     styles.buttonBigText,
                     isEnabledSleep ? { color: "white" } : { color: "black" },
+                    { fontSize: responsiveFontSize(2.25) / fontScale },
                   ]}
                 >
                   Sleep Mode
                 </Text>
-                <Text style={styles.buttonSmallText2}>
+                <Text
+                  style={[
+                    styles.buttonSmallText,
+                    { fontSize: responsiveFontSize(2.08) / fontScale },
+                  ]}
+                >
                   {isEnabledSleep ? "On" : "Off"}
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
+            {/* Sleep toggle switch */}
             <SafeAreaView
               style={{
                 marginRight: "4%",
-                //backgroundColor: "blue",
                 height: "100%",
                 width: "20%",
                 justifyContent: "center",
@@ -812,14 +1049,13 @@ export default function GiveeHomeScreen({ navigation }) {
                 trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                 thumbColor={isEnabledSleep ? "white" : "white"}
                 style={styles.switchBody}
-                onValueChange={
-                  !isEnabledSleep ? toggleSwitchSleep : toggleSleep
-                }
+                onValueChange={!isEnabledSleep ? toggleModal1 : toggleSleep}
                 value={isEnabledSleep}
               />
             </SafeAreaView>
           </SafeAreaView>
 
+          {/* Do Not Disturb Container */}
           <SafeAreaView
             style={[
               styles.bottomRowBody,
@@ -842,45 +1078,50 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 height: "100%",
                 width: "75%",
-                //backgroundColor: "green",
                 flexDirection: "row",
-                //justifyContent: "center",
                 alignItems: "center",
               }}
             >
               {isEnabledDisturb ? (
                 <Image
-                  style={[
-                    styles.imagesBody,
-                    { marginLeft: "5%", marginRight: "5%" },
-                  ]}
+                  style={styles.imagesBody}
                   source={require("../../assets/images/icons-caregivee-dnd-on.imageset/icons-caregivee-dnd-on.png")}
                 />
               ) : (
                 <Image
-                  style={[
-                    styles.imagesBody,
-                    { marginLeft: "5%", marginRight: "5%" },
-                  ]}
+                  style={styles.imagesBody}
                   source={require("../../assets/images/icons-caregivee-dnd-off.imageset/icons-caregivee-dnd-off.png")}
                 />
               )}
+              {/* Middle text container */}
               <SafeAreaView
                 style={{
                   marginLeft: "4%",
                   alignSelf: "center",
                   justifyContent: "center",
-                  //backgroundColor: "red",
                   height: "100%",
                   width: "60%",
                 }}
               >
-                <Text style={styles.buttonBigText}>Do Not Disturb</Text>
-                <Text style={styles.buttonSmallText2}>
+                <Text
+                  style={[
+                    styles.buttonBigText,
+                    { fontSize: responsiveFontSize(2.25) / fontScale },
+                  ]}
+                >
+                  Do Not Disturb
+                </Text>
+                <Text
+                  style={[
+                    styles.buttonSmallText,
+                    { fontSize: responsiveFontSize(2.08) / fontScale },
+                  ]}
+                >
                   {isEnabledDisturb ? "On" : "Off"}
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
+            {/* DnD toggle switch container */}
             <SafeAreaView
               style={{
                 height: "100%",
@@ -893,13 +1134,12 @@ export default function GiveeHomeScreen({ navigation }) {
                 trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                 thumbColor={isEnabledDisturb ? "white" : "white"}
                 style={styles.switchBody}
-                onValueChange={
-                  !isEnabledDisturb ? toggleSwitchDisturb : toggleDisturb
-                }
+                onValueChange={!isEnabledDisturb ? toggleModal2 : toggleDisturb}
                 value={isEnabledDisturb}
               />
             </SafeAreaView>
           </SafeAreaView>
+          {/* Monitoring container */}
           <SafeAreaView
             style={[
               styles.bottomRowBody,
@@ -922,49 +1162,53 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 height: "100%",
                 width: "75%",
-                //backgroundColor: "green",
                 flexDirection: "row",
-                //justifyContent: "center",
                 alignItems: "center",
               }}
             >
               {isEnabledMonitor ? (
                 <Image
-                  style={[
-                    styles.imagesBody,
-                    { marginLeft: "5%", marginRight: "5%" },
-                  ]}
+                  style={styles.imagesBody}
                   source={require("../../assets/images/icons-caregivee-monitor-on.imageset/icons-caregivee-monitor-on.png")}
                 />
               ) : (
                 <Image
-                  style={[
-                    styles.imagesBody,
-                    { marginLeft: "5%", marginRight: "5%" },
-                  ]}
+                  style={styles.imagesBody}
                   source={require("../../assets/images/icons-caregivee-monitor-off.imageset/icons-caregivee-monitor-off.png")}
                 />
               )}
+              {/* Middle text container */}
               <SafeAreaView
                 style={{
                   marginLeft: "4%",
                   alignSelf: "center",
                   justifyContent: "center",
-                  //backgroundColor: "red",
                   height: "100%",
                   width: "60%",
                 }}
               >
-                <Text style={styles.buttonBigText}>Monitoring</Text>
-                <Text style={styles.buttonSmallText2}>
+                <Text
+                  style={[
+                    styles.buttonBigText,
+                    { fontSize: responsiveFontSize(2.25) / fontScale },
+                  ]}
+                >
+                  Monitoring
+                </Text>
+                <Text
+                  style={[
+                    styles.buttonSmallText,
+                    { fontSize: responsiveFontSize(2.08) / fontScale },
+                  ]}
+                >
                   {isEnabledMonitor ? "Active" : "Paused"}
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
+            {/* Monitoring toggle switch container */}
             <SafeAreaView
               style={{
                 marginRight: "4%",
-                //backgroundColor: "blue",
                 height: "100%",
                 width: "20%",
                 justifyContent: "center",
@@ -974,9 +1218,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                 thumbColor={isEnabledMonitor ? "white" : "white"}
                 style={styles.switchBody}
-                onValueChange={
-                  isEnabledMonitor ? toggleSwitchMonitor : toggleMonitor
-                }
+                onValueChange={isEnabledMonitor ? toggleModal3 : toggleMonitor}
                 value={isEnabledMonitor}
               />
             </SafeAreaView>
@@ -988,16 +1230,6 @@ export default function GiveeHomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  mainBody: {
-    height: "100%",
-    width: "100%",
-    backgroundColor: "whitesmoke",
-  },
-
-  mediumTopBody: {
-    flexDirection: "row",
-    marginBottom: "7.8%",
-  },
   callBody: {
     alignItems: "center",
     flexDirection: "row",
@@ -1005,16 +1237,9 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS == "ios" ? "10%" : "5%",
     justifyContent: "center",
   },
-  mediumBody: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "33%",
-  },
   alertBody: {
     backgroundColor: "white",
     alignItems: "center",
-    //justifyContent: "center",
     height: "100%",
     width: "43%",
     borderRadius: 5,
@@ -1022,7 +1247,6 @@ const styles = StyleSheet.create({
   chatBody: {
     backgroundColor: "white",
     alignItems: "center",
-    //justifyContent: "center",
     height: "100%",
     width: "43%",
     borderRadius: 5,
@@ -1030,16 +1254,11 @@ const styles = StyleSheet.create({
   imagesBody: {
     width: 45,
     height: 45,
+    marginLeft: "5%",
+    marginRight: "5%",
   },
-
   switchBody: {
     transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
-  },
-  bottomBody: {
-    height: "90%",
-    width: "100%",
-    justifyContent: "space-evenly",
-    alignItems: "center",
   },
   bottomRowBody: {
     width: "92%",
@@ -1051,40 +1270,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderRadius: 5,
   },
-
-  helloText: {
-    color: "darkgrey",
-    fontSize: responsiveFontSize(2.15),
-    //fontWeight: "bold",
-  },
-
-  callText: {
-    color: "dodgerblue",
-    fontSize: responsiveFontSize(2),
-    fontWeight: "bold",
-    marginLeft: "2%",
-  },
-
   buttonBigText: {
     fontSize: responsiveFontSize(2.25),
     fontWeight: "500",
   },
-
   buttonSmallText: {
-    fontSize: responsiveFontSize(2.08),
     color: "darkgrey",
     fontWeight: "500",
     marginTop: "3%",
-    marginBottom: "10%",
-  },
-  buttonSmallText2: {
-    fontSize: responsiveFontSize(2.08),
-    color: "darkgrey",
-    fontWeight: "500",
-    marginTop: "3%",
-  },
-  preferencesText: {
-    fontSize: responsiveFontSize(2.3),
-    fontWeight: "500",
   },
 });

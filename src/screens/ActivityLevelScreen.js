@@ -7,28 +7,33 @@ import {
   StatusBar,
   Image,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedUser } from "../redux/actions";
-import { setActivity } from "../network/Carebitapi";
-export default function AccountCreationScreen({ navigation, route }) {
+import { setActivityEndpoint } from "../network/CarebitAPI";
+export default function ActivityLevelScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
 
-
-
-  const handleSetActivity = async (level) =>{
-    const responseText =  await setActivity(level, route, tokenData);
+  const setActivity = async (level) => {
+    const params = {
+      targetID: selectedUser.caregiveeID,
+      selfID: tokenData.caregiverID,
+      level: level,
+      auth: tokenData.access_token,
+    };
+    const responseText = await setActivityEndpoint(params);
     if (!responseText) {
       dispatch(setSelectedUser({ ...selectedUser, healthProfile: level }));
       navigation.goBack();
     } else console.log("Error setting activity level");
-  }
-  
+  };
   let doesSelectedUserExist = selectedUser.email !== "";
+  const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
@@ -45,7 +50,14 @@ export default function AccountCreationScreen({ navigation, route }) {
                 { marginLeft: "10%", marginRight: "10%" },
               ]}
             >
-              <Text style={GlobalStyle.Subtitle}>Activity Level</Text>
+              <Text
+                style={[
+                  GlobalStyle.Subtitle,
+                  { fontSize: responsiveFontSize(6.3) / fontScale },
+                ]}
+              >
+                Activity Level
+              </Text>
 
               <SafeAreaView
                 style={{
@@ -56,7 +68,10 @@ export default function AccountCreationScreen({ navigation, route }) {
                 }}
               >
                 <Text
-                  style={{ color: "white", fontSize: responsiveFontSize(3) }}
+                  style={{
+                    color: "white",
+                    fontSize: responsiveFontSize(3) / fontScale,
+                  }}
                 >
                   Please Choose a Caregivee First
                 </Text>
@@ -66,7 +81,14 @@ export default function AccountCreationScreen({ navigation, route }) {
                     navigation.navigate("ListOfFriendsScreen");
                   }}
                 >
-                  <Text style={GlobalStyle.ButtonText}>Select Caregivee</Text>
+                  <Text
+                    style={[
+                      GlobalStyle.ButtonText,
+                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                    ]}
+                  >
+                    Select Caregivee
+                  </Text>
                 </TouchableOpacity>
               </SafeAreaView>
             </SafeAreaView>
@@ -80,10 +102,22 @@ export default function AccountCreationScreen({ navigation, route }) {
                 { marginLeft: "10%", marginRight: "10%" },
               ]}
             >
-              <Text style={GlobalStyle.Subtitle}>Activity Level</Text>
+              <Text
+                style={[
+                  GlobalStyle.Subtitle,
+                  { fontSize: responsiveFontSize(6.3) / fontScale },
+                ]}
+              >
+                Activity Level
+              </Text>
 
               <SafeAreaView style={styles.TextBox}>
-                <Text style={styles.DescriptiveText}>
+                <Text
+                  style={[
+                    styles.DescriptiveText,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
                   Choose the usual level of activity for your Caregivee
                 </Text>
               </SafeAreaView>
@@ -99,12 +133,26 @@ export default function AccountCreationScreen({ navigation, route }) {
                 <TouchableOpacity
                   style={styles.InnerContainers}
                   onPress={() => {
-                    setActivity(3);
+                    setActivity(1);
                   }}
                 >
                   <SafeAreaView>
-                    <Text style={styles.InnerTitle}>Active</Text>
-                    <Text style={styles.InnerText}>Living an active life</Text>
+                    <Text
+                      style={[
+                        styles.InnerTitle,
+                        { fontSize: responsiveFontSize(2.4) / fontScale },
+                      ]}
+                    >
+                      Active
+                    </Text>
+                    <Text
+                      style={[
+                        styles.InnerText,
+                        { fontSize: responsiveFontSize(2.2) / fontScale },
+                      ]}
+                    >
+                      Living an active life
+                    </Text>
                   </SafeAreaView>
                   <Image
                     style={{ height: 15, width: 15, marginRight: "5%" }}
@@ -119,8 +167,20 @@ export default function AccountCreationScreen({ navigation, route }) {
                   }}
                 >
                   <SafeAreaView>
-                    <Text style={styles.InnerTitle}>Sedentary</Text>
-                    <Text style={styles.InnerText}>
+                    <Text
+                      style={[
+                        styles.InnerTitle,
+                        { fontSize: responsiveFontSize(2.4) / fontScale },
+                      ]}
+                    >
+                      Sedentary
+                    </Text>
+                    <Text
+                      style={[
+                        styles.InnerText,
+                        { fontSize: responsiveFontSize(2.2) / fontScale },
+                      ]}
+                    >
                       Not active, but not homebound
                     </Text>
                   </SafeAreaView>
@@ -132,12 +192,24 @@ export default function AccountCreationScreen({ navigation, route }) {
                 <TouchableOpacity
                   style={styles.InnerContainers}
                   onPress={() => {
-                    setActivity(1);
+                    setActivity(3);
                   }}
                 >
                   <SafeAreaView>
-                    <Text style={styles.InnerTitle}>Homebound</Text>
-                    <Text style={styles.InnerText}>
+                    <Text
+                      style={[
+                        styles.InnerTitle,
+                        { fontSize: responsiveFontSize(2.4) / fontScale },
+                      ]}
+                    >
+                      Homebound
+                    </Text>
+                    <Text
+                      style={[
+                        styles.InnerText,
+                        { fontSize: responsiveFontSize(2.2) / fontScale },
+                      ]}
+                    >
                       Unable able to leave home
                     </Text>
                   </SafeAreaView>

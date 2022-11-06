@@ -8,64 +8,129 @@ import {
   RefreshControl,
   Platform,
   useWindowDimensions,
+  TouchableOpacity,
 } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import React, { useState } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
-import moment from "moment";
+import Moment from "moment";
+import { extendMoment } from "moment-range";
 import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import call from "react-native-phone-call";
-import { useDrawerStatus } from "@react-navigation/drawer";
-import * as WebBrowser from "expo-web-browser";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { resetSelectedData, setSelectedUser } from "../redux/actions";
-import {updateConnections} from '../network/Carebitapi';
-import {storeMessageToken, refreshFitbitAccessToken, fetchFitbitAccessToken } from '../network/Carebitapi';
-import { fetchFitbitData } from "../network/Fitbitapi";
-let date = moment().format("dddd, MMM D");
+import {
+  caregiveeGetEndpoint,
+  fitbitDataEndpoint,
+  getDefaultEndpoint,
+  notificationTokenEndpoint,
+  setNoSyncAlert,
+  alertCounter,
+} from "../network/CarebitAPI";
 
-export default async function GiverHomeScreen({ navigation }) {
-  
-  const [fitbitAccessToken, setFitbitAccessToken] = useState(null);
+export default function GiverHomeScreen({ navigation }) {
+  const { fontScale } = useWindowDimensions();
+  const [dailySteps, setDailySteps] = useState(null);
+  const [hourlySteps, setHourlySteps] = useState(null);
+  const [stepUpdate, setStepUpdate] = useState(null);
+  const [HeartBPM, setHeart] = useState(null);
+  const [HeartMax, setHeartMax] = useState(null);
+  const [HeartMin, setHeartMin] = useState(null);
+  const [HeartAvg, setHeartAvg] = useState(null);
+  const [BatteryLevel, setBatteryLevel] = useState(null);
+  const [BatterySyncTime, setBatterySyncTime] = useState(null);
+  const [HeartSyncTime, setHeartSyncTime] = useState(null);
+  const [StepsSyncTime, setStepsSyncTime] = useState(null);
+  const [isEnabledSleep, setIsEnabledSleep] = useState(false);
+  const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
+  const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
+  const [lastTimeMeasured, setLastTimeMeasured] = useState(null);
+  const [counter, setCounter] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
+
   const dispatch = useDispatch();
 
-  const number = selectedUser.phone || "0";
+  const moment = extendMoment(Moment);
+  let date = moment().format("dddd, MMM D");
+
+  var number = selectedUser.phone || null;
+  var args = {
+    number,
+    prompt: true,
+    skipCanOpen: true,
+  };
+
   const [refreshing, setRefreshing] = React.useState(false);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    handleUpdateConnections(tokenData);
+    getDefault();
+    getCaregiveeInfo();
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
-
-  const handleUpdateConnections = async(tokenData) => {
-    const json  = updateConnections(tokenData);
-    if (json.connections) {
-      let selected = null;
-      // Pull new data from the same user if possible.
-      selected = json.connections.find(
-        (iter) => iter.email === selectedUser.email
-      );
-
-      // If you cant find, then it was deleted. Find the first Accepted alternative
-      if (!selected)
-        selected = json.connections.find(
-          (iter) => iter.status === "Accepted"
-        );
-
-      // If you could find one, set it. Otherwise, reset the state
-      if (selected) dispatch(setSelectedUser(selected));
-      else dispatch(resetSelectedData());
+  const getCaregiveeInfo = async () => {
+    if (!selectedUser.caregiveeID) return;
+    const params = {
+      auth: tokenData.access_token,
+      targetID: selectedUser.caregiveeID,
+    };
+    const json = await caregiveeGetEndpoint(params);
+    if (json.caregivee) {
+      setIsEnabledSleep(json.caregivee.sleep === 1);
+      setIsEnabledDisturb(json.caregivee.doNotDisturb === 1);
+      setIsEnabledMonitor(json.caregivee.monitoring === 1);
     }
-  }
+  };
 
+  const getDefault = async () => {
+    const params = {
+      auth: tokenData.access_token,
+      body: {
+        caregiverID: tokenData.caregiverID,
+        caregiveeID: null,
+      },
+    };
+    const json = await getDefaultEndpoint(params);
+
+    if (json.error) {
+      if (json.error.startsWith("request not")) {
+        reset();
+      } else {
+        console.log("Error getting default: ", json.error);
+      }
+      return;
+    }
+
+    if (json.default) {
+      dispatch(setSelectedUser(json.default));
+    }
+  };
+
+  const reset = () => {
+    dispatch(resetSelectedData());
+    setBatteryLevel(null);
+    setBatterySyncTime(null);
+    setHeart(null);
+    setHeartMin(null);
+    setHeartAvg(null);
+    setHeartMax(null);
+    setHeartSyncTime(null);
+    setHourlySteps(null);
+    setDailySteps(null);
+    setStepUpdate(null);
+    setStepsSyncTime(null);
+    setHeartSyncTime(null);
+    setLastTimeMeasured(null);
+    setIsEnabledSleep(false);
+    setIsEnabledDisturb(false);
+    setIsEnabledMonitor(true);
+  };
   // Get Device expo-token-Notification
   async function registerForPushNotificationsAsync() {
     let token;
@@ -97,24 +162,198 @@ export default async function GiverHomeScreen({ navigation }) {
 
     return token;
   }
- 
- const [Steps, Heart, HeartAvg, HeartMax, HeartMin, Battery] = await fetchFitbitData(selectedUser);
+
+  // Stores expo-token-notification in user's database
+  const storeMessageToken = async (token) => {
+    const params = {
+      payload: token,
+      selfID: tokenData.userID,
+      auth: tokenData.access_token,
+    };
+
+    const json = await notificationTokenEndpoint(params);
+    // TODO: Implement error catching here
+  };
+
+  const calculateTime = (pullTime) => {
+    let currTime = moment().format("YYYY-MM-DD HH:mm:ss");
+    let range = moment.range(pullTime, currTime);
+
+    let diffDays = range.diff("days");
+    if (diffDays > 0) {
+      return diffDays + " day" + (diffDays === 1 ? "" : "s") + " ago";
+    }
+    let diffHours = range.diff("hours");
+
+    if (diffHours > 0) {
+      return diffHours + " hour" + (diffHours === 1 ? "" : "s") + " ago";
+    }
+
+    let diffMinutes = range.diff("minutes");
+
+    if (diffMinutes > 0) {
+      return diffMinutes + " minute" + (diffMinutes === 1 ? "" : "s") + " ago";
+    }
+
+    let diffSeconds = range.diff("seconds");
+
+    if (diffSeconds > 0) {
+      return diffSeconds + " second" + (diffSeconds === 1 ? "" : "s") + " ago";
+    }
+
+    if (diffSeconds === 0) {
+      return "now";
+    }
+
+    return "Invalid Time";
+  };
+
+  const getAlertCounter = async () => {
+    if (!selectedUser.caregiveeID) {
+      return;
+    }
+    const params = {
+      auth: tokenData.access_token,
+      targetID: selectedUser.caregiveeID,
+      selfID: tokenData.caregiverID,
+    };
+    const json = await alertCounter(params);
+    if (json) {
+      setCounter(json.counter);
+    } else {
+      console.log("Failed to get alertCounter");
+      return;
+    }
+  };
+
+  const noSyncAlert = async () => {
+    if (!selectedUser.caregiveeID) {
+      return;
+    }
+    const params = {
+      auth: tokenData.access_token,
+      targetID: selectedUser.caregiveeID,
+    };
+    const json = await setNoSyncAlert(params);
+    if (json) {
+      console.log("Problem sending no sync alert");
+      return;
+    }
+  };
+
+  const fetchData = async () => {
+    if (!selectedUser.caregiveeID) {
+      return;
+    }
+    const params = {
+      auth: tokenData.access_token,
+      targetID: selectedUser.caregiveeID,
+      metric: "all",
+      period: "recent",
+    };
+    const json = await fitbitDataEndpoint(params);
+    if (!json) {
+      console.log("Aborting data pull (Internal server error)");
+      return;
+    }
+
+    if (json.device) {
+      console.log("Device: ", json.device);
+      setBatteryLevel(json.device.battery);
+      setBatterySyncTime(calculateTime(json.device.lastSyncTime));
+    }
+    if (json.heart) {
+      console.log("Heart: ", json.heart);
+      setHeart(json.heart.restingRate);
+      setHeartMin(json.heart.minHR);
+      setHeartAvg(json.heart.average);
+      setHeartMax(json.heart.maxHR);
+      setHeartSyncTime(
+        calculateTime(
+          json.heart.date +
+            (json.heart.timeMeasured.length === 7 ? " 0" : " ") +
+            json.heart.timeMeasured
+        )
+      );
+    }
+    if (json.steps) {
+      console.log("Steps: ", json.steps);
+      setHourlySteps(json.steps.hourlyTotal);
+      setDailySteps(json.steps.currentDayTotal);
+
+      // Returns the difference in minutes between the last time the
+      // Fitbit sunk and right now
+      let currTime = moment().format("YYYY-MM-DD HH:mm:ss");
+      let pullTime =
+        json.steps.date +
+        (json.steps.hourlyTime.length === 7 ? " 0" : " ") +
+        json.steps.hourlyTime;
+      let range = moment.range(pullTime, currTime);
+      let StepAlert = range.diff("minutes");
+
+      // If it's been over an hour since a sync, send a no sync alert
+      // If the last sync time hasn't changed, don't send the alert again
+      if (StepAlert >= 60 && json.steps.hourlyTime !== lastTimeMeasured) {
+        setLastTimeMeasured(json.steps.hourlyTime);
+        noSyncAlert();
+      }
+
+      setStepUpdate(
+        calculateTime(
+          json.steps.date +
+            (json.steps.timeMeasured.length === 7 ? " 0" : " ") +
+            json.steps.timeMeasured
+        )
+      );
+      setStepsSyncTime(
+        calculateTime(
+          json.steps.date +
+            (json.steps.hourlyTime.length === 7 ? " 0" : " ") +
+            json.steps.hourlyTime
+        )
+      );
+    }
+  };
   useEffect(() => {
     registerForPushNotificationsAsync();
+    getCaregiveeInfo();
+    getAlertCounter();
+    // TODO: Do this on login / account creation
   }, []);
 
   useEffect(() => {
-    fetchData();
-  }, [fitbitAccessToken]);
+    // When selected user changes, either reset or fetch data depending on whether selected user is valid
+    if (selectedUser.caregiveeID) {
+      getCaregiveeInfo();
+      fetchData();
+      getAlertCounter();
+    } else reset();
 
-  const args = {
-    number,
-    prompt: true,
-  };
+    number = selectedUser.phone || null;
+    args = {
+      number,
+      prompt: true,
+      skipCanOpen: true,
+    };
+  }, [selectedUser]);
 
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
-  console.log(tokenData);
+
+  const isFocused = useIsFocused();
+
+  // Auto refreshes every x milliseconds as long as the screen is focused
+  useEffect(() => {
+    const toggle = setInterval(() => {
+      console.log("here");
+      console.log(StepsSyncTime);
+      isFocused
+        ? getCaregiveeInfo() && fetchData() && getAlertCounter()
+        : clearInterval(toggle);
+    }, 100000);
+    return () => clearInterval(toggle);
+  });
+
   return (
     <SafeAreaView style={{ height: windowHeight, width: windowWidth }}>
       <StatusBar
@@ -143,105 +382,300 @@ export default async function GiverHomeScreen({ navigation }) {
               width: "100%",
             }}
           >
-            <TouchableOpacity style={{ marginLeft: "8%" }}>
+            <SafeAreaView style={{ marginLeft: "4%", flexDirection: "row" }}>
+              <Image
+                style={{
+                  height: 15,
+                  width: 15,
+                  marginRight: "3%",
+                  alignSelf: "center",
+                }}
+                source={require("../../assets/images/icons-caregivee-alert.imageset/icons-caregivee-alert.png")}
+              />
               <Text
                 style={{
                   color: "gray",
                   fontWeight: "bold",
-                  //marginVertical: Platform.OS === "ios" ? "10%" : "8%",
+                  fontSize: responsiveFontSize(2) / fontScale,
                   justifyContent: "center",
                 }}
               >
-                0 Alerts Today
+                {counter ? counter : "0"} Alerts Today
               </Text>
-            </TouchableOpacity>
+            </SafeAreaView>
             <TouchableOpacity
               style={{
-                marginRight: "8%",
+                marginRight: "4%",
                 //backgroundColor: "red",
                 alignItems: "flex-end",
                 justifyContent: "center",
+              }}
+              onPress={() => {
+                navigation.navigate("ReceivedAlertsScreen");
               }}
             >
               <Text
                 style={{
                   color: "dodgerblue",
                   fontWeight: "bold",
-                  //marginVertical: Platform.OS === "ios" ? "1%" : "8%",
+                  fontSize: responsiveFontSize(2) / fontScale,
                 }}
               >
                 View History
               </Text>
             </TouchableOpacity>
           </SafeAreaView>
-          <SafeAreaView
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              //backgroundColor: "green",
-              height: "9%",
-              width: "100%",
-            }}
-          >
+          {!isEnabledSleep && !isEnabledDisturb && isEnabledMonitor ? (
             <SafeAreaView
               style={{
-                justifyContent: "center",
-
+                height: "9%",
+                width: "96%",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
                 //backgroundColor: "blue",
-                height: "80%",
-                width: "60%",
               }}
             >
-              <Text
+              <SafeAreaView
                 style={{
-                  //marginTop: "10%",
-                  //marginLeft: "4%",
-                  color: "darkgrey",
-                  fontSize: responsiveFontSize(1.8),
+                  //backgroundColor: "yellow",
+                  height: "100%",
+                  width: "64%",
+                  justifyContent: "center",
+                  marginRight: "2%",
+                  marginLeft: "4%",
                 }}
               >
-                Hello {tokenData.firstName || "N/A"}
-              </Text>
+                <Text
+                  style={{
+                    flexShrink: 1,
+                    color: "darkgrey",
+                    fontSize: responsiveFontSize(1.9) / fontScale,
+                  }}
+                  numberOfLines={1}
+                >
+                  Hello {tokenData.firstName || "N/A"}
+                </Text>
+
+                {/* All users must have a phone number, otherwise there's no way to add them. Thus, no phone = no user */}
+                {/* The only way for us not to have a Caregivee is if we don't have anyone added */}
+                {/* Thus, send to add screen if no Caregivee exists */}
+                {selectedUser.phone ? (
+                  <Text
+                    style={{
+                      color: "black",
+                      fontSize: responsiveFontSize(2.2) / fontScale,
+                      fontWeight: "500",
+                    }}
+                    numberOfLines={1}
+                  >
+                    Your Caregivee is {selectedUser.firstName}
+                  </Text>
+                ) : (
+                  <TouchableOpacity>
+                    <Text
+                      style={{
+                        color: "dodgerblue",
+                        fontSize: responsiveFontSize(2.2) / fontScale,
+                        fontWeight: "500",
+                      }}
+                      numberOfLines={1}
+                      onPress={() => {
+                        navigation.navigate("AddScreen");
+                      }}
+                    >
+                      Click To Add A Caregivee
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </SafeAreaView>
+              <SafeAreaView
+                style={{
+                  height: "100%",
+                  width: "32%",
+                  justifyContent: "center",
+                  marginRight: "2%",
+                  //flexShrink: 1,
+                  //backgroundColor: "red",
+                }}
+              >
+                <SafeAreaView
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    //backgroundColor: "blue",
+                    flexDirection: "row",
+                    height: "100%",
+                    width: "100%",
+                    flexShrink: 1,
+                  }}
+                >
+                  {number && (
+                    <TouchableOpacity
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        flexShrink: 1,
+                      }}
+                      onPress={() => {
+                        call(args).catch(console.error);
+                      }}
+                    >
+                      <Image
+                        style={{ flexShrink: 1 }}
+                        source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
+                      />
+                      <Text
+                        style={[
+                          styles.callText,
+                          {
+                            flexShrink: 1,
+                            fontSize: responsiveFontSize(2) / fontScale,
+                          },
+                        ]}
+                        numberOfLines={2}
+                      >
+                        Call {selectedUser.firstName || "N/A"}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </SafeAreaView>
+              </SafeAreaView>
+            </SafeAreaView>
+          ) : !isEnabledMonitor ? (
+            <SafeAreaView
+              style={{
+                flexDirection: "row",
+                //justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(255, 197, 0, 0.8)",
+                height: "7%",
+                width: "100%",
+                ...Platform.select({
+                  ios: {
+                    shadowColor: "black",
+                    shadowOffset: { width: 4, height: 6 },
+                    shadowOpacity: 0.4,
+                  },
+                  android: {
+                    elevation: 6,
+                  },
+                }),
+              }}
+            >
+              <Image
+                style={[
+                  styles.imagesBody,
+                  {
+                    height: 20,
+                    width: 20,
+                    marginLeft: "3%",
+                    marginRight: "2%",
+                    tintColor: "black",
+                  },
+                ]}
+                source={require("../../assets/images/icons-caregivee-monitor-off.imageset/icons-caregivee-monitor-off.png")}
+              />
               <Text
                 style={{
-                  color: "black",
-                  fontSize: responsiveFontSize(2.2),
-                  fontWeight: "500",
-                  //flex: 1,
-                  marginRight: "5%",
-                  //marginLeft: "4%",
+                  fontWeight: "bold",
+                  fontSize: responsiveFontSize(2.1) / fontScale,
+                  fontWeight: "800",
                 }}
                 numberOfLines={1}
               >
-                Your Caregivee is {selectedUser.firstName || "N/A"}
+                {selectedUser.firstName} Paused Monitoring
               </Text>
             </SafeAreaView>
+          ) : isEnabledSleep ? (
             <SafeAreaView
               style={{
-                //marginTop: "4%",
-                //backgroundColor: "red",
-                width: "32%",
-                height: "80%",
-                justifyContent: "center",
-                alignItems: "flex-end",
+                flexDirection: "row",
+                //justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(0,0,0,.9)",
+                height: "7%",
+                width: "100%",
+                ...Platform.select({
+                  ios: {
+                    shadowColor: "blue",
+                    shadowOffset: { width: 4, height: 6 },
+                    shadowOpacity: 0.4,
+                  },
+                  android: {
+                    elevation: 6,
+                  },
+                }),
               }}
             >
-              <TouchableOpacity
-                style={styles.callBody}
-                onPress={() => {
-                  call(args).catch(console.error);
+              <Image
+                style={[
+                  {
+                    height: 25,
+                    width: 25,
+                    marginLeft: "3%",
+                    marginRight: "2%",
+                  },
+                ]}
+                source={require("../../assets/images/icons-caregivee-sleep-on.imageset/icons-caregivee-sleep-on.png")}
+              />
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: responsiveFontSize(2.1) / fontScale,
+                  fontWeight: "800",
                 }}
+                numberOfLines={1}
               >
-                <Image
-                  source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
-                />
-                <Text style={styles.callText}>
-                  Call {selectedUser.firstName || "N/A"}
-                </Text>
-              </TouchableOpacity>
+                {selectedUser.firstName} Said Good Night
+              </Text>
             </SafeAreaView>
-          </SafeAreaView>
+          ) : (
+            <SafeAreaView
+              style={{
+                flexDirection: "row",
+                //justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(0,0,0,.8)",
+                height: "7%",
+                width: "100%",
+                ...Platform.select({
+                  ios: {
+                    shadowColor: "black",
+                    shadowOffset: { width: 4, height: 6 },
+                    shadowOpacity: 0.4,
+                  },
+                  android: {
+                    elevation: 6,
+                  },
+                }),
+              }}
+            >
+              <Image
+                style={[
+                  {
+                    height: 25,
+                    width: 25,
+                    marginLeft: "3%",
+                    marginRight: "2%",
+                  },
+                ]}
+                source={require("../../assets/images/icons-caregivee-dnd-on.imageset/icons-caregivee-dnd-on.png")}
+              />
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: responsiveFontSize(2.1) / fontScale,
+                  fontWeight: "800",
+                }}
+                numberOfLines={1}
+              >
+                {selectedUser.firstName} Wants No Disturbances
+              </Text>
+            </SafeAreaView>
+          )}
           <SafeAreaView
             style={{
               borderBottomColor: "lightgray",
@@ -263,19 +697,23 @@ export default async function GiverHomeScreen({ navigation }) {
             <Text
               style={{
                 color: "black",
-                fontSize: responsiveFontSize(2.2),
+                fontSize: responsiveFontSize(2.2) / fontScale,
               }}
             >
               Last Recorded Activity
             </Text>
-
             <Text
               style={{
                 color: "darkgrey",
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.8) / fontScale,
               }}
             >
-              14 mins ago
+              {/** TODO: Is this the right field?*/}
+              {BatterySyncTime && StepsSyncTime
+                ? BatterySyncTime <= StepsSyncTime
+                  ? BatterySyncTime
+                  : StepsSyncTime
+                : ""}
             </Text>
           </SafeAreaView>
 
@@ -317,7 +755,7 @@ export default async function GiverHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.25),
+                    fontSize: responsiveFontSize(2.25) / fontScale,
                     marginLeft: "5%",
                   }}
                 >
@@ -353,7 +791,7 @@ export default async function GiverHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.25),
+                    fontSize: responsiveFontSize(2.25) / fontScale,
                     marginLeft: "5%",
                     //marginVertical: "3%",
                   }}
@@ -406,16 +844,16 @@ export default async function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5) / fontScale,
                       fontWeight: "700",
                     }}
                   >
-                    0
+                    {HeartBPM === null || !isEnabledMonitor ? "--" : HeartBPM}
                   </Text>
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(2),
+                      fontSize: responsiveFontSize(2) / fontScale,
                       marginLeft: "3%",
                       fontWeight: "600",
                     }}
@@ -432,14 +870,25 @@ export default async function GiverHomeScreen({ navigation }) {
                     justifyContent: "flex-start",
                   }}
                 >
-                  <Text style={styles.smallText}>14 mins ago</Text>
+                  <Text
+                    style={[
+                      styles.smallText,
+                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                    ]}
+                  >
+                    {!isEnabledMonitor
+                      ? ""
+                      : HeartSyncTime
+                      ? HeartSyncTime
+                      : ""}
+                  </Text>
                 </SafeAreaView>
               </SafeAreaView>
 
               <SafeAreaView
                 style={{
                   backgroundColor: "whitesmoke",
-                  justifyContent: "center",
+                  //justifyContent: "center",
                   alignItems: "center",
                   height: "100%",
                   width: "43%",
@@ -461,30 +910,52 @@ export default async function GiverHomeScreen({ navigation }) {
                   style={{
                     flexDirection: "row",
                     justifyContent: "center",
-                    alignItems: "center",
-                    height: "70%",
+                    alignItems: "flex-end",
+                    //backgroundColor: "blue",
+
+                    height: "55%",
                     width: "100%",
                   }}
                 >
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5) / fontScale,
                       fontWeight: "700",
                     }}
+                    numberOfLines={1}
                   >
-                    0
+                    {isEnabledMonitor
+                      ? hourlySteps === null
+                        ? "--"
+                        : hourlySteps
+                      : "--"}
                   </Text>
                 </SafeAreaView>
                 <SafeAreaView
                   style={{
-                    width: "100%",
-                    height: "30%",
+                    width: "92%",
+                    height: "45%",
                     alignItems: "center",
-                    justifyContent: "flex-start",
+                    justifyContent: "center",
                   }}
                 >
-                  <Text style={styles.smallText}>in past hour</Text>
+                  <Text
+                    style={[
+                      styles.smallText,
+                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                    ]}
+                    numberOfLines={2}
+                  >
+                    {stepUpdate
+                      ? stepUpdate.includes("hour", 0) ||
+                        stepUpdate.includes("day", 0)
+                        ? "ask " +
+                          selectedUser.firstName.slice(0, 12) +
+                          " to sync"
+                        : "in past hour"
+                      : "in past hour"}
+                  </Text>
                 </SafeAreaView>
               </SafeAreaView>
             </SafeAreaView>
@@ -508,7 +979,7 @@ export default async function GiverHomeScreen({ navigation }) {
             <Text
               style={{
                 color: "black",
-                fontSize: responsiveFontSize(2.2),
+                fontSize: responsiveFontSize(2.2) / fontScale,
 
                 marginLeft: "4%",
               }}
@@ -519,7 +990,7 @@ export default async function GiverHomeScreen({ navigation }) {
             <Text
               style={{
                 color: "darkgrey",
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.8) / fontScale,
                 marginRight: "4%",
               }}
             >
@@ -575,7 +1046,7 @@ export default async function GiverHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.25),
+                    fontSize: responsiveFontSize(2.25) / fontScale,
                     marginLeft: "3%",
                     //marginVertical: "3%",
                   }}
@@ -585,7 +1056,7 @@ export default async function GiverHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "darkgrey",
-                    fontSize: responsiveFontSize(1.8),
+                    fontSize: responsiveFontSize(1.8) / fontScale,
                     marginRight: "5%",
                   }}
                 >
@@ -636,11 +1107,15 @@ export default async function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5) / fontScale,
                       fontWeight: "700",
                     }}
                   >
-                    0
+                    {isEnabledMonitor
+                      ? HeartMin === null
+                        ? "--"
+                        : HeartMin
+                      : "--"}
                   </Text>
                 </SafeAreaView>
 
@@ -653,7 +1128,14 @@ export default async function GiverHomeScreen({ navigation }) {
                     // backgroundColor: "yellow",
                   }}
                 >
-                  <Text style={[styles.smallText]}>min</Text>
+                  <Text
+                    style={[
+                      styles.smallText,
+                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                    ]}
+                  >
+                    min
+                  </Text>
                 </SafeAreaView>
               </SafeAreaView>
               <SafeAreaView
@@ -685,11 +1167,15 @@ export default async function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5) / fontScale,
                       fontWeight: "700",
                     }}
                   >
-                    0
+                    {isEnabledMonitor
+                      ? HeartAvg === null
+                        ? "--"
+                        : HeartAvg
+                      : "--"}
                   </Text>
                 </SafeAreaView>
 
@@ -702,7 +1188,14 @@ export default async function GiverHomeScreen({ navigation }) {
                     //backgroundColor: "yellow",
                   }}
                 >
-                  <Text style={[styles.smallText]}>avg</Text>
+                  <Text
+                    style={[
+                      styles.smallText,
+                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                    ]}
+                  >
+                    avg
+                  </Text>
                 </SafeAreaView>
               </SafeAreaView>
               <SafeAreaView
@@ -734,11 +1227,15 @@ export default async function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5) / fontScale,
                       fontWeight: "700",
                     }}
                   >
-                    0
+                    {isEnabledMonitor
+                      ? HeartMax === null
+                        ? "--"
+                        : HeartMax
+                      : "--"}
                   </Text>
                 </SafeAreaView>
 
@@ -751,7 +1248,14 @@ export default async function GiverHomeScreen({ navigation }) {
                     // backgroundColor: "yellow",
                   }}
                 >
-                  <Text style={[styles.smallText]}>max</Text>
+                  <Text
+                    style={[
+                      styles.smallText,
+                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                    ]}
+                  >
+                    max
+                  </Text>
                 </SafeAreaView>
               </SafeAreaView>
             </SafeAreaView>
@@ -789,16 +1293,16 @@ export default async function GiverHomeScreen({ navigation }) {
               >
                 <Image
                   style={[styles.images, { marginLeft: "4%" }]}
-                  source={require("../../assets/images/heart/heart.png")}
+                  source={require("../../assets/images/steps/steps.png")}
                 />
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.25),
+                    fontSize: responsiveFontSize(2.25) / fontScale,
                     marginLeft: "5%",
                   }}
                 >
-                  Heart Rate
+                  Total Steps
                 </Text>
               </SafeAreaView>
 
@@ -825,17 +1329,17 @@ export default async function GiverHomeScreen({ navigation }) {
               >
                 <Image
                   style={[styles.images, { marginLeft: "4%" }]}
-                  source={require("../../assets/images/steps/steps.png")}
+                  source={require("../../assets/images/icons-fitbit-color.imageset/icons-fitbit-color.png")}
                 />
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.25),
+                    fontSize: responsiveFontSize(2.25) / fontScale,
                     marginLeft: "5%",
                     //marginVertical: "3%",
                   }}
                 >
-                  Steps
+                  Fitbit Battery
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
@@ -883,21 +1387,16 @@ export default async function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.8),
+                      fontSize: responsiveFontSize(4.5) / fontScale,
                       fontWeight: "700",
                     }}
+                    numberOfLines={1}
                   >
-                    0
-                  </Text>
-                  <Text
-                    style={{
-                      color: "black",
-                      fontSize: responsiveFontSize(2),
-                      marginLeft: "3%",
-                      fontWeight: "600",
-                    }}
-                  >
-                    BPM
+                    {isEnabledMonitor
+                      ? dailySteps === null
+                        ? "--"
+                        : dailySteps
+                      : "--"}
                   </Text>
                 </SafeAreaView>
                 <SafeAreaView
@@ -909,7 +1408,18 @@ export default async function GiverHomeScreen({ navigation }) {
                     justifyContent: "flex-start",
                   }}
                 >
-                  <Text style={styles.smallText}>14 mins ago</Text>
+                  <Text
+                    style={[
+                      styles.smallText,
+                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                    ]}
+                  >
+                    {!isEnabledMonitor
+                      ? ""
+                      : StepsSyncTime
+                      ? StepsSyncTime
+                      : ""}
+                  </Text>
                 </SafeAreaView>
               </SafeAreaView>
 
@@ -943,15 +1453,22 @@ export default async function GiverHomeScreen({ navigation }) {
                     width: "100%",
                   }}
                 >
-                  <Text
-                    style={{
-                      color: "black",
-                      fontSize: responsiveFontSize(4.8),
-                      fontWeight: "700",
-                    }}
-                  >
-                    0
-                  </Text>
+                  {BatteryLevel === "High" ? (
+                    <Image
+                      style={{ height: 29, width: 51 }}
+                      source={require("../../assets/images/battery-full.imageset/battery-full.png")}
+                    />
+                  ) : BatteryLevel === "Medium" ? (
+                    <Image
+                      style={{ height: 29, width: 51 }}
+                      source={require("../../assets/images/battery-medium.imageset/battery-medium.png")}
+                    />
+                  ) : (
+                    <Image
+                      style={{ height: 29, width: 51 }}
+                      source={require("../../assets/images/battery-low.imageset/battery-low.png")}
+                    />
+                  )}
                 </SafeAreaView>
                 <SafeAreaView
                   style={{
@@ -961,7 +1478,18 @@ export default async function GiverHomeScreen({ navigation }) {
                     justifyContent: "flex-start",
                   }}
                 >
-                  <Text style={styles.smallText}>in past hour</Text>
+                  <Text
+                    style={[
+                      styles.smallText,
+                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                    ]}
+                  >
+                    {isEnabledMonitor
+                      ? BatteryLevel === null
+                        ? "Unlinked"
+                        : BatteryLevel
+                      : "Paused"}
+                  </Text>
                 </SafeAreaView>
               </SafeAreaView>
             </SafeAreaView>
@@ -971,7 +1499,7 @@ export default async function GiverHomeScreen({ navigation }) {
     </SafeAreaView>
   );
 }
-
+//const { fontScale } = useWindowDimensions();
 const styles = StyleSheet.create({
   caregiveeText: {
     color: "black",
@@ -997,15 +1525,14 @@ const styles = StyleSheet.create({
   callBody: {
     alignItems: "center",
     flexDirection: "row",
-    //marginRight: "4%",
-    //marginTop: Platform.OS == "ios" ? "10%" : "5%",
-    justifyContent: "center",
+    height: "100%",
+    width: "100%",
   },
   callText: {
     color: "dodgerblue",
     fontSize: responsiveFontSize(2),
     fontWeight: "bold",
-    marginLeft: "2%",
+    // marginLeft: "2%",
   },
   images: {
     height: 25,

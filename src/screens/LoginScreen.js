@@ -5,18 +5,24 @@ import {
   ImageBackground,
   StatusBar,
   Keyboard,
+  TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import CustomTextInput from "../utils/CustomTextInput";
-import { setSelectedUser, setTokenData } from "../redux/actions";
+import {
+  resetSelectedData,
+  setSelectedUser,
+  setTokenData,
+} from "../redux/actions";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import * as SecureStore from "expo-secure-store";
-import { login } from "../network/Carebitapi";
+import validator from "validator";
+import { getDefaultEndpoint, loginEndpoint } from "../network/CarebitAPI";
+import { setKeychain } from "../network/Auth";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 export default function LoginScreen({ navigation }) {
-  const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
 
   const [inputs, setInputs] = useState({
@@ -41,7 +47,7 @@ export default function LoginScreen({ navigation }) {
     if (!inputs.email) {
       handleError(" Please enter your email", "email");
       valid = false;
-    } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
+    } else if (!validator.isEmail(inputs.email)) {
       handleError(" Invalid email", "email");
       valid = false;
     }
@@ -52,33 +58,53 @@ export default function LoginScreen({ navigation }) {
     }
 
     if (valid === true) {
-      
-      const json  = login(inputs.email, inputs.password, dispatch, false);
-      
-      if (json.access_token !== undefined) {
-        dispatch(setTokenData(json));
+      login(inputs.email, inputs.password, dispatch, false);
+    }
+  };
 
-        const oppositeType =
-          json.type === "caregiver" ? "caregivee" : "caregiver";
-        if (
-          json[oppositeType + "ID"] &&
-          json[oppositeType + "ID"].length !== 0
-        ) {
-          const selected = json[oppositeType + "ID"].find(
-            (iter) => iter.status === "Accepted"
-          );
-          dispatch(setSelectedUser(selected));
-        }
+  const login = async (email, password) => {
+    const body = { email: email, password: password };
 
-        SecureStore.setItemAsync("carebitcredentials", body);
-      } else {
-        SecureStore.deleteItemAsync("carebitcredentials");
-        console.log("Saved credentials are invalid. Removing...");
+    const json = await loginEndpoint(body);
+    if (json.access_token !== undefined) {
+      if (json.caregiveeID && json.caregiveeID.length === 0)
+        json.caregiveeID = null;
+      getDefault(json);
+      dispatch(setTokenData(json));
+      setKeychain(body);
+    } else {
+      if (json.message === "Email not found")
+        handleError(" Email not found", "email");
+      else {
+        handleError(" Incorrect password", "password");
       }
     }
   };
 
-  
+  const getDefault = async (tokenJson) => {
+    const body =
+      tokenJson.type === "caregiver"
+        ? { caregiverID: tokenJson.caregiverID, caregiveeID: null }
+        : { caregiverID: null, caregiveeID: tokenJson.caregiveeID };
+
+    const params = { body: body, auth: tokenJson.access_token };
+
+    const json = await getDefaultEndpoint(params);
+
+    if (json.error) {
+      if (json.error.startsWith("request not")) {
+        dispatch(resetSelectedData());
+      } else {
+        console.log("Error getting default: ", json.error);
+      }
+      return;
+    }
+
+    if (json.default) {
+      dispatch(setSelectedUser(json.default));
+    }
+  };
+  const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
@@ -87,9 +113,19 @@ export default function LoginScreen({ navigation }) {
     >
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
-        <KeyboardAwareScrollView style={{ flex: 1 }}>
+        <KeyboardAwareScrollView
+          style={{ flex: 1 }}
+          keyboardShouldPersistTaps="always"
+        >
           <SafeAreaView style={GlobalStyle.Container}>
-            <Text style={GlobalStyle.Title}>Log into Carebit</Text>
+            <Text
+              style={[
+                GlobalStyle.Title,
+                { fontSize: responsiveFontSize(6.95) / fontScale },
+              ]}
+            >
+              Log into Carebit
+            </Text>
             <SafeAreaView
               style={{
                 height: "60%",
@@ -104,7 +140,9 @@ export default function LoginScreen({ navigation }) {
                 keyboardType="email-address"
                 autoCapitalize="none"
                 error={errors.email}
-                onChangeText={(text) => handleChange(text, "email")}
+                onChangeText={(text) =>
+                  handleChange(validator.trim(text), "email")
+                }
                 onFocus={() => {
                   handleError(null, "email");
                 }}
@@ -131,7 +169,14 @@ export default function LoginScreen({ navigation }) {
                 ]}
                 onPress={validate}
               >
-                <Text style={GlobalStyle.ButtonText}>Log In</Text>
+                <Text
+                  style={[
+                    GlobalStyle.ButtonText,
+                    { fontSize: responsiveFontSize(2.51) / fontScale },
+                  ]}
+                >
+                  Log In
+                </Text>
               </TouchableOpacity>
               <Text></Text>
             </SafeAreaView>

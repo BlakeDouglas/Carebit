@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  useWindowDimensions,
 } from "react-native";
 import CustomTextInput from "../utils/CustomTextInput";
 import React, { useEffect, useState, useCallback } from "react";
@@ -19,7 +20,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { discovery } from "./AuthenticationScreen";
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
 import { setTokenData } from "../redux/actions";
-import { getRequests, makeRequest } from "../network/Carebitapi";
+import { phone } from "phone";
+import { createRequestEndpoint } from "../network/CarebitAPI";
+
 export default function LinkUsersScreen({ navigation }) {
   const handleChange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
@@ -35,62 +38,73 @@ export default function LinkUsersScreen({ navigation }) {
   const dispatch = useDispatch();
   const typeOfRequester =
     tokenData.type === "caregivee" ? "caregiver" : "caregivee";
-
-  const createButtonAlert = () =>
-    Alert.alert(
-      "Warning",
-      "You will need to sign into your caregivee's Fitbit device.\nOnly continue if you know their Fitbit credentials.",
-      [
-        {
-          text: "Cancel",
-          onPress: () => {
-            console.log("Cancel Pressed");
-          },
-          style: "cancel",
-        },
-        {
-          text: "OK",
-          onPress: () => {
-            navigation.navigate("ModifiedCaregiveeAccountCreation");
-          },
-        },
-      ]
-    );
+  const { fontScale } = useWindowDimensions();
   const [isModal1Visible, setModal1Visible] = useState(false);
   const toggleModal1 = () => {
     setModal1Visible(!isModal1Visible);
   };
-  const validate = async () => {
+
+  const validate = () => {
     Keyboard.dismiss();
     let valid = true;
-    if (!inputs.phone) {
-      handleError("  Input required", "phone");
+
+    let phoneData = phone(inputs.phone);
+
+    if (!phoneData.isValid) {
+      handleError(" Invalid Number", "phone");
       valid = false;
-    } else if (
-      !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
-    ) {
-      handleError("  Too Short", "phone");
+    } else {
+      inputs.phone = phoneData.phoneNumber;
+    }
+    if (inputs.phone === tokenData.phone) {
+      handleError("  Invalid Number", "phone");
       valid = false;
     }
 
     if (valid) {
-      const json  = await makeRequest(tokenData, inputs);
-      if (json.error) {
-        console.log(json.error);
-        // TODO: Prettify these errors.
-        if (json.error === "This request already exists") {
-          handleError("  Already added", "phone");
-        } else {
-          handleError("  Not Found", "phone");
-        }
-      }
-      if (json.request)
-        dispatch(setTokenData({ ...tokenData, caregiveeID: [json.request] }));
-
-      getRequests(tokenData);
+      makeRequest();
     }
   };
 
+  const makeRequest = async () => {
+    if (!tokenData.phone || !inputs.phone) return;
+    const body =
+      tokenData.type !== "caregiver"
+        ? {
+            caregiveePhone: tokenData.phone,
+            caregiverPhone: inputs.phone,
+            sender: tokenData.type,
+          }
+        : {
+            caregiverPhone: tokenData.phone,
+            caregiveePhone: inputs.phone,
+            sender: tokenData.type,
+          };
+    const params = { auth: tokenData.access_token, body: body };
+    const json = await createRequestEndpoint(params);
+    if (json.error) {
+      if (json.error === "This request already exists") {
+        handleError("  Already added", "phone");
+      } else {
+        handleError("  Not Found", "phone");
+      }
+      return;
+    }
+    if (json.request) {
+      Alert.alert(
+        "Sent!",
+        "Your request has been sent. Once accepted, you will be able to view their Fitbit data.",
+        [
+          {
+            text: "Continue",
+            onPress: () => {
+              dispatch(setTokenData({ ...tokenData, authPhase: 2 }));
+            },
+          },
+        ]
+      );
+    }
+  };
 
   return (
     <ImageBackground
@@ -135,14 +149,14 @@ export default function LinkUsersScreen({ navigation }) {
                 <Text
                   style={{
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(2.2),
+                    fontSize: responsiveFontSize(2.2) / fontScale,
                   }}
                 >
                   Warning
                 </Text>
                 <Text
                   style={{
-                    fontSize: responsiveFontSize(1.8),
+                    fontSize: responsiveFontSize(1.8) / fontScale,
                     fontWeight: "400",
                     textAlign: "left",
                   }}
@@ -170,16 +184,22 @@ export default function LinkUsersScreen({ navigation }) {
                   }}
                 >
                   <TouchableOpacity
-                    style={{ alignItems: "center", justifyContent: "center" }}
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100%",
+                      width: "100%",
+                      //backgroundColor: "blue",
+                    }}
                     onPress={() => {
                       toggleModal1();
-                      navigation.navigate("ModifiedCaregiveeAccountCreation");
+                      dispatch(setTokenData({ ...tokenData, authPhase: 10 }));
                     }}
                   >
                     <Text
                       style={{
                         color: "dodgerblue",
-                        fontSize: responsiveFontSize(2),
+                        fontSize: responsiveFontSize(2) / fontScale,
                         fontWeight: "bold",
                       }}
                     >
@@ -207,7 +227,7 @@ export default function LinkUsersScreen({ navigation }) {
                     <Text
                       style={{
                         color: "dodgerblue",
-                        fontSize: responsiveFontSize(2),
+                        fontSize: responsiveFontSize(2) / fontScale,
                         fontWeight: "bold",
                       }}
                     >
@@ -218,12 +238,13 @@ export default function LinkUsersScreen({ navigation }) {
               </SafeAreaView>
             </View>
           </Modal>
-          <SafeAreaView style={[GlobalStyle.Container, { marginTop: "17%" }]}>
+
+          <SafeAreaView style={[GlobalStyle.Container, { marginTop: "19%" }]}>
             <SafeAreaView style={{ marginBottom: "2%" }}>
               <Text
                 style={[
                   GlobalStyle.Subtitle,
-                  { fontSize: responsiveFontSize(5.3) },
+                  { fontSize: responsiveFontSize(5.3) / fontScale },
                 ]}
               >
                 Connect to a Caregivee
@@ -251,7 +272,7 @@ export default function LinkUsersScreen({ navigation }) {
                 <Text
                   style={[
                     GlobalStyle.Text,
-                    { fontSize: responsiveFontSize(2.3) },
+                    { fontSize: responsiveFontSize(2.3) / fontScale },
                   ]}
                 >
                   Request a Caregivee for monitoring {"\n"}(recommended method)
@@ -271,23 +292,26 @@ export default function LinkUsersScreen({ navigation }) {
                         ? "Caregivee's Phone Number"
                         : "Caregiver's Phone Number"
                     }
-                    placeholder="(XXX) XXX-XXXX"
-                    iconName="phone-outline"
-                    keyboardType="number-pad"
                     error={errors.phone}
-                    onChangeText={(text) =>
-                      handleChange(text.replace(/[^0-9]+/g, ""), "phone")
-                    }
-                    onFocus={() => {
+                    onChangeFormattedText={(text) => {
+                      handleChange(text, "phone");
                       handleError(null, "phone");
                     }}
+                    phone
                   />
                 </SafeAreaView>
                 <TouchableOpacity
                   style={[GlobalStyle.Button, { marginTop: "5%" }]}
                   onPress={validate}
                 >
-                  <Text style={GlobalStyle.ButtonText}>Send Request</Text>
+                  <Text
+                    style={[
+                      GlobalStyle.ButtonText,
+                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                    ]}
+                  >
+                    Send Request
+                  </Text>
                 </TouchableOpacity>
               </SafeAreaView>
               <SafeAreaView
@@ -296,7 +320,7 @@ export default function LinkUsersScreen({ navigation }) {
                 <Text
                   style={[
                     GlobalStyle.Text,
-                    { fontSize: responsiveFontSize(2.3) },
+                    { fontSize: responsiveFontSize(2.3) / fontScale },
                   ]}
                 >
                   Proceed without your Caregivee using the app
@@ -305,7 +329,14 @@ export default function LinkUsersScreen({ navigation }) {
                   style={[GlobalStyle.Button, { marginTop: "8%" }]}
                   onPress={toggleModal1}
                 >
-                  <Text style={GlobalStyle.ButtonText}>Opt Out</Text>
+                  <Text
+                    style={[
+                      GlobalStyle.ButtonText,
+                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                    ]}
+                  >
+                    Opt Out
+                  </Text>
                 </TouchableOpacity>
               </SafeAreaView>
             </SafeAreaView>

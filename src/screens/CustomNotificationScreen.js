@@ -8,6 +8,7 @@ import {
   ImageBackground,
   ScrollView,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -17,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { setSelectedUser, setTokenData } from "../redux/actions";
 import GlobalStyle from "../utils/GlobalStyle";
-import { thresholdsAPI } from "../network/Carebitapi";
+import { thresholdsEndpoint } from "../network/CarebitAPI";
 export default function CustomNotificationScreen({ navigation }) {
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
@@ -25,8 +26,8 @@ export default function CustomNotificationScreen({ navigation }) {
   const [isCustom, setIsCustom] = useState(selectedUser.healthProfile === 4);
   const [isHrAlerts, setIsHrAlerts] = useState(true);
   const [isActivityAlerts, setIsActivityAlerts] = useState(true);
-  const [isWandering, setIsWandering] = useState(false);
-  const [isSync, setIsSync] = useState(false);
+  const [isWandering, setIsWandering] = useState(true);
+  const [isSync, setIsSync] = useState(true);
   const [isBattery, setIsBattery] = useState(true);
   const [thresholds, setThresholds] = useState(null);
 
@@ -50,13 +51,16 @@ export default function CustomNotificationScreen({ navigation }) {
     setIsBattery(!isBattery);
   };
 
-  const range = (start, end) => {
+  const range = (start, end, mult = 1, unit) => {
     var arr = [];
+    let addUnit = unit;
     for (let i = start; i <= end; i++) {
-      arr.push(i);
+      let addUnit = unit;
+      i <= 1 ? (addUnit === " hours" ? (addUnit = " hour") : addUnit) : addUnit;
+      arr.push(i * mult + addUnit);
     }
     return arr.map((num) => {
-      return num.toString();
+      return num;
     });
   };
 
@@ -64,41 +68,32 @@ export default function CustomNotificationScreen({ navigation }) {
     thresholdsAPI("GET");
   }, []);
 
+  const thresholdsAPI = async (type, newJson) => {
+    if (type === "PUT" && !thresholds) type = "GET";
+    if (!newJson) newJson = thresholds;
+    if (!selectedUser.email) return; // Check if selected user is valid
 
-  const lowHeartLimits = range(25, 90);
-  const highHeartLimits = range(90, 150);
-  const noActivityLimit = range(1, 24);
+    const params = {
+      targetID: selectedUser.caregiveeID,
+      selfID: tokenData.caregiverID,
+      auth: tokenData.access_token,
+      type: type,
+      body: type === "PUT" ? newJson : undefined,
+    };
+    const json = await thresholdsEndpoint(params);
+    if (json && json.thresholds) {
+      setThresholds(json.thresholds);
+      dispatch(setSelectedUser({ ...selectedUser, healthProfile: 4 }));
+    }
+  };
 
-  const maxSteps = [
-    "500",
-    "750",
-    "1000",
-    "1250",
-    "1500",
-    "1750",
-    "2000",
-    "2250",
-    "2500",
-    "2750",
-    "3000",
-    "3250",
-    "3500",
-    "4000",
-    "4500",
-    "5000",
-    "5500",
-    "6000",
-    "6500",
-    "7000",
-    "7500",
-    "8000",
-    "8500",
-    "9000",
-    "9500",
-    "10000",
-  ];
+  const lowHeartLimits = range(25, 90, 1, " bpm");
+  const highHeartLimits = range(90, 150, 1, " bpm");
+  const noActivityLimit = range(1, 24, 1, " hours");
+  const maxSteps = range(1, 40, 250, " steps");
 
   let doesSelectedUserExist = selectedUser.email !== "";
+  const { fontScale } = useWindowDimensions();
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar
@@ -119,7 +114,12 @@ export default function CustomNotificationScreen({ navigation }) {
                 { marginLeft: "10%", marginRight: "10%", marginTop: "20%" },
               ]}
             >
-              <Text style={{ fontSize: responsiveFontSize(6), color: "white" }}>
+              <Text
+                style={{
+                  fontSize: responsiveFontSize(6) / fontScale,
+                  color: "white",
+                }}
+              >
                 Custom Alerts
               </Text>
 
@@ -132,7 +132,10 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
               >
                 <Text
-                  style={{ fontSize: responsiveFontSize(3), color: "white" }}
+                  style={{
+                    fontSize: responsiveFontSize(3) / fontScale,
+                    color: "white",
+                  }}
                 >
                   Please Choose a Caregivee First
                 </Text>
@@ -143,7 +146,14 @@ export default function CustomNotificationScreen({ navigation }) {
                     navigation.navigate("ListOfFriendsScreen");
                   }}
                 >
-                  <Text style={GlobalStyle.ButtonText}>Select Caregivee</Text>
+                  <Text
+                    style={[
+                      GlobalStyle.ButtonText,
+                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                    ]}
+                  >
+                    Select Caregivee
+                  </Text>
                 </TouchableOpacity>
               </SafeAreaView>
             </SafeAreaView>
@@ -153,7 +163,12 @@ export default function CustomNotificationScreen({ navigation }) {
       {doesSelectedUserExist && (
         <ScrollView>
           <SafeAreaView style={[styles.Box, { marginTop: "3%" }]}>
-            <Text style={[styles.Title, { margin: "4%" }]}>
+            <Text
+              style={[
+                styles.TitleNoSub,
+                { fontSize: responsiveFontSize(2.2) / fontScale },
+              ]}
+            >
               Use Custom Alerts
             </Text>
             <Switch
@@ -165,7 +180,12 @@ export default function CustomNotificationScreen({ navigation }) {
             />
           </SafeAreaView>
           <SafeAreaView>
-            <Text style={styles.Descriptive}>
+            <Text
+              style={[
+                styles.Descriptive,
+                { fontSize: responsiveFontSize(1.9) / fontScale },
+              ]}
+            >
               {isCustom
                 ? "Turn off to use Activity Levels instead of Custom Thresholds for notifications"
                 : "Turn on to use Custom Thresholds instead of Activity Levels for notifications"}
@@ -173,7 +193,15 @@ export default function CustomNotificationScreen({ navigation }) {
           </SafeAreaView>
           {isCustom ? (
             <SafeAreaView style={[styles.Box, { marginTop: "5%" }]}>
-              <Text style={styles.Title}>Heart Rate Alerts</Text>
+              <Text
+                style={[
+                  styles.TitleNoSub,
+                  { fontSize: responsiveFontSize(2.2) / fontScale },
+                ]}
+              >
+                Heart Rate Alerts
+              </Text>
+
               <Switch
                 trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                 thumbColor={isCustom ? "white" : "white"}
@@ -185,8 +213,24 @@ export default function CustomNotificationScreen({ navigation }) {
           ) : null}
           {isHrAlerts && isCustom ? (
             <SafeAreaView style={styles.Box}>
-              <Text style={styles.Title}>Low Heart Rate</Text>
-
+              <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
+                <Text
+                  style={[
+                    styles.Title,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Low Heart Rate
+                </Text>
+                <Text
+                  style={[
+                    styles.Example,
+                    { fontSize: responsiveFontSize(1.5) / fontScale },
+                  ]}
+                >
+                  e.g. 60 bpm
+                </Text>
+              </SafeAreaView>
               <SelectDropdown
                 renderDropdownIcon={(isOpened) => {
                   return (
@@ -198,7 +242,9 @@ export default function CustomNotificationScreen({ navigation }) {
                   );
                 }}
                 dropdownIconPosition={"right"}
-                defaultValue={thresholds ? thresholds.lowHRThreshold : "N/A"}
+                defaultValue={
+                  thresholds ? thresholds.lowHRThreshold + " bpm" : "N/A"
+                }
                 disableAutoScroll={true}
                 //search={true}
                 selectedRowStyle={{ backgroundColor: "lightgray" }}
@@ -209,13 +255,16 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
                 data={lowHeartLimits}
                 onSelect={(selectedItem) => {
+                  // Removes everything that isn't a number
+                  let thresholdVal = selectedItem.replace(/\D/g, "");
+
                   thresholdsAPI("PUT", {
                     ...thresholds,
-                    lowHRThreshold: selectedItem,
+                    lowHRThreshold: thresholdVal,
                   });
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
-                  return selectedItem + " bpm";
+                  return selectedItem;
                 }}
                 rowTextForSelection={(item, index) => {
                   return item;
@@ -225,7 +274,24 @@ export default function CustomNotificationScreen({ navigation }) {
           ) : null}
           {isHrAlerts && isCustom && (
             <SafeAreaView style={styles.Box}>
-              <Text style={styles.Title}>High Heart Rate</Text>
+              <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
+                <Text
+                  style={[
+                    styles.Title,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  High Heart Rate
+                </Text>
+                <Text
+                  style={[
+                    styles.Example,
+                    { fontSize: responsiveFontSize(1.5) / fontScale },
+                  ]}
+                >
+                  e.g. 100 bpm
+                </Text>
+              </SafeAreaView>
               <SelectDropdown
                 renderDropdownIcon={(isOpened) => {
                   return (
@@ -237,7 +303,9 @@ export default function CustomNotificationScreen({ navigation }) {
                   );
                 }}
                 dropdownIconPosition={"right"}
-                defaultValue={thresholds ? thresholds.highHRThreshold : "N/A"}
+                defaultValue={
+                  thresholds ? thresholds.highHRThreshold + " bpm" : "N/A"
+                }
                 disableAutoScroll={true}
                 selectedRowStyle={{ backgroundColor: "lightgray" }}
                 buttonStyle={styles.downButtonStyle}
@@ -247,13 +315,15 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
                 data={highHeartLimits}
                 onSelect={(selectedItem) => {
+                  // Removes everything that isn't a number
+                  let thresholdVal = selectedItem.replace(/\D/g, "");
                   thresholdsAPI("PUT", {
                     ...thresholds,
-                    highHRThreshold: selectedItem,
+                    highHRThreshold: thresholdVal,
                   });
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
-                  return selectedItem + " bpm";
+                  return selectedItem;
                 }}
                 rowTextForSelection={(item, index) => {
                   return item;
@@ -263,7 +333,14 @@ export default function CustomNotificationScreen({ navigation }) {
           )}
           {isCustom && (
             <SafeAreaView style={[styles.Box, { marginTop: "10%" }]}>
-              <Text style={styles.Title}>No Activity Alerts</Text>
+              <Text
+                style={[
+                  styles.TitleNoSub,
+                  { fontSize: responsiveFontSize(2.2) / fontScale },
+                ]}
+              >
+                No Activity Alerts
+              </Text>
               <Switch
                 trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                 thumbColor={isCustom ? "white" : "white"}
@@ -275,7 +352,24 @@ export default function CustomNotificationScreen({ navigation }) {
           )}
           {isActivityAlerts && isCustom && (
             <SafeAreaView style={styles.Box}>
-              <Text style={styles.Title}>Time Without Heart Rate</Text>
+              <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
+                <Text
+                  style={[
+                    styles.Title,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Time Without Heart Rate
+                </Text>
+                <Text
+                  style={[
+                    styles.Example,
+                    { fontSize: responsiveFontSize(1.5) / fontScale },
+                  ]}
+                >
+                  e.g. 1 hour
+                </Text>
+              </SafeAreaView>
               <SelectDropdown
                 renderDropdownIcon={(isOpened) => {
                   return (
@@ -288,7 +382,11 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
                 dropdownIconPosition={"right"}
                 defaultValue={
-                  thresholds ? thresholds.timeWithoutHRThreshold : "N/A"
+                  thresholds
+                    ? thresholds.timeWithoutHRThreshold > 1
+                      ? thresholds.timeWithoutHRThreshold + " hours"
+                      : thresholds.timeWithoutHRThreshold + " hour"
+                    : "N/A"
                 }
                 disableAutoScroll={true}
                 selectedRowStyle={{ backgroundColor: "lightgray" }}
@@ -299,15 +397,15 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
                 data={noActivityLimit}
                 onSelect={(selectedItem) => {
+                  // Removes everything that isn't a number
+                  let thresholdVal = selectedItem.replace(/\D/g, "");
                   thresholdsAPI("PUT", {
                     ...thresholds,
-                    timeWithoutHRThreshold: selectedItem,
+                    timeWithoutHRThreshold: thresholdVal,
                   });
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
-                  return selectedItem > 1
-                    ? selectedItem + " hours"
-                    : selectedItem + " hour";
+                  return selectedItem;
                 }}
                 rowTextForSelection={(item, index) => {
                   return item;
@@ -317,7 +415,24 @@ export default function CustomNotificationScreen({ navigation }) {
           )}
           {isActivityAlerts && isCustom && (
             <SafeAreaView style={styles.Box}>
-              <Text style={styles.Title}>Time Without Steps</Text>
+              <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
+                <Text
+                  style={[
+                    styles.Title,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Time Without Steps
+                </Text>
+                <Text
+                  style={[
+                    styles.Example,
+                    { fontSize: responsiveFontSize(1.5) / fontScale },
+                  ]}
+                >
+                  e.g. 2 hours
+                </Text>
+              </SafeAreaView>
               <SelectDropdown
                 renderDropdownIcon={(isOpened) => {
                   return (
@@ -330,7 +445,11 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
                 dropdownIconPosition={"right"}
                 defaultValue={
-                  thresholds ? thresholds.timeWithoutStepsThreshold : "N/A"
+                  thresholds
+                    ? thresholds.timeWithoutStepsThreshold > 1
+                      ? thresholds.timeWithoutStepsThreshold + " hours"
+                      : thresholds.timeWithoutStepsThreshold + " hour"
+                    : "N/A"
                 }
                 disableAutoScroll={true}
                 selectedRowStyle={{ backgroundColor: "lightgray" }}
@@ -341,15 +460,15 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
                 data={noActivityLimit}
                 onSelect={(selectedItem) => {
+                  // Removes everything that isn't a number
+                  let thresholdVal = selectedItem.replace(/\D/g, "");
                   thresholdsAPI("PUT", {
                     ...thresholds,
-                    timeWithoutStepsThreshold: selectedItem,
+                    timeWithoutStepsThreshold: thresholdVal,
                   });
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
-                  return selectedItem > 1
-                    ? selectedItem + " hours"
-                    : selectedItem + " hour";
+                  return selectedItem;
                 }}
                 rowTextForSelection={(item, index) => {
                   return item;
@@ -360,7 +479,14 @@ export default function CustomNotificationScreen({ navigation }) {
 
           {isCustom && (
             <SafeAreaView style={[styles.Box, { marginTop: "10%" }]}>
-              <Text style={styles.Title}>Wandering Alerts</Text>
+              <Text
+                style={[
+                  styles.TitleNoSub,
+                  { fontSize: responsiveFontSize(2.2) / fontScale },
+                ]}
+              >
+                Wandering Alerts
+              </Text>
               <Switch
                 trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                 thumbColor={isWandering ? "white" : "white"}
@@ -372,7 +498,24 @@ export default function CustomNotificationScreen({ navigation }) {
           )}
           {isWandering && isCustom && (
             <SafeAreaView style={styles.Box}>
-              <Text style={styles.Title}>Max Steps in an Hour</Text>
+              <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
+                <Text
+                  style={[
+                    styles.Title,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Max Steps in an Hour
+                </Text>
+                <Text
+                  style={[
+                    styles.Example,
+                    { fontSize: responsiveFontSize(1.5) / fontScale },
+                  ]}
+                >
+                  e.g. 2000 Steps
+                </Text>
+              </SafeAreaView>
               <SelectDropdown
                 renderDropdownIcon={(isOpened) => {
                   return (
@@ -384,7 +527,9 @@ export default function CustomNotificationScreen({ navigation }) {
                   );
                 }}
                 dropdownIconPosition={"right"}
-                defaultValue={thresholds ? thresholds.stepThreshold : "N/A"}
+                defaultValue={
+                  thresholds ? thresholds.stepThreshold + " steps" : "N/A"
+                }
                 disableAutoScroll={true}
                 //search={true}
                 selectedRowStyle={{ backgroundColor: "lightgray" }}
@@ -395,13 +540,15 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
                 data={maxSteps}
                 onSelect={(selectedItem) => {
+                  // Removes everything that isn't a number
+                  let thresholdVal = selectedItem.replace(/\D/g, "");
                   thresholdsAPI("PUT", {
                     ...thresholds,
-                    stepThreshold: selectedItem,
+                    stepThreshold: thresholdVal,
                   });
                 }}
                 buttonTextAfterSelection={(selectedItem, index) => {
-                  return selectedItem + " steps";
+                  return selectedItem;
                 }}
                 rowTextForSelection={(item, index) => {
                   return item;
@@ -412,7 +559,14 @@ export default function CustomNotificationScreen({ navigation }) {
           {isCustom && (
             <SafeAreaView>
               <SafeAreaView style={[styles.Box, { marginTop: "10%" }]}>
-                <Text style={styles.Title}>No Sync Alerts</Text>
+                <Text
+                  style={[
+                    styles.TitleNoSub,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  No Sync Alerts
+                </Text>
                 <Switch
                   trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                   thumbColor={isSync ? "white" : "white"}
@@ -422,9 +576,14 @@ export default function CustomNotificationScreen({ navigation }) {
                 />
               </SafeAreaView>
               <SafeAreaView>
-                <Text style={styles.Descriptive}>
-                  We'll send you an alert after Testing Care's Fitbit hasn't
-                  synced for an hour
+                <Text
+                  style={[
+                    styles.Descriptive,
+                    { fontSize: responsiveFontSize(1.9) / fontScale },
+                  ]}
+                >
+                  We'll send you an alert after {selectedUser.firstName}'s
+                  Fitbit hasn't synced for an hour
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
@@ -433,7 +592,14 @@ export default function CustomNotificationScreen({ navigation }) {
           {isCustom && (
             <SafeAreaView>
               <SafeAreaView style={[styles.Box, { marginTop: "5%" }]}>
-                <Text style={styles.Title}>Empty Battery Alerts</Text>
+                <Text
+                  style={[
+                    styles.TitleNoSub,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Empty Battery Alerts
+                </Text>
                 <Switch
                   trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                   thumbColor={isBattery ? "white" : "white"}
@@ -443,9 +609,14 @@ export default function CustomNotificationScreen({ navigation }) {
                 />
               </SafeAreaView>
               <SafeAreaView>
-                <Text style={styles.Descriptive}>
-                  We'll send you an alert when Testing Care's Fitbit has no
-                  charge
+                <Text
+                  style={[
+                    styles.Descriptive,
+                    { fontSize: responsiveFontSize(1.9) / fontScale },
+                  ]}
+                >
+                  We'll send you an alert when {selectedUser.firstName}'s Fitbit
+                  has no charge
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
@@ -474,7 +645,19 @@ const styles = StyleSheet.create({
   Title: {
     fontSize: responsiveFontSize(2.2),
     fontWeight: "600",
+  },
+  TitleNoSub: {
+    fontSize: responsiveFontSize(2.2),
+    fontWeight: "600",
     margin: "4%",
+    alignSelf: "center",
+  },
+  Example: {
+    fontSize: responsiveFontSize(1.5),
+    color: "lightgrey",
+    fontWeight: "500",
+    marginLeft: "4%",
+    marginBottom: "2%",
   },
   Descriptive: {
     fontSize: responsiveFontSize(1.9),
