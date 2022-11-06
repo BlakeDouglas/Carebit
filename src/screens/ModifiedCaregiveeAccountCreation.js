@@ -1,26 +1,27 @@
 import {
-  StyleSheet,
   Text,
   SafeAreaView,
   ImageBackground,
   Keyboard,
   StatusBar,
-  Platform,
   View,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
-import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import validator from "validator";
+import { phone } from "phone";
+import { userEndpoint } from "../network/CarebitAPI";
+import { setTokenData } from "../redux/actions";
+import { useSelector } from "react-redux";
 
 export default function ModifiedCaregiveeAccountCreation({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-  const dispatch = useDispatch();
-
   const requiredText = " Input required";
 
   // Content between this point and the return statement
@@ -35,9 +36,8 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
     type: "",
     mobilePlatform: "",
   });
-
+  const { fontScale } = useWindowDimensions();
   const [errors, setErrors] = useState({});
-  //console.log(tokenData);
   // Checks for formatting in text fields
   const validate = () => {
     Keyboard.dismiss();
@@ -45,7 +45,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
     if (!inputs.email) {
       handleError(requiredText, "email");
       valid = false;
-    } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
+    } else if (!validator.isEmail(inputs.email)) {
       handleError(" Invalid email", "email");
       valid = false;
     }
@@ -60,40 +60,61 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
       valid = false;
     }
 
-    if (!inputs.phone) {
-      handleError(requiredText, "phone");
+    let phoneData = phone(inputs.phone);
+
+    if (!phoneData.isValid) {
+      handleError(" Invalid Number", "phone");
       valid = false;
-    } else if (
-      !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
-    ) {
-      handleError(" Invalid phone number", "phone");
-      valid = false;
+    } else {
+      inputs.phone = phoneData.phoneNumber;
     }
-    if (!inputs.password) {
-      handleError(requiredText, "password");
+
+    if (!validator.isStrongPassword(inputs.password, { minSymbols: 0 })) {
       valid = false;
-    } else if (inputs.password.length < 8) {
-      handleError(" Too short (8 minimum)", "password");
-      valid = false;
-    } else if (!/[0-9]/.test(inputs.password)) {
-      handleError(" Must contain a number", "password");
-      valid = false;
-    } else if (!/[A-Z]/.test(inputs.password)) {
-      handleError(" Must contain capital", "password");
-      valid = false;
+      if (!inputs.password) {
+        handleError(requiredText, "password");
+      } else if (inputs.password.length < 8) {
+        handleError(" Too short (8 minimum)", "password");
+      } else if (!/[0-9]/.test(inputs.password)) {
+        handleError(" Must contain a number", "password");
+      } else if (!/[A-Z]/.test(inputs.password)) {
+        handleError(" Must contain capital", "password");
+      } else {
+        handleError(" Invalid password", "password");
+      }
     }
     if (valid) {
       toggleModal2();
     }
   };
-  const handleRegisterCaregivee = async () =>{
-    const json = await registerShellCaregivee();
-    if (json.access_token) {
-      navigation.navigate("ModifiedAuthScreen", { json });
-    }
 
-  }
- 
+  const registerShellCaregivee = async () => {
+    const body = {
+      ...inputs,
+      type: "caregivee",
+      mobilePlatform: "NA",
+      caregiverID: tokenData.caregiverID,
+    };
+    const json = await userEndpoint(body);
+    if (json.access_token) {
+      dispatch(
+        setTokenData({
+          ...tokenData,
+          authPhase: 3,
+          optedUser: json,
+        })
+      );
+    } else if (json.error === "Phone number already exists.") {
+      handleError(" Phone number taken", "phone");
+      console.log(json.error);
+    } else if (json.error === "Email already exists.") {
+      handleError(" Email taken", "email");
+      console.log(json.error);
+    } else {
+      handleError(" Invalid email", "email");
+      console.log(json.error);
+    }
+  };
 
   const handleChange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
@@ -143,14 +164,14 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2),
+                fontSize: responsiveFontSize(2.2) / fontScale,
               }}
             >
               Opting Out
             </Text>
             <Text
               style={{
-                fontSize: responsiveFontSize(1.8),
+                fontSize: responsiveFontSize(1.8) / fontScale,
                 fontWeight: "400",
                 textAlign: "left",
               }}
@@ -181,13 +202,13 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                 style={{ alignItems: "center", justifyContent: "center" }}
                 onPress={() => {
                   toggleModal2();
-                  handleRegisterCaregivee();
+                  registerShellCaregivee();
                 }}
               >
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2),
+                    fontSize: responsiveFontSize(2) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -223,7 +244,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
             <Text
               style={[
                 GlobalStyle.Subtitle2,
-                { fontSize: responsiveFontSize(3.71) },
+                { fontSize: responsiveFontSize(3.71) / fontScale },
               ]}
             >
               Caregivee Registration
@@ -245,7 +266,9 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                       iconName="account-outline"
                       label="Name*"
                       error={errors.firstName}
-                      onChangeText={(text) => handleChange(text, "firstName")}
+                      onChangeText={(text) =>
+                        handleChange(validator.trim(text), "firstName")
+                      }
                       onFocus={() => {
                         handleError(null, "firstName");
                       }}
@@ -256,7 +279,9 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                       placeholder="Last Name"
                       label="  "
                       error={errors.lastName}
-                      onChangeText={(text) => handleChange(text, "lastName")}
+                      onChangeText={(text) =>
+                        handleChange(validator.trim(text), "lastName")
+                      }
                       onFocus={() => {
                         handleError(null, "lastName");
                       }}
@@ -264,18 +289,13 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                   </View>
                 </View>
                 <CustomTextInput
-                  placeholder="(XXX)-XXX-XXXX"
-                  iconName="phone-outline"
                   label="Phone*"
-                  keyboardType="number-pad"
                   error={errors.phone}
-                  onChangeText={(text) =>
-                    // Removes everything but numbers, so it complies with the api
-                    handleChange(text.replace(/[^0-9]+/g, ""), "phone")
-                  }
-                  onFocus={() => {
+                  onChangeFormattedText={(text) => {
+                    handleChange(text, "phone");
                     handleError(null, "phone");
                   }}
+                  phone
                 />
 
                 <CustomTextInput
@@ -285,7 +305,9 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                   keyboardType="email-address"
                   autoCapitalize="none"
                   error={errors.email}
-                  onChangeText={(text) => handleChange(text, "email")}
+                  onChangeText={(text) =>
+                    handleChange(validator.trim(text), "email")
+                  }
                   onFocus={() => {
                     handleError(null, "email");
                   }}
@@ -322,7 +344,14 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                   ]}
                   onPress={validate}
                 >
-                  <Text style={GlobalStyle.ButtonText}>Create Account</Text>
+                  <Text
+                    style={[
+                      GlobalStyle.ButtonText,
+                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                    ]}
+                  >
+                    Create Account
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>

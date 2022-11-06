@@ -1,427 +1,494 @@
-import { resetSelectedData, setSelectedUser, setTokenData } from "../redux/actions";
-import * as SecureStore from "expo-secure-store";
-import { useDispatch } from "react-redux";
+const urlBase = "https://www.carebit.xyz/";
+const headerSettings = {
+  Accept: "application/json",
+  "Content-Type": "application/json",
+};
 
-
-  export const login = async (email, password) => {
-    const body = JSON.stringify({ email, password });
-    try {
-      let response = await fetch("https://www.carebit.xyz/login", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: body,
-      });
-      const json = await response.json();
-      return json
-      
-    } catch (error) {
-      console.log("Caught error in /login: " + error);
+// Params: {body: {email, password}}
+export async function loginEndpoint(body) {
+  try {
+    let response = await fetch(`${urlBase}login`, {
+      method: "POST",
+      headers: headerSettings,
+      body: JSON.stringify(body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /login: " + responseText;
     }
-  };
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /login " + error);
+  }
+}
 
-  export const deleteConnection = async (tokenData, rejectID) => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/deleteRequest/" + rejectID,
-        {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
+// Params: {auth, body}
+export async function getDefaultEndpoint(params) {
+  try {
+    const response = await fetch(`${urlBase}getDefaultRequest`, {
+      method: "POST",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+      body: JSON.stringify(params.body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /getDefaultRequest: " + responseText;
+    }
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /getDefaultRequest: " + error);
+  }
+}
+
+// Params: {auth, body}
+export async function setDefaultEndpoint(params) {
+  try {
+    const response = await fetch(`${urlBase}setDefaultRequest`, {
+      method: "PUT",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+      body: JSON.stringify(params.body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /setDefaultRequest: " + responseText;
+    }
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /setDefaultRequest: " + error);
+  }
+}
+
+// Params: {auth, body}
+export async function caregiveeCreateEndpoint(params) {
+  try {
+    const response = await fetch(`${urlBase}caregivee/create`, {
+      method: "POST",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+      body: JSON.stringify(params.body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /caregivee/create: " + responseText;
+    }
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /caregivee/create: " + error);
+  }
+}
+
+// Params: {auth, targetID, selfID}
+export async function alertCounter(params) {
+  const url = `${urlBase}alertCounter/${params.targetID}/${params.selfID}`;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw (
+        "Server error in /alertCounter/<caregiveeID>/<caregiverID>: " +
+        responseText
       );
-      const json = await response.json();
-      return json; 
-    } catch (error) {
-      console.log("Caught error in /deleteRequest: " + error);
     }
-  };
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log(
+      "Caught error from /alertCounter/<caregiveeID>/<caregiverID>: " + error
+    );
+  }
+}
 
-  export const rejectRequest = async (tokenData, rejectID) => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/deleteRequest/" + rejectID,
-        {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
-      );
-      const json = await response.json();
-      console.log("Result from delete: " + JSON.stringify(json));
-      navigation.navigate("HomeScreen");
-    } catch (error) {
-      console.log("Caught error in /deleteRequest: " + error);
+// Params: {auth, body, targetID}
+export async function caregiveeSetEndpoint(params) {
+  const url = `${urlBase}caregivee/${params.targetID}`;
+  try {
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
+      body: JSON.stringify(params.body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /caregivee/<caregiveeID>: " + responseText;
     }
-  };
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error uploading to /caregivee/<caregiveeID>: " + error);
+  }
+}
 
-  
-
-
-  
-  export const updateConnections = async (tokenData) => {
-    try {
-      const response = await fetch("https://www.carebit.xyz/getRequests", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify({
-          caregiverID: tokenData.caregiverID,
-          caregiveeID: null,
-        }),
-      });
-      const json = await response.json();
-      return json;
-    
-    } catch (error) {
-      console.log("Caught error in /getRequests: " + error);
+// Params: {auth, targetID}
+export async function caregiveeGetEndpoint(params) {
+  const url = `${urlBase}caregivee/${params.targetID}`;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /caregivee/<caregiveeID>: " + responseText;
     }
-  };
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log(
+      "Caught error downloading from /caregivee/<caregiveeID>: " + error
+    );
+  }
+}
 
-
-  export const registerPhysician = async (inputs, tokenData) => {
-    try {
-      let response = await fetch("https://www.carebit.xyz/physician", {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify({
-          ...inputs,
-          caregiveeID: tokenData.caregiveeID,
-        }),
-      });
-      const json = await response.json();
-      return json;
-    } catch (error) {
-      console.log("Caught error in /physician: " + error);
+// Params: body
+export async function userEndpoint(body) {
+  try {
+    let response = await fetch(`${urlBase}user`, {
+      method: "POST",
+      headers: headerSettings,
+      body: JSON.stringify(body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /user: " + responseText;
     }
-  };
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /user: " + error);
+  }
+}
 
-  
-  export const registerShellCaregivee = async () => {
-    const output = {
-      ...inputs,
-      type: "caregivee",
-      mobilePlatform: "NA",
-    };
-    try {
-      const response = await fetch("https://www.carebit.xyz/user", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(output),
-      });
-      const json = await response.json();
-      console.log("registerShellCaregivee: " + JSON.stringify(json));
-      if (json.access_token) {
-        navigation.navigate("ModifiedAuthScreen", { json });
+// Params: {auth, selfID}
+export async function getRequestCount(params) {
+  const url = `${urlBase}getRequestCount/${params.selfID}`;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /activity: " + responseText;
+    }
+    return responseText;
+  } catch (error) {
+    console.log("Caught error in /getRequestCount: " + error);
+  }
+}
+
+// Params: {auth, targetID, level, selfID}
+export async function setActivityEndpoint(params) {
+  const url = `${urlBase}activity/${params.targetID}/${params.level}/${params.selfID}`;
+  try {
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /activity: " + responseText;
+    }
+    return responseText;
+  } catch (error) {
+    console.log("Caught error in /activity: " + error);
+  }
+}
+
+// Params: {auth, body}
+export async function setDefaultActivityEndpoint(params) {
+  try {
+    const response = await fetch(`${urlBase}/updateHealthProfile`, {
+      method: "PUT",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+      body: JSON.stringify(params.body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /updateHealthProfile: " + responseText;
+    }
+    return responseText;
+  } catch (error) {
+    console.log("Caught error in /updateHealthProfile: " + error);
+  }
+}
+
+// Params: {auth, body}
+export async function createRequestEndpoint(params) {
+  try {
+    const response = await fetch(`${urlBase}createRequest`, {
+      method: "POST",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+      body: JSON.stringify(params.body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /createRequest: " + responseText;
+    }
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /createRequest: " + error);
+  }
+}
+
+// Params: {auth, targetID}
+export async function deleteRequestEndpoint(params) {
+  try {
+    const response = await fetch(`${urlBase}deleteRequest/${params.targetID}`, {
+      method: "DELETE",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /deleteRequest: " + responseText;
+    }
+    if (responseText === "") {
+      return responseText;
+    }
+    return JSON.parse(responseText);
+  } catch (error) {
+    console.log("Caught error in /deleteRequest: " + error);
+  }
+}
+
+// Params: {auth, body}
+export async function acceptRequestEndpoint(params) {
+  try {
+    const response = await fetch(`${urlBase}acceptRequest`, {
+      method: "PUT",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+      body: JSON.stringify(params.body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /acceptRequest: " + responseText;
+    }
+    if (responseText === "") return "";
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /acceptRequest: " + error);
+  }
+}
+
+// Params: {auth, body}
+export async function getRequestsEndpoint(params) {
+  try {
+    const response = await fetch(`${urlBase}getRequests`, {
+      method: "POST",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+      body: JSON.stringify(params.body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /getRequests: " + responseText;
+    }
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /getRequests: " + error);
+  }
+}
+
+// Params: {auth, type (method), body, targetID, selfID}
+export async function thresholdsEndpoint(params) {
+  const url = `${urlBase}thresholds/${params.targetID}/${params.selfID}`;
+  try {
+    let response = await fetch(url, {
+      method: params.type,
+      headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
+      body: JSON.stringify(params.body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /thresholds: " + responseText;
+    }
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /thresholds: " + error);
+  }
+}
+
+export async function physicianEndpoint(params) {
+  try {
+    let response = await fetch(`${urlBase}physician`, {
+      method: "PUT",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+      body: JSON.stringify(params.body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /physician: " + responseText;
+    }
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /physician: " + error);
+  }
+}
+
+// Params: {auth, targetID}
+export async function setAlertOkEndpoint(params) {
+  try {
+    const response = await fetch(`${urlBase}alerts/ok/${params.targetID}`, {
+      method: "PUT",
+      headers: headerSettings,
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /alerts/ok: " + responseText;
+    }
+    if (responseText === "") return "";
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /alerts/ok: " + error);
+  }
+}
+
+// Params: {auth, targetID}
+export async function getAlertsEndpoint(params) {
+  try {
+    const response = await fetch(
+      `${urlBase}alerts/${params.targetID}/${params.selfID}`,
+      {
+        method: "GET",
+        headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
       }
-    } catch (error) {
-      console.log("Caught error in /user: " + error);
+    );
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.log(
+      "Caught error from /alerts/<caregiveeID>/<int:caregiverID>: " + error
+    );
+  }
+}
+
+// Params: {auth, targetID}
+export async function setNoSyncAlert(params) {
+  try {
+    console.log(`${urlBase}noSyncAlert/${params.targetID}`);
+    const response = await fetch(`${urlBase}noSyncAlert/${params.targetID}`, {
+      method: "POST",
+      headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /noSyncAlert/<caregiveeID>: " + responseText;
     }
-  };
+    if (responseText === "") return responseText;
+    else return JSON.parse(responseText);
+  } catch (error) {
+    console.log("Caught error in /noSyncAlert/<caregiveeID>: " + error);
+  }
+}
 
-  export const setActivity = async (level, route, tokenData) => {
-    const giveeID = route.params
-      ? route.params.caregiveeID
-      : tokenData.caregiveeID;
+// Params: {payload, selfID, auth}
+export async function notificationTokenEndpoint(params) {
+  try {
+    let url = `${urlBase}notificationToken/${params.selfID}/${params.payload}`;
+    let response = await fetch(url, {
+      method: "POST",
+      headers: {
+        ...headerSettings,
+        Authorization: "Bearer " + params.auth,
+      },
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /notificationToken: " + responseText;
+    } else if (!responseText) return "";
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error in /notificationToken: " + error);
+  }
+}
 
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/activity/" + giveeID + "/" + level,
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
-      );
-      const responseText = await response.text();
-      return responseText; 
-     
-    } catch (error) {
-      console.log("Caught error in /activity: " + error);
-    }
-  };
-
-  
-  export const makeRequest = async (tokenData, inputs) => {
-    if (!tokenData.phone || !inputs.phone) return;
-    const body =
-      tokenData.type !== "caregiver"
-        ? {
-            caregiveePhone: tokenData.phone,
-            caregiverPhone: inputs.phone,
-            sender: tokenData.type,
-          }
-        : {
-            caregiverPhone: tokenData.phone,
-            caregiveePhone: inputs.phone,
-            sender: tokenData.type,
-          };
-    try {
-      const response = await fetch("https://www.carebit.xyz/createRequest", {
-        method: "POST",
+// Params: {auth, targetID, metric (all / some), period (recent / date)}
+export async function fitbitDataEndpoint(params) {
+  try {
+    const response = await fetch(
+      `${urlBase}caregivee/${params.targetID}/${params.metric}/${params.period}`,
+      {
+        method: "GET",
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
+          ...headerSettings,
+          Authorization: "Bearer " + params.auth,
         },
-        body: JSON.stringify(body),
-      });
-      const json = await response.json();
-      if (json.error) {
-        console.log(json.error);
-        // TODO: Prettify these errors.
-        if (json.error === "This request already exists") {
-          handleError("  Already added", "phone");
-        } else {
-          handleError("  Not Found", "phone");
-        }
       }
-      if (json.request)
-        dispatch(setTokenData({ ...tokenData, caregiveeID: [json.request] }));
-
-      getRequests(tokenData);
-    } catch (error) {
-      console.log("Caught error in /createRequest: " + error);
-    }
-  };
-
-  
-  // Stores expo-token-notification in user's database
-  export const storeMessageToken = async (token) => {
-    try {
-      let url =
-        "https://www.carebit.xyz/notificationToken/" +
-        tokenData.userID +
-        "/" +
-        token;
-
-      let response = await fetch(url, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-      });
-      const json = await response.json();
-    } catch (error) {
-      console.log("Caught error in /notificationToken: " + error);
-    }
-  };
-
-  export const refreshFitbitAccessToken = async (caregiveeID) => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/refreshFitbitToken/" + caregiveeID,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
-      );
-      const json = await response.json();
-      if (json.access_token) setFitbitAccessToken(json.access_token);
-      else console.log("Refreshing error: " + json.error);
-    } catch (error) {
-      console.log("Caught error in /refreshFitbitToken: " + error);
-    }
-  };
-  export const fetchFitbitAccessToken = async (caregiveeID) => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/getFitbitToken/" + caregiveeID,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
-      );
-      const json = await response.json();
-      if (!json.error) setFitbitAccessToken(json.fitbitToken);
-      else console.log("Error: " + json.error);
-    } catch (error) {
-      console.log("Caught error in /getFitbitToken: " + error);
-    }
-  };
-
-  
-  export const getCaregiveeInfo = async () => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/caregivee/" + tokenData.caregiveeID,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-        }
-      );
-      const json = await response.json();
-      if (json.caregivee) {
-        setCaregivee(json.caregivee);
-        setIsEnabledSleep(json.caregivee.sleep === 1);
-        setIsEnabledDisturb(json.caregivee.doNotDisturb === 1);
-        setIsEnabledMonitor(json.caregivee.monitoring === 1);
-      }
-    } catch (error) {
-      console.log(
-        "Caught error downloading from /caregivee/<caregiveeID>: " + error
+    );
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw (
+        "Server error in /caregivee/<caregiveeID>/<metric>/recent: " +
+        responseText
       );
     }
-  };
-  export const setCaregiveeInfo = async (newJson, tokenData) => {
-    try {
-      const response = await fetch(
-        "https://www.carebit.xyz/caregivee/" + tokenData.caregiveeID,
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-          body: JSON.stringify({
-            ...caregivee,
-            ...newJson,
-            physCity: undefined,
-            physName: undefined,
-            physPhone: undefined,
-            physState: undefined,
-            physStreet: undefined,
-            physZip: undefined,
-            caregiveeID: undefined,
-            userID: undefined,
-          }),
-        }
-      );
-      const json = await response.json();
-      if (json.caregivee) setCaregivee(json.caregivee);
-    } catch (error) {
-      console.log(
-        "Caught error uploading to /caregivee/<caregiveeID>: " + error
-      );
-    }
-  };
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log(
+      "Caught error in /caregivee/<caregiveeID>/<metric>/recent: " + error
+    );
+  }
+}
 
-  export const thresholdsAPI = async (type, newJson) => {
-    if (type === "PUT" && !thresholds) type = "GET";
-    if (!newJson) newJson = thresholds;
-    try {
-      let response = await fetch(
-        "https://www.carebit.xyz/thresholds/" + selectedUser.caregiveeID,
-        {
-          method: type,
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + tokenData.access_token,
-          },
-          body: type === "PUT" ? JSON.stringify(newJson) : undefined,
-        }
-      );
-      const json = await response.json();
-      if (json.thresholds) {
-        setThresholds(json.thresholds);
-        dispatch(setSelectedUser({ ...selectedUser, healthProfile: 4 }));
-      }
-    } catch (error) {
-      console.log("Caught error in /thresholds: " + error);
+// Params: {auth, targetID}
+export async function logoutEndpoint(params) {
+  try {
+    const response = await fetch(`${urlBase}logout/${params.targetID}`, {
+      method: "DELETE",
+      headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /logout: " + responseText;
     }
-  };
-
- export const acceptRequest = async (caregiveeID, caregiverID) => {
-    try {
-      const response = await fetch("https://www.carebit.xyz/acceptRequest", {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + route.params.json.access_token,
-        },
-
-        body: JSON.stringify({
-          caregiveeID: caregiveeID,
-          caregiverID: caregiverID,
-        }),
-      });
-      const json = await response.json();
-      return json
-      
-    } catch (error) {
-      console.log("Caught error in /acceptRequest: " + error);
-    }
-  };
-
-  export const makeCaregivee = async (code, userID) => {
-    try {
-      const response = await fetch("https://www.carebit.xyz/caregivee/create", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + route.params.json.access_token,
-        },
-        body: JSON.stringify({
-          userID: userID,
-          authCode: code,
-        }),
-      });
-      const json = await response.json();
-      return json
-      
-    } catch (error) {
-      console.log("Caught error in /caregivee/create: " + error);
-    }
-  };
-
-  export const getRequests = async (tokenData) => {
-    const body =
-      tokenData.type === "caregivee"
-        ? { caregiveeID: tokenData.caregiveeID, caregiverID: null }
-        : { caregiverID: tokenData.caregiverID, caregiveeID: null };
-    try {
-      const response = await fetch("https://www.carebit.xyz/getRequests", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + tokenData.access_token,
-        },
-        body: JSON.stringify(body),
-      });
-      const json = await response.json();
-      return json;
-      
-    } catch (error) {
-      console.log("Caught error in /getRequests: " + error);
-    }
-  };
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log("Caught error from /logout: " + error);
+  }
+}

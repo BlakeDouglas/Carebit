@@ -7,15 +7,24 @@ import {
   FlatList,
   Alert,
   ImageBackground,
+  RefreshControl,
+  TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
-import { setSelectedUser } from "../redux/actions";
-import { acceptRequest, rejectRequest, getRequest } from "../network/Carebitapi";
+import { resetSelectedData, setSelectedUser } from "../redux/actions";
+import { useIsFocused } from "@react-navigation/native";
+import phone from "phone";
+import {
+  acceptRequestEndpoint,
+  deleteRequestEndpoint,
+  getDefaultEndpoint,
+  getRequestsEndpoint,
+} from "../network/CarebitAPI";
 const RequestScreen = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -36,8 +45,9 @@ const RequestScreen = ({ navigation }) => {
         {
           text: "Continue",
           onPress: () => {
-            rejectRequest(tokenData, item.requestID);
-            getRequests(tokenData);
+            rejectRequest(item.requestID);
+            getRequests();
+            setSelectedId(null);
           },
         },
       ]
@@ -61,38 +71,171 @@ const RequestScreen = ({ navigation }) => {
         { text: "Cancel", onPress: () => {}, style: "cancel" },
         {
           text: "Allow",
-          onPress: () => {
-            acceptRequest(tokenData, item);
-            getRequests(tokenData);
+          onPress: async () => {
+            await acceptRequest(item);
+            await getRequests();
+            await getDefault();
+            setSelectedId(null);
+            Alert.alert(
+              "Accepted!",
+              fullName +
+                " is now added! You will be able to find them in the " +
+                (typeOfRequester === "caregivee"
+                  ? "'My Caregivee'"
+                  : "'My Caregiver'") +
+                " tab",
+              [
+                {
+                  text: "Continue",
+                  onPress: () => console.log("Continue"),
+                },
+              ]
+            );
           },
         },
       ]
     );
   };
 
-  
-  getRequests(tokenData);
+  const rejectRequest = async (rejectID) => {
+    const params = { auth: tokenData.access_token, targetID: rejectID };
+    const json = await deleteRequestEndpoint(params);
+    if (json === "") return;
+    if (json.error) console.log("Error on delete: ", json.error);
+  };
+
+  const getDefault = async () => {
+    const body =
+      tokenData.type === "caregiver"
+        ? {
+            caregiverID: tokenData.caregiverID,
+            caregiveeID: null,
+          }
+        : {
+            caregiverID: null,
+            caregiveeID: tokenData.caregiveeID,
+          };
+    const params = {
+      auth: tokenData.access_token,
+      body: body,
+    };
+    const json = await getDefaultEndpoint(params);
+
+    if (json.error) {
+      if (json.error.startsWith("request not")) {
+        dispatch(resetSelectedData());
+      } else {
+        console.log("Error getting default: ", json.error);
+      }
+      return;
+    }
+
+    if (json.default) {
+      dispatch(setSelectedUser(json.default));
+    }
+  };
+
+  const acceptRequest = async (item) => {
+    const params = {
+      auth: tokenData.access_token,
+      body:
+        tokenData.type === "caregivee"
+          ? {
+              caregiveeID: tokenData.caregiveeID,
+              caregiverID: item.caregiverID,
+            }
+          : {
+              caregiverID: tokenData.caregiverID,
+              caregiveeID: item.caregiveeID,
+            },
+    };
+
+    const json = await acceptRequestEndpoint(params);
+
+    if (json === "") return;
+    if (json.error) {
+      console.log("Error on accept: ", json.error);
+      return;
+    }
+    if (tokenData.type === "caregiver" && json.newCaregivee)
+      dispatch(setSelectedUser(json.newCaregivee));
+    if (tokenData.type === "caregivee" && json.newCaregiver)
+      dispatch(setSelectedUser(json.newCaregiver));
+  };
+
+  const getRequests = async () => {
+    if (!tokenData.type) return;
+    const params = {
+      auth: tokenData.access_token,
+      body:
+        tokenData.type === "caregivee"
+          ? { caregiveeID: tokenData.caregiveeID, caregiverID: null }
+          : { caregiverID: tokenData.caregiverID, caregiveeID: null },
+    };
+
+    const json = await getRequestsEndpoint(params);
+
+    // Only set the background data if there's new new data
+    if (JSON.stringify(backgroundData) !== JSON.stringify(json.connections))
+      setBackgroundData(json.connections);
+  };
 
   useEffect(() => {
     setData(
       backgroundData.filter(
-        (iter) => iter.status === "Pending" && iter.sender !== tokenData.type
+        (iter) => iter.status === "pending" && iter.sender !== tokenData.type
       )
     );
   }, [backgroundData]);
 
+  useEffect(() => {
+    getRequests();
+  }, []);
+
   const renderItem = ({ item }) => {
     const backgroundColor =
       item.requestID === selectedId ? "#bfb6a5" : "#f3f2f1";
+    let countryCode = phone(item.phone).countryCode;
+    let phoneNumber;
+    if (!countryCode) {
+      countryCode = "+1";
+      phoneNumber = item.phone;
+    } else {
+      phoneNumber = item.phone.substring(countryCode.length);
+    }
+
     return (
       <Item
         item={item}
+        countryCode={countryCode}
+        phoneNumber={phoneNumber}
         onPress={() => setSelectedId(item.requestID)}
         backgroundColor={{ backgroundColor }}
+        fontScale={fontScale}
       />
     );
   };
 
+  const [refreshing, setRefreshing] = React.useState(false);
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getRequests();
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
+
+  const isFocused = useIsFocused();
+  // Auto refreshes every 10 seconds as long as the screen is focused
+  useEffect(() => {
+    const toggle = setInterval(() => {
+      isFocused ? getRequests() : clearInterval(toggle);
+    }, 10000);
+    return () => clearInterval(toggle);
+  });
+
+  const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
@@ -115,12 +258,20 @@ const RequestScreen = ({ navigation }) => {
             marginTop: "10%",
           }}
         >
-          <Text style={{ fontSize: responsiveFontSize(4.3), color: "white" }}>
+          <Text
+            style={{
+              fontSize: responsiveFontSize(4.3) / fontScale,
+              color: "white",
+            }}
+          >
             All Incoming Requests
           </Text>
         </SafeAreaView>
         <FlatList
           data={data}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           renderItem={renderItem}
           keyExtractor={(item) => item.requestID}
           ListEmptyComponent={Empty}
@@ -150,7 +301,7 @@ const RequestScreen = ({ navigation }) => {
                   style={{
                     color: "darkred",
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(2.8),
+                    fontSize: responsiveFontSize(2.8) / fontScale,
                   }}
                 >
                   Reject
@@ -181,7 +332,7 @@ const RequestScreen = ({ navigation }) => {
                   style={{
                     color: "green",
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(2.8),
+                    fontSize: responsiveFontSize(2.8) / fontScale,
                   }}
                 >
                   Accept
@@ -195,20 +346,57 @@ const RequestScreen = ({ navigation }) => {
   );
 };
 
-const Item = ({ item, onPress, backgroundColor }) => (
+const Item = ({
+  item,
+  phoneNumber,
+  countryCode,
+  onPress,
+  backgroundColor,
+  fontScale,
+}) => (
   <TouchableOpacity style={[styles.item, backgroundColor]} onPress={onPress}>
-    <Text style={styles.name}>
+    <Text
+      style={[styles.name, { fontSize: responsiveFontSize(2.2) / fontScale }]}
+      numberOfLines={1}
+    >
       {item.firstName} {item.lastName}
     </Text>
-    <Text style={styles.phone}>{item.phone}</Text>
+    <Text
+      style={[styles.phone, { fontSize: responsiveFontSize(1.8) / fontScale }]}
+    >
+      {countryCode === "+1"
+        ? countryCode +
+          " (" +
+          phoneNumber.substring(0, 3) +
+          ") " +
+          phoneNumber.substring(3, 6) +
+          "-" +
+          phoneNumber.substring(6)
+        : countryCode + " " + phoneNumber}
+    </Text>
   </TouchableOpacity>
 );
 
 const Empty = () => {
+  const { fontScale } = useWindowDimensions();
   return (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>Your inbox is empty</Text>
-      <Text style={styles.emptyText}>...</Text>
+      <Text
+        style={[
+          styles.emptyText,
+          { fontSize: responsiveFontSize(3.5) / fontScale },
+        ]}
+      >
+        Your inbox is empty
+      </Text>
+      <Text
+        style={[
+          styles.emptyText,
+          { fontSize: responsiveFontSize(3.5) / fontScale },
+        ]}
+      >
+        ...
+      </Text>
     </View>
   );
 };

@@ -9,17 +9,20 @@ import {
   StatusBar,
   useWindowDimensions,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from "react-native";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import CustomTextInput from "../utils/CustomTextInput";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { setTokenData } from "../redux/actions";
-import { registerPhysician } from "../network/Carebitapi";
+import validator from "validator";
+import { phone } from "phone";
+import { physicianEndpoint } from "../network/CarebitAPI";
+
 export default function PhysicianInfoScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
@@ -27,42 +30,46 @@ export default function PhysicianInfoScreen({ navigation }) {
     physName: "",
     physPhone: "",
   });
-
-  const requiredText = " Input required";
-
+  const { fontScale } = useWindowDimensions();
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
   const [errors, setErrors] = useState({});
 
-  const validate = async (tokenData) => {
+  const validate = () => {
     Keyboard.dismiss();
     let valid = true;
-    if (!inputs.physName) {
-      handleError(requiredText, "physName");
+    let phoneData = phone(inputs.physPhone);
+    if (!phoneData.isValid) {
+      handleError(" Invalid Number", "physPhone");
       valid = false;
-    }
-    if (!inputs.physPhone) {
-      handleError(requiredText, "physPhone");
-      valid = false;
-    } else if (
-      !inputs.physPhone.match(
-        /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/
-      )
-    ) {
-      handleError(" Invalid phone number", "physPhone");
-      valid = false;
+    } else {
+      inputs.physPhone = phoneData.phoneNumber;
     }
     if (valid) {
-      
-      const json = await registerPhysician(inputs, tokenData);
-      dispatch(
-        setTokenData({
-          ...tokenData,
-          physName: json.cgvee.physName,
-          physPhone: json.cgvee.physPhone,
-        })
-      );
+      registerPhysician();
     }
   };
 
+  const registerPhysician = async () => {
+    const params = {
+      body: {
+        ...inputs,
+        caregiveeID: tokenData.caregiveeID,
+      },
+      auth: tokenData.access_token,
+    };
+    const json = await physicianEndpoint(params);
+
+    // TODO: Error handling
+    dispatch(
+      setTokenData({
+        ...tokenData,
+        physName: json.cgvee.physName,
+        physPhone: json.cgvee.physPhone,
+        authPhase: 8,
+      })
+    );
+  };
 
   const handleChange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
@@ -72,8 +79,6 @@ export default function PhysicianInfoScreen({ navigation }) {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
 
-  const windowWidth = useWindowDimensions().width;
-  const windowHeight = useWindowDimensions().height;
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background03.png")}
@@ -99,14 +104,14 @@ export default function PhysicianInfoScreen({ navigation }) {
               <Text
                 style={[
                   GlobalStyle.Subtitle,
-                  { fontSize: responsiveFontSize(5.1) },
+                  { fontSize: responsiveFontSize(5.1) / fontScale },
                 ]}
               >
                 Physician Contact
               </Text>
             </View>
           </TouchableWithoutFeedback>
-          <KeyboardAwareScrollView>
+          <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
             <View
               style={{
                 marginTop: "6%",
@@ -119,23 +124,21 @@ export default function PhysicianInfoScreen({ navigation }) {
                 iconName="account-outline"
                 label="Physician's Name*"
                 error={errors.physName}
-                onChangeText={(text) => handleChange(text, "physName")}
+                onChangeText={(text) =>
+                  handleChange(validator.trim(text), "physName")
+                }
                 onFocus={() => {
                   handleError(null, "physName");
                 }}
               />
               <CustomTextInput
-                placeholder="(XXX) XXX-XXXX"
-                iconName="phone-outline"
                 label="Physician's Number*"
-                keyboardType="number-pad"
                 error={errors.physPhone}
-                onChangeText={(text) =>
-                  handleChange(text.replace(/[^0-9]+/g, ""), "physPhone")
-                }
-                onFocus={() => {
+                onChangeFormattedText={(text) => {
+                  handleChange(text, "physPhone");
                   handleError(null, "physPhone");
                 }}
+                phone
               />
 
               <View style={{ width: "100%", marginTop: "12%" }}>
@@ -147,10 +150,17 @@ export default function PhysicianInfoScreen({ navigation }) {
                     },
                   ]}
                   onPress={() => {
-                    validate(tokenData);
+                    validate();
                   }}
                 >
-                  <Text style={GlobalStyle.ButtonText}>Create Account</Text>
+                  <Text
+                    style={[
+                      GlobalStyle.ButtonText,
+                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                    ]}
+                  >
+                    Create Account
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
