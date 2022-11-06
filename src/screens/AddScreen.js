@@ -2,19 +2,23 @@ import {
   StyleSheet,
   Text,
   SafeAreaView,
+  Alert,
   StatusBar,
   ScrollView,
   ImageBackground,
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
+  useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
-import { makeRequest } from "../network/Carebitapi";
+import { phone } from "phone";
+import { createRequestEndpoint } from "../network/CarebitAPI";
+
 export default function AddScreen({ navigation: { goBack } }) {
   const handleChange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
@@ -33,15 +37,16 @@ export default function AddScreen({ navigation: { goBack } }) {
   const validate = () => {
     Keyboard.dismiss();
     let valid = true;
-    if (!inputs.phone) {
-      handleError("  Input required", "phone");
+
+    let phoneData = phone(inputs.phone);
+
+    if (!phoneData.isValid) {
+      handleError(" Invalid Number", "phone");
       valid = false;
-    } else if (
-      !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
-    ) {
-      handleError("  Invalid Number", "phone");
-      valid = false;
-    } else if (inputs.phone === tokenData.phone) {
+    } else {
+      inputs.phone = phoneData.phoneNumber;
+    }
+    if (inputs.phone === tokenData.phone) {
       handleError("  Invalid Number", "phone");
       valid = false;
     }
@@ -51,7 +56,40 @@ export default function AddScreen({ navigation: { goBack } }) {
     }
   };
 
- 
+  const makeRequest = async () => {
+    const params = {
+      auth: tokenData.access_token,
+      body:
+        tokenData.type === "caregivee"
+          ? {
+              caregiveePhone: tokenData.phone,
+              caregiverPhone: inputs.phone,
+              sender: tokenData.type,
+            }
+          : {
+              caregiverPhone: tokenData.phone,
+              caregiveePhone: inputs.phone,
+              sender: tokenData.type,
+            },
+    };
+    const json = await createRequestEndpoint(params);
+    if (json.error) {
+      if (json.error === "This request already exists") {
+        handleError("  Already added", "phone");
+      } else {
+        handleError("  Not Found", "phone");
+      }
+    } else {
+      goBack();
+      if (json.request)
+        Alert.alert(
+          "Sent!",
+          "Your request has been sent. Once accepted, you will be able to view their Fitbit data.",
+          [{ text: "Continue", onPress: () => console.log("Continue") }]
+        );
+    }
+  };
+  const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
@@ -77,7 +115,15 @@ export default function AddScreen({ navigation: { goBack } }) {
               alignItems: "center",
             }}
           >
-            <Text style={[GlobalStyle.Subtitle, { alignSelf: "center" }]}>
+            <Text
+              style={[
+                GlobalStyle.Subtitle,
+                {
+                  alignSelf: "center",
+                  fontSize: responsiveFontSize(6.3) / fontScale,
+                },
+              ]}
+            >
               {typeOfRequester === "caregivee"
                 ? "Add Caregivee"
                 : "Add Caregiver"}
@@ -94,7 +140,12 @@ export default function AddScreen({ navigation: { goBack } }) {
               justifyContent: "center",
             }}
           >
-            <Text style={{ fontSize: responsiveFontSize(2.5), color: "white" }}>
+            <Text
+              style={{
+                fontSize: responsiveFontSize(2.5) / fontScale,
+                color: "white",
+              }}
+            >
               {typeOfRequester === "caregivee"
                 ? "Please enter your Caregivee's phone number to add them"
                 : "Please enter your Caregiver's phone number to add them"}
@@ -116,23 +167,26 @@ export default function AddScreen({ navigation: { goBack } }) {
                   ? "Caregivee's Phone Number"
                   : "Caregiver's Phone Number"
               }
-              placeholder="(XXX) XXX-XXXX"
-              iconName="phone-outline"
-              keyboardType="number-pad"
               error={errors.phone}
-              onChangeText={(text) =>
-                handleChange(text.replace(/[^0-9]+/g, ""), "phone")
-              }
-              onFocus={() => {
+              onChangeFormattedText={(text) => {
+                handleChange(text, "phone");
                 handleError(null, "phone");
               }}
+              phone
             />
             <SafeAreaView style={{}}>
               <TouchableOpacity
                 style={[GlobalStyle.Button, { marginTop: "8%" }]}
                 onPress={validate}
               >
-                <Text style={GlobalStyle.ButtonText}>Send Request</Text>
+                <Text
+                  style={[
+                    GlobalStyle.ButtonText,
+                    { fontSize: responsiveFontSize(2.51) / fontScale },
+                  ]}
+                >
+                  Send Request
+                </Text>
               </TouchableOpacity>
             </SafeAreaView>
           </SafeAreaView>

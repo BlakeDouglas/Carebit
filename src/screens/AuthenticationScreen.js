@@ -7,66 +7,60 @@ import {
   Alert,
   LogBox,
   StatusBar,
+  TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
-import * as Linking from "expo-linking";
+import { makeRedirectUri } from "expo-auth-session";
 import GlobalStyle from "../utils/GlobalStyle";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { resetData, setTokenData } from "../redux/actions";
-import * as SecureStore from "expo-secure-store";
-import {response} from '../network/Authprocess';
-import {makeCaregivee} from '../network/Carebitapi';
+import { deleteKeychain, getAuthRequest } from "../network/Auth";
+import { caregiveeCreateEndpoint, logoutEndpoint } from "../network/CarebitAPI";
+
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
-
-
-const handleMakeCaregivee = async(code, tokenData) =>{
-  const json =  await makeCaregivee(code, tokenData)
-  if (json.caregiveeID !== undefined) {
-    dispatch(setTokenData({ ...tokenData, ...json, type: "caregivee" }));
-  } else
-    Alert.alert("Error", json.error, json.error_0, [
-      { text: "Ok", onPress: () => {}, style: "cancel" },
-    ]);
-}
-export const makeCaregivee = async (code, tokenData, dispatch) => {
-  try {
-    const response = await fetch("https://www.carebit.xyz/caregivee/create", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + tokenData.access_token,
-      },
-      body: JSON.stringify({ userID: tokenData.userID, authCode: code }),
-    });
-    const json = await response.json();
-    return json;
-
-   
-  } catch (error) {
-    console.log("Caught error in /caregivee/create: " + error);
-  }
-};
 
 export default function AuthenticationScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
 
+  const [request, response, promptAsync] = getAuthRequest();
 
+  const makeCaregivee = async (code) => {
+    const params = {
+      auth: tokenData.access_token,
+      body: { authCode: code, userID: tokenData.userID },
+    };
+    const json = await caregiveeCreateEndpoint(params);
+
+    if (json.caregiveeID !== undefined) {
+      dispatch(
+        setTokenData({ ...tokenData, ...json, type: "caregivee", authPhase: 7 })
+      );
+    } else
+      Alert.alert("Error", json.error, json.error_0, [
+        { text: "Ok", onPress: () => {}, style: "cancel" },
+      ]);
+  };
 
   const logOutButtonHandler = async () => {
-    await SecureStore.deleteItemAsync("carebitcredentials");
+    const json = await logoutEndpoint({
+      auth: tokenData.access_token,
+      targetID: tokenData.userID,
+    });
+    if (json.error) {
+      console.log("Failed /logout: ", json.error);
+    }
+
+    deleteKeychain();
     dispatch(resetData());
   };
 
   React.useEffect(() => {
-    if (response?.type === "success")
-    handleMakeCaregivee(response.params.code, tokenData);
+    if (response?.type === "success") makeCaregivee(response.params.code);
   }, [response]);
-
+  const { fontScale } = useWindowDimensions();
   console.log(makeRedirectUri({ scheme: "carebit", path: "callback" }));
   return (
     <ImageBackground
@@ -90,7 +84,12 @@ export default function AuthenticationScreen({ navigation }) {
               style={{ marginRight: "1%" }}
               source={require("../../assets/images/midCheck/icons-check.png")}
             />
-            <Text style={{ fontSize: responsiveFontSize(2.8), color: "white" }}>
+            <Text
+              style={{
+                fontSize: responsiveFontSize(2.8) / fontScale,
+                color: "white",
+              }}
+            >
               Account Created
             </Text>
           </SafeAreaView>
@@ -106,7 +105,7 @@ export default function AuthenticationScreen({ navigation }) {
               style={{
                 alignSelf: "center",
                 color: "white",
-                fontSize: responsiveFontSize(2.5),
+                fontSize: responsiveFontSize(2.5) / fontScale,
               }}
             >
               To allow your Caregiver to monitor you, you'll need to link your
@@ -127,7 +126,14 @@ export default function AuthenticationScreen({ navigation }) {
                 promptAsync();
               }}
             >
-              <Text style={GlobalStyle.ButtonText}>Link Fitbit</Text>
+              <Text
+                style={[
+                  GlobalStyle.ButtonText,
+                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                ]}
+              >
+                Link Fitbit
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -139,7 +145,14 @@ export default function AuthenticationScreen({ navigation }) {
                 logOutButtonHandler();
               }}
             >
-              <Text style={GlobalStyle.ButtonText}>Cancel</Text>
+              <Text
+                style={[
+                  GlobalStyle.ButtonText,
+                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                ]}
+              >
+                Cancel
+              </Text>
             </TouchableOpacity>
           </SafeAreaView>
         </SafeAreaView>

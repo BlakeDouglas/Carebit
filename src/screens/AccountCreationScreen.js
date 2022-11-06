@@ -3,286 +3,277 @@ import {
   Text,
   SafeAreaView,
   ImageBackground,
-  Keyboard,
-  StatusBar,
   Platform,
-  View,
+  StatusBar,
+  Image,
+  TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
-
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { useState } from "react";
-import GlobalStyle from "../utils/GlobalStyle";
-import { useSelector, useDispatch } from "react-redux";
-import CustomTextInput from "../utils/CustomTextInput";
-import { setTokenData } from "../redux/actions";
-import * as SecureStore from "expo-secure-store";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
-
-export default function AccountCreationScreen({ navigation }) {
-  // These are the two tools of the redux state manager. Use them instead of hooks
+import GlobalStyle from "../utils/GlobalStyle";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedUser } from "../redux/actions";
+import { setActivityEndpoint } from "../network/CarebitAPI";
+export default function AccountCreationScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
 
-  const requiredText = " Input required";
-
-  // Content between this point and the return statement
-  // are inspired by kymzTech's React Native Tutorial
-
-  const [inputs, setInputs] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    password: "",
-    type: "",
-    mobilePlatform: "",
-  });
-
-  const [errors, setErrors] = useState({});
-
-  // Checks for formatting in text fields
-  const validate = () => {
-    Keyboard.dismiss();
-    let valid = true;
-    if (!inputs.email) {
-      handleError(requiredText, "email");
-      valid = false;
-    } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
-      handleError(" Invalid email", "email");
-      valid = false;
-    }
-
-    if (!inputs.firstName) {
-      handleError(requiredText, "firstName");
-      valid = false;
-    }
-
-    if (!inputs.lastName) {
-      handleError(requiredText, "lastName");
-      valid = false;
-    }
-
-    if (!inputs.phone) {
-      handleError(requiredText, "phone");
-      valid = false;
-    } else if (
-      !inputs.phone.match(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/)
-    ) {
-      handleError(" Invalid phone number", "phone");
-      valid = false;
-    }
-
-    if (!inputs.password) {
-      handleError(requiredText, "password");
-      valid = false;
-    } else if (inputs.password.length < 8) {
-      handleError(" Too short (8 minimum)", "password");
-      valid = false;
-    } else if (!/[0-9]/.test(inputs.password)) {
-      handleError(" Must contain a number", "password");
-      valid = false;
-    } else if (!/[A-Z]/.test(inputs.password)) {
-      handleError(" Must contain capital", "password");
-      valid = false;
-    }
-
-    if (valid) {
-      register();
-    }
-  };
-
-  const register = async () => {
-    const output = {
-      ...inputs,
-      type: tokenData.type,
-      mobilePlatform: Platform.OS,
+  const setActivity = async (level) => {
+    const params = {
+      targetID: selectedUser.caregiveeID,
+      selfID: tokenData.caregiverID,
+      level: level,
+      auth: tokenData.access_token,
     };
-    const body = {
-      email: inputs.email,
-      password: inputs.password,
-    };
-    try {
-      let response = await fetch("https://www.carebit.xyz/user", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(output),
-      });
-      const json = await response.json();
-      if (json.access_token !== undefined) {
-        dispatch(
-          setTokenData({
-            ...tokenData,
-            ...json,
-            firstName: inputs.firstName,
-            lastName: inputs.lastName,
-          })
-        );
-        // TODO: Modify here
-        SecureStore.setItemAsync("carebitcredentials", JSON.stringify(body));
-      } else if (json.error === "Phone number already exists.") {
-        handleError(" Phone Number already exists", "phone");
-        console.log(json.error);
-      } else {
-        handleError(" Invalid email", "email");
-        console.log(json.error);
-      }
-    } catch (error) {
-      console.log("Caught error in /user: " + error);
-    }
+    const responseText = await setActivityEndpoint(params);
+    if (!responseText) {
+      dispatch(setSelectedUser({ ...selectedUser, healthProfile: level }));
+      navigation.goBack();
+    } else console.log("Error setting activity level");
   };
-
-  const handleChange = (text, input) => {
-    setInputs((prevState) => ({ ...prevState, [input]: text }));
-  };
-
-  const handleError = (errorMessage, input) => {
-    setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
-  };
-
+  let doesSelectedUserExist = selectedUser.email !== "";
+  const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
-      source={require("../../assets/images/background-hearts.imageset/background03.png")}
-      resizeMode="cover"
+      source={require("../../assets/images/background-hearts.imageset/background02.png")}
+      resizeMode={"cover"}
       style={GlobalStyle.Background}
     >
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
-        <View
-          style={[
-            GlobalStyle.Container,
-            {
-              marginTop: "0%",
-
-              //backgroundColor: "blue",
-            },
-          ]}
-        >
-          <View
-            style={{
-              height: "22%",
-              width: "100%",
-              //backgroundColor: "red",
-              justifyContent: "flex-end",
-              marginBottom: "8%",
-            }}
-          >
-            <Text
+        {!doesSelectedUserExist && (
+          <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView
               style={[
-                GlobalStyle.Subtitle2,
-                { fontSize: responsiveFontSize(3.71) },
+                GlobalStyle.Container,
+                { marginLeft: "10%", marginRight: "10%" },
               ]}
             >
-              {tokenData.type.charAt(0).toUpperCase() +
-                tokenData.type.slice(1) +
-                " Registration"}
-            </Text>
-          </View>
-          <KeyboardAwareScrollView style={{ flex: 1 }}>
-            <View style={{ height: "80%", width: "100%" }}>
-              <View
+              <Text
+                style={[
+                  GlobalStyle.Subtitle,
+                  { fontSize: responsiveFontSize(6.3) / fontScale },
+                ]}
+              >
+                Activity Level
+              </Text>
+
+              <SafeAreaView
                 style={{
-                  height: "100%",
-                  width: "100%",
+                  flex: 1,
                   //backgroundColor: "blue",
+                  alignItems: "center",
+                  marginTop: "40%",
                 }}
               >
-                <View style={{ flexDirection: "row" }}>
-                  <View style={GlobalStyle.Background}>
-                    <CustomTextInput
-                      placeholder="First Name"
-                      iconName="account-outline"
-                      label="Name*"
-                      error={errors.firstName}
-                      onChangeText={(text) => handleChange(text, "firstName")}
-                      onFocus={() => {
-                        handleError(null, "firstName");
-                      }}
-                    />
-                  </View>
-                  <View style={GlobalStyle.Background}>
-                    <CustomTextInput
-                      placeholder="Last Name"
-                      label="  "
-                      error={errors.lastName}
-                      onChangeText={(text) => handleChange(text, "lastName")}
-                      onFocus={() => {
-                        handleError(null, "lastName");
-                      }}
-                    />
-                  </View>
-                </View>
-                <CustomTextInput
-                  placeholder="(XXX)-XXX-XXXX"
-                  iconName="phone-outline"
-                  label="Phone*"
-                  keyboardType="number-pad"
-                  error={errors.phone}
-                  onChangeText={(text) =>
-                    // Removes everything but numbers, so it complies with the api
-                    handleChange(text.replace(/[^0-9]+/g, ""), "phone")
-                  }
-                  onFocus={() => {
-                    handleError(null, "phone");
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: responsiveFontSize(3) / fontScale,
                   }}
-                />
+                >
+                  Please Choose a Caregivee First
+                </Text>
+                <TouchableOpacity
+                  style={[GlobalStyle.Button, { marginTop: "20%" }]}
+                  onPress={() => {
+                    navigation.navigate("ListOfFriendsScreen");
+                  }}
+                >
+                  <Text
+                    style={[
+                      GlobalStyle.ButtonText,
+                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                    ]}
+                  >
+                    Select Caregivee
+                  </Text>
+                </TouchableOpacity>
+              </SafeAreaView>
+            </SafeAreaView>
+          </SafeAreaView>
+        )}
+        {doesSelectedUserExist && (
+          <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView
+              style={[
+                GlobalStyle.Container,
+                { marginLeft: "10%", marginRight: "10%" },
+              ]}
+            >
+              <Text
+                style={[
+                  GlobalStyle.Subtitle,
+                  { fontSize: responsiveFontSize(6.3) / fontScale },
+                ]}
+              >
+                Activity Level
+              </Text>
 
-                <CustomTextInput
-                  placeholder="example@domain.com"
-                  iconName="email-outline"
-                  label="Email*"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  error={errors.email}
-                  onChangeText={(text) => handleChange(text, "email")}
-                  onFocus={() => {
-                    handleError(null, "email");
-                  }}
-                />
+              <SafeAreaView style={styles.TextBox}>
+                <Text
+                  style={[
+                    styles.DescriptiveText,
+                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                  ]}
+                >
+                  Choose the usual level of activity for your Caregivee
+                </Text>
+              </SafeAreaView>
 
-                <CustomTextInput
-                  placeholder="Password"
-                  iconName="lock-outline"
-                  label="Password*"
-                  error={errors.password}
-                  onChangeText={(text) => handleChange(text, "password")}
-                  onFocus={() => {
-                    handleError(null, "password");
-                  }}
-                  password
-                />
-              </View>
-              <View
+              <SafeAreaView
                 style={{
-                  height: "20%",
-                  marginTop: "7%",
-                  justifyContent: "center",
+                  width: "100%",
+                  height: "80%",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
                 }}
               >
                 <TouchableOpacity
-                  style={[
-                    GlobalStyle.Button,
-                    {
-                      alignSelf: "center",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      backgroundColor: "rgba(255, 255, 255, .2)",
-                    },
-                  ]}
-                  onPress={validate}
+                  style={styles.InnerContainers}
+                  onPress={() => {
+                    setActivity(1);
+                  }}
                 >
-                  <Text style={GlobalStyle.ButtonText}>Create Account</Text>
+                  <SafeAreaView>
+                    <Text
+                      style={[
+                        styles.InnerTitle,
+                        { fontSize: responsiveFontSize(2.4) / fontScale },
+                      ]}
+                    >
+                      Active
+                    </Text>
+                    <Text
+                      style={[
+                        styles.InnerText,
+                        { fontSize: responsiveFontSize(2.2) / fontScale },
+                      ]}
+                    >
+                      Living an active life
+                    </Text>
+                  </SafeAreaView>
+                  <Image
+                    style={{ height: 15, width: 15, marginRight: "5%" }}
+                    source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
+                  />
                 </TouchableOpacity>
-              </View>
-            </View>
-          </KeyboardAwareScrollView>
-        </View>
+
+                <TouchableOpacity
+                  style={styles.InnerContainers}
+                  onPress={() => {
+                    setActivity(2);
+                  }}
+                >
+                  <SafeAreaView>
+                    <Text
+                      style={[
+                        styles.InnerTitle,
+                        { fontSize: responsiveFontSize(2.4) / fontScale },
+                      ]}
+                    >
+                      Sedentary
+                    </Text>
+                    <Text
+                      style={[
+                        styles.InnerText,
+                        { fontSize: responsiveFontSize(2.2) / fontScale },
+                      ]}
+                    >
+                      Not active, but not homebound
+                    </Text>
+                  </SafeAreaView>
+                  <Image
+                    style={{ height: 15, width: 15, marginRight: "5%" }}
+                    source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.InnerContainers}
+                  onPress={() => {
+                    setActivity(3);
+                  }}
+                >
+                  <SafeAreaView>
+                    <Text
+                      style={[
+                        styles.InnerTitle,
+                        { fontSize: responsiveFontSize(2.4) / fontScale },
+                      ]}
+                    >
+                      Homebound
+                    </Text>
+                    <Text
+                      style={[
+                        styles.InnerText,
+                        { fontSize: responsiveFontSize(2.2) / fontScale },
+                      ]}
+                    >
+                      Unable able to leave home
+                    </Text>
+                  </SafeAreaView>
+
+                  <Image
+                    style={{
+                      height: 15,
+                      width: 15,
+                      marginRight: "5%",
+                    }}
+                    source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
+                  />
+                </TouchableOpacity>
+              </SafeAreaView>
+            </SafeAreaView>
+          </SafeAreaView>
+        )}
       </SafeAreaView>
     </ImageBackground>
   );
 }
-
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  TextBox: {
+    height: "15%",
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: "5%",
+  },
+  DescriptiveText: {
+    fontSize: responsiveFontSize(2.2),
+    color: "white",
+  },
+  InnerContainers: {
+    flexDirection: "row",
+    marginTop: "7%",
+    backgroundColor: "white",
+    height: "15%",
+    width: "100%",
+    borderRadius: 8,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 1, height: 3 },
+        shadowOpacity: 0.4,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  InnerTitle: {
+    marginLeft: "6%",
+    color: "black",
+    fontWeight: "600",
+    fontSize: responsiveFontSize(2.4),
+  },
+  InnerText: {
+    marginLeft: "6%",
+    marginTop: "2%",
+    color: "darkgray",
+    fontWeight: "400",
+    fontSize: responsiveFontSize(2.2),
+  },
+});
