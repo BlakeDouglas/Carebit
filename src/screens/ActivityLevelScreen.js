@@ -14,7 +14,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedUser } from "../redux/actions";
 import { setActivityEndpoint } from "../network/CarebitAPI";
-export default function AccountCreationScreen({ navigation, route }) {
+export default function ActivityLevelScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
