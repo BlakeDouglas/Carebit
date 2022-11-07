@@ -97,6 +97,11 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
     };
     const json = await userEndpoint(body);
     if (json.access_token) {
+      console.log("Sending optedUser as ", {
+        phone: json.phone,
+        userID: json.userID,
+      });
+      console.log("^ IF THIS CONTAINS NULL/UNDEFINED, THAT IS NOT GOOD");
       dispatch(
         setTokenData({
           ...tokenData,
