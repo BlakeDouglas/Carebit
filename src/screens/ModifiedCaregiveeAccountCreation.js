@@ -18,12 +18,12 @@ import validator from "validator";
 import { phone } from "phone";
 import { userEndpoint } from "../network/CarebitAPI";
 import { setTokenData } from "../redux/actions";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function ModifiedCaregiveeAccountCreation({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const requiredText = " Input required";
-
+  const dispatch = useDispatch();
   // Content between this point and the return statement
   // are inspired by kymzTech's React Native Tutorial
 
