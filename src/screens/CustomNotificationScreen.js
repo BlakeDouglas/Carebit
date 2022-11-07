@@ -83,7 +83,9 @@ export default function CustomNotificationScreen({ navigation }) {
     const json = await thresholdsEndpoint(params);
     if (json && json.thresholds) {
       setThresholds(json.thresholds);
-      dispatch(setSelectedUser({ ...selectedUser, healthProfile: 4 }));
+      if (json.thresholds.healthProfile === 4) {
+        dispatch(setSelectedUser({ ...selectedUser, healthProfile: 4 }));
+      }
     }
   };
 
@@ -94,6 +96,7 @@ export default function CustomNotificationScreen({ navigation }) {
 
   let doesSelectedUserExist = selectedUser.email !== "";
   const { fontScale } = useWindowDimensions();
+  console.log(thresholds);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar
