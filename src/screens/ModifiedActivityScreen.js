@@ -25,7 +25,7 @@ export default function ModifiedActivityScreen({ navigation }) {
     let params = { level: level, auth: tokenData.access_token };
     let responseText;
 
-    // In case we're going through the opt-out feature
+    // In case we're going through the opt-out feature, authPhase = 5
     if (tokenData.authPhase === 5) {
       params.targetID = tokenData.optedUser.caregiveeID;
       params.selfID = tokenData.caregiverID;

@@ -43,7 +43,11 @@ export default function ModifiedAuthScreen({ navigation }) {
   const makeCaregivee = async (code, userID) => {
     const params = {
       auth: tokenData.access_token,
-      body: { authCode: code, userID: userID },
+      body: {
+        authCode: code,
+        userID: userID,
+        caregiverID: tokenData.caregiverID,
+      },
     };
     const json = await caregiveeCreateEndpoint(params);
 
