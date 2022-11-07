@@ -68,18 +68,16 @@ export default function ModifiedPhysScreen({ navigation }) {
     };
     const json = await physicianEndpoint(params);
 
-    // TODO: Error handling
-
     if (json.cgvee) {
-      await getDefault(tokenData);
+      await getDefault();
       dispatch(setTokenData({ ...tokenData, authPhase: 5 }));
-    }
+    } else console.log("Error on /physician: ", json.error);
   };
 
-  const getDefault = async (tokenJson) => {
+  const getDefault = async () => {
     const params = {
-      auth: tokenJson.access_token,
-      body: { caregiverID: tokenJson.caregiverID, caregiveeID: null },
+      auth: tokenData.access_token,
+      body: { caregiverID: tokenData.caregiverID, caregiveeID: null },
     };
     const json = await getDefaultEndpoint(params);
 

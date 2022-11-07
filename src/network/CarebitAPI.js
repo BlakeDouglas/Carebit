@@ -19,7 +19,12 @@ export async function loginEndpoint(body) {
     const json = JSON.parse(responseText);
     return json;
   } catch (error) {
-    console.log("Caught error in /login " + error);
+    console.log(
+      "Caught error in /login ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -41,7 +46,12 @@ export async function getDefaultEndpoint(params) {
     const json = JSON.parse(responseText);
     return json;
   } catch (error) {
-    console.log("Caught error in /getDefaultRequest: " + error);
+    console.log(
+      "Caught error in /getDefaultRequest: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -63,7 +73,12 @@ export async function setDefaultEndpoint(params) {
     const json = JSON.parse(responseText);
     return json;
   } catch (error) {
-    console.log("Caught error in /setDefaultRequest: " + error);
+    console.log(
+      "Caught error in /setDefaultRequest: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -85,7 +100,12 @@ export async function caregiveeCreateEndpoint(params) {
     const json = JSON.parse(responseText);
     return json;
   } catch (error) {
-    console.log("Caught error in /caregivee/create: " + error);
+    console.log(
+      "Caught error in /caregivee/create: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -108,7 +128,10 @@ export async function alertCounter(params) {
     return json;
   } catch (error) {
     console.log(
-      "Caught error from /alertCounter/<caregiveeID>/<caregiverID>: " + error
+      "Caught error from /alertCounter/<caregiveeID>/<caregiverID>: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
     );
   }
 }
@@ -129,7 +152,12 @@ export async function caregiveeSetEndpoint(params) {
     const json = JSON.parse(responseText);
     return json;
   } catch (error) {
-    console.log("Caught error uploading to /caregivee/<caregiveeID>: " + error);
+    console.log(
+      "Caught error uploading to /caregivee/<caregiveeID>: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -149,7 +177,10 @@ export async function caregiveeGetEndpoint(params) {
     return json;
   } catch (error) {
     console.log(
-      "Caught error downloading from /caregivee/<caregiveeID>: " + error
+      "Caught error downloading from /caregivee/<caregiveeID>: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
     );
   }
 }
@@ -169,7 +200,12 @@ export async function userEndpoint(body) {
     const json = JSON.parse(responseText);
     return json;
   } catch (error) {
-    console.log("Caught error in /user: " + error);
+    console.log(
+      "Caught error in /user: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -190,7 +226,12 @@ export async function getLastNoSyncAlert(params) {
     }
     return responseText;
   } catch (error) {
-    console.log("Caught error in /lastSyncAlert: " + error);
+    console.log(
+      "Caught error in /lastSyncAlert: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -211,7 +252,12 @@ export async function setLastNoSyncAlert(params) {
     }
     return responseText;
   } catch (error) {
-    console.log("Caught error in /lastSyncAlert: " + error);
+    console.log(
+      "Caught error in /lastSyncAlert: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -232,7 +278,12 @@ export async function getRequestCount(params) {
     }
     return responseText;
   } catch (error) {
-    console.log("Caught error in /getRequestCount: " + error);
+    console.log(
+      "Caught error in /getRequestCount: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -253,7 +304,12 @@ export async function setActivityEndpoint(params) {
     }
     return responseText;
   } catch (error) {
-    console.log("Caught error in /activity: " + error);
+    console.log(
+      "Caught error in /activity: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -274,7 +330,12 @@ export async function setDefaultActivityEndpoint(params) {
     }
     return responseText;
   } catch (error) {
-    console.log("Caught error in /updateHealthProfile: " + error);
+    console.log(
+      "Caught error in /updateHealthProfile: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -296,7 +357,12 @@ export async function createRequestEndpoint(params) {
     const json = JSON.parse(responseText);
     return json;
   } catch (error) {
-    console.log("Caught error in /createRequest: " + error);
+    console.log(
+      "Caught error in /createRequest: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -319,7 +385,12 @@ export async function deleteRequestEndpoint(params) {
     }
     return JSON.parse(responseText);
   } catch (error) {
-    console.log("Caught error in /deleteRequest: " + error);
+    console.log(
+      "Caught error in /deleteRequest: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -342,7 +413,12 @@ export async function acceptRequestEndpoint(params) {
     const json = JSON.parse(responseText);
     return json;
   } catch (error) {
-    console.log("Caught error in /acceptRequest: " + error);
+    console.log(
+      "Caught error in /acceptRequest: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -364,7 +440,12 @@ export async function getRequestsEndpoint(params) {
     const json = JSON.parse(responseText);
     return json;
   } catch (error) {
-    console.log("Caught error in /getRequests: " + error);
+    console.log(
+      "Caught error in /getRequests: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -384,7 +465,12 @@ export async function thresholdsEndpoint(params) {
     const json = JSON.parse(responseText);
     return json;
   } catch (error) {
-    console.log("Caught error in /thresholds: " + error);
+    console.log(
+      "Caught error in /thresholds: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -405,7 +491,12 @@ export async function physicianEndpoint(params) {
     const json = JSON.parse(responseText);
     return json;
   } catch (error) {
-    console.log("Caught error in /physician: " + error);
+    console.log(
+      "Caught error in /physician: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -424,7 +515,12 @@ export async function setAlertOkEndpoint(params) {
     const json = JSON.parse(responseText);
     return json;
   } catch (error) {
-    console.log("Caught error in /alerts/ok: " + error);
+    console.log(
+      "Caught error in /alerts/ok: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -442,7 +538,10 @@ export async function getAlertsEndpoint(params) {
     return json;
   } catch (error) {
     console.log(
-      "Caught error from /alerts/<caregiveeID>/<int:caregiverID>: " + error
+      "Caught error from /alerts/<caregiveeID>/<int:caregiverID>: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
     );
   }
 }
@@ -461,7 +560,12 @@ export async function setNoSyncAlert(params) {
     if (responseText === "") return responseText;
     else return JSON.parse(responseText);
   } catch (error) {
-    console.log("Caught error in /noSyncAlert/<caregiveeID>: " + error);
+    console.log(
+      "Caught error in /noSyncAlert/<caregiveeID>: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -483,7 +587,12 @@ export async function notificationTokenEndpoint(params) {
     const json = JSON.parse(responseText);
     return json;
   } catch (error) {
-    console.log("Caught error in /notificationToken: " + error);
+    console.log(
+      "Caught error in /notificationToken: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
 
@@ -511,7 +620,10 @@ export async function fitbitDataEndpoint(params) {
     return json;
   } catch (error) {
     console.log(
-      "Caught error in /caregivee/<caregiveeID>/<metric>/recent: " + error
+      "Caught error in /caregivee/<caregiveeID>/<metric>/recent: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
     );
   }
 }
@@ -530,6 +642,11 @@ export async function logoutEndpoint(params) {
     const json = JSON.parse(responseText);
     return json;
   } catch (error) {
-    console.log("Caught error from /logout: " + error);
+    console.log(
+      "Caught error from /logout: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
   }
 }
