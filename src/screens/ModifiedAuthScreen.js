@@ -104,15 +104,14 @@ export default function ModifiedAuthScreen({ navigation }) {
       },
     };
     const json = await acceptRequestEndpoint(params);
-    if (json.request.caregiveeID) {
+    if (!json.error) {
       dispatch(
         setTokenData({
           ...tokenData,
           authPhase: 4,
         })
       );
-    }
-    if (json.error) console.log("Error accepting request: ", json.error);
+    } else console.log("Error accepting request: ", json.error);
   };
 
   const [errors, setErrors] = useState({});
