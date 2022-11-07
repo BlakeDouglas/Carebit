@@ -48,12 +48,8 @@ export default function ModifiedAuthScreen({ navigation }) {
     const json = await caregiveeCreateEndpoint(params);
 
     if (json.caregiveeID !== undefined) {
-      dispatch(
-        setTokenData({
-          ...tokenData,
-          optedUser: { ...tokenData.optedUser, caregiveeID: json.caregiveeID },
-        })
-      );
+      tokenData.optedUser.caregiveeID = json.caregiveeID;
+      dispatch(setTokenData(tokenData));
       await makeRequest();
     } else
       Alert.alert("Error", json.error, json.error_0, [

@@ -59,6 +59,12 @@ export default function ModifiedPhysScreen({ navigation }) {
   };
 
   const registerPhysician = async () => {
+    if (!tokenData.optedUser.caregiveeID) {
+      console.log(
+        "optedUser.caregiveeID is not defined. Canceling registration"
+      );
+      return;
+    }
     const params = {
       body: {
         ...inputs,
