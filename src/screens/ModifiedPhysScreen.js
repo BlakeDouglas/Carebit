@@ -62,7 +62,7 @@ export default function ModifiedPhysScreen({ navigation }) {
     const params = {
       body: {
         ...inputs,
-        caregiveeID: tokenData.optedUser.request.caregiveeID,
+        caregiveeID: tokenData.optedUser.caregiveeID,
       },
       auth: tokenData.access_token,
     };

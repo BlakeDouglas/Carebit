@@ -58,7 +58,7 @@ export default function LoginScreen({ navigation }) {
     }
 
     if (valid === true) {
-      login(inputs.email, inputs.password, dispatch, false);
+      login(inputs.email, inputs.password);
     }
   };
 

@@ -101,7 +101,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
         setTokenData({
           ...tokenData,
           authPhase: 3,
-          optedUser: json,
+          optedUser: { phone: json.phone, userID: json.userID },
         })
       );
     } else if (json.error === "Phone number already exists.") {

@@ -42,12 +42,18 @@ export default function ModifiedAuthScreen({ navigation }) {
 
   const makeCaregivee = async (code, userID) => {
     const params = {
-      auth: tokenData.optedUser.access_token,
+      auth: tokenData.access_token,
       body: { authCode: code, userID: userID },
     };
     const json = await caregiveeCreateEndpoint(params);
 
     if (json.caregiveeID !== undefined) {
+      dispatch(
+        setTokenData({
+          ...tokenData,
+          optedUser: { ...tokenData.optedUser, caregiveeID: json.caregiveeID },
+        })
+      );
       await makeRequest();
     } else
       Alert.alert("Error", json.error, json.error_0, [
@@ -91,7 +97,7 @@ export default function ModifiedAuthScreen({ navigation }) {
 
   const acceptRequest = async (caregiveeID, caregiverID) => {
     const params = {
-      auth: tokenData.optedUser.access_token,
+      auth: tokenData.access_token,
       body: {
         caregiveeID: caregiveeID,
         caregiverID: caregiverID,
@@ -102,7 +108,6 @@ export default function ModifiedAuthScreen({ navigation }) {
       dispatch(
         setTokenData({
           ...tokenData,
-          optedUser: { ...tokenData.optedUser, request: json.request },
           authPhase: 4,
         })
       );

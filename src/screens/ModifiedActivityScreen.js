@@ -27,18 +27,15 @@ export default function ModifiedActivityScreen({ navigation }) {
 
     // In case we're going through the opt-out feature
     if (tokenData.authPhase === 5) {
-      params.targetID = tokenData.optedUser.request.caregiveeID;
+      params.targetID = tokenData.optedUser.caregiveeID;
       params.selfID = tokenData.caregiverID;
       responseText = await setActivityEndpoint(params);
     }
     // Account creation, caregivee edition, authPhase = 8, will be set to 9 after calling /updateHealthProfile
     else {
-      params = {
-        auth: tokenData.access_token,
-        body: {
-          caregiveeID: tokenData.caregiveeID,
-          healthProfile: level.toString(),
-        },
+      params.body = {
+        caregiveeID: tokenData.caregiveeID,
+        healthProfile: level.toString(),
       };
       responseText = await setDefaultActivityEndpoint(params);
     }
@@ -49,7 +46,6 @@ export default function ModifiedActivityScreen({ navigation }) {
         setTokenData({
           ...tokenData,
           authPhase: newPhase,
-          optedUser: undefined,
         })
       );
     } else console.log("Error setting activity level: ", responseText);
