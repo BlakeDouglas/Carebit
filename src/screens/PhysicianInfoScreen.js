@@ -61,15 +61,16 @@ export default function PhysicianInfoScreen({ navigation }) {
     };
     const json = await physicianEndpoint(params);
 
-    // TODO: Error handling
-    dispatch(
-      setTokenData({
-        ...tokenData,
-        physName: json.cgvee.physName,
-        physPhone: json.cgvee.physPhone,
-        authPhase: 8,
-      })
-    );
+    if (json.cgvee) {
+      dispatch(
+        setTokenData({
+          ...tokenData,
+          physName: json.cgvee.physName,
+          physPhone: json.cgvee.physPhone,
+          authPhase: 8,
+        })
+      );
+    } else console.log("Error registering physician: ", json.error);
   };
 
   const handleChange = (text, input) => {
