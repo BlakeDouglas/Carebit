@@ -19,6 +19,7 @@ import {
 } from "../network/CarebitAPI";
 export default function ModifiedActivityScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
   const { fontScale } = useWindowDimensions();
   const setActivity = async (level) => {
@@ -27,7 +28,7 @@ export default function ModifiedActivityScreen({ navigation }) {
 
     // In case we're going through the opt-out feature, authPhase = 5
     if (tokenData.authPhase === 5) {
-      params.targetID = tokenData.optedUser.caregiveeID;
+      params.targetID = selectedUser.caregiveeID;
       params.selfID = tokenData.caregiverID;
       responseText = await setActivityEndpoint(params);
     }

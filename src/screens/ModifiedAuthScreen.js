@@ -15,7 +15,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { resetData, setTokenData } from "../redux/actions";
+import { resetData, setSelectedUser, setTokenData } from "../redux/actions";
 import { deleteKeychain, getAuthRequest } from "../network/Auth";
 import {
   acceptRequestEndpoint,
@@ -31,12 +31,13 @@ export default function ModifiedAuthScreen({ navigation }) {
 
   const dispatch = useDispatch();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
 
   const [request, response, promptAsync] = getAuthRequest();
 
   React.useEffect(() => {
     if (response?.type === "success") {
-      makeCaregivee(response.params.code, tokenData.optedUser.userID);
+      makeCaregivee(response.params.code, selectedUser.userID);
     }
   }, [response]);
 
@@ -52,8 +53,9 @@ export default function ModifiedAuthScreen({ navigation }) {
     const json = await caregiveeCreateEndpoint(params);
 
     if (json.caregiveeID !== undefined) {
-      tokenData.optedUser.caregiveeID = json.caregiveeID;
-      dispatch(setTokenData(tokenData));
+      dispatch(
+        setSelectedUser({ ...selectedUser, caregiveeID: json.caregiveeID })
+      );
       await makeRequest();
     } else
       Alert.alert("Error", json.error, json.error_0, [
@@ -62,17 +64,17 @@ export default function ModifiedAuthScreen({ navigation }) {
   };
 
   const makeRequest = async () => {
-    if (!tokenData.phone || !tokenData.optedUser.phone) return;
+    if (!tokenData.phone || !selectedUser.phone) return;
     const body =
       tokenData.type !== "caregiver"
         ? {
             caregiveePhone: tokenData.phone,
-            caregiverPhone: tokenData.optedUser.phone,
+            caregiverPhone: selectedUser.phone,
             sender: tokenData.type,
           }
         : {
             caregiverPhone: tokenData.phone,
-            caregiveePhone: tokenData.optedUser.phone,
+            caregiveePhone: selectedUser.phone,
             sender: tokenData.type,
           };
     const params = { auth: tokenData.access_token, body: body };

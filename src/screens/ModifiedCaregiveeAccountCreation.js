@@ -17,11 +17,12 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import validator from "validator";
 import { phone } from "phone";
 import { userEndpoint } from "../network/CarebitAPI";
-import { setTokenData } from "../redux/actions";
+import { setSelectedUser, setTokenData } from "../redux/actions";
 import { useSelector, useDispatch } from "react-redux";
 
 export default function ModifiedCaregiveeAccountCreation({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const requiredText = " Input required";
   const dispatch = useDispatch();
   // Content between this point and the return statement
@@ -97,16 +98,17 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
     };
     const json = await userEndpoint(body);
     if (json.access_token) {
-      console.log("Sending optedUser as ", {
-        phone: json.phone,
-        userID: json.userID,
-      });
-      console.log("^ IF THIS CONTAINS NULL/UNDEFINED, THAT IS NOT GOOD");
       dispatch(
         setTokenData({
           ...tokenData,
           authPhase: 3,
-          optedUser: { phone: json.phone, userID: json.userID },
+        })
+      );
+      dispatch(
+        setSelectedUser({
+          ...selectedUser,
+          phone: json.phone,
+          userID: json.userID,
         })
       );
     } else if (json.error === "Phone number already exists.") {

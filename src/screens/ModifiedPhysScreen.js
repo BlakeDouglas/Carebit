@@ -28,6 +28,7 @@ import {
 } from "../redux/actions";
 export default function ModifiedPhysScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
   const [inputs, setInputs] = useState({
     physName: "",
@@ -59,16 +60,16 @@ export default function ModifiedPhysScreen({ navigation }) {
   };
 
   const registerPhysician = async () => {
-    if (!tokenData.optedUser.caregiveeID) {
+    if (!selectedUser.caregiveeID) {
       console.log(
-        "optedUser.caregiveeID is not defined. Canceling registration"
+        "selectedUser.caregiveeID is not defined. Canceling registration"
       );
       return;
     }
     const params = {
       body: {
         ...inputs,
-        caregiveeID: tokenData.optedUser.caregiveeID,
+        caregiveeID: selectedUser.caregiveeID,
       },
       auth: tokenData.access_token,
     };
