@@ -55,6 +55,7 @@ export default function PhysicianInfoScreen({ navigation }) {
       body: {
         ...inputs,
         caregiveeID: tokenData.caregiveeID,
+        caregiverID: null,
       },
       auth: tokenData.access_token,
     };

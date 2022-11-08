@@ -70,6 +70,7 @@ export default function ModifiedPhysScreen({ navigation }) {
       body: {
         ...inputs,
         caregiveeID: selectedUser.caregiveeID,
+        caregiverID: tokenData.caregiverID,
       },
       auth: tokenData.access_token,
     };

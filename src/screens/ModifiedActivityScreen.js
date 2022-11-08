@@ -23,26 +23,26 @@ export default function ModifiedActivityScreen({ navigation }) {
   const dispatch = useDispatch();
   const { fontScale } = useWindowDimensions();
   const setActivity = async (level) => {
-    let params = { level: level, auth: tokenData.access_token };
-    let responseText;
-
-    // In case we're going through the opt-out feature, authPhase = 5
-    if (tokenData.authPhase === 5) {
-      params.targetID = selectedUser.caregiveeID;
-      params.selfID = tokenData.caregiverID;
-      responseText = await setActivityEndpoint(params);
+    let params = {
+      auth: tokenData.access_token,
+      body: {
+        healthProfile: level.toString(),
+      },
+    };
+    // In case we're going through the opt-out feature
+    if (tokenData.type === "caregiver") {
+      params.body.caregiverID = tokenData.caregiverID;
+      params.body.caregiveeID = selectedUser.caregiveeID;
     }
     // Account creation, caregivee edition, authPhase = 8, will be set to 9 after calling /updateHealthProfile
     else {
-      params.body = {
-        caregiveeID: tokenData.caregiveeID,
-        healthProfile: level.toString(),
-      };
-      responseText = await setDefaultActivityEndpoint(params);
+      params.body.caregiverID = null;
+      params.body.caregiveeID = tokenData.caregiveeID;
     }
+    let responseText = await setDefaultActivityEndpoint(params);
     if (!responseText) {
       // Send to 2 (giverhome) for opt-out, and 9 (giveehome) for normal givee account creation
-      const newPhase = tokenData.authPhase === 5 ? 2 : 9;
+      let newPhase = tokenData.type === "caregiver" ? 2 : 9;
       dispatch(
         setTokenData({
           ...tokenData,
