@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import React, { useState } from "react";
 import { useEffect } from "react";
 import moment from "moment";
@@ -306,7 +307,7 @@ export default function GiverHomeScreen({ navigation }) {
       >
         <SafeAreaView
           style={{
-            height: windowHeight - 50,
+            height: windowHeight - verticalScale(50),
             width: windowWidth,
           }}
         >
@@ -325,8 +326,8 @@ export default function GiverHomeScreen({ navigation }) {
             >
               <Image
                 style={{
-                  height: 15,
-                  width: 15,
+                  height: verticalScale(15),
+                  width: scale(15),
                   marginRight: "3%",
                   alignSelf: "center",
                 }}
@@ -488,11 +489,11 @@ export default function GiverHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "black",
-                    shadowOffset: { width: 4, height: 6 },
-                    shadowOpacity: 0.4,
+                    shadowOffset: { width: scale(4), height: verticalScale(6) },
+                    shadowOpacity: moderateScale(0.4),
                   },
                   android: {
-                    elevation: 6,
+                    elevation: moderateScale(6),
                   },
                 }),
               }}
@@ -501,8 +502,8 @@ export default function GiverHomeScreen({ navigation }) {
                 style={[
                   styles.imagesBody,
                   {
-                    height: 20,
-                    width: 20,
+                    height: verticalScale(20),
+                    width: scale(20),
                     marginLeft: "3%",
                     marginRight: "2%",
                     tintColor: "black",
@@ -533,11 +534,11 @@ export default function GiverHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "blue",
-                    shadowOffset: { width: 4, height: 6 },
-                    shadowOpacity: 0.4,
+                    shadowOffset: { width: scale(4), height: verticalScale(6) },
+                    shadowOpacity:moderateScale(0.4),
                   },
                   android: {
-                    elevation: 6,
+                    elevation: moderateScale(6),
                   },
                 }),
               }}
@@ -545,8 +546,8 @@ export default function GiverHomeScreen({ navigation }) {
               <Image
                 style={[
                   {
-                    height: 25,
-                    width: 25,
+                    height: verticalScale(25),
+                    width: scale(25),
                     marginLeft: "3%",
                     marginRight: "2%",
                   },
@@ -577,11 +578,11 @@ export default function GiverHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "black",
-                    shadowOffset: { width: 4, height: 6 },
-                    shadowOpacity: 0.4,
+                    shadowOffset: { width: scale(4), height: verticalScale(6) },
+                    shadowOpacity: moderateScale(0.4),
                   },
                   android: {
-                    elevation: 6,
+                    elevation: moderateScale(6),
                   },
                 }),
               }}
@@ -589,8 +590,8 @@ export default function GiverHomeScreen({ navigation }) {
               <Image
                 style={[
                   {
-                    height: 25,
-                    width: 25,
+                    height: verticalScale(25),
+                    width: scale(25),
                     marginLeft: "3%",
                     marginRight: "2%",
                   },
@@ -613,7 +614,7 @@ export default function GiverHomeScreen({ navigation }) {
           <SafeAreaView
             style={{
               borderBottomColor: "lightgray",
-              borderBottomWidth: 1,
+              borderBottomWidth: moderateScale(1),
             }}
           ></SafeAreaView>
 
@@ -670,16 +671,16 @@ export default function GiverHomeScreen({ navigation }) {
                   width: "43%",
                   alignItems: "center",
                   flexDirection: "row",
-                  borderTopLeftRadius: 5,
-                  borderTopRightRadius: 5,
+                  borderTopLeftRadius: moderateScale(5),
+                  borderTopRightRadius: moderateScale(5),
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: 1, height: 3 },
-                      shadowOpacity: 0.6,
+                      shadowOffset: { width: scale(1), height: verticalScale(3) },
+                      shadowOpacity: moderateScale(0.6),
                     },
                     android: {
-                      elevation: 6,
+                      elevation: moderateScale(6),
                     },
                   }),
                 }}
@@ -706,16 +707,16 @@ export default function GiverHomeScreen({ navigation }) {
                   height: "100%",
                   alignItems: "center",
                   flexDirection: "row",
-                  borderTopLeftRadius: 5,
-                  borderTopRightRadius: 5,
+                  borderTopLeftRadius: moderateScale(5),
+                  borderTopRightRadius: moderateScale(5),
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: 1, height: 3 },
-                      shadowOpacity: 0.6,
+                      shadowOffset: { width: scale(1), height: verticalScale(3) },
+                      shadowOpacity: moderateScale(0.6),
                     },
                     android: {
-                      elevation: 6,
+                      elevation: moderateScale(6),
                     },
                   }),
                 }}
@@ -753,16 +754,16 @@ export default function GiverHomeScreen({ navigation }) {
                   alignItems: "center",
                   width: "43%",
                   height: "100%",
-                  borderBottomEndRadius: 5,
-                  borderBottomLeftRadius: 5,
+                  borderBottomEndRadius: moderateScale(5),
+                  borderBottomLeftRadius: moderateScale(5),
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: 1, height: 3 },
-                      shadowOpacity: 0.4,
+                      shadowOffset: { width: scale(1), height: verticalScale(3) },
+                      shadowOpacity: moderateScale(0.4),
                     },
                     android: {
-                      elevation: 6,
+                      elevation: moderateScale(6),
                     },
                   }),
                 }}
@@ -817,16 +818,16 @@ export default function GiverHomeScreen({ navigation }) {
                   alignItems: "center",
                   height: "100%",
                   width: "43%",
-                  borderBottomEndRadius: 5,
-                  borderBottomLeftRadius: 5,
+                  borderBottomEndRadius: moderateScale(5),
+                  borderBottomLeftRadius: moderateScale(5),
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: 1, height: 3 },
-                      shadowOpacity: 0.4,
+                      shadowOffset: { width: scale(1), height: verticalScale(3) },
+                      shadowOpacity: moderateScale(0.4),
                     },
                     android: {
-                      elevation: 6,
+                      elevation: moderateScale(6),
                     },
                   }),
                 }}
@@ -867,7 +868,7 @@ export default function GiverHomeScreen({ navigation }) {
           <SafeAreaView
             style={{
               borderBottomColor: "lightgray",
-              borderBottomWidth: 1,
+              borderBottomWidth: moderateScale(1),
               marginTop: "7%",
             }}
           ></SafeAreaView>
@@ -909,7 +910,7 @@ export default function GiverHomeScreen({ navigation }) {
               backgroundColor: "whitesmoke",
               alignSelf: "center",
               width: "92%",
-              borderRadius: 5,
+              borderRadius: moderateScale(5),
             }}
           >
             <SafeAreaView
@@ -919,16 +920,16 @@ export default function GiverHomeScreen({ navigation }) {
                 width: "100%",
                 height: "30%",
                 alignItems: "center",
-                borderTopStartRadius: 5,
-                borderTopRightRadius: 5,
+                borderTopStartRadius: moderateScale(5),
+                borderTopRightRadius: moderateScale(5),
                 ...Platform.select({
                   ios: {
                     shadowColor: "#000",
-                    shadowOffset: { width: 1, height: 3 },
-                    shadowOpacity: 0.4,
+                    shadowOffset: { width:scale(1), height: verticalScale(3) },
+                    shadowOpacity:moderateScale(0.4),
                   },
                   android: {
-                    elevation: 6,
+                    elevation: moderateScale(6),
                   },
                 }),
               }}
@@ -979,15 +980,15 @@ export default function GiverHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "#000",
-                    shadowOffset: { width: 1, height: 3 },
-                    shadowOpacity: 0.4,
+                    shadowOffset: { width: scale(1), height:verticalScale(3) },
+                    shadowOpacity: moderateScale(0.4),
                   },
                   android: {
-                    elevation: 6,
+                    elevation: moderateScale(6),
                   },
                 }),
-                borderBottomEndRadius: 5,
-                borderBottomLeftRadius: 5,
+                borderBottomEndRadius: moderateScale(5),
+                borderBottomLeftRadius: moderateScale(5),
               }}
             >
               <SafeAreaView
@@ -1035,7 +1036,7 @@ export default function GiverHomeScreen({ navigation }) {
                 style={{
                   alignSelf: "center",
                   borderLeftColor: "lightgray",
-                  borderLeftWidth: 1.5,
+                  borderLeftWidth: moderateScale(1.5),
                   height: "70%",
                 }}
               ></SafeAreaView>
@@ -1084,7 +1085,7 @@ export default function GiverHomeScreen({ navigation }) {
                 style={{
                   alignSelf: "center",
                   borderLeftColor: "lightgray",
-                  borderLeftWidth: 1.5,
+                  borderLeftWidth: moderateScale(1.5),
                   height: "70%",
                 }}
               ></SafeAreaView>
@@ -1148,16 +1149,16 @@ export default function GiverHomeScreen({ navigation }) {
                   width: "43%",
                   alignItems: "center",
                   flexDirection: "row",
-                  borderTopLeftRadius: 5,
-                  borderTopRightRadius: 5,
+                  borderTopLeftRadius: moderateScale(5),
+                  borderTopRightRadius: moderateScale(5),
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: 1, height: 3 },
-                      shadowOpacity: 0.6,
+                      shadowOffset: { width: scale(1), height: verticalScale(3) },
+                      shadowOpacity: moderateScale(0.6),
                     },
                     android: {
-                      elevation: 6,
+                      elevation: moderateScale(6),
                     },
                   }),
                 }}
@@ -1184,16 +1185,16 @@ export default function GiverHomeScreen({ navigation }) {
                   height: "100%",
                   alignItems: "center",
                   flexDirection: "row",
-                  borderTopLeftRadius: 5,
-                  borderTopRightRadius: 5,
+                  borderTopLeftRadius: moderateScale(5),
+                  borderTopRightRadius: moderateScale(5),
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: 1, height: 3 },
-                      shadowOpacity: 0.6,
+                      shadowOffset: { width: scale(1), height: verticalScale(3) },
+                      shadowOpacity: moderateScale(0.6),
                     },
                     android: {
-                      elevation: 6,
+                      elevation: moderateScale(6),
                     },
                   }),
                 }}
@@ -1231,16 +1232,16 @@ export default function GiverHomeScreen({ navigation }) {
                   alignItems: "center",
                   width: "43%",
                   height: "100%",
-                  borderBottomEndRadius: 5,
-                  borderBottomLeftRadius: 5,
+                  borderBottomEndRadius: moderateScale(5),
+                  borderBottomLeftRadius: moderateScale(5),
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: 1, height: 3 },
-                      shadowOpacity: 0.4,
+                      shadowOffset: { width: scale(1), height: verticalScale(3) },
+                      shadowOpacity: moderateScale(0.4),
                     },
                     android: {
-                      elevation: 6,
+                      elevation: moderateScale(6),
                     },
                   }),
                 }}
@@ -1291,11 +1292,11 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: 1, height: 3 },
-                      shadowOpacity: 0.4,
+                      shadowOffset: { width: scale(1), height: verticalScale(3) },
+                      shadowOpacity: moderateScale(0.4),
                     },
                     android: {
-                      elevation: 6,
+                      elevation: moderateScale(6),
                     },
                   }),
                 }}
@@ -1311,17 +1312,17 @@ export default function GiverHomeScreen({ navigation }) {
                 >
                   {BatteryLevel === "High" ? (
                     <Image
-                      style={{ height: 29, width: 51 }}
+                      style={{ height: scale(29), width: verticalScale(51) }}
                       source={require("../../assets/images/battery-full.imageset/battery-full.png")}
                     />
                   ) : BatteryLevel === "Medium" ? (
                     <Image
-                      style={{ height: 29, width: 51 }}
+                      style={{ height: scale(29), width: verticalScale(51) }}
                       source={require("../../assets/images/battery-medium.imageset/battery-medium.png")}
                     />
                   ) : (
                     <Image
-                      style={{ height: 29, width: 51 }}
+                      style={{ height: scale(29), width: verticalScale(51) }}
                       source={require("../../assets/images/battery-low.imageset/battery-low.png")}
                     />
                   )}
@@ -1382,7 +1383,7 @@ const styles = StyleSheet.create({
     // marginLeft: "2%",
   },
   images: {
-    height: 25,
-    width: 25,
+    height: verticalScale(25),
+    width: scale(5),
   },
 });

@@ -17,6 +17,7 @@ import moment from "moment";
 import { useEffect } from "react";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import Modal from "react-native-modal";
 import call from "react-native-phone-call";
 import { resetSelectedData, setSelectedUser } from "../redux/actions";
@@ -238,7 +239,7 @@ export default function GiveeHomeScreen({ navigation }) {
             <SafeAreaView
               style={{
                 borderBottomColor: "lightgray",
-                borderBottomWidth: 1,
+                borderBottomWidth: moderateScale(1),
                 width: "110%",
               }}
             ></SafeAreaView>
@@ -247,7 +248,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 fontSize: responsiveFontSize(1.8) / fontScale,
                 fontWeight: "400",
                 textAlign: "left",
-                padding: 7,
+                padding: moderateScale(7),
               }}
             >
               Turning on Sleep Mode will inform your caregiver(s) that you are
@@ -269,7 +270,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 alignItems: "center",
                 justifyContent: "center",
                 borderTopColor: "rgba(128, 128, 128, .2)",
-                borderTopWidth: 1,
+                borderTopWidth: moderateScale(1),
               }}
             >
               <TouchableOpacity
@@ -298,7 +299,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 alignItems: "center",
                 justifyContent: "center",
                 borderTopColor: "rgba(128, 128, 128, .2)",
-                borderTopWidth: 1,
+                borderTopWidth: moderateScale(1),
               }}
             >
               <TouchableOpacity
@@ -337,7 +338,7 @@ export default function GiveeHomeScreen({ navigation }) {
             height: "30%",
             width: "70%",
             backgroundColor: "white",
-            borderRadius: 8,
+            borderRadius:moderateScale(8),
             alignItems: "center",
             justifyContent: "space-evenly",
           }}
@@ -361,7 +362,7 @@ export default function GiveeHomeScreen({ navigation }) {
             <SafeAreaView
               style={{
                 borderBottomColor: "lightgray",
-                borderBottomWidth: 1,
+                borderBottomWidth: moderateScale(1),
                 width: "110%",
               }}
             ></SafeAreaView>
@@ -369,7 +370,7 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 fontSize: responsiveFontSize(1.8) / fontScale,
                 fontWeight: "400",
-                padding: 7,
+                padding: moderateScale(7),
                 textAlign: "left",
               }}
             >
@@ -392,7 +393,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 alignItems: "center",
                 justifyContent: "center",
                 borderTopColor: "rgba(128, 128, 128, .2)",
-                borderTopWidth: 1,
+                borderTopWidth: moderateScale(1),
               }}
             >
               <TouchableOpacity
@@ -421,7 +422,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 alignItems: "center",
                 justifyContent: "center",
                 borderTopColor: "rgba(128, 128, 128, .2)",
-                borderTopWidth: 1,
+                borderTopWidth: moderateScale(1),
               }}
             >
               <TouchableOpacity
@@ -460,7 +461,7 @@ export default function GiveeHomeScreen({ navigation }) {
             height: "30%",
             width: "70%",
             backgroundColor: "white",
-            borderRadius: 8,
+            borderRadius: moderateScale(8),
             alignItems: "center",
             justifyContent: "space-evenly",
           }}
@@ -486,7 +487,7 @@ export default function GiveeHomeScreen({ navigation }) {
             <SafeAreaView
               style={{
                 borderBottomColor: "lightgray",
-                borderBottomWidth: 1,
+                borderBottomWidth: moderateScale(1),
                 width: "100%",
               }}
             ></SafeAreaView>
@@ -494,7 +495,7 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 fontSize: responsiveFontSize(1.8) / fontScale,
                 fontWeight: "400",
-                padding: 7,
+                padding: moderateScale(7),
                 textAlign: "left",
               }}
             >
@@ -517,7 +518,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 alignItems: "center",
                 justifyContent: "center",
                 borderTopColor: "rgba(128, 128, 128, .2)",
-                borderTopWidth: 1,
+                borderTopWidth: moderateScale(1),
               }}
             >
               <TouchableOpacity
@@ -546,7 +547,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 alignItems: "center",
                 justifyContent: "center",
                 borderTopColor: "rgba(128, 128, 128, .2)",
-                borderTopWidth: 1,
+                borderTopWidth: moderateScale(1),
               }}
             >
               <TouchableOpacity
@@ -578,7 +579,7 @@ export default function GiveeHomeScreen({ navigation }) {
       >
         <SafeAreaView
           style={{
-            height: windowHeight - 50,
+            height: windowHeight - verticalScale(50),
             width: windowWidth,
           }}
         >
@@ -690,11 +691,11 @@ export default function GiveeHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "gray",
-                      shadowOffset: { width: 4, height: 10 },
-                      shadowOpacity: 0.4,
+                      shadowOffset: { width: scale(4), height: verticalScale(10) },
+                      shadowOpacity: moderateScale(0.4),
                     },
                     android: {
-                      elevation: 6,
+                      elevation: moderateScale(6),
                     },
                   }),
                 },
@@ -750,11 +751,11 @@ export default function GiveeHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "gray",
-                      shadowOffset: { width: 4, height: 10 },
-                      shadowOpacity: 0.4,
+                      shadowOffset: { width: scale(4), height: verticalScale(10) },
+                      shadowOpacity: moderateScale(0.4),
                     },
                     android: {
-                      elevation: 6,
+                      elevation: moderateScale(6),
                     },
                   }),
                 },
@@ -771,7 +772,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 }}
               >
                 <Image
-                  style={{ height: 30, width: 55 }}
+                  style={{ height: verticalScale(30), width: scale(55) }}
                   source={require("../../assets/images/battery-full.imageset/battery-full.png")}
                 />
               </SafeAreaView>
@@ -800,7 +801,7 @@ export default function GiveeHomeScreen({ navigation }) {
           <SafeAreaView
             style={{
               borderBottomColor: "lightgray",
-              borderBottomWidth: 1,
+              borderBottomWidth: moderateScale(1),
               marginTop: "8%",
               width: "100%",
             }}
@@ -837,11 +838,11 @@ export default function GiveeHomeScreen({ navigation }) {
                     ...Platform.select({
                       ios: {
                         shadowColor: "blue",
-                        shadowOffset: { width: 4, height: 10 },
-                        shadowOpacity: 0.4,
+                        shadowOffset: { width: scale(4), height: verticalScale(10) },
+                        shadowOpacity: moderateScale(0.4),
                       },
                       android: {
-                        elevation: 4,
+                        elevation: moderateScale(4),
                       },
                     }),
                   }
@@ -849,11 +850,11 @@ export default function GiveeHomeScreen({ navigation }) {
                     ...Platform.select({
                       ios: {
                         shadowColor: "gray",
-                        shadowOffset: { width: 4, height: 10 },
-                        shadowOpacity: 0.4,
+                        shadowOffset: { width: scale(4), height: verticalScale(10) },
+                        shadowOpacity: moderateScale(0.4),
                       },
                       android: {
-                        elevation: 6,
+                        elevation: moderateScale(6),
                       },
                     }),
                   },
@@ -943,11 +944,11 @@ export default function GiveeHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "gray",
-                    shadowOffset: { width: 4, height: 10 },
-                    shadowOpacity: 0.4,
+                    shadowOffset: { width: scale(4), height: verticalScale(10) },
+                    shadowOpacity:moderateScale(0.4),
                   },
                   android: {
-                    elevation: 6,
+                    elevation: moderateScale(6),
                   },
                 }),
               },
@@ -1024,11 +1025,11 @@ export default function GiveeHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "gray",
-                    shadowOffset: { width: 4, height: 10 },
-                    shadowOpacity: 0.4,
+                    shadowOffset: { width: scale(4), height: verticalScale(10) },
+                    shadowOpacity:moderateScale(0.4),
                   },
                   android: {
-                    elevation: 6,
+                    elevation: moderateScale(6),
                   },
                 }),
               },
@@ -1141,11 +1142,11 @@ const styles = StyleSheet.create({
     //justifyContent: "center",
     height: "100%",
     width: "43%",
-    borderRadius: 5,
+    borderRadius: moderateScale(5),
   },
   imagesBody: {
-    width: 45,
-    height: 45,
+    width: scale(45),
+    height: verticalScale(45),
   },
 
   switchBody: {
@@ -1165,7 +1166,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     height: "12%",
     flexDirection: "row",
-    borderRadius: 5,
+    borderRadius:moderateScale(5),
   },
 
   helloText: {

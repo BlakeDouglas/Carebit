@@ -14,6 +14,7 @@ import React, { useState } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import SelectDropdown from "react-native-select-dropdown";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { setSelectedUser, setTokenData } from "../redux/actions";
@@ -502,9 +503,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     borderTopColor: "rgba(128,128,128,.1)",
-    borderTopWidth: 1,
+    borderTopWidth: moderateScale(1),
     borderBottomColor: "rgba(128,128,128,.1)",
-    borderBottomWidth: 1,
+    borderBottomWidth: moderateScale(1),
   },
   Title: {
     fontSize: responsiveFontSize(2.2) / fontScale,

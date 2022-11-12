@@ -13,6 +13,7 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { setTokenData } from "../redux/actions";
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const fontScale = useWindowDimensions();
 export default function ModifiedActivityScreen({ navigation, route }) {
@@ -121,7 +122,7 @@ export default function ModifiedActivityScreen({ navigation, route }) {
                   <Text style={styles.InnerText}>Living an active life</Text>
                 </SafeAreaView>
                 <Image
-                  style={{ height: 15, width: 15, marginRight: "5%" }}
+                  style={{ height:verticalScale(15), width: scale(15), marginRight: "5%" }}
                   source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
                 />
               </TouchableOpacity>
@@ -139,7 +140,7 @@ export default function ModifiedActivityScreen({ navigation, route }) {
                   </Text>
                 </SafeAreaView>
                 <Image
-                  style={{ height: 15, width: 15, marginRight: "5%" }}
+                  style={{ height: verticalScale(15), width: scale(15), marginRight: "5%" }}
                   source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
                 />
               </TouchableOpacity>
@@ -156,8 +157,8 @@ export default function ModifiedActivityScreen({ navigation, route }) {
 
                 <Image
                   style={{
-                    height: 15,
-                    width: 15,
+                    height: verticalScale(15),
+                    width: scale(15),
                     marginRight: "5%",
                   }}
                   source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
@@ -188,15 +189,15 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     height: "15%",
     width: "100%",
-    borderRadius: 8,
+    borderRadius: moderateScale(8),
     ...Platform.select({
       ios: {
         shadowColor: "#000",
-        shadowOffset: { width: 1, height: 3 },
-        shadowOpacity: 0.4,
+        shadowOffset: { width: scale(1), height: verticalScale(3) },
+        shadowOpacity: moderateScale(0.4),
       },
       android: {
-        elevation: 4,
+        elevation: moderateScale(4),
       },
     }),
     justifyContent: "space-between",

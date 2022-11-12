@@ -12,6 +12,7 @@ import { React } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { resetData, setSelectedUser, setTokenData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
 import phone from "phone";
@@ -74,7 +75,7 @@ export default function GiverSettingsScreen({ navigation }) {
           }}
         >
           <Image
-            style={{ height: 85, width: 85, marginLeft: "6%" }}
+            style={{ height: verticalScale(85), width: scale(85), marginLeft: "6%" }}
             source={require("../../assets/images/avatar/DefaultAvatar.png")}
           />
           <SafeAreaView
@@ -232,8 +233,8 @@ export default function GiverSettingsScreen({ navigation }) {
                   </Text>
                   <Image
                     style={{
-                      height: 15,
-                      width: 15,
+                      height: verticalScale(15),
+                      width: scale(15),
                       marginLeft: "1%",
                       //tintColor: "white",
                       alignSelf: "center",
@@ -257,8 +258,8 @@ export default function GiverSettingsScreen({ navigation }) {
                   </Text>
                   <Image
                     style={{
-                      height: 15,
-                      width: 15,
+                      height: verticalScale(15),
+                      width: scale(15),
                       marginLeft: "1%",
                       //tintColor: "black",
                     }}
@@ -361,9 +362,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     borderTopColor: "rgba(255,255,255,0)",
-    borderTopWidth: 0.5,
+    borderTopWidth: moderateScale(0.5),
     borderBottomColor: "rgba(255,255,255,0)",
-    borderBottomWidth: 0.5,
+    borderBottomWidth: moderateScale(0.5),
   },
   Box2: {
     height: "37%",
@@ -375,7 +376,7 @@ const styles = StyleSheet.create({
     borderTopColor: "rgba(255,255,255,.8)",
     borderTopWidth: 0.5,
     borderBottomColor: "rgba(255,255,255,0)",
-    borderBottomWidth: 0.5,
+    borderBottomWidth: moderateScale(0.5),
   },
   Title: {
     fontSize: responsiveFontSize(1.9) / fontScale,

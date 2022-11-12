@@ -11,6 +11,7 @@ import {
 import { React } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { resetData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
 import phone from "phone";
@@ -56,16 +57,16 @@ export default function GiveeSettingsScreen({ navigation }) {
             height: "15%",
             width: "100%",
             borderTopColor: "rgba(255,255,255,0)",
-            borderTopWidth: 1,
+            borderTopWidth: moderateScale(1),
             borderBottomColor: "rgba(255,255,255,0)",
-            borderBottomWidth: 1,
+            borderBottomWidth: moderateScale(1),
             alignItems: "center",
             flexDirection: "row",
             backgroundColor: "rgba(255,255,255,.1)",
           }}
         >
           <Image
-            style={{ height: 85, width: 85, marginLeft: "6%" }}
+            style={{ height: verticalScale(85), width: scale(85), marginLeft: "6%" }}
             source={require("../../assets/images/avatar/DefaultAvatar.png")}
           />
           <SafeAreaView
@@ -295,9 +296,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     borderTopColor: "rgba(255,255,255,0)",
-    borderTopWidth: 0.5,
+    borderTopWidth: moderateScale(0.5),
     borderBottomColor: "rgba(255,255,255,0)",
-    borderBottomWidth: 0.5,
+    borderBottomWidth: moderateScale(0.5),
   },
   Box2: {
     height: "38%",

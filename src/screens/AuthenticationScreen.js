@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
 import * as Linking from "expo-linking";
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import GlobalStyle from "../utils/GlobalStyle";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import React from "react";
@@ -164,7 +165,7 @@ export default function AuthenticationScreen({ navigation }) {
             <TouchableOpacity
               style={[
                 GlobalStyle.Button,
-                { marginTop: 20, backgroundColor: "transparent" },
+                { marginTop: verticalScale(20), backgroundColor: "transparent" },
               ]}
               onPress={() => {
                 logOutButtonHandler();
