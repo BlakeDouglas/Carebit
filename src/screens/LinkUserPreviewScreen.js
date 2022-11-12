@@ -4,7 +4,7 @@ import {
   StatusBar,
   ImageBackground,
   TouchableOpacity,
-  useWindowDimensions,
+  useWindowDimensions
 } from "react-native";
 import GlobalStyle from "../utils/GlobalStyle";
 import React, { useEffect } from "react";
@@ -21,7 +21,7 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 export default function LinkUserPreviewScreen({ navigation }) {
   const dispatch = useDispatch();
   // Sends user to Link user screen
-  const fontScale = useWindowDimensions();
+  const {fontScale} = useWindowDimensions();
   const ContinueButtonHandler = () => {
     navigation.navigate("LinkUsersScreen");
   };
@@ -103,7 +103,7 @@ export default function LinkUserPreviewScreen({ navigation }) {
             <Text
               style={{
                 color: "white",
-                fontSize: responsiveFontSize(2.1) / fontScale,
+                fontSize: responsiveFontSize(2.1)  / fontScale, 
                 marginTop: "8%",
                 alignSelf: "center",
               }}

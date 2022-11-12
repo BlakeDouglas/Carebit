@@ -8,7 +8,7 @@ import {
   Platform,
   View,
   TouchableOpacity,
-  useWindowDimensions,
+  useWindowDimensions
 } from "react-native";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -27,7 +27,7 @@ export default function AccountCreationScreen({ navigation }) {
   // These are the two tools of the redux state manager. Use them instead of hooks
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
-  const fontScale = useWindowDimensions();
+  const{ fontScale } = useWindowDimensions();
 
   const requiredText = " Input required";
 

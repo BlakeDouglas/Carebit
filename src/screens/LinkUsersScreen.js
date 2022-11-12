@@ -33,7 +33,7 @@ export default function LinkUsersScreen({ navigation }) {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
   const [errors, setErrors] = useState({});
-  const fontScale = useWindowDimensions();
+  const {fontScale} = useWindowDimensions();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
   const typeOfRequester =
@@ -270,7 +270,7 @@ export default function LinkUsersScreen({ navigation }) {
               <Text
                 style={[
                   GlobalStyle.Subtitle,
-                  { fontSize: responsiveFontSize(5.3) / fontScale },
+                  { fontSize: responsiveFontSize(5.3) / fontscale},
                 ]}
               >
                 Connect to a Caregivee
@@ -298,7 +298,7 @@ export default function LinkUsersScreen({ navigation }) {
                 <Text
                   style={[
                     GlobalStyle.Text,
-                    { fontSize: responsiveFontSize(2.3) / fontScale },
+                    { fontSize: responsiveFontSize(2.3) / fontscale},
                   ]}
                 >
                   Request a Caregivee for monitoring {"\n"}(recommended method)
@@ -339,7 +339,7 @@ export default function LinkUsersScreen({ navigation }) {
                 <Text
                   style={[
                     GlobalStyle.Text,
-                    { fontSize: responsiveFontSize(2.3) / fontScale },
+                    { fontSize: responsiveFontSize(2.3) / fontscale},
                   ]}
                 >
                   Proceed without your Caregivee using the app

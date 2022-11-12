@@ -8,7 +8,7 @@ import {
   LogBox,
   StatusBar,
   TouchableOpacity,
-  useWindowDimensions,
+  useWindowDimensions
 } from "react-native";
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
 import * as Linking from "expo-linking";
@@ -188,7 +188,7 @@ export default function ModifiedAuthScreen({ navigation, route }) {
     dispatch(resetData());
   };
 
-  const fontScale = useWindowDimensions();
+  const {fontScale} = useWindowDimensions();
 
   return (
     <ImageBackground
@@ -212,12 +212,7 @@ export default function ModifiedAuthScreen({ navigation, route }) {
               style={{ marginRight: "1%" }}
               source={require("../../assets/images/midCheck/icons-check.png")}
             />
-            <Text
-              style={{
-                fontSize: responsiveFontSize(2.8) / fontScale,
-                color: "white",
-              }}
-            >
+            <Text style={{ fontSize: responsiveFontSize(2.8) / fontScale, color: "white" }}>
               Account Created
             </Text>
           </SafeAreaView>

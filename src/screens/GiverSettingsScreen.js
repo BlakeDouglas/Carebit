@@ -6,7 +6,7 @@ import {
   StatusBar,
   ImageBackground,
   TouchableOpacity,
-  useWindowDimensions,
+  useWindowDimensions
 } from "react-native";
 import { React } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
@@ -20,7 +20,7 @@ export default function GiverSettingsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
-  const fontScale = useWindowDimensions();
+  const {fontScale} = useWindowDimensions();
   const logOutButtonHandler = async () => {
     await SecureStore.deleteItemAsync("carebitcredentials");
     dispatch(resetData());
@@ -87,19 +87,13 @@ export default function GiverSettingsScreen({ navigation }) {
             }}
           >
             <Text
-              style={{
-                fontSize: responsiveFontSize(2.8) / fontScale,
-                color: "white",
-              }}
+              style={{ fontSize: responsiveFontSize(2.8) / fontScale, color: "white" }}
               numberOfLines={1}
             >
               {tokenData.firstName || ""} {tokenData.lastName || ""}
             </Text>
             <Text
-              style={{
-                fontSize: responsiveFontSize(2.1) / fontScale,
-                color: "white",
-              }}
+              style={{ fontSize: responsiveFontSize(2.1) / fontScale, color: "white" }}
               numberOfLines={1}
             >
               {tokenData.email || "email error"}

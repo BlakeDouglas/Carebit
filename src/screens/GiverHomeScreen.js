@@ -34,7 +34,7 @@ export default function GiverHomeScreen({ navigation }) {
   const [BatterySyncTime, setBatterySyncTime] = useState(null);
   const [HeartSyncTime, setHeartSyncTime] = useState(null);
   const [StepsSyncTime, setStepsSyncTime] = useState(null);
-  const fontScale = useWindowDimensions();
+  const {fontScale} = useWindowDimensions();
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);

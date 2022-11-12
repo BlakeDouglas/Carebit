@@ -13,13 +13,13 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { setTokenData } from "../redux/actions";
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
-const fontScale = useWindowDimensions();
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
+
 export default function ModifiedActivityScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
-
+  const { fontScale } = useWindowDimensions();
   const setActivity = async (level) => {
     let url = "https://www.carebit.xyz/";
     let body;
@@ -122,7 +122,11 @@ export default function ModifiedActivityScreen({ navigation, route }) {
                   <Text style={styles.InnerText}>Living an active life</Text>
                 </SafeAreaView>
                 <Image
-                  style={{ height:verticalScale(15), width: scale(15), marginRight: "5%" }}
+                  style={{
+                    height: verticalScale(15),
+                    width: scale(15),
+                    marginRight: "5%",
+                  }}
                   source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
                 />
               </TouchableOpacity>
@@ -140,7 +144,11 @@ export default function ModifiedActivityScreen({ navigation, route }) {
                   </Text>
                 </SafeAreaView>
                 <Image
-                  style={{ height: verticalScale(15), width: scale(15), marginRight: "5%" }}
+                  style={{
+                    height: verticalScale(15),
+                    width: scale(15),
+                    marginRight: "5%",
+                  }}
                   source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
                 />
               </TouchableOpacity>

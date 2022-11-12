@@ -27,7 +27,7 @@ export default function GiveeHomeScreen({ navigation }) {
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
-  const fontScale = useWindowDimensions();
+  const {fontScale} = useWindowDimensions();
   const dispatch = useDispatch();
   const number = selectedUser.phone || null;
   const args = {

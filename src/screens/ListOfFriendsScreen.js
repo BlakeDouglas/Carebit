@@ -10,7 +10,7 @@ import {
   ImageBackground,
   RefreshControl,
   TouchableOpacity,
-  useWindowDimensions,
+  useWindowDimensions
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import * as React from "react";
@@ -32,7 +32,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
-  const fontScale = useWindowDimensions();
+  const {fontScale} = useWindowDimensions();
   const [refreshing, setRefreshing] = React.useState(false);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -259,12 +259,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
             marginTop: "10%",
           }}
         >
-          <Text
-            style={{
-              fontSize: responsiveFontSize(4.3) / fontScale,
-              color: "white",
-            }}
-          >
+          <Text style={{ fontSize: responsiveFontSize(4.3) / fontScale, color: "white" }}>
             {typeOfRequester === "caregivee"
               ? "Added Caregivers"
               : "Added Caregivees"}
@@ -427,7 +422,7 @@ const styles = StyleSheet.create({
   },
   phone: {
     color: "black",
-    fontSize: responsiveFontSize(1.8) / fontScale,
+    fontSize: responsiveFontSize(1.8)/ fontScale,
     alignSelf: "center",
   },
   emptyText: {

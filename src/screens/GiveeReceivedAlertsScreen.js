@@ -7,7 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
   RefreshControl,
-  useWindowDimensions,
+  useWindowDimensions
 } from "react-native";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
@@ -92,7 +92,7 @@ const data_temp = [
 ];
 
 export default function GiveeReceivedAlertsScreen({ navigation }) {
-  const fontScale = useWindowDimensions();
+  const {fontScale} = useWindowDimensions();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const [data, setData] = useState([]);
 
@@ -337,10 +337,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
           }}
         >
           <Text
-            style={{
-              fontSize: responsiveFontSize(2.4) / fontScale,
-              fontWeight: "600",
-            }}
+            style={{ fontSize: responsiveFontSize(2.4) / fontScale, fontWeight: "600" }}
           >
             {title}
           </Text>
@@ -455,12 +452,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
           marginBottom: "6%",
         }}
       >
-        <Text
-          style={{
-            fontSize: responsiveFontSize(2.5) / fontScale,
-            fontWeight: "600",
-          }}
-        >
+        <Text style={{ fontSize: responsiveFontSize(2.5) /fontScale, fontWeight: "600" }}>
           Today
         </Text>
       </SafeAreaView>

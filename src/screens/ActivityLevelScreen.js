@@ -13,15 +13,13 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedUser } from "../redux/actions";
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
-const fontScale = useWindowDimensions();
 export default function AccountCreationScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
-
   const dispatch = useDispatch();
-
+  const fontScale = useWindowDimensions();
   const setActivity = async (level) => {
     try {
       const response = await fetch(
@@ -131,7 +129,11 @@ export default function AccountCreationScreen({ navigation, route }) {
                     <Text style={styles.InnerText}>Living an active life</Text>
                   </SafeAreaView>
                   <Image
-                    style={{ height: verticalScale(15), width: scale(15), marginRight: "5%" }}
+                    style={{
+                      height: verticalScale(15),
+                      width: scale(15),
+                      marginRight: "5%",
+                    }}
                     source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
                   />
                 </TouchableOpacity>
@@ -149,7 +151,11 @@ export default function AccountCreationScreen({ navigation, route }) {
                     </Text>
                   </SafeAreaView>
                   <Image
-                    style={{ height:verticalScale(15), width: scale(15), marginRight: "5%" }}
+                    style={{
+                      height: verticalScale(15),
+                      width: scale(15),
+                      marginRight: "5%",
+                    }}
                     source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
                   />
                 </TouchableOpacity>

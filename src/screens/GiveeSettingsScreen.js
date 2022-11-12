@@ -6,7 +6,7 @@ import {
   Image,
   ImageBackground,
   TouchableOpacity,
-  useWindowDimensions,
+  useWindowDimensions
 } from "react-native";
 import { React } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,7 +20,7 @@ export default function GiveeSettingsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
-  const fontScale = useWindowDimensions();
+  const {fontScale} = useWindowDimensions();
   const logOutButtonHandler = async () => {
     SecureStore.deleteItemAsync("carebitcredentials");
     dispatch(resetData());
@@ -87,10 +87,7 @@ export default function GiveeSettingsScreen({ navigation }) {
               {tokenData.firstName || ""} {tokenData.lastName || ""}
             </Text>
             <Text
-              style={{
-                fontSize: responsiveFontSize(2.1) / fontScale,
-                color: "white",
-              }}
+              style={{ fontSize: responsiveFontSize(2.1) / fontScale, color: "white" }}
               numberOfLines={1}
             >
               {tokenData.email || "email error"}
