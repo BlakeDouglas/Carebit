@@ -23,7 +23,6 @@ import PhysicianInfoScreen from "./src/screens/PhysicianInfoScreen";
 import ReceivedAlertsScreen from "./src/screens/ReceivedAlertsScreen";
 import RequestScreen from "./src/screens/RequestScreen";
 import RoleSelectScreen from "./src/screens/RoleSelectScreen";
-import SettingsOverviewScreen from "./src/screens/SettingsOverviewScreen";
 import TitleScreen from "./src/screens/TitleScreen";
 import {
   Image,
