@@ -337,7 +337,6 @@ export default function GiverHomeScreen({ navigation }) {
                 style={{
                   color: "gray",
                   fontWeight: "bold",
-                  //marginVertical: Platform.OS === "ios" ? "10%" : "8%",
                   justifyContent: "center",
                 }}
               >
@@ -463,7 +462,11 @@ export default function GiverHomeScreen({ navigation }) {
                       }}
                     >
                       <Image
-                        style={{ flexShrink: 1 }}
+                        style={{
+                          flexShrink: 1,
+                          height: moderateScale(26),
+                          width: moderateScale(26),
+                        }}
                         source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
                       />
                       <Text
@@ -1336,17 +1339,26 @@ export default function GiverHomeScreen({ navigation }) {
                 >
                   {BatteryLevel === "High" ? (
                     <Image
-                      style={{ height: moderateScale(29), width: moderateScale(51) }}
+                      style={{
+                        height: moderateScale(29),
+                        width: moderateScale(51),
+                      }}
                       source={require("../../assets/images/battery-full.imageset/battery-full.png")}
                     />
                   ) : BatteryLevel === "Medium" ? (
                     <Image
-                      style={{ height: moderateScale(29), width: moderateScale(51) }}
+                      style={{
+                        height: moderateScale(29),
+                        width: moderateScale(51),
+                      }}
                       source={require("../../assets/images/battery-medium.imageset/battery-medium.png")}
                     />
                   ) : (
                     <Image
-                      style={{ height: moderateScale(29), width: moderateScale(51) }}
+                      style={{
+                        height: moderateScale(29),
+                        width: moderateScale(51),
+                      }}
                       source={require("../../assets/images/battery-low.imageset/battery-low.png")}
                     />
                   )}
@@ -1407,7 +1419,7 @@ const styles = StyleSheet.create({
     // marginLeft: "2%",
   },
   images: {
-    height: moderateScale(25),
-    width: moderateScale(5),
+    height: moderateScale(22),
+    width: moderateScale(22),
   },
 });

@@ -67,8 +67,8 @@ export default function GiveeSettingsScreen({ navigation }) {
         >
           <Image
             style={{
-              height: verticalScale(85),
-              width: scale(85),
+              height: moderateScale(85),
+              width: moderateScale(85),
               marginLeft: "6%",
             }}
             source={require("../../assets/images/avatar/DefaultAvatar.png")}

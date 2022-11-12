@@ -663,6 +663,10 @@ export default function GiveeHomeScreen({ navigation }) {
                   }}
                 >
                   <Image
+                    style={{
+                      height: moderateScale(26),
+                      width: moderateScale(26),
+                    }}
                     source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
                   />
                   <Text style={styles.callText} numberOfLines={2}>
@@ -778,7 +782,10 @@ export default function GiveeHomeScreen({ navigation }) {
                 }}
               >
                 <Image
-                  style={{ height: verticalScale(30), width: scale(55) }}
+                  style={{
+                    height: moderateScale(29),
+                    width: moderateScale(51),
+                  }}
                   source={require("../../assets/images/battery-full.imageset/battery-full.png")}
                 />
               </SafeAreaView>
@@ -1163,8 +1170,8 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(5),
   },
   imagesBody: {
-    width: scale(45),
-    height: verticalScale(45),
+    width: moderateScale(40),
+    height: moderateScale(40),
   },
 
   switchBody: {
