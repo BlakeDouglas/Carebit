@@ -6,13 +6,13 @@ import {
   StatusBar,
   ImageBackground,
   TouchableOpacity,
-  useWindowDimensions
+  useWindowDimensions,
 } from "react-native";
 import { React } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { resetData, setSelectedUser, setTokenData } from "../redux/actions";
 import * as SecureStore from "expo-secure-store";
 import phone from "phone";
@@ -20,7 +20,7 @@ export default function GiverSettingsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
-  const {fontScale} = useWindowDimensions();
+  const { fontScale } = useWindowDimensions();
   const logOutButtonHandler = async () => {
     await SecureStore.deleteItemAsync("carebitcredentials");
     dispatch(resetData());
@@ -75,7 +75,11 @@ export default function GiverSettingsScreen({ navigation }) {
           }}
         >
           <Image
-            style={{ height: verticalScale(85), width: scale(85), marginLeft: "6%" }}
+            style={{
+              height: verticalScale(85),
+              width: scale(85),
+              marginLeft: "6%",
+            }}
             source={require("../../assets/images/avatar/DefaultAvatar.png")}
           />
           <SafeAreaView
@@ -87,13 +91,19 @@ export default function GiverSettingsScreen({ navigation }) {
             }}
           >
             <Text
-              style={{ fontSize: responsiveFontSize(2.8) / fontScale, color: "white" }}
+              style={{
+                fontSize: responsiveFontSize(2.8) / fontScale,
+                color: "white",
+              }}
               numberOfLines={1}
             >
               {tokenData.firstName || ""} {tokenData.lastName || ""}
             </Text>
             <Text
-              style={{ fontSize: responsiveFontSize(2.1) / fontScale, color: "white" }}
+              style={{
+                fontSize: responsiveFontSize(2.1) / fontScale,
+                color: "white",
+              }}
               numberOfLines={1}
             >
               {tokenData.email || "email error"}
@@ -373,7 +383,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: moderateScale(0.5),
   },
   Title: {
-    fontSize: responsiveFontSize(1.9) / fontScale,
+    fontSize: responsiveFontSize(1.9),
     color: "white",
     fontWeight: "500",
     marginLeft: "4%",
@@ -387,13 +397,13 @@ const styles = StyleSheet.create({
     marginLeft: "4%",
   },
   BoxTitle: {
-    fontSize: responsiveFontSize(2.2) / fontScale,
+    fontSize: responsiveFontSize(2.2),
     fontWeight: "600",
     marginLeft: "4%",
     color: "white",
   },
   BoxSub: {
-    fontSize: responsiveFontSize(2.2) / fontScale,
+    fontSize: responsiveFontSize(2.2),
     marginRight: "4%",
     color: "white",
   },

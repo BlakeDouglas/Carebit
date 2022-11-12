@@ -19,7 +19,7 @@ export default function AccountCreationScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
-  const fontScale = useWindowDimensions();
+  const { fontScale } = useWindowDimensions();
   const setActivity = async (level) => {
     try {
       const response = await fetch(
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     marginTop: "5%",
   },
   DescriptiveText: {
-    fontSize: responsiveFontSize(2.2) / fontScale,
+    fontSize: responsiveFontSize(2.2),
     color: "white",
   },
   InnerContainers: {
@@ -225,13 +225,13 @@ const styles = StyleSheet.create({
     marginLeft: "6%",
     color: "black",
     fontWeight: "600",
-    fontSize: responsiveFontSize(2.4) / fontScale,
+    fontSize: responsiveFontSize(2.4),
   },
   InnerText: {
     marginLeft: "6%",
     marginTop: "2%",
     color: "darkgray",
     fontWeight: "400",
-    fontSize: responsiveFontSize(2.2) / fontScale,
+    fontSize: responsiveFontSize(2.2),
   },
 });

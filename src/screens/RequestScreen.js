@@ -9,7 +9,7 @@ import {
   ImageBackground,
   RefreshControl,
   TouchableOpacity,
-  useWindowDimensions
+  useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { useEffect } from "react";
@@ -24,8 +24,7 @@ const RequestScreen = ({ navigation }) => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
-  const {fontScale} = useWindowDimensions();
-  
+  const { fontScale } = useWindowDimensions();
 
   // Stores only incoming requests
   const [data, setData] = useState([]);
@@ -301,7 +300,12 @@ const RequestScreen = ({ navigation }) => {
             marginTop: "10%",
           }}
         >
-          <Text style={{ fontSize: responsiveFontSize(4.3) / fontScale, color: "white" }}>
+          <Text
+            style={{
+              fontSize: responsiveFontSize(4.3) / fontScale,
+              color: "white",
+            }}
+          >
             All Incoming Requests
           </Text>
         </SafeAreaView>
@@ -339,7 +343,7 @@ const RequestScreen = ({ navigation }) => {
                   style={{
                     color: "darkred",
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(2.8)  / fontScale ,
+                    fontSize: responsiveFontSize(2.8) / fontScale,
                   }}
                 >
                   Reject
@@ -370,7 +374,7 @@ const RequestScreen = ({ navigation }) => {
                   style={{
                     color: "green",
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(2.8)  / fontScale ,
+                    fontSize: responsiveFontSize(2.8) / fontScale,
                   }}
                 >
                   Accept
@@ -430,23 +434,23 @@ const styles = StyleSheet.create({
   },
   name: {
     color: "black",
-    fontSize: responsiveFontSize(2.2)  / fontScale ,
+    fontSize: responsiveFontSize(2.2),
     fontFamily: "RobotoBold",
     alignSelf: "center",
   },
   title: {
     color: "black",
-    fontSize: responsiveFontSize(4)  / fontScale ,
-     fontFamily: "RobotoBold",
+    fontSize: responsiveFontSize(4),
+    fontFamily: "RobotoBold",
   },
   phone: {
     color: "black",
-    fontSize: responsiveFontSize(1.8)  / fontScale ,
+    fontSize: responsiveFontSize(1.8),
     alignSelf: "center",
   },
   emptyText: {
     color: "white",
-    fontSize: responsiveFontSize(3.5)  / fontScale,
+    fontSize: responsiveFontSize(3.5),
     alignSelf: "center",
   },
   emptyContainer: {

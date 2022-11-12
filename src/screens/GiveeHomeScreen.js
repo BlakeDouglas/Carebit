@@ -17,7 +17,7 @@ import moment from "moment";
 import { useEffect } from "react";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import Modal from "react-native-modal";
 import call from "react-native-phone-call";
 import { resetSelectedData, setSelectedUser } from "../redux/actions";
@@ -27,7 +27,7 @@ export default function GiveeHomeScreen({ navigation }) {
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
-  const {fontScale} = useWindowDimensions();
+  const { fontScale } = useWindowDimensions();
   const dispatch = useDispatch();
   const number = selectedUser.phone || null;
   const args = {
@@ -338,7 +338,7 @@ export default function GiveeHomeScreen({ navigation }) {
             height: "30%",
             width: "70%",
             backgroundColor: "white",
-            borderRadius:moderateScale(8),
+            borderRadius: moderateScale(8),
             alignItems: "center",
             justifyContent: "space-evenly",
           }}
@@ -691,7 +691,10 @@ export default function GiveeHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "gray",
-                      shadowOffset: { width: scale(4), height: verticalScale(10) },
+                      shadowOffset: {
+                        width: scale(4),
+                        height: verticalScale(10),
+                      },
                       shadowOpacity: moderateScale(0.4),
                     },
                     android: {
@@ -751,7 +754,10 @@ export default function GiveeHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "gray",
-                      shadowOffset: { width: scale(4), height: verticalScale(10) },
+                      shadowOffset: {
+                        width: scale(4),
+                        height: verticalScale(10),
+                      },
                       shadowOpacity: moderateScale(0.4),
                     },
                     android: {
@@ -838,7 +844,10 @@ export default function GiveeHomeScreen({ navigation }) {
                     ...Platform.select({
                       ios: {
                         shadowColor: "blue",
-                        shadowOffset: { width: scale(4), height: verticalScale(10) },
+                        shadowOffset: {
+                          width: scale(4),
+                          height: verticalScale(10),
+                        },
                         shadowOpacity: moderateScale(0.4),
                       },
                       android: {
@@ -850,7 +859,10 @@ export default function GiveeHomeScreen({ navigation }) {
                     ...Platform.select({
                       ios: {
                         shadowColor: "gray",
-                        shadowOffset: { width: scale(4), height: verticalScale(10) },
+                        shadowOffset: {
+                          width: scale(4),
+                          height: verticalScale(10),
+                        },
                         shadowOpacity: moderateScale(0.4),
                       },
                       android: {
@@ -944,8 +956,11 @@ export default function GiveeHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "gray",
-                    shadowOffset: { width: scale(4), height: verticalScale(10) },
-                    shadowOpacity:moderateScale(0.4),
+                    shadowOffset: {
+                      width: scale(4),
+                      height: verticalScale(10),
+                    },
+                    shadowOpacity: moderateScale(0.4),
                   },
                   android: {
                     elevation: moderateScale(6),
@@ -1025,8 +1040,11 @@ export default function GiveeHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "gray",
-                    shadowOffset: { width: scale(4), height: verticalScale(10) },
-                    shadowOpacity:moderateScale(0.4),
+                    shadowOffset: {
+                      width: scale(4),
+                      height: verticalScale(10),
+                    },
+                    shadowOpacity: moderateScale(0.4),
                   },
                   android: {
                     elevation: moderateScale(6),
@@ -1166,42 +1184,42 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     height: "12%",
     flexDirection: "row",
-    borderRadius:moderateScale(5),
+    borderRadius: moderateScale(5),
   },
 
   helloText: {
     color: "darkgrey",
-    fontSize: responsiveFontSize(2.15) / fontScale,
+    fontSize: responsiveFontSize(2.15),
     //fontWeight: "bold",
   },
 
   callText: {
     color: "dodgerblue",
-    fontSize: responsiveFontSize(2) / fontScale,
+    fontSize: responsiveFontSize(2),
     fontWeight: "bold",
     marginLeft: "2%",
   },
 
   buttonBigText: {
-    fontSize: responsiveFontSize(2.25) / fontScale,
+    fontSize: responsiveFontSize(2.25),
     fontWeight: "500",
   },
 
   buttonSmallText: {
-    fontSize: responsiveFontSize(2.08) / fontScale,
+    fontSize: responsiveFontSize(2.08),
     color: "darkgrey",
     fontWeight: "500",
     marginTop: "3%",
     marginBottom: "10%",
   },
   buttonSmallText2: {
-    fontSize: responsiveFontSize(2.08) / fontScale,
+    fontSize: responsiveFontSize(2.08),
     color: "darkgrey",
     fontWeight: "500",
     marginTop: "3%",
   },
   preferencesText: {
-    fontSize: responsiveFontSize(2.3) / fontScale,
+    fontSize: responsiveFontSize(2.3),
     fontWeight: "500",
     marginLeft: "2%",
   },

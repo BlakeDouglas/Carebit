@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
-  useWindowDimensions
+  useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
@@ -93,7 +93,7 @@ export default function AddScreen({ navigation: { goBack } }) {
       console.log("Caught error in /createRequest: " + error);
     }
   };
-
+  const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
@@ -136,7 +136,12 @@ export default function AddScreen({ navigation: { goBack } }) {
               justifyContent: "center",
             }}
           >
-            <Text style={{ fontSize: responsiveFontSize(2.5) / fontScale, color: "white" }}>
+            <Text
+              style={{
+                fontSize: responsiveFontSize(2.5) / fontScale,
+                color: "white",
+              }}
+            >
               {typeOfRequester === "caregivee"
                 ? "Please enter your Caregivee's phone number to add them"
                 : "Please enter your Caregiver's phone number to add them"}

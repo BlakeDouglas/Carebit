@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import moment from "moment";
@@ -34,7 +34,7 @@ export default function GiverHomeScreen({ navigation }) {
   const [BatterySyncTime, setBatterySyncTime] = useState(null);
   const [HeartSyncTime, setHeartSyncTime] = useState(null);
   const [StepsSyncTime, setStepsSyncTime] = useState(null);
-  const {fontScale} = useWindowDimensions();
+  const { fontScale } = useWindowDimensions();
   const [isEnabledSleep, setIsEnabledSleep] = useState(false);
   const [isEnabledDisturb, setIsEnabledDisturb] = useState(false);
   const [isEnabledMonitor, setIsEnabledMonitor] = useState(true);
@@ -535,7 +535,7 @@ export default function GiverHomeScreen({ navigation }) {
                   ios: {
                     shadowColor: "blue",
                     shadowOffset: { width: scale(4), height: verticalScale(6) },
-                    shadowOpacity:moderateScale(0.4),
+                    shadowOpacity: moderateScale(0.4),
                   },
                   android: {
                     elevation: moderateScale(6),
@@ -676,7 +676,10 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: scale(1), height: verticalScale(3) },
+                      shadowOffset: {
+                        width: scale(1),
+                        height: verticalScale(3),
+                      },
                       shadowOpacity: moderateScale(0.6),
                     },
                     android: {
@@ -712,7 +715,10 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: scale(1), height: verticalScale(3) },
+                      shadowOffset: {
+                        width: scale(1),
+                        height: verticalScale(3),
+                      },
                       shadowOpacity: moderateScale(0.6),
                     },
                     android: {
@@ -759,7 +765,10 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: scale(1), height: verticalScale(3) },
+                      shadowOffset: {
+                        width: scale(1),
+                        height: verticalScale(3),
+                      },
                       shadowOpacity: moderateScale(0.4),
                     },
                     android: {
@@ -823,7 +832,10 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: scale(1), height: verticalScale(3) },
+                      shadowOffset: {
+                        width: scale(1),
+                        height: verticalScale(3),
+                      },
                       shadowOpacity: moderateScale(0.4),
                     },
                     android: {
@@ -925,8 +937,8 @@ export default function GiverHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "#000",
-                    shadowOffset: { width:scale(1), height: verticalScale(3) },
-                    shadowOpacity:moderateScale(0.4),
+                    shadowOffset: { width: scale(1), height: verticalScale(3) },
+                    shadowOpacity: moderateScale(0.4),
                   },
                   android: {
                     elevation: moderateScale(6),
@@ -980,7 +992,7 @@ export default function GiverHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "#000",
-                    shadowOffset: { width: scale(1), height:verticalScale(3) },
+                    shadowOffset: { width: scale(1), height: verticalScale(3) },
                     shadowOpacity: moderateScale(0.4),
                   },
                   android: {
@@ -1154,7 +1166,10 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: scale(1), height: verticalScale(3) },
+                      shadowOffset: {
+                        width: scale(1),
+                        height: verticalScale(3),
+                      },
                       shadowOpacity: moderateScale(0.6),
                     },
                     android: {
@@ -1190,7 +1205,10 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: scale(1), height: verticalScale(3) },
+                      shadowOffset: {
+                        width: scale(1),
+                        height: verticalScale(3),
+                      },
                       shadowOpacity: moderateScale(0.6),
                     },
                     android: {
@@ -1237,7 +1255,10 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: scale(1), height: verticalScale(3) },
+                      shadowOffset: {
+                        width: scale(1),
+                        height: verticalScale(3),
+                      },
                       shadowOpacity: moderateScale(0.4),
                     },
                     android: {
@@ -1292,7 +1313,10 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: scale(1), height: verticalScale(3) },
+                      shadowOffset: {
+                        width: scale(1),
+                        height: verticalScale(3),
+                      },
                       shadowOpacity: moderateScale(0.4),
                     },
                     android: {
@@ -1351,22 +1375,22 @@ export default function GiverHomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   caregiveeText: {
     color: "black",
-    fontSize: responsiveFontSize(2.7) / fontScale,
+    fontSize: responsiveFontSize(2.7),
     marginLeft: "5%",
     fontWeight: "500",
   },
   lastActivityText: {
     color: "black",
-    fontSize: responsiveFontSize(2.2) / fontScale,
+    fontSize: responsiveFontSize(2.2),
   },
   smallText: {
     color: "darkgrey",
-    fontSize: responsiveFontSize(1.8) / fontScale,
+    fontSize: responsiveFontSize(1.8),
     fontWeight: "bold",
   },
   dateText: {
     color: "darkgrey",
-    fontSize: responsiveFontSize(1.8) / fontScale,
+    fontSize: responsiveFontSize(1.8),
     fontWeight: "bold",
     marginLeft: "45%",
   },
@@ -1378,7 +1402,7 @@ const styles = StyleSheet.create({
   },
   callText: {
     color: "dodgerblue",
-    fontSize: responsiveFontSize(2) / fontScale,
+    fontSize: responsiveFontSize(2),
     fontWeight: "bold",
     // marginLeft: "2%",
   },

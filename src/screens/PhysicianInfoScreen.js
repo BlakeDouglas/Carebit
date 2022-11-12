@@ -7,10 +7,9 @@ import {
   Platform,
   SafeAreaView,
   StatusBar,
-  useWindowDimensions,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  useWindowDimensions
+  useWindowDimensions,
 } from "react-native";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -26,7 +25,7 @@ import { phone } from "phone";
 export default function PhysicianInfoScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
-  const {fontScale} = useWindowDimensions();
+  const { fontScale } = useWindowDimensions();
 
   const [inputs, setInputs] = useState({
     physName: "",

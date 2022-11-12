@@ -14,7 +14,7 @@ import React, { useState } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import SelectDropdown from "react-native-select-dropdown";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { setSelectedUser, setTokenData } from "../redux/actions";
@@ -22,7 +22,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 export default function CustomNotificationScreen({ navigation }) {
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
-  const {fontScale} = useWindowDimensions();
+  const { fontScale } = useWindowDimensions();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const [isCustom, setIsCustom] = useState(selectedUser.healthProfile === 4);
   const [isHrAlerts, setIsHrAlerts] = useState(true);
@@ -147,7 +147,12 @@ export default function CustomNotificationScreen({ navigation }) {
                 { marginLeft: "10%", marginRight: "10%", marginTop: "20%" },
               ]}
             >
-              <Text style={{ fontSize: responsiveFontSize(6) / fontScale, color: "white" }}>
+              <Text
+                style={{
+                  fontSize: responsiveFontSize(6) / fontScale,
+                  color: "white",
+                }}
+              >
                 Custom Alerts
               </Text>
 
@@ -160,7 +165,10 @@ export default function CustomNotificationScreen({ navigation }) {
                 }}
               >
                 <Text
-                  style={{ fontSize: responsiveFontSize(3) / fontScale, color: "white" }}
+                  style={{
+                    fontSize: responsiveFontSize(3) / fontScale,
+                    color: "white",
+                  }}
                 >
                   Please Choose a Caregivee First
                 </Text>
@@ -500,12 +508,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: moderateScale(1),
   },
   Title: {
-    fontSize: responsiveFontSize(2.2) / fontScale,
+    fontSize: responsiveFontSize(2.2),
     fontWeight: "600",
     margin: "4%",
   },
   Descriptive: {
-    fontSize: responsiveFontSize(1.9) / fontScale,
+    fontSize: responsiveFontSize(1.9),
     margin: "3%",
     color: "gray",
     fontWeight: "500",
@@ -513,7 +521,7 @@ const styles = StyleSheet.create({
   Inputs: {
     marginRight: "3%",
     color: "black",
-    fontSize: responsiveFontSize(2.2) / fontScale,
+    fontSize: responsiveFontSize(2.2),
   },
   downButtonStyle: {
     height: "100%",

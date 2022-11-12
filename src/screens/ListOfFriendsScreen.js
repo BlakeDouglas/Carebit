@@ -10,7 +10,7 @@ import {
   ImageBackground,
   RefreshControl,
   TouchableOpacity,
-  useWindowDimensions
+  useWindowDimensions,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import * as React from "react";
@@ -32,7 +32,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
-  const {fontScale} = useWindowDimensions();
+  const { fontScale } = useWindowDimensions();
   const [refreshing, setRefreshing] = React.useState(false);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -259,7 +259,12 @@ const ListOfFriendsScreen = ({ navigation }) => {
             marginTop: "10%",
           }}
         >
-          <Text style={{ fontSize: responsiveFontSize(4.3) / fontScale, color: "white" }}>
+          <Text
+            style={{
+              fontSize: responsiveFontSize(4.3) / fontScale,
+              color: "white",
+            }}
+          >
             {typeOfRequester === "caregivee"
               ? "Added Caregivers"
               : "Added Caregivees"}
@@ -411,23 +416,23 @@ const styles = StyleSheet.create({
   },
   name: {
     color: "black",
-    fontSize: responsiveFontSize(2.2) / fontScale,
+    fontSize: responsiveFontSize(2.2),
     fontFamily: "RobotoBold",
     alignSelf: "center",
   },
   title: {
     color: "black",
-    fontSize: responsiveFontSize(4) / fontScale,
+    fontSize: responsiveFontSize(4),
     fontFamily: "RobotoBold",
   },
   phone: {
     color: "black",
-    fontSize: responsiveFontSize(1.8)/ fontScale,
+    fontSize: responsiveFontSize(1.8),
     alignSelf: "center",
   },
   emptyText: {
     color: "white",
-    fontSize: responsiveFontSize(3.5) / fontScale,
+    fontSize: responsiveFontSize(3.5),
     alignSelf: "center",
   },
   emptyContainer: {
