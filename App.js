@@ -227,7 +227,7 @@ const HomeStack = () => {
   useEffect(() => {
     const toggle = setInterval(() => {
       showAlert();
-    }, 10000);
+    }, 3000);
     return () => clearInterval(toggle);
   });
 
