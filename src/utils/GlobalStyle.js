@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 export default StyleSheet.create({
   Title: {
@@ -41,13 +42,12 @@ export default StyleSheet.create({
   },
   Container: {
     flex: 1,
-    marginLeft: "12%",
-    marginRight: "12%",
-    marginTop: "30%",
+    marginLeft: scale(42),
+    marginRight: scale(42),
+    marginTop: scale(100),
   },
   HeaderText: {
     flex: 1,
-    //  textAlignVertical: "center",
     textAlign: "center",
     textAlignVertical: "center",
     color: "white",

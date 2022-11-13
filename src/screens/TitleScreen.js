@@ -86,6 +86,8 @@ export default function TitleScreen({ navigation }) {
       console.log("Error accessing credentials: ", error);
     }
   };
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
   const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
@@ -98,11 +100,16 @@ export default function TitleScreen({ navigation }) {
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
         <SafeAreaView style={GlobalStyle.Container}>
           {/* Title Container */}
-          <SafeAreaView style={{ width: "100%", height: "22%" }}>
+          <SafeAreaView
+            style={{
+              width: moderateScale(windowWidth),
+              height: moderateScale(120),
+            }}
+          >
             <Text
               style={[
                 GlobalStyle.Subtitle,
-                { fontSize: responsiveFontSize(6.3) / fontScale },
+                { fontSize: moderateScale(47.5, 0.4) / fontScale },
               ]}
             >
               Welcome to
@@ -110,7 +117,7 @@ export default function TitleScreen({ navigation }) {
             <Text
               style={[
                 GlobalStyle.Title,
-                { fontSize: responsiveFontSize(6.95) / fontScale },
+                { fontSize: moderateScale(52, 0.4) / fontScale },
               ]}
             >
               Carebit
@@ -119,17 +126,17 @@ export default function TitleScreen({ navigation }) {
           {/* Text body Container */}
           <SafeAreaView
             style={{
-              height: "35%",
+              height: moderateScale(200, 0.3),
               width: "100%",
-              marginTop: "5%",
+              marginTop: scale(12),
               justifyContent: "center",
-              marginBottom: "5%",
+              marginBottom: scale(12),
             }}
           >
             <Text
               style={[
                 GlobalStyle.Text,
-                { fontSize: responsiveFontSize(2.51) / fontScale },
+                { fontSize: moderateScale(19) / fontScale },
               ]}
             >
               Carebit uses Fitbit devices to monitor the heart rate and activity
@@ -141,7 +148,7 @@ export default function TitleScreen({ navigation }) {
                   GlobalStyle.Text,
                   {
                     textDecorationLine: "underline",
-                    fontSize: responsiveFontSize(2.51) / fontScale,
+                    fontSize: moderateScale(19) / fontScale,
                   },
                 ]}
               >
@@ -151,7 +158,12 @@ export default function TitleScreen({ navigation }) {
           </SafeAreaView>
 
           {/* Log in and make account button container */}
-          <SafeAreaView style={{ width: "100%", height: "22%" }}>
+          <SafeAreaView
+            style={{
+              flex: 1,
+              marginTop: moderateScale(25),
+            }}
+          >
             {/* Button to create an account along with onPress navigation */}
             <TouchableOpacity
               style={GlobalStyle.Button}
@@ -160,7 +172,7 @@ export default function TitleScreen({ navigation }) {
               <Text
                 style={[
                   GlobalStyle.ButtonText,
-                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                  { fontSize: moderateScale(19) / fontScale },
                 ]}
               >
                 Create an Account
@@ -170,14 +182,17 @@ export default function TitleScreen({ navigation }) {
             <TouchableOpacity
               style={[
                 GlobalStyle.Button,
-                { backgroundColor: "transparent", marginTop: "7%" },
+                {
+                  backgroundColor: "transparent",
+                  marginTop: moderateScale(18, 0.4),
+                },
               ]}
               onPress={loginButtonHandler}
             >
               <Text
                 style={[
                   GlobalStyle.ButtonText,
-                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                  { fontSize: moderateScale(19) / fontScale },
                 ]}
               >
                 Log In
