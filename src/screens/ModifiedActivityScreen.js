@@ -12,7 +12,7 @@ import {
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
-import { setTokenData } from "../redux/actions";
+import { setSelectedUser, setTokenData } from "../redux/actions";
 import {
   setActivityEndpoint,
   setDefaultActivityEndpoint,
@@ -33,11 +33,13 @@ export default function ModifiedActivityScreen({ navigation }) {
     if (tokenData.type === "caregiver") {
       params.body.caregiverID = tokenData.caregiverID;
       params.body.caregiveeID = selectedUser.caregiveeID;
+      dispatch(setSelectedUser({ ...selectedUser, healthProfile: level }));
     }
     // Account creation, caregivee edition, authPhase = 8, will be set to 9 after calling /updateHealthProfile
     else {
       params.body.caregiverID = null;
       params.body.caregiveeID = tokenData.caregiveeID;
+      dispatch(setTokenData({ ...tokenData, healthProfile: level }));
     }
     let responseText = await setDefaultActivityEndpoint(params);
     if (!responseText) {
