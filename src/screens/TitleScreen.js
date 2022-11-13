@@ -10,6 +10,8 @@ import GlobalStyle from "../utils/GlobalStyle";
 import React, { useEffect } from "react";
 import * as Linking from "expo-linking";
 import * as SecureStore from "expo-secure-store";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
+
 import { useDispatch } from "react-redux";
 import {
   resetSelectedData,

@@ -10,6 +10,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Modal from "react-native-modal";
@@ -258,8 +259,8 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
               style={{
                 marginTop: "10%",
                 borderColor: "lightblue",
-                borderWidth: 1,
-                borderRadius: 5,
+                borderWidth: moderateScale(1),
+                borderRadius: moderateScale(5),
               }}
               onPress={() => {
                 setOkID(alertID);
@@ -391,7 +392,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
             height: "31%",
             width: "75%",
             backgroundColor: "white",
-            borderRadius: 8,
+            borderRadius: moderateScale(8),
             alignItems: "center",
             justifyContent: "space-evenly",
           }}
@@ -438,7 +439,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                 alignItems: "center",
                 justifyContent: "center",
                 borderTopColor: "rgba(128, 128, 128, .2)",
-                borderTopwidth: 1,
+                borderTopwidth: moderateScale(1),
               }}
             >
               <TouchableOpacity
@@ -471,7 +472,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                 alignItems: "center",
                 justifyContent: "center",
                 borderTopColor: "rgba(128, 128, 128, .2)",
-                borderTopwidth: 1,
+                borderTopwidth: moderateScale(1),
               }}
             >
               <TouchableOpacity
@@ -536,8 +537,8 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   images: {
-    height: 50,
-    width: 50,
+    height: moderateScale(50),
+    width: moderateScale(50),
   },
   emptyText: {
     color: "black",
@@ -547,6 +548,6 @@ const styles = StyleSheet.create({
   emptyContainer: {
     paddingTop: "5%",
     borderTopColor: "lightgrey",
-    borderTopWidth: 1,
+    borderTopWidth: moderateScale(1),
   },
 });

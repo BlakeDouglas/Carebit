@@ -16,6 +16,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Modal from "react-native-modal";
 import GlobalStyle from "../utils/GlobalStyle";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { useSelector, useDispatch } from "react-redux";
 import { discovery } from "./AuthenticationScreen";
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
@@ -133,7 +134,7 @@ export default function LinkUsersScreen({ navigation }) {
                 height: "31%",
                 width: "75%",
                 backgroundColor: "white",
-                borderRadius: 8,
+                borderRadius: moderateScale(8),
                 alignItems: "center",
                 justifyContent: "space-evenly",
               }}
@@ -180,7 +181,7 @@ export default function LinkUsersScreen({ navigation }) {
                     alignItems: "center",
                     justifyContent: "center",
                     borderTopColor: "rgba(128, 128, 128, .2)",
-                    borderTopWidth: 1,
+                    borderTopWidth: moderateScale(1),
                   }}
                 >
                   <TouchableOpacity
@@ -214,7 +215,7 @@ export default function LinkUsersScreen({ navigation }) {
                     alignItems: "center",
                     justifyContent: "center",
                     borderTopColor: "rgba(128, 128, 128, .2)",
-                    borderTopWidth: 1,
+                    borderTopWidth: moderateScale(1),
                   }}
                 >
                   <TouchableOpacity

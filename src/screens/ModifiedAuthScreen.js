@@ -11,6 +11,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import GlobalStyle from "../utils/GlobalStyle";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import React, { useState } from "react";
@@ -212,7 +213,7 @@ export default function ModifiedAuthScreen({ navigation }) {
               style={[
                 GlobalStyle.Button,
                 {
-                  marginTop: 20,
+                  marginTop: verticalScale(20),
                   backgroundColor: "transparent",
                   fontSize: responsiveFontSize(2.51) / fontScale,
                 },

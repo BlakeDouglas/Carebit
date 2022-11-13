@@ -16,6 +16,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import GlobalStyle from "../utils/GlobalStyle";
 
 import {
@@ -308,7 +309,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
                 //backgroundColor: "green",
                 height: "100%",
                 width: "40%",
-                borderRadius: 8,
+                borderRadius: moderateScale(8),
                 marginTop: "5%",
                 alignItems: "center",
                 justifyContent: "center",
@@ -322,7 +323,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
                   height: "100%",
                   width: "100%",
                   //backgroundColor: "blue",
-                  borderRadius: 8,
+                  borderRadius: moderateScale(8),
                 }}
                 onPress={() => {
                   setSelected();
@@ -347,7 +348,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
                 // backgroundColor: "purple",
                 height: "100%",
                 width: "40%",
-                borderRadius: 8,
+                borderRadius: moderateScale(8),
                 marginTop: "5%",
               }}
             >
@@ -358,7 +359,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
                   height: "100%",
                   width: "100%",
                   //backgroundColor: "blue",
-                  borderRadius: 8,
+                  borderRadius: moderateScale(8),
                 }}
                 onPress={() => {
                   onPressDelete(
@@ -395,11 +396,11 @@ const styles = StyleSheet.create({
     padding: "3%",
     width: "65%",
     alignSelf: "center",
-    borderRadius: 8,
+    borderRadius: moderateScale(8),
     marginTop: "5%",
     backgroundColor: "blue",
     borderColor: "lightgray",
-    borderWidth: 3,
+    borderWidth: moderateScale(3),
     alignItems: "center",
   },
   name: {
@@ -435,7 +436,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     borderTopColor: "lightgray",
-    borderTopWidth: 1,
+    borderTopWidth: moderateScale(1),
   },
   buttons: {
     height: "100%",
@@ -446,8 +447,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 2,
-    borderRadius: 8,
+    borderWidth: moderateScale(2),
+    borderRadius: moderateScale(8),
   },
 });
 

@@ -15,6 +15,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import GlobalStyle from "../utils/GlobalStyle";
 import { resetSelectedData, setSelectedUser } from "../redux/actions";
 import { useIsFocused } from "@react-navigation/native";
@@ -284,7 +285,7 @@ const RequestScreen = ({ navigation }) => {
               //backgroundColor: "green",
               height: "100%",
               width: "40%",
-              borderRadius: 8,
+              borderRadius: moderateScale(8),
               marginTop: "5%",
             }}
           >
@@ -411,10 +412,10 @@ const styles = StyleSheet.create({
     padding: "3%",
     width: "65%",
     alignSelf: "center",
-    borderRadius: 8,
+    borderRadius: moderateScale(8),
     marginTop: "5%",
     borderColor: "lightgray",
-    borderWidth: 3,
+    borderWidth: moderateScale(3),
     alignItems: "center",
   },
   name: {
@@ -450,7 +451,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "flex-end",
     borderTopColor: "lightgray",
-    borderTopWidth: 2,
+    borderTopWidth: moderateScale(2),
   },
   buttons: {
     height: "100%",
@@ -461,8 +462,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 2,
-    borderRadius: 8,
+    borderWidth: moderateScale(2),
+    borderRadius: moderateScale(8),
   },
 });
 

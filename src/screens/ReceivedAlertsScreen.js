@@ -10,6 +10,7 @@ import {
 } from "react-native";
 
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
 import { getAlertsEndpoint } from "../network/CarebitAPI";
@@ -55,7 +56,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
         flexDirection: "row",
         alignItems: "center",
         borderTopColor: "lightgrey",
-        borderTopWidth: 1,
+        borderTopWidth: moderateScale(1),
       }}
     >
       {alertType === "tooManyStepsAlert" && (
@@ -261,8 +262,8 @@ export default function ReceivedAlertsScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   images: {
-    height: 50,
-    width: 50,
+    height: moderateScale(50),
+    width: moderateScale(50),
   },
   emptyText: {
     color: "black",
@@ -272,6 +273,6 @@ const styles = StyleSheet.create({
   emptyContainer: {
     paddingTop: "5%",
     borderTopColor: "lightgrey",
-    borderTopWidth: 1,
+    borderTopWidth: moderateScale(1),
   },
 });
