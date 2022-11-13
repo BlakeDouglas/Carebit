@@ -295,7 +295,6 @@ export default function GiveeHomeScreen({ navigation }) {
 
   useEffect(() => {
     registerForPushNotificationsAsync();
-
   }, []);
 
   const { fontScale } = useWindowDimensions();
@@ -834,7 +833,10 @@ export default function GiveeHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "gray",
-                      shadowOffset: { width: moderateScale(4), height: moderateScale(10) },
+                      shadowOffset: {
+                        width: moderateScale(4),
+                        height: moderateScale(10),
+                      },
                       shadowOpacity: moderateScale(0.6),
                     },
                     android: {
@@ -860,7 +862,10 @@ export default function GiveeHomeScreen({ navigation }) {
                   }}
                 >
                   <Image
-                    style={{ height: moderateScale(45), width: moderateScale(45) }}
+                    style={{
+                      height: moderateScale(45),
+                      width: moderateScale(45),
+                    }}
                     source={require("../../assets/images/icons-alert-big-color.imageset/icons-alert-big-color.png")}
                   />
                 </TouchableOpacity>
@@ -902,7 +907,10 @@ export default function GiveeHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "gray",
-                      shadowOffset: { width: moderateScale(4), height: moderateScale(10) },
+                      shadowOffset: {
+                        width: moderateScale(4),
+                        height: moderateScale(10),
+                      },
                       shadowOpacity: moderateScale(0.6),
                     },
                     android: {
@@ -923,17 +931,26 @@ export default function GiveeHomeScreen({ navigation }) {
               >
                 {BatteryLevel === "High" ? (
                   <Image
-                    style={{ height: moderateScale(29), width: moderateScale(51) }}
+                    style={{
+                      height: moderateScale(29),
+                      width: moderateScale(51),
+                    }}
                     source={require("../../assets/images/battery-full.imageset/battery-full.png")}
                   />
                 ) : BatteryLevel === "Medium" ? (
                   <Image
-                    style={{ height: moderateScale(29), width: moderateScale(51) }}
+                    style={{
+                      height: moderateScale(29),
+                      width: moderateScale(51),
+                    }}
                     source={require("../../assets/images/battery-medium.imageset/battery-medium.png")}
                   />
                 ) : (
                   <Image
-                    style={{ height: moderateScale(29), width: moderateScale(51) }}
+                    style={{
+                      height: moderateScale(29),
+                      width: moderateScale(51),
+                    }}
                     source={require("../../assets/images/battery-low.imageset/battery-low.png")}
                   />
                 )}
@@ -1017,7 +1034,10 @@ export default function GiveeHomeScreen({ navigation }) {
                     ...Platform.select({
                       ios: {
                         shadowColor: "blue",
-                        shadowOffset: { width: moderateScale(4), height: moderateScale(10) },
+                        shadowOffset: {
+                          width: moderateScale(4),
+                          height: moderateScale(10),
+                        },
                         shadowOpacity: moderateScale(0.6),
                       },
                       android: {
@@ -1029,7 +1049,10 @@ export default function GiveeHomeScreen({ navigation }) {
                     ...Platform.select({
                       ios: {
                         shadowColor: "gray",
-                        shadowOffset: { width: moderateScale(4), height: moderateScale(10) },
+                        shadowOffset: {
+                          width: moderateScale(4),
+                          height: moderateScale(10),
+                        },
                         shadowOpacity: moderateScale(0.6),
                       },
                       android: {
@@ -1117,7 +1140,10 @@ export default function GiveeHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "gray",
-                    shadowOffset: { width: moderateScale(4), height: moderateScale(10) },
+                    shadowOffset: {
+                      width: moderateScale(4),
+                      height: moderateScale(10),
+                    },
                     shadowOpacity: moderateScale(0.6),
                   },
                   android: {
@@ -1202,7 +1228,10 @@ export default function GiveeHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "gray",
-                    shadowOffset: { width: moderateScale(4), height: moderateScale(10) },
+                    shadowOffset: {
+                      width: moderateScale(4),
+                      height: moderateScale(10),
+                    },
                     shadowOpacity: moderateScale(0.6),
                   },
                   android: {

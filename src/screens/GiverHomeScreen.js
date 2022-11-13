@@ -593,7 +593,10 @@ export default function GiverHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "black",
-                    shadowOffset: { width: moderateScale(4), height: moderateScale(6) },
+                    shadowOffset: {
+                      width: moderateScale(4),
+                      height: moderateScale(6),
+                    },
                     shadowOpacity: moderateScale(0.4),
                   },
                   android: {
@@ -638,7 +641,10 @@ export default function GiverHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "blue",
-                    shadowOffset: { width: moderateScale(4), height: moderateScale(6) },
+                    shadowOffset: {
+                      width: moderateScale(4),
+                      height: moderateScale(6),
+                    },
                     shadowOpacity: moderateScale(0.4),
                   },
                   android: {
@@ -682,7 +688,10 @@ export default function GiverHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "black",
-                    shadowOffset: { width: moderateScale(4), height: moderateScale(6) },
+                    shadowOffset: {
+                      width: moderateScale(4),
+                      height: moderateScale(6),
+                    },
                     shadowOpacity: moderateScale(0.4),
                   },
                   android: {
@@ -777,7 +786,10 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: moderateScale(1), height: moderateScale(3) },
+                      shadowOffset: {
+                        width: moderateScale(1),
+                        height: moderateScale(3),
+                      },
                       shadowOpacity: moderateScale(0.6),
                     },
                     android: {
@@ -813,7 +825,10 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: moderateScale(1), height: moderateScale(3) },
+                      shadowOffset: {
+                        width: moderateScale(1),
+                        height: moderateScale(3),
+                      },
                       shadowOpacity: moderateScale(0.6),
                     },
                     android: {
@@ -859,7 +874,10 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: moderateScale(1), height: moderateScale(3) },
+                      shadowOffset: {
+                        width: moderateScale(1),
+                        height: moderateScale(3),
+                      },
                       shadowOpacity: moderateScale(0.4),
                     },
                     android: {
@@ -933,7 +951,10 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: moderateScale(1), height: moderateScale(3) },
+                      shadowOffset: {
+                        width: moderateScale(1),
+                        height: moderateScale(3),
+                      },
                       shadowOpacity: moderateScale(0.4),
                     },
                     android: {
@@ -1056,7 +1077,10 @@ export default function GiverHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "#000",
-                    shadowOffset: { width: moderateScale(1), height: moderateScale(3) },
+                    shadowOffset: {
+                      width: moderateScale(1),
+                      height: moderateScale(3),
+                    },
                     shadowOpacity: moderateScale(0.4),
                   },
                   android: {
@@ -1109,7 +1133,10 @@ export default function GiverHomeScreen({ navigation }) {
                 ...Platform.select({
                   ios: {
                     shadowColor: "#000",
-                    shadowOffset: { width: moderateScale(1), height: moderateScale(3) },
+                    shadowOffset: {
+                      width: moderateScale(1),
+                      height: moderateScale(3),
+                    },
                     shadowOpacity: moderateScale(0.4),
                   },
                   android: {
@@ -1316,7 +1343,10 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: moderateScale(1), height: moderateScale(3) },
+                      shadowOffset: {
+                        width: moderateScale(1),
+                        height: moderateScale(3),
+                      },
                       shadowOpacity: moderateScale(0.6),
                     },
                     android: {
@@ -1352,7 +1382,10 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: moderateScale(1), height: moderateScale(3) },
+                      shadowOffset: {
+                        width: moderateScale(1),
+                        height: moderateScale(3),
+                      },
                       shadowOpacity: moderateScale(0.6),
                     },
                     android: {
@@ -1399,7 +1432,10 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: moderateScale(1), height: moderateScale(3) },
+                      shadowOffset: {
+                        width: moderateScale(1),
+                        height: moderateScale(3),
+                      },
                       shadowOpacity: moderateScale(0.4),
                     },
                     android: {
@@ -1469,7 +1505,10 @@ export default function GiverHomeScreen({ navigation }) {
                   ...Platform.select({
                     ios: {
                       shadowColor: "#000",
-                      shadowOffset: { width: moderateScale(1), height: moderateScale(3) },
+                      shadowOffset: {
+                        width: moderateScale(1),
+                        height: moderateScale(3),
+                      },
                       shadowOpacity: moderateScale(0.4),
                     },
                     android: {
@@ -1489,17 +1528,26 @@ export default function GiverHomeScreen({ navigation }) {
                 >
                   {BatteryLevel === "High" ? (
                     <Image
-                      style={{ height: moderateScale(29), width: moderateScale(15) }}
+                      style={{
+                        height: moderateScale(23),
+                        width: moderateScale(40),
+                      }}
                       source={require("../../assets/images/battery-full.imageset/battery-full.png")}
                     />
                   ) : BatteryLevel === "Medium" ? (
                     <Image
-                      style={{ height: moderateScale(29), width: moderateScale(15) }}
+                      style={{
+                        height: moderateScale(23),
+                        width: moderateScale(40),
+                      }}
                       source={require("../../assets/images/battery-medium.imageset/battery-medium.png")}
                     />
                   ) : (
                     <Image
-                      style={{ height: moderateScale(29), width: moderateScale(15) }}
+                      style={{
+                        height: moderateScale(23),
+                        width: moderateScale(40),
+                      }}
                       source={require("../../assets/images/battery-low.imageset/battery-low.png")}
                     />
                   )}
