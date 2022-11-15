@@ -8,10 +8,11 @@ import {
   TextInput,
   View,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import PhoneInput from "react-native-phone-number-input";
-
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 const CustomTextInput = ({
   label,
   iconName,
@@ -30,21 +31,25 @@ const CustomTextInput = ({
   const lockImage = require("../../assets/images/lock-outline.png");
   const eyeImage = require("../../assets/images/eye-outline.png");
   const eyeOffImage = require("../../assets/images/eye-off-outline.png");
-
+  const { fontScale } = useWindowDimensions();
   return (
     <View
       style={{
-        marginBottom: phone ? "0%" : "4%",
-        marginTop: phone ? "3%" : "0%",
+        marginBottom: phone ? "0%" : moderateScale(8),
+        marginTop: phone ? moderateScale(8) : "0%",
       }}
     >
       <View style={{ flexDirection: "row" }}>
-        <Text style={style.label}>{label}</Text>
+        <Text
+          style={[style.label, { fontSize: moderateScale(19) / fontScale }]}
+        >
+          {label}
+        </Text>
         {error && (
           <Text
             style={{
               color: "red",
-              fontSize: responsiveFontSize(1.9),
+              fontSize: moderateScale(15) / fontScale,
               fontFamily: "RobotoBold",
             }}
           >
@@ -71,17 +76,17 @@ const CustomTextInput = ({
           }}
           textInputStyle={{
             color: "white",
-            fontSize: responsiveFontSize(2.15),
+            fontSize: moderateScale(16) / fontScale,
           }}
           countryPickerButtonStyle={{
-            marginRight: "-6.5%",
+            marginRight: moderateScale(-20, 0.9),
           }}
           textInputProps={{
             placeholderTextColor: "rgba(255, 255, 255, .5)",
           }}
           codeTextStyle={{
             color: "white",
-            fontSize: responsiveFontSize(2),
+            fontSize: moderateScale(16) / fontScale,
           }}
         />
       )}
@@ -102,7 +107,11 @@ const CustomTextInput = ({
                 ? lockImage
                 : accountImage
             }
-            style={{ height: 22, width: 22, marginRight: 10 }}
+            style={{
+              height: moderateScale(22),
+              width: moderateScale(22),
+              marginRight: scale(8),
+            }}
           />
 
           <TextInput
@@ -117,7 +126,7 @@ const CustomTextInput = ({
             style={{
               color: "white",
               flex: 1,
-              fontSize: responsiveFontSize(2.15),
+              fontSize: moderateScale(16.5) / fontScale,
             }}
             placeholderTextColor="rgba(255, 255, 255, .5)"
             secureTextEntry={hidePassword}
@@ -131,7 +140,7 @@ const CustomTextInput = ({
             >
               <Image
                 source={hidePassword ? eyeOffImage : eyeImage}
-                style={{ height: 22, width: 22 }}
+                style={{ height: moderateScale(22), width: moderateScale(22) }}
               />
             </TouchableOpacity>
           )}
@@ -144,11 +153,10 @@ const CustomTextInput = ({
 const style = StyleSheet.create({
   label: {
     marginBottom: "1.8%",
-    fontSize: responsiveFontSize(1.9),
     color: "white",
   },
   inputContainer: {
-    height: 55,
+    height: moderateScale(55, 0.3),
     backgroundColor: "transparent",
     flexDirection: "row",
     paddingHorizontal: "3%",
