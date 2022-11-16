@@ -18,7 +18,7 @@ import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";
 import { phone } from "phone";
 import { createRequestEndpoint } from "../network/CarebitAPI";
-
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 export default function AddScreen({ navigation: { goBack } }) {
   const handleChange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
@@ -109,9 +109,7 @@ export default function AddScreen({ navigation: { goBack } }) {
               height: "20%",
               alignSelf: "center",
               width: "100%",
-
               justifyContent: "flex-end",
-              //backgroundColor: "blue",
               alignItems: "center",
             }}
           >
@@ -120,7 +118,7 @@ export default function AddScreen({ navigation: { goBack } }) {
                 GlobalStyle.Subtitle,
                 {
                   alignSelf: "center",
-                  fontSize: responsiveFontSize(6.3) / fontScale,
+                  fontSize: moderateScale(48.5) / fontScale,
                 },
               ]}
             >
@@ -134,7 +132,6 @@ export default function AddScreen({ navigation: { goBack } }) {
             style={{
               height: "20%",
               width: "90%",
-              //backgroundColor: "red",
               alignItems: "center",
               alignSelf: "center",
               justifyContent: "center",
@@ -142,7 +139,7 @@ export default function AddScreen({ navigation: { goBack } }) {
           >
             <Text
               style={{
-                fontSize: responsiveFontSize(2.5) / fontScale,
+                fontSize: moderateScale(19.3) / fontScale,
                 color: "white",
               }}
             >
@@ -156,9 +153,8 @@ export default function AddScreen({ navigation: { goBack } }) {
               height: "80%",
               width: "80%",
               alignSelf: "center",
-              //backgroundColor: "blue",
               justifyContent: "flex-start",
-              marginTop: "5%",
+              marginTop: scale(17.2),
             }}
           >
             <CustomTextInput
@@ -176,13 +172,13 @@ export default function AddScreen({ navigation: { goBack } }) {
             />
             <SafeAreaView style={{}}>
               <TouchableOpacity
-                style={[GlobalStyle.Button, { marginTop: "8%" }]}
+                style={[GlobalStyle.Button, { marginTop: scale(22) }]}
                 onPress={validate}
               >
                 <Text
                   style={[
                     GlobalStyle.ButtonText,
-                    { fontSize: responsiveFontSize(2.51) / fontScale },
+                    { fontSize: moderateScale(19) / fontScale },
                   ]}
                 >
                   Send Request

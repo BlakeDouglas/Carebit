@@ -20,7 +20,6 @@ import {
 } from "../redux/actions";
 import { loginEndpoint, getDefaultEndpoint } from "../network/CarebitAPI";
 import { deleteKeychain, getKeychain } from "../network/Auth";
-import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 export default function TitleScreen({ navigation }) {
   const dispatch = useDispatch();

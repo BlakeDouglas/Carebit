@@ -18,10 +18,10 @@ import {
   setTokenData,
 } from "../redux/actions";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import validator from "validator";
 import { getDefaultEndpoint, loginEndpoint } from "../network/CarebitAPI";
 import { setKeychain } from "../network/Auth";
-import { responsiveFontSize } from "react-native-responsive-dimensions";
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
 
@@ -121,7 +121,7 @@ export default function LoginScreen({ navigation }) {
             <Text
               style={[
                 GlobalStyle.Title,
-                { fontSize: responsiveFontSize(6.95) / fontScale },
+                { fontSize: moderateScale(53) / fontScale },
               ]}
             >
               Log into Carebit
@@ -129,7 +129,7 @@ export default function LoginScreen({ navigation }) {
             <SafeAreaView
               style={{
                 height: "60%",
-                marginTop: "12%",
+                marginTop: moderateScale(38, 0.3),
                 justifyContent: "space-evenly",
               }}
             >
@@ -164,7 +164,7 @@ export default function LoginScreen({ navigation }) {
                   GlobalStyle.Button,
                   {
                     backgroundColor: "rgba(255, 255, 255, .2)",
-                    marginTop: "8%",
+                    marginTop: scale(22),
                   },
                 ]}
                 onPress={validate}
@@ -172,7 +172,7 @@ export default function LoginScreen({ navigation }) {
                 <Text
                   style={[
                     GlobalStyle.ButtonText,
-                    { fontSize: responsiveFontSize(2.51) / fontScale },
+                    { fontSize: moderateScale(19) / fontScale },
                   ]}
                 >
                   Log In

@@ -579,8 +579,6 @@ export default function GiveeHomeScreen({ navigation }) {
               width: "100%",
               height: "60%",
               justifyContent: "space-evenly",
-
-              //backgroundColor: "lightblue",
             }}
           >
             <Text
@@ -693,7 +691,7 @@ export default function GiveeHomeScreen({ navigation }) {
           {/* Shows reminder to sync to Fitbit if its been over an hour */}
           <SafeAreaView
             style={{
-              height: "3%",
+              height: scale(21),
               width: "100%",
               alignItems: "center",
               justifyContent: "center",
@@ -701,7 +699,7 @@ export default function GiveeHomeScreen({ navigation }) {
           >
             <Text
               style={{
-                fontSize: responsiveFontSize(2) / fontScale,
+                fontSize: moderateScale(15.3) / fontScale,
                 color: "red",
               }}
               numberOfLines={1}
@@ -736,7 +734,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 style={{
                   marginLeft: "4%",
                   color: "darkgrey",
-                  fontSize: responsiveFontSize(1.9) / fontScale,
+                  fontSize: moderateScale(14.7) / fontScale,
                 }}
                 numberOfLines={1}
               >
@@ -749,7 +747,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.2) / fontScale,
+                    fontSize: moderateScale(17) / fontScale,
                     fontWeight: "500",
                     marginLeft: "4%",
                   }}
@@ -762,7 +760,7 @@ export default function GiveeHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "dodgerblue",
-                      fontSize: responsiveFontSize(2.2) / fontScale,
+                      fontSize: moderateScale(17) / fontScale,
                       fontWeight: "500",
                       marginLeft: "4%",
                     }}
@@ -796,11 +794,15 @@ export default function GiveeHomeScreen({ navigation }) {
                 >
                   <Image
                     source={require("../../assets/images/icons-phone-color.imageset/icons-phone-color.png")}
+                    style={{
+                      height: moderateScale(25),
+                      width: moderateScale(25),
+                    }}
                   />
                   <Text
                     style={{
                       flexShrink: 1,
-                      fontSize: responsiveFontSize(2) / fontScale,
+                      fontSize: moderateScale(15.5) / fontScale,
                       color: "dodgerblue",
                       fontWeight: "bold",
                       marginLeft: "2%",
@@ -822,7 +824,7 @@ export default function GiveeHomeScreen({ navigation }) {
               width: "100%",
               justifyContent: "space-evenly",
               alignItems: "center",
-              marginTop: "5%",
+              marginTop: moderateScale(19, 0.3),
             }}
           >
             {/* Container for alerts */}
@@ -848,7 +850,7 @@ export default function GiveeHomeScreen({ navigation }) {
             >
               <SafeAreaView
                 style={{
-                  marginTop: "5%",
+                  marginTop: moderateScale(8.5),
                   height: "40%",
                   width: "100%",
                   alignItems: "center",
@@ -882,14 +884,14 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={[
                     styles.buttonBigText,
-                    { fontSize: responsiveFontSize(2.25) / fontScale },
+                    { fontSize: moderateScale(17.2) / fontScale },
                   ]}
                 >
                   Alerts
                 </Text>
                 <Text
                   style={{
-                    fontSize: responsiveFontSize(2.08) / fontScale,
+                    fontSize: moderateScale(16.1) / fontScale,
                     color: "darkgrey",
                     fontWeight: "500",
                   }}
@@ -922,7 +924,7 @@ export default function GiveeHomeScreen({ navigation }) {
             >
               <SafeAreaView
                 style={{
-                  marginTop: "5%",
+                  marginTop: moderateScale(8.5),
                   height: "40%",
                   width: "100%",
                   alignItems: "center",
@@ -966,14 +968,14 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={[
                     styles.buttonBigText,
-                    { fontSize: responsiveFontSize(2.25) / fontScale },
+                    { fontSize: moderateScale(17.2) / fontScale },
                   ]}
                 >
                   Battery
                 </Text>
                 <Text
                   style={{
-                    fontSize: responsiveFontSize(2.08) / fontScale,
+                    fontSize: moderateScale(16.1) / fontScale,
                     color: "darkgrey",
                     fontWeight: "500",
                   }}
@@ -989,7 +991,7 @@ export default function GiveeHomeScreen({ navigation }) {
             style={{
               borderBottomColor: "lightgray",
               borderBottomWidth: moderateScale(1),
-              marginTop: "8%",
+              marginTop: moderateScale(31, 0.3),
               width: "100%",
             }}
           ></SafeAreaView>
@@ -1009,7 +1011,7 @@ export default function GiveeHomeScreen({ navigation }) {
               style={{
                 fontWeight: "500",
                 marginLeft: "2%",
-                fontSize: responsiveFontSize(2.3) / fontScale,
+                fontSize: moderateScale(17.8) / fontScale,
               }}
             >
               Preferences
@@ -1017,7 +1019,7 @@ export default function GiveeHomeScreen({ navigation }) {
             <Text
               style={{
                 color: "darkgrey",
-                fontSize: responsiveFontSize(1.8) / fontScale,
+                fontSize: moderateScale(13.9) / fontScale,
                 marginRight: "2%",
               }}
             >
@@ -1098,7 +1100,7 @@ export default function GiveeHomeScreen({ navigation }) {
                   style={[
                     styles.buttonBigText,
                     isEnabledSleep ? { color: "white" } : { color: "black" },
-                    { fontSize: responsiveFontSize(2.25) / fontScale },
+                    { fontSize: moderateScale(17.4) / fontScale },
                   ]}
                 >
                   Sleep Mode
@@ -1106,7 +1108,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={[
                     styles.buttonSmallText,
-                    { fontSize: responsiveFontSize(2.08) / fontScale },
+                    { fontSize: moderateScale(16.5) / fontScale },
                   ]}
                 >
                   {isEnabledSleep ? "On" : "Off"}
@@ -1186,7 +1188,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={[
                     styles.buttonBigText,
-                    { fontSize: responsiveFontSize(2.25) / fontScale },
+                    { fontSize: moderateScale(17.4) / fontScale },
                   ]}
                 >
                   Do Not Disturb
@@ -1194,7 +1196,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={[
                     styles.buttonSmallText,
-                    { fontSize: responsiveFontSize(2.08) / fontScale },
+                    { fontSize: moderateScale(16.5) / fontScale },
                   ]}
                 >
                   {isEnabledDisturb ? "On" : "Off"}
@@ -1273,7 +1275,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={[
                     styles.buttonBigText,
-                    { fontSize: responsiveFontSize(2.25) / fontScale },
+                    { fontSize: moderateScale(17.4) / fontScale },
                   ]}
                 >
                   Monitoring
@@ -1281,7 +1283,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={[
                     styles.buttonSmallText,
-                    { fontSize: responsiveFontSize(2.08) / fontScale },
+                    { fontSize: moderateScale(16.5) / fontScale },
                   ]}
                 >
                   {isEnabledMonitor ? "Active" : "Paused"}
@@ -1354,7 +1356,7 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(5),
   },
   buttonBigText: {
-    fontSize: responsiveFontSize(2.25),
+    fontSize: moderateScale(17.4),
     fontWeight: "500",
   },
   buttonSmallText: {

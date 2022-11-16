@@ -147,7 +147,7 @@ const MiddleStack = () => {
                   onPress={() =>
                     dispatch(setTokenData({ ...tokenData, authPhase: 2 }))
                   }
-                  style={{ marginRight: "8%" }}
+                  style={{ marginRight: scale(10) }}
                 >
                   <Text
                     style={{
@@ -227,7 +227,7 @@ const HomeStack = () => {
   useEffect(() => {
     const toggle = setInterval(() => {
       showAlert();
-    }, 3000);
+    }, 30000);
     return () => clearInterval(toggle);
   });
 
@@ -254,7 +254,7 @@ const HomeStack = () => {
             headerTitleAlign: "center",
             headerTitleStyle: {
               color: "white",
-              fontSize: responsiveFontSize(2.5) / fontScale,
+              fontSize: moderateScale(19.5) / fontScale,
             },
             headerStyle: {
               backgroundColor: "dodgerblue",
@@ -265,9 +265,8 @@ const HomeStack = () => {
               <Provider2>
                 <View
                   style={{
-                    marginTop: Platform.OS === "ios" ? "7%" : "12%",
-                    marginLeft: "8%",
-                    //alignItems: "flex-end",
+                    alignSelf: "center",
+                    marginLeft: scale(10),
                     justifyContent: "center",
                   }}
                 >
@@ -279,7 +278,12 @@ const HomeStack = () => {
                     // Icons/Text shown to open the menu
                     anchor={
                       <View
-                        style={{ flexDirection: "row", alignItems: "center" }}
+                        style={{
+                          flex: 1,
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
                       >
                         <TouchableOpacity
                           style={{
@@ -293,8 +297,8 @@ const HomeStack = () => {
                         >
                           <Image
                             style={{
-                              height: 28,
-                              width: 28,
+                              height: moderateScale(25),
+                              width: moderateScale(25),
                               alignSelf: "center",
                             }}
                             source={require("./assets/images/moreIcon/menu.png")}
@@ -304,8 +308,8 @@ const HomeStack = () => {
                           <Image
                             source={require("./assets/images/alerts/shakeAlert.png")}
                             style={{
-                              width: 20,
-                              height: 20,
+                              width: moderateScale(20),
+                              height: moderateScale(20),
                               tintColor: "white",
                             }}
                           />
@@ -321,7 +325,7 @@ const HomeStack = () => {
                       )}
                       titleStyle={{
                         color: "black",
-                        fontSize: responsiveFontSize(1.9) / fontScale,
+                        fontSize: moderateScale(14.5) / fontScale,
                       }}
                       title={
                         tokenData.type === "caregivee"
@@ -337,8 +341,8 @@ const HomeStack = () => {
                           <Image
                             source={require("./assets/images/alerts/shakeAlert.png")}
                             style={{
-                              width: 25,
-                              height: 25,
+                              width: moderateScale(20),
+                              height: moderateScale(20),
 
                               tintColor: "dodgerblue",
                             }}
@@ -355,7 +359,7 @@ const HomeStack = () => {
                       )}
                       titleStyle={{
                         color: "black",
-                        fontSize: responsiveFontSize(1.9) / fontScale,
+                        fontSize: moderateScale(14.5) / fontScale,
                       }}
                       title="Requests"
                     />
@@ -369,7 +373,7 @@ const HomeStack = () => {
                       )}
                       titleStyle={{
                         color: "black",
-                        fontSize: responsiveFontSize(1.9) / fontScale,
+                        fontSize: moderateScale(14.5) / fontScale,
                       }}
                       title={
                         tokenData.type === "caregivee"
@@ -387,10 +391,14 @@ const HomeStack = () => {
                   closeMenu(),
                   navigation.navigate("SettingsScreen"),
                 ]}
-                style={{ marginRight: "8%" }}
+                style={{ marginRight: scale(10) }}
               >
                 <Image
                   source={require("./assets/images/settings/settings.png")}
+                  style={{
+                    width: moderateScale(25),
+                    height: moderateScale(25),
+                  }}
                 />
               </TouchableOpacity>
             ),
@@ -410,7 +418,7 @@ const HomeStack = () => {
             headerTitleAlign: "center",
             headerTitleStyle: {
               color: "white",
-              fontSize: responsiveFontSize(2.5) / fontScale,
+              fontSize: moderateScale(19.5) / fontScale,
             },
             headerStyle: {
               backgroundColor: "dodgerblue",
@@ -426,7 +434,7 @@ const HomeStack = () => {
             headerTitleAlign: "center",
             headerTitleStyle: {
               color: "white",
-              fontSize: responsiveFontSize(2.5) / fontScale,
+              fontSize: moderateScale(19.5) / fontScale,
             },
             headerStyle: {
               backgroundColor: "dodgerblue",
@@ -442,7 +450,7 @@ const HomeStack = () => {
             headerTitleAlign: "center",
             headerTitleStyle: {
               color: "white",
-              fontSize: responsiveFontSize(2.5) / fontScale,
+              fontSize: moderateScale(19.5) / fontScale,
             },
             headerStyle: {
               backgroundColor: "dodgerblue",
@@ -455,9 +463,9 @@ const HomeStack = () => {
               >
                 <Image
                   style={{
-                    width: 28,
-                    height: 28,
-                    marginRight: "8%",
+                    width: moderateScale(25),
+                    height: moderateScale(25),
+                    marginRight: scale(10),
                   }}
                   source={require("./assets/images/avatar/addUser.png")}
                 />
@@ -473,7 +481,7 @@ const HomeStack = () => {
             headerTitleAlign: "center",
             headerTitleStyle: {
               color: "white",
-              fontSize: responsiveFontSize(2.5) / fontScale,
+              fontSize: moderateScale(19.5) / fontScale,
             },
             headerStyle: {
               backgroundColor: "dodgerblue",
@@ -496,7 +504,7 @@ const HomeStack = () => {
             headerTitleAlign: "center",
             headerTitleStyle: {
               color: "white",
-              fontSize: responsiveFontSize(2.5) / fontScale,
+              fontSize: moderateScale(19.5) / fontScale,
             },
             headerStyle: {
               backgroundColor: "dodgerblue",

@@ -14,7 +14,6 @@ import {
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import GlobalStyle from "../utils/GlobalStyle";
 import { resetSelectedData, setSelectedUser } from "../redux/actions";
@@ -256,12 +255,12 @@ const RequestScreen = ({ navigation }) => {
             justifyContent: "center",
             height: "10%",
             width: "90%",
-            marginTop: "10%",
+            marginTop: scale(35),
           }}
         >
           <Text
             style={{
-              fontSize: responsiveFontSize(4.3) / fontScale,
+              fontSize: moderateScale(33.2) / fontScale,
               color: "white",
             }}
           >
@@ -282,7 +281,6 @@ const RequestScreen = ({ navigation }) => {
         <View style={styles.optionsPane}>
           <View
             style={{
-              //backgroundColor: "green",
               height: "100%",
               width: "40%",
               borderRadius: moderateScale(8),
@@ -302,7 +300,7 @@ const RequestScreen = ({ navigation }) => {
                   style={{
                     color: "darkred",
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(2.8) / fontScale,
+                    fontSize: moderateScale(22) / fontScale,
                   }}
                 >
                   Reject
@@ -313,7 +311,6 @@ const RequestScreen = ({ navigation }) => {
 
           <View
             style={{
-              //backgroundColor: "purple",
               height: "100%",
               width: "40%",
               borderRadius: 8,
@@ -333,7 +330,7 @@ const RequestScreen = ({ navigation }) => {
                   style={{
                     color: "green",
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(2.8) / fontScale,
+                    fontSize: moderateScale(22) / fontScale,
                   }}
                 >
                   Accept
@@ -357,14 +354,12 @@ const Item = ({
 }) => (
   <TouchableOpacity style={[styles.item, backgroundColor]} onPress={onPress}>
     <Text
-      style={[styles.name, { fontSize: responsiveFontSize(2.2) / fontScale }]}
+      style={[styles.name, { fontSize: moderateScale(17) / fontScale }]}
       numberOfLines={1}
     >
       {item.firstName} {item.lastName}
     </Text>
-    <Text
-      style={[styles.phone, { fontSize: responsiveFontSize(1.8) / fontScale }]}
-    >
+    <Text style={[styles.phone, { fontSize: moderateScale(13.8) / fontScale }]}>
       {countryCode === "+1"
         ? countryCode +
           " (" +
@@ -383,18 +378,12 @@ const Empty = () => {
   return (
     <View style={styles.emptyContainer}>
       <Text
-        style={[
-          styles.emptyText,
-          { fontSize: responsiveFontSize(3.5) / fontScale },
-        ]}
+        style={[styles.emptyText, { fontSize: moderateScale(27) / fontScale }]}
       >
         Your inbox is empty
       </Text>
       <Text
-        style={[
-          styles.emptyText,
-          { fontSize: responsiveFontSize(3.5) / fontScale },
-        ]}
+        style={[styles.emptyText, { fontSize: moderateScale(27) / fontScale }]}
       >
         ...
       </Text>
@@ -409,34 +398,30 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
   },
   item: {
-    padding: "3%",
+    padding: moderateScale(11.8),
     width: "65%",
     alignSelf: "center",
     borderRadius: moderateScale(8),
-    marginTop: "5%",
+    marginTop: scale(17.5),
     borderColor: "lightgray",
     borderWidth: moderateScale(3),
     alignItems: "center",
   },
   name: {
     color: "black",
-    fontSize: responsiveFontSize(2.2),
     fontFamily: "RobotoBold",
     alignSelf: "center",
   },
   title: {
     color: "black",
-    fontSize: responsiveFontSize(4),
     fontFamily: "RobotoBold",
   },
   phone: {
     color: "black",
-    fontSize: responsiveFontSize(1.8),
     alignSelf: "center",
   },
   emptyText: {
     color: "white",
-    fontSize: responsiveFontSize(3.5),
     alignSelf: "center",
   },
   emptyContainer: {
@@ -456,7 +441,7 @@ const styles = StyleSheet.create({
   buttons: {
     height: "100%",
     width: "100%",
-    marginTop: "2%",
+    marginTop: scale(3),
     borderColor: "transparent",
     backgroundColor: "transparent",
     textAlign: "center",
