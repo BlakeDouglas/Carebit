@@ -455,7 +455,10 @@ const HomeStack = () => {
             headerStyle: {
               backgroundColor: "dodgerblue",
             },
-            headerTitle: "Friend Requests",
+            headerTitle:
+              tokenData.type === "caregiver"
+                ? "Caregivee Requests"
+                : "Caregiver Requests",
 
             headerRight: () => (
               <TouchableOpacity
@@ -510,6 +513,22 @@ const HomeStack = () => {
               backgroundColor: "dodgerblue",
             },
             headerTitle: "Alert History",
+
+            headerRight: () =>
+              tokenData.type === "caregiver" ? (
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("CustomNotification")}
+                >
+                  <Image
+                    style={{
+                      width: moderateScale(25),
+                      height: moderateScale(25),
+                      marginRight: scale(10),
+                    }}
+                    source={require("./assets/images/editIcon/edit.png")}
+                  />
+                </TouchableOpacity>
+              ) : null,
           })}
         />
         <Stack.Screen name="AddScreen" component={AddScreen} />

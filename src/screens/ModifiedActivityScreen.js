@@ -124,7 +124,11 @@ export default function ModifiedActivityScreen({ navigation }) {
                   </Text>
                 </SafeAreaView>
                 <Image
-                  style={{ height:moderateScale(15), width: moderateScale(15), marginRight: "5%" }}
+                  style={{
+                    height: moderateScale(15),
+                    width: moderateScale(15),
+                    marginRight: "5%",
+                  }}
                   source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
                 />
               </TouchableOpacity>
@@ -154,7 +158,11 @@ export default function ModifiedActivityScreen({ navigation }) {
                   </Text>
                 </SafeAreaView>
                 <Image
-                  style={{ height: moderateScale(15), width: moderateScale(15), marginRight: "5%" }}
+                  style={{
+                    height: moderateScale(15),
+                    width: moderateScale(15),
+                    marginRight: "5%",
+                  }}
                   source={require("../../assets/images/icons-forward-light.imageset/grayArrow.png")}
                 />
               </TouchableOpacity>
@@ -214,7 +222,7 @@ const styles = StyleSheet.create({
   InnerContainers: {
     flexDirection: "row",
     marginTop: "7%",
-    backgroundColor: "white",
+    backgroundColor: "rgba(218, 223, 225, 1)",
     height: "15%",
     width: "100%",
     borderRadius: moderateScale(8),

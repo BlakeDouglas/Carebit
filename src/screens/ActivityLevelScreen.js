@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
   InnerContainers: {
     flexDirection: "row",
     marginTop: "7%",
-    backgroundColor: "white",
+    backgroundColor: "rgba(218, 223, 225, 1)",
     height: "15%",
     width: "100%",
     borderRadius: 8,
