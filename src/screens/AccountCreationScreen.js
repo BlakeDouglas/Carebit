@@ -21,6 +21,7 @@ import validator from "validator";
 import { phone } from "phone";
 import { userEndpoint } from "../network/CarebitAPI";
 import { setKeychain } from "../network/Auth";
+import { moderateScale } from "react-native-size-matters";
 
 export default function AccountCreationScreen({ navigation }) {
   // These are the two tools of the redux state manager. Use them instead of hooks
@@ -189,13 +190,13 @@ export default function AccountCreationScreen({ navigation }) {
               height: "22%",
               width: "100%",
               justifyContent: "flex-end",
-              marginBottom: "8%",
+              marginBottom: moderateScale(22),
             }}
           >
             <Text
               style={[
                 GlobalStyle.Subtitle2,
-                { fontSize: responsiveFontSize(3.71) / fontScale },
+                { fontSize: moderateScale(36.5) / fontScale },
               ]}
             >
               {tokenData.type.charAt(0).toUpperCase() +
@@ -290,7 +291,7 @@ export default function AccountCreationScreen({ navigation }) {
               <View
                 style={{
                   height: "20%",
-                  marginTop: "7%",
+                  marginTop: moderateScale(20),
                   justifyContent: "center",
                 }}
               >

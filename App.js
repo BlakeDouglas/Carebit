@@ -36,6 +36,7 @@ import { Provider, useDispatch, useSelector } from "react-redux";
 import { Store } from "./src/redux/store";
 import { useFonts } from "expo-font";
 import React, { useEffect } from "react";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { Menu, Divider, Provider as Provider2 } from "react-native-paper";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { getRequestCount } from "./src/network/CarebitAPI";
@@ -150,7 +151,7 @@ const MiddleStack = () => {
                 >
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(2.5) / fontScale,
+                      fontSize: moderateScale(20) / fontScale,
                       color: "white",
                     }}
                   >

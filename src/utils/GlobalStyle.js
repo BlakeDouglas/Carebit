@@ -44,7 +44,7 @@ export default StyleSheet.create({
     flex: 1,
     marginLeft: scale(42),
     marginRight: scale(42),
-    marginTop: scale(100),
+    marginTop: moderateScale(112, 0.3),
   },
   HeaderText: {
     flex: 1,

@@ -11,11 +11,13 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { useSelector, useDispatch } from "react-redux";
 import { setTokenData } from "../redux/actions";
+import { moderateScale } from "react-native-size-matters";
 
 export default function RoleSelectScreen({ navigation }) {
   const dispatch = useDispatch();
   const tokenData = useSelector((state) => state.Reducers.tokenData);
-
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
   const caregiverCreateAccountButtonHandler = () => {
     dispatch(setTokenData({ ...tokenData, type: "caregiver" }));
     navigation.navigate("AccountCreationScreen");
@@ -38,7 +40,7 @@ export default function RoleSelectScreen({ navigation }) {
           <Text
             style={[
               GlobalStyle.Subtitle,
-              { fontSize: responsiveFontSize(6.3) / fontScale },
+              { fontSize: moderateScale(49) / fontScale },
             ]}
           >
             Choose Your
@@ -46,7 +48,7 @@ export default function RoleSelectScreen({ navigation }) {
           <Text
             style={[
               GlobalStyle.Title,
-              { fontSize: responsiveFontSize(6.95) / fontScale },
+              { fontSize: moderateScale(54) / fontScale },
             ]}
           >
             Role
@@ -62,7 +64,7 @@ export default function RoleSelectScreen({ navigation }) {
             <Text
               style={[
                 GlobalStyle.Text,
-                { fontSize: responsiveFontSize(2.51) / fontScale },
+                { fontSize: moderateScale(19.3) / fontScale },
               ]}
             >
               To create your account, let us know if you're giving care or are
@@ -76,7 +78,7 @@ export default function RoleSelectScreen({ navigation }) {
             <Text
               style={[
                 GlobalStyle.ButtonText,
-                { fontSize: responsiveFontSize(2.51) / fontScale },
+                { fontSize: moderateScale(19.4) / fontScale },
               ]}
             >
               I'm Caregiving
@@ -90,7 +92,7 @@ export default function RoleSelectScreen({ navigation }) {
             <Text
               style={[
                 GlobalStyle.ButtonText,
-                { fontSize: responsiveFontSize(2.51) / fontScale },
+                { fontSize: moderateScale(19.4) / fontScale },
               ]}
             >
               I'm Receiving Care

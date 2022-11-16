@@ -106,7 +106,8 @@ export default function LinkUsersScreen({ navigation }) {
       );
     }
   };
-
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background03.png")}
@@ -131,7 +132,7 @@ export default function LinkUsersScreen({ navigation }) {
             <View
               style={{
                 alignSelf: "center",
-                height: "31%",
+                height: moderateScale(windowHeight / 4, 0.7),
                 width: "75%",
                 backgroundColor: "white",
                 borderRadius: moderateScale(8),
@@ -150,14 +151,14 @@ export default function LinkUsersScreen({ navigation }) {
                 <Text
                   style={{
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(2.2) / fontScale,
+                    fontSize: moderateScale(18) / fontScale,
                   }}
                 >
                   Warning
                 </Text>
                 <Text
                   style={{
-                    fontSize: responsiveFontSize(1.8) / fontScale,
+                    fontSize: moderateScale(14) / fontScale,
                     fontWeight: "400",
                     textAlign: "left",
                   }}
@@ -190,7 +191,6 @@ export default function LinkUsersScreen({ navigation }) {
                       justifyContent: "center",
                       height: "100%",
                       width: "100%",
-                      //backgroundColor: "blue",
                     }}
                     onPress={() => {
                       toggleModal1();
@@ -200,7 +200,7 @@ export default function LinkUsersScreen({ navigation }) {
                     <Text
                       style={{
                         color: "dodgerblue",
-                        fontSize: responsiveFontSize(2) / fontScale,
+                        fontSize: moderateScale(15.5) / fontScale,
                         fontWeight: "bold",
                       }}
                     >
@@ -228,7 +228,7 @@ export default function LinkUsersScreen({ navigation }) {
                     <Text
                       style={{
                         color: "dodgerblue",
-                        fontSize: responsiveFontSize(2) / fontScale,
+                        fontSize: moderateScale(15.5) / fontScale,
                         fontWeight: "bold",
                       }}
                     >
@@ -240,12 +240,17 @@ export default function LinkUsersScreen({ navigation }) {
             </View>
           </Modal>
 
-          <SafeAreaView style={[GlobalStyle.Container, { marginTop: "19%" }]}>
-            <SafeAreaView style={{ marginBottom: "2%" }}>
+          <SafeAreaView
+            style={[
+              GlobalStyle.Container,
+              { marginTop: moderateScale(112, 0.1) },
+            ]}
+          >
+            <SafeAreaView style={{ marginBottom: moderateScale(23, 0.8) }}>
               <Text
                 style={[
                   GlobalStyle.Subtitle,
-                  { fontSize: responsiveFontSize(5.3) / fontScale },
+                  { fontSize: moderateScale(39) / fontScale },
                 ]}
               >
                 Connect to a Caregivee
@@ -255,10 +260,8 @@ export default function LinkUsersScreen({ navigation }) {
               style={{
                 height: "75%",
                 width: "100%",
-                marginTop: "13%",
+                marginTop: moderateScale(20),
                 justifyContent: "center",
-
-                //backgroundColor: "green",
               }}
             >
               <SafeAreaView
@@ -266,14 +269,13 @@ export default function LinkUsersScreen({ navigation }) {
                   height: "50%",
                   width: "100%",
                   alignSelf: "center",
-                  //backgroundColor: "blue",
                   justifyContent: "center",
                 }}
               >
                 <Text
                   style={[
                     GlobalStyle.Text,
-                    { fontSize: responsiveFontSize(2.3) / fontScale },
+                    { fontSize: moderateScale(17, 0.6) / fontScale },
                   ]}
                 >
                   Request a Caregivee for monitoring {"\n"}(recommended method)
@@ -282,9 +284,8 @@ export default function LinkUsersScreen({ navigation }) {
                   style={{
                     alignSelf: "center",
                     width: "100%",
-                    //backgroundColor: "blue",
                     justifyContent: "center",
-                    marginTop: "5%",
+                    marginTop: moderateScale(10, 0.1),
                   }}
                 >
                   <CustomTextInput
@@ -302,13 +303,16 @@ export default function LinkUsersScreen({ navigation }) {
                   />
                 </SafeAreaView>
                 <TouchableOpacity
-                  style={[GlobalStyle.Button, { marginTop: "5%" }]}
+                  style={[
+                    GlobalStyle.Button,
+                    { marginTop: moderateScale(10, 0.1) },
+                  ]}
                   onPress={validate}
                 >
                   <Text
                     style={[
                       GlobalStyle.ButtonText,
-                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                      { fontSize: scale(18) / fontScale },
                     ]}
                   >
                     Send Request
@@ -316,24 +320,31 @@ export default function LinkUsersScreen({ navigation }) {
                 </TouchableOpacity>
               </SafeAreaView>
               <SafeAreaView
-                style={{ flex: 1, marginTop: "19%", alignItems: "center" }}
+                style={{
+                  flex: 1,
+                  marginTop: moderateScale(40, 0.6),
+                  alignItems: "center",
+                }}
               >
                 <Text
                   style={[
                     GlobalStyle.Text,
-                    { fontSize: responsiveFontSize(2.3) / fontScale },
+                    { fontSize: moderateScale(17, 0.6) / fontScale },
                   ]}
                 >
                   Proceed without your Caregivee using the app
                 </Text>
                 <TouchableOpacity
-                  style={[GlobalStyle.Button, { marginTop: "8%" }]}
+                  style={[
+                    GlobalStyle.Button,
+                    { marginTop: moderateScale(15, 0.1) },
+                  ]}
                   onPress={toggleModal1}
                 >
                   <Text
                     style={[
                       GlobalStyle.ButtonText,
-                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                      { fontSize: scale(18) / fontScale },
                     ]}
                   >
                     Opt Out
