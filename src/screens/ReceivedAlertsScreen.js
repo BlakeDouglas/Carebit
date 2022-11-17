@@ -20,16 +20,36 @@ export default function ReceivedAlertsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const [data, setData] = useState([]);
+  const [backgroundData, setBackgroundData] = useState([]);
+
+  // Note that 6 is a full page of alerts. Starting with 6 as the default shown will immediately load more at start
+  const increment = 10; // Number to load each time the bottom of the list is reached
+  const defaultShown = 8; // This is the default number of alerts to show
+
+  const [maxShown, setMaxShown] = useState(0);
+
   const [refreshing, setRefreshing] = React.useState(false);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
+
   const { fontScale } = useWindowDimensions();
+
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     getAlerts();
     wait(1000).then(() => setRefreshing(false));
   }, []);
+
+  const getFirst = (arr, n) => {
+    if (n === 0) return [];
+    if (arr.length === 0) return [];
+    let retArr = [];
+    for (let i = 0; i < Math.min(n, arr.length); i++) {
+      retArr.push(arr[i]);
+    }
+    return retArr;
+  };
 
   const getAlerts = async () => {
     if (!selectedUser.caregiveeID) return;
@@ -40,14 +60,19 @@ export default function ReceivedAlertsScreen({ navigation }) {
     };
     const json = await getAlertsEndpoint(params);
     if (json) {
-      setData(json.alerts.reverse().splice(0, 50));
-      console.log(data);
+      setMaxShown(defaultShown);
+      setBackgroundData(json.alerts.reverse());
+      setData(getFirst(json.alerts, defaultShown));
     }
   };
 
   useEffect(() => {
     getAlerts();
   }, []);
+
+  useEffect(() => {
+    setData(getFirst(backgroundData, maxShown));
+  }, [maxShown, backgroundData]);
 
   const Item = ({ alertType, time, date, body, title, ok }) => (
     <SafeAreaView
@@ -252,6 +277,11 @@ export default function ReceivedAlertsScreen({ navigation }) {
         }
         keyExtractor={(item) => item.alertID}
         ListEmptyComponent={Empty}
+        onEndReachedThreshold={0.01}
+        onEndReached={(info) => {
+          console.log("End reached. Loading more.");
+          setMaxShown(Math.min(maxShown + increment, backgroundData.length));
+        }}
       />
     </SafeAreaView>
   );

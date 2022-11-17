@@ -17,11 +17,12 @@ import CustomTextInput from "../utils/CustomTextInput";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
-import { setTokenData } from "../redux/actions";
+import { resetData, setTokenData } from "../redux/actions";
 import validator from "validator";
 import { phone } from "phone";
-import { physicianEndpoint } from "../network/CarebitAPI";
+import { logoutEndpoint, physicianEndpoint } from "../network/CarebitAPI";
 import { moderateScale } from "react-native-size-matters";
+import { deleteKeychain } from "../network/Auth";
 
 export default function PhysicianInfoScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -51,6 +52,18 @@ export default function PhysicianInfoScreen({ navigation }) {
   };
 
   const registerPhysician = async () => {
+    // If you somehow got here without giveeID, then log out
+    if (!tokenData.caregiveeID) {
+      if (tokenData.userID)
+        await logoutEndpoint({
+          auth: tokenData.access_token,
+          targetID: tokenData.userID,
+        });
+
+      await deleteKeychain();
+      dispatch(resetData());
+      return;
+    }
     const params = {
       body: {
         ...inputs,
