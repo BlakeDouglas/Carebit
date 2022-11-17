@@ -57,6 +57,9 @@ export default function GiverSettingsScreen({ navigation }) {
   let selectedNumber = selectedCountryCode
     ? selectedUser.phone.substring(selectedCountryCode.length)
     : null;
+
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
@@ -71,33 +74,36 @@ export default function GiverSettingsScreen({ navigation }) {
         />
         <SafeAreaView
           style={{
-            marginTop: "8%",
-            height: "15%",
+            marginTop: moderateScale(35, 0.1),
+            height: moderateScale(windowHeight / 8.5, 0.4),
             width: "100%",
             borderTopColor: "rgba(255,255,255,0)",
-            borderTopWidth: 1,
+            borderTopWidth: moderateScale(1),
             borderBottomColor: "rgba(255,255,255,0)",
-            borderBottomWidth: 1,
+            borderBottomWidth: moderateScale(1),
             alignItems: "center",
             flexDirection: "row",
             backgroundColor: "rgba(255,255,255,.1)",
           }}
         >
           <Image
-            style={{ height: moderateScale(85), width: moderateScale(85), marginLeft: "6%" }}
+            style={{
+              height: moderateScale(85),
+              width: moderateScale(85),
+              marginLeft: "6%",
+            }}
             source={require("../../assets/images/avatar/DefaultAvatar.png")}
           />
           <SafeAreaView
             style={{
               marginLeft: "3%",
-              //backgroundColor: "white",
               width: "68%",
               marginRight: "1%",
             }}
           >
             <Text
               style={{
-                fontSize: responsiveFontSize(2.8) / fontScale,
+                fontSize: moderateScale(21.5) / fontScale,
                 color: "white",
               }}
               numberOfLines={1}
@@ -106,7 +112,7 @@ export default function GiverSettingsScreen({ navigation }) {
             </Text>
             <Text
               style={{
-                fontSize: responsiveFontSize(2.1) / fontScale,
+                fontSize: moderateScale(16.5) / fontScale,
                 color: "white",
               }}
               numberOfLines={1}
@@ -121,16 +127,15 @@ export default function GiverSettingsScreen({ navigation }) {
           <SafeAreaView style={{ width: "100%", height: "63%" }}>
             <SafeAreaView
               style={{
-                marginTop: "5%",
+                marginTop: moderateScale(33, 0.1),
                 height: "29%",
                 width: "100%",
-                //backgroundColor: "red",
               }}
             >
               <Text
                 style={[
                   styles.Title,
-                  { fontSize: responsiveFontSize(1.9) / fontScale },
+                  { fontSize: moderateScale(14.6) / fontScale },
                 ]}
               >
                 SELECTED CAREGIVEE
@@ -140,7 +145,7 @@ export default function GiverSettingsScreen({ navigation }) {
                 <Text
                   style={[
                     styles.BoxTitle,
-                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
                 >
                   Name
@@ -157,7 +162,7 @@ export default function GiverSettingsScreen({ navigation }) {
                       styles.BoxSub,
                       {
                         textAlign: "right",
-                        fontSize: responsiveFontSize(2.2) / fontScale,
+                        fontSize: moderateScale(17) / fontScale,
                       },
                     ]}
                     numberOfLines={1}
@@ -171,7 +176,7 @@ export default function GiverSettingsScreen({ navigation }) {
                 <Text
                   style={[
                     styles.BoxTitle,
-                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
                 >
                   Phone
@@ -188,7 +193,7 @@ export default function GiverSettingsScreen({ navigation }) {
                       styles.BoxSub,
                       {
                         textAlign: "right",
-                        fontSize: responsiveFontSize(2.2) / fontScale,
+                        fontSize: moderateScale(17) / fontScale,
                       },
                     ]}
                   >
@@ -214,14 +219,13 @@ export default function GiverSettingsScreen({ navigation }) {
               style={{
                 height: "29%",
                 width: "100%",
-                marginTop: "6%",
-                //backgroundColor: "blue",
+                marginTop: scale(15),
               }}
             >
               <Text
                 style={[
                   styles.Title,
-                  { fontSize: responsiveFontSize(1.9) / fontScale },
+                  { fontSize: moderateScale(14.6) / fontScale },
                 ]}
               >
                 PHYSICIAN INFO
@@ -231,7 +235,7 @@ export default function GiverSettingsScreen({ navigation }) {
                 <Text
                   style={[
                     styles.BoxTitle,
-                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
                 >
                   Name
@@ -239,7 +243,7 @@ export default function GiverSettingsScreen({ navigation }) {
                 <Text
                   style={[
                     styles.BoxSub,
-                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
                   numberOfLines={1}
                 >
@@ -250,7 +254,7 @@ export default function GiverSettingsScreen({ navigation }) {
                 <Text
                   style={[
                     styles.BoxTitle,
-                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
                 >
                   Phone
@@ -258,7 +262,7 @@ export default function GiverSettingsScreen({ navigation }) {
                 <Text
                   style={[
                     styles.BoxSub,
-                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
                 >
                   {selectedUser.physPhone
@@ -282,14 +286,13 @@ export default function GiverSettingsScreen({ navigation }) {
               style={{
                 height: "29%",
                 width: "100%",
-                marginTop: "3%",
-                //backgroundColor: "blue",
+                marginTop: scale(15),
               }}
             >
               <Text
                 style={[
                   styles.Title,
-                  { fontSize: responsiveFontSize(1.9) / fontScale },
+                  { fontSize: moderateScale(14.6) / fontScale },
                 ]}
               >
                 ALERTS
@@ -299,7 +302,7 @@ export default function GiverSettingsScreen({ navigation }) {
                 <Text
                   style={[
                     styles.BoxTitle,
-                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
                 >
                   Activity Level
@@ -315,7 +318,7 @@ export default function GiverSettingsScreen({ navigation }) {
                   <Text
                     style={[
                       styles.BoxSub,
-                      { fontSize: responsiveFontSize(2.2) / fontScale },
+                      { fontSize: moderateScale(17) / fontScale },
                     ]}
                   >
                     {selectedUser.healthProfile === 1
@@ -331,7 +334,6 @@ export default function GiverSettingsScreen({ navigation }) {
                       height: moderateScale(15),
                       width: moderateScale(15),
                       marginLeft: "1%",
-                      //tintColor: "white",
                       alignSelf: "center",
                     }}
                     source={require("../../assets/images/icons-forward-light.imageset/icons-forward-light.png")}
@@ -342,7 +344,7 @@ export default function GiverSettingsScreen({ navigation }) {
                 <Text
                   style={[
                     styles.BoxTitle,
-                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
                 >
                   Custom Alert Settings
@@ -358,7 +360,7 @@ export default function GiverSettingsScreen({ navigation }) {
                   <Text
                     style={[
                       styles.BoxSub,
-                      { fontSize: responsiveFontSize(2.2) / fontScale },
+                      { fontSize: moderateScale(17) / fontScale },
                     ]}
                   >
                     {selectedUser.healthProfile === 4 ? "On" : "Off"}
@@ -368,7 +370,6 @@ export default function GiverSettingsScreen({ navigation }) {
                       height: moderateScale(15),
                       width: moderateScale(15),
                       marginLeft: "1%",
-                      //tintColor: "black",
                     }}
                     source={require("../../assets/images/icons-forward-light.imageset/icons-forward-light.png")}
                   />
@@ -383,7 +384,6 @@ export default function GiverSettingsScreen({ navigation }) {
               width: "100%",
               alignItems: "center",
               justifyContent: "flex-end",
-              //backgroundColor: "blue",
             }}
           >
             <SafeAreaView
@@ -392,13 +392,11 @@ export default function GiverSettingsScreen({ navigation }) {
                 height: "70%",
                 justifyContent: "center",
                 alignSelf: "center",
-                //backgroundColor: "blue",
               }}
             >
               <Text
                 style={{
-                  fontSize: responsiveFontSize(2.2) / fontScale,
-                  //fontWeight: "600",
+                  fontSize: moderateScale(17) / fontScale,
                   color: "white",
                   textAlign: "left",
                 }}
@@ -414,7 +412,6 @@ export default function GiverSettingsScreen({ navigation }) {
               style={{
                 width: "100%",
                 justifyContent: "center",
-                //backgroundColor: "green",
               }}
             >
               <TouchableOpacity
@@ -426,7 +423,7 @@ export default function GiverSettingsScreen({ navigation }) {
                 <Text
                   style={[
                     GlobalStyle.ButtonText,
-                    { fontSize: responsiveFontSize(2.51) / fontScale },
+                    { fontSize: moderateScale(19.5) / fontScale },
                   ]}
                 >
                   View Requests
@@ -441,7 +438,7 @@ export default function GiverSettingsScreen({ navigation }) {
                 <Text
                   style={[
                     GlobalStyle.ButtonText,
-                    { fontSize: responsiveFontSize(2.51) / fontScale },
+                    { fontSize: moderateScale(19.5) / fontScale },
                   ]}
                 >
                   Add Caregivee
@@ -461,7 +458,7 @@ export default function GiverSettingsScreen({ navigation }) {
             <Text
               style={{
                 color: "red",
-                fontSize: responsiveFontSize(2.5) / fontScale,
+                fontSize: moderateScale(19.5) / fontScale,
                 fontWeight: "bold",
               }}
             >
@@ -500,7 +497,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: moderateScale(0.5),
   },
   Title: {
-    fontSize: responsiveFontSize(1.9),
+    fontSize: moderateScale(14.6),
     color: "white",
     fontWeight: "500",
     marginLeft: "4%",
@@ -514,13 +511,13 @@ const styles = StyleSheet.create({
     marginLeft: "4%",
   },
   BoxTitle: {
-    fontSize: responsiveFontSize(2.2),
+    fontSize: moderateScale(17),
     fontWeight: "600",
     marginLeft: "4%",
     color: "white",
   },
   BoxSub: {
-    fontSize: responsiveFontSize(2.2),
+    fontSize: moderateScale(17),
     marginRight: "4%",
     color: "white",
   },

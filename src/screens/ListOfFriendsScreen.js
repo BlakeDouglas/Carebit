@@ -242,7 +242,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
         <Text
           style={[
             styles.emptyText,
-            { fontSize: responsiveFontSize(3.5) / fontScale },
+            { fontSize: moderateScale(27) / fontScale },
           ]}
         >
           No added {tokenData.type === "caregivee" ? "caregiver" : "caregivee"}s
@@ -250,7 +250,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
         <Text
           style={[
             styles.emptyText,
-            { fontSize: responsiveFontSize(3.5) / fontScale },
+            { fontSize: moderateScale(27) / fontScale },
           ]}
         >
           ...
@@ -278,12 +278,12 @@ const ListOfFriendsScreen = ({ navigation }) => {
             justifyContent: "center",
             height: "10%",
             width: "90%",
-            marginTop: "10%",
+            marginTop: scale(35),
           }}
         >
           <Text
             style={{
-              fontSize: responsiveFontSize(4.3) / fontScale,
+              fontSize: moderateScale(33.2) / fontScale,
               color: "white",
             }}
           >
@@ -306,7 +306,6 @@ const ListOfFriendsScreen = ({ navigation }) => {
           {selectedId !== null && (
             <View
               style={{
-                //backgroundColor: "green",
                 height: "100%",
                 width: "40%",
                 borderRadius: moderateScale(8),
@@ -322,7 +321,6 @@ const ListOfFriendsScreen = ({ navigation }) => {
 
                   height: "100%",
                   width: "100%",
-                  //backgroundColor: "blue",
                   borderRadius: moderateScale(8),
                 }}
                 onPress={() => {
@@ -334,7 +332,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
                     textAlign: "center",
                     color: "white",
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(3) / fontScale,
+                    fontSize: moderateScale(22) / fontScale,
                   }}
                 >
                   Select
@@ -345,7 +343,6 @@ const ListOfFriendsScreen = ({ navigation }) => {
           {selectedId !== null && (
             <View
               style={{
-                // backgroundColor: "purple",
                 height: "100%",
                 width: "40%",
                 borderRadius: moderateScale(8),
@@ -358,7 +355,6 @@ const ListOfFriendsScreen = ({ navigation }) => {
                   alignItems: "center",
                   height: "100%",
                   width: "100%",
-                  //backgroundColor: "blue",
                   borderRadius: moderateScale(8),
                 }}
                 onPress={() => {
@@ -372,7 +368,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
                     textAlign: "center",
                     color: "red",
                     fontWeight: "bold",
-                    fontSize: responsiveFontSize(3) / fontScale,
+                    fontSize: moderateScale(22) / fontScale,
                   }}
                 >
                   Delete
@@ -393,11 +389,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
   },
   item: {
-    padding: "3%",
+    padding: moderateScale(11.8),
     width: "65%",
     alignSelf: "center",
     borderRadius: moderateScale(8),
-    marginTop: "5%",
+    marginTop: scale(17.5),
     backgroundColor: "blue",
     borderColor: "lightgray",
     borderWidth: moderateScale(3),
@@ -431,7 +427,6 @@ const styles = StyleSheet.create({
     height: "8%",
     marginBottom: "2%",
     width: "100%",
-    // backgroundColor: "black",
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
@@ -441,7 +436,7 @@ const styles = StyleSheet.create({
   buttons: {
     height: "100%",
     width: "100%",
-    marginTop: "2%",
+    marginTop: scale(3),
     borderColor: "dodgerblue",
     backgroundColor: "lightgray",
     textAlign: "center",

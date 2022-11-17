@@ -13,7 +13,6 @@ import {
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import GlobalStyle from "../utils/GlobalStyle";
-import { responsiveFontSize } from "react-native-responsive-dimensions";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { resetData, setSelectedUser, setTokenData } from "../redux/actions";
@@ -154,12 +153,12 @@ export default function ModifiedAuthScreen({ navigation }) {
             }}
           >
             <Image
-              style={{ marginRight: "1%" }}
+              style={{ marginRight: scale(5) }}
               source={require("../../assets/images/midCheck/icons-check.png")}
             />
             <Text
               style={{
-                fontSize: responsiveFontSize(2.8) / fontScale,
+                fontSize: moderateScale(21, 0.8) / fontScale,
                 color: "white",
               }}
             >
@@ -168,7 +167,7 @@ export default function ModifiedAuthScreen({ navigation }) {
           </SafeAreaView>
           <SafeAreaView
             style={{
-              height: "15%",
+              height: moderateScale(30),
               width: "100%",
               justifyContent: "flex-end",
               alignItems: "center",
@@ -178,7 +177,7 @@ export default function ModifiedAuthScreen({ navigation }) {
               style={{
                 alignSelf: "center",
                 color: "white",
-                fontSize: responsiveFontSize(2.5) / fontScale,
+                fontSize: moderateScale(19.2) / fontScale,
               }}
             >
               Link the Caregivee's Fitbit account to provide the Caregiver
@@ -202,7 +201,7 @@ export default function ModifiedAuthScreen({ navigation }) {
               <Text
                 style={[
                   GlobalStyle.ButtonText,
-                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                  { fontSize: moderateScale(19.4) / fontScale },
                 ]}
               >
                 Link Fitbit
@@ -213,9 +212,8 @@ export default function ModifiedAuthScreen({ navigation }) {
               style={[
                 GlobalStyle.Button,
                 {
-                  marginTop: verticalScale(20),
+                  marginTop: scale(15),
                   backgroundColor: "transparent",
-                  fontSize: responsiveFontSize(2.51) / fontScale,
                 },
               ]}
               onPress={() => {
@@ -225,7 +223,7 @@ export default function ModifiedAuthScreen({ navigation }) {
               <Text
                 style={[
                   GlobalStyle.ButtonText,
-                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                  { fontSize: moderateScale(19.4) / fontScale },
                 ]}
               >
                 Cancel

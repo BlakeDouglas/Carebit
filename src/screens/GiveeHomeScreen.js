@@ -17,7 +17,6 @@ import Moment from "moment";
 import { extendMoment } from "moment-range";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import Modal from "react-native-modal";
 import call from "react-native-phone-call";
@@ -317,7 +316,7 @@ export default function GiveeHomeScreen({ navigation }) {
         <View
           style={{
             alignSelf: "center",
-            height: "30%",
+            height: moderateScale(windowHeight / 4, 0.7),
             width: "70%",
             backgroundColor: "white",
             borderRadius: moderateScale(8),
@@ -336,7 +335,7 @@ export default function GiveeHomeScreen({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2) / fontScale,
+                fontSize: moderateScale(17, 0.6) / fontScale,
               }}
             >
               Sleep Mode
@@ -350,7 +349,7 @@ export default function GiveeHomeScreen({ navigation }) {
             ></SafeAreaView>
             <Text
               style={{
-                fontSize: responsiveFontSize(1.8) / fontScale,
+                fontSize: moderateScale(14, 0.6) / fontScale,
                 fontWeight: "400",
                 textAlign: "left",
                 padding: moderateScale(7),
@@ -389,7 +388,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2) / fontScale,
+                    fontSize: moderateScale(15.1, 0.6) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -417,7 +416,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2) / fontScale,
+                    fontSize: moderateScale(15.1, 0.6) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -441,7 +440,7 @@ export default function GiveeHomeScreen({ navigation }) {
         <View
           style={{
             alignSelf: "center",
-            height: "30%",
+            height: moderateScale(windowHeight / 4, 0.7),
             width: "70%",
             backgroundColor: "white",
             borderRadius: moderateScale(8),
@@ -460,7 +459,7 @@ export default function GiveeHomeScreen({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2) / fontScale,
+                fontSize: moderateScale(17, 0.6) / fontScale,
               }}
             >
               Do Not Disturb
@@ -474,7 +473,7 @@ export default function GiveeHomeScreen({ navigation }) {
             ></SafeAreaView>
             <Text
               style={{
-                fontSize: responsiveFontSize(1.8) / fontScale,
+                fontSize: moderateScale(14, 0.6) / fontScale,
                 fontWeight: "400",
                 padding: moderateScale(7),
                 textAlign: "left",
@@ -513,7 +512,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2) / fontScale,
+                    fontSize: moderateScale(15.1, 0.6) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -541,7 +540,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2) / fontScale,
+                    fontSize: moderateScale(15.1, 0.6) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -565,7 +564,7 @@ export default function GiveeHomeScreen({ navigation }) {
         <View
           style={{
             alignSelf: "center",
-            height: "30%",
+            height: moderateScale(windowHeight / 4, 0.7),
             width: "70%",
             backgroundColor: "white",
             borderRadius: moderateScale(8),
@@ -584,7 +583,7 @@ export default function GiveeHomeScreen({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2) / fontScale,
+                fontSize: moderateScale(17, 0.6) / fontScale,
               }}
             >
               Monitoring
@@ -598,7 +597,7 @@ export default function GiveeHomeScreen({ navigation }) {
             ></SafeAreaView>
             <Text
               style={{
-                fontSize: responsiveFontSize(1.8) / fontScale,
+                fontSize: moderateScale(14, 0.6) / fontScale,
                 fontWeight: "400",
                 padding: moderateScale(7),
                 textAlign: "left",
@@ -637,7 +636,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "red",
-                    fontSize: responsiveFontSize(2) / fontScale,
+                    fontSize: moderateScale(15.1, 0.6) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -665,7 +664,7 @@ export default function GiveeHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2) / fontScale,
+                    fontSize: moderateScale(15.1, 0.6) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -676,6 +675,7 @@ export default function GiveeHomeScreen({ navigation }) {
           </SafeAreaView>
         </View>
       </Modal>
+
       {/* Container for all visible data */}
       <ScrollView
         refreshControl={
@@ -1343,7 +1343,8 @@ const styles = StyleSheet.create({
     marginRight: "5%",
   },
   switchBody: {
-    transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }],
+    transform: [{ scaleX: moderateScale(1.1) }, { scaleY: moderateScale(1.1) }],
+    marginRight: moderateScale(20, 0.8),
   },
   bottomRowBody: {
     width: "92%",

@@ -74,7 +74,7 @@ export default function ModifiedActivityScreen({ navigation }) {
             <Text
               style={[
                 GlobalStyle.Subtitle,
-                { fontSize: responsiveFontSize(6.3) / fontScale },
+                { fontSize: moderateScale(49) / fontScale },
               ]}
             >
               Activity Level
@@ -84,7 +84,7 @@ export default function ModifiedActivityScreen({ navigation }) {
               <Text
                 style={[
                   styles.DescriptiveText,
-                  { fontSize: responsiveFontSize(2.2) / fontScale },
+                  { fontSize: moderateScale(17) / fontScale },
                 ]}
               >
                 Choose the usual level of activity for this account
@@ -109,7 +109,7 @@ export default function ModifiedActivityScreen({ navigation }) {
                   <Text
                     style={[
                       styles.InnerTitle,
-                      { fontSize: responsiveFontSize(2.4) / fontScale },
+                      { fontSize: moderateScale(18.5) / fontScale },
                     ]}
                   >
                     Active
@@ -117,7 +117,7 @@ export default function ModifiedActivityScreen({ navigation }) {
                   <Text
                     style={[
                       styles.InnerText,
-                      { fontSize: responsiveFontSize(2.2) / fontScale },
+                      { fontSize: moderateScale(17) / fontScale },
                     ]}
                   >
                     Living an active life
@@ -143,7 +143,7 @@ export default function ModifiedActivityScreen({ navigation }) {
                   <Text
                     style={[
                       styles.InnerTitle,
-                      { fontSize: responsiveFontSize(2.4) / fontScale },
+                      { fontSize: moderateScale(18.5) / fontScale },
                     ]}
                   >
                     Sedentary
@@ -151,7 +151,7 @@ export default function ModifiedActivityScreen({ navigation }) {
                   <Text
                     style={[
                       styles.InnerText,
-                      { fontSize: responsiveFontSize(2.2) / fontScale },
+                      { fontSize: moderateScale(17) / fontScale },
                     ]}
                   >
                     Not active, but not homebound
@@ -176,7 +176,7 @@ export default function ModifiedActivityScreen({ navigation }) {
                   <Text
                     style={[
                       styles.InnerTitle,
-                      { fontSize: responsiveFontSize(2.4) / fontScale },
+                      { fontSize: moderateScale(18.5) / fontScale },
                     ]}
                   >
                     Homebound
@@ -184,7 +184,7 @@ export default function ModifiedActivityScreen({ navigation }) {
                   <Text
                     style={[
                       styles.InnerText,
-                      { fontSize: responsiveFontSize(2.2) / fontScale },
+                      { fontSize: moderateScale(17) / fontScale },
                     ]}
                   >
                     Unable to leave home
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     marginTop: "5%",
   },
   DescriptiveText: {
-    fontSize: responsiveFontSize(2.2),
+    fontSize: moderateScale(17),
     color: "white",
   },
   InnerContainers: {
@@ -243,13 +243,13 @@ const styles = StyleSheet.create({
     marginLeft: "6%",
     color: "black",
     fontWeight: "600",
-    fontSize: responsiveFontSize(2.4),
+    fontSize: moderateScale(18.5),
   },
   InnerText: {
     marginLeft: "6%",
     marginTop: "2%",
     color: "darkgray",
     fontWeight: "400",
-    fontSize: responsiveFontSize(2.2),
+    fontSize: moderateScale(17),
   },
 });

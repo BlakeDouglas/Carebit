@@ -417,7 +417,7 @@ export default function GiverHomeScreen({ navigation }) {
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
-              height: "6%",
+              height: moderateScale(47, 0.3),
               width: "100%",
             }}
           >
@@ -435,7 +435,7 @@ export default function GiverHomeScreen({ navigation }) {
                 style={{
                   color: "gray",
                   fontWeight: "bold",
-                  fontSize: responsiveFontSize(2) / fontScale,
+                  fontSize: moderateScale(15.5) / fontScale,
                   justifyContent: "center",
                 }}
               >
@@ -445,7 +445,6 @@ export default function GiverHomeScreen({ navigation }) {
             <TouchableOpacity
               style={{
                 marginRight: "4%",
-                //backgroundColor: "red",
                 alignItems: "flex-end",
                 justifyContent: "center",
               }}
@@ -457,7 +456,7 @@ export default function GiverHomeScreen({ navigation }) {
                 style={{
                   color: "dodgerblue",
                   fontWeight: "bold",
-                  fontSize: responsiveFontSize(2) / fontScale,
+                  fontSize: moderateScale(15.5) / fontScale,
                 }}
               >
                 View History
@@ -467,17 +466,15 @@ export default function GiverHomeScreen({ navigation }) {
           {!isEnabledSleep && !isEnabledDisturb && isEnabledMonitor ? (
             <SafeAreaView
               style={{
-                height: "9%",
+                height: moderateScale(68),
                 width: "96%",
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-                //backgroundColor: "blue",
               }}
             >
               <SafeAreaView
                 style={{
-                  //backgroundColor: "yellow",
                   height: "100%",
                   width: "64%",
                   justifyContent: "center",
@@ -489,7 +486,7 @@ export default function GiverHomeScreen({ navigation }) {
                   style={{
                     flexShrink: 1,
                     color: "darkgrey",
-                    fontSize: responsiveFontSize(1.9) / fontScale,
+                    fontSize: moderateScale(14.7) / fontScale,
                   }}
                   numberOfLines={1}
                 >
@@ -503,7 +500,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(2.2) / fontScale,
+                      fontSize: moderateScale(17) / fontScale,
                       fontWeight: "500",
                     }}
                     numberOfLines={1}
@@ -515,7 +512,7 @@ export default function GiverHomeScreen({ navigation }) {
                     <Text
                       style={{
                         color: "dodgerblue",
-                        fontSize: responsiveFontSize(2.2) / fontScale,
+                        fontSize: moderateScale(17) / fontScale,
                         fontWeight: "500",
                       }}
                       numberOfLines={1}
@@ -534,15 +531,12 @@ export default function GiverHomeScreen({ navigation }) {
                   width: "32%",
                   justifyContent: "center",
                   marginRight: "2%",
-                  //flexShrink: 1,
-                  //backgroundColor: "red",
                 }}
               >
                 <SafeAreaView
                   style={{
                     alignItems: "center",
                     justifyContent: "center",
-                    //backgroundColor: "blue",
                     flexDirection: "row",
                     height: "100%",
                     width: "100%",
@@ -569,7 +563,7 @@ export default function GiverHomeScreen({ navigation }) {
                           styles.callText,
                           {
                             flexShrink: 1,
-                            fontSize: responsiveFontSize(2) / fontScale,
+                            fontSize: moderateScale(15.5) / fontScale,
                           },
                         ]}
                         numberOfLines={2}
@@ -585,7 +579,6 @@ export default function GiverHomeScreen({ navigation }) {
             <SafeAreaView
               style={{
                 flexDirection: "row",
-                //justifyContent: "center",
                 alignItems: "center",
                 backgroundColor: "rgba(255, 197, 0, 0.8)",
                 height: "7%",
@@ -621,7 +614,7 @@ export default function GiverHomeScreen({ navigation }) {
               <Text
                 style={{
                   fontWeight: "bold",
-                  fontSize: responsiveFontSize(2.1) / fontScale,
+                  fontSize: moderateScale(16.2) / fontScale,
                   fontWeight: "800",
                 }}
                 numberOfLines={1}
@@ -668,7 +661,7 @@ export default function GiverHomeScreen({ navigation }) {
                 style={{
                   color: "white",
                   fontWeight: "bold",
-                  fontSize: responsiveFontSize(2.1) / fontScale,
+                  fontSize: moderateScale(16.2) / fontScale,
                   fontWeight: "800",
                 }}
                 numberOfLines={1}
@@ -715,7 +708,7 @@ export default function GiverHomeScreen({ navigation }) {
                 style={{
                   color: "white",
                   fontWeight: "bold",
-                  fontSize: responsiveFontSize(2.1) / fontScale,
+                  fontSize: moderateScale(16.2) / fontScale,
                   fontWeight: "800",
                 }}
                 numberOfLines={1}
@@ -739,13 +732,12 @@ export default function GiverHomeScreen({ navigation }) {
               alignSelf: "center",
               height: "5%",
               width: "92%",
-              //backgroundColor: "red",
             }}
           >
             <Text
               style={{
                 color: "black",
-                fontSize: responsiveFontSize(2.2) / fontScale,
+                fontSize: moderateScale(17) / fontScale,
               }}
             >
               Last Recorded Activity
@@ -753,7 +745,7 @@ export default function GiverHomeScreen({ navigation }) {
             <Text
               style={{
                 color: "darkgrey",
-                fontSize: responsiveFontSize(1.8) / fontScale,
+                fontSize: moderateScale(14, 0.6) / fontScale,
               }}
             >
               {/** TODO: Is this the right field?*/}
@@ -805,7 +797,7 @@ export default function GiverHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.25) / fontScale,
+                    fontSize: moderateScale(17.5) / fontScale,
                     marginLeft: "5%",
                   }}
                 >
@@ -844,9 +836,8 @@ export default function GiverHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.25) / fontScale,
+                    fontSize: moderateScale(17.5) / fontScale,
                     marginLeft: "5%",
-                    //marginVertical: "3%",
                   }}
                 >
                   Steps
@@ -898,7 +889,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.5) / fontScale,
+                      fontSize: moderateScale(34.8) / fontScale,
                       fontWeight: "700",
                     }}
                   >
@@ -907,7 +898,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(2) / fontScale,
+                      fontSize: moderateScale(15.5) / fontScale,
                       marginLeft: "3%",
                       fontWeight: "600",
                     }}
@@ -919,7 +910,6 @@ export default function GiverHomeScreen({ navigation }) {
                   style={{
                     width: "100%",
                     height: "30%",
-                    //backgroundColor: "red",
                     alignItems: "center",
                     justifyContent: "flex-start",
                   }}
@@ -927,7 +917,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={[
                       styles.smallText,
-                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                      { fontSize: moderateScale(14) / fontScale },
                     ]}
                   >
                     {!isEnabledMonitor
@@ -968,8 +958,6 @@ export default function GiverHomeScreen({ navigation }) {
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "flex-end",
-                    //backgroundColor: "blue",
-
                     height: "55%",
                     width: "100%",
                   }}
@@ -977,7 +965,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.5) / fontScale,
+                      fontSize: moderateScale(34.8) / fontScale,
                       fontWeight: "700",
                     }}
                     numberOfLines={1}
@@ -1000,7 +988,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={[
                       styles.smallText,
-                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                      { fontSize: moderateScale(14) / fontScale },
                     ]}
                     numberOfLines={2}
                   >
@@ -1036,7 +1024,7 @@ export default function GiverHomeScreen({ navigation }) {
             <Text
               style={{
                 color: "black",
-                fontSize: responsiveFontSize(2.2) / fontScale,
+                fontSize: moderateScale(17) / fontScale,
 
                 marginLeft: "4%",
               }}
@@ -1047,7 +1035,7 @@ export default function GiverHomeScreen({ navigation }) {
             <Text
               style={{
                 color: "darkgrey",
-                fontSize: responsiveFontSize(1.8) / fontScale,
+                fontSize: moderateScale(14) / fontScale,
                 marginRight: "4%",
               }}
             >
@@ -1105,7 +1093,7 @@ export default function GiverHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.25) / fontScale,
+                    fontSize: moderateScale(17.5) / fontScale,
                     marginLeft: "3%",
                   }}
                 >
@@ -1114,7 +1102,7 @@ export default function GiverHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "darkgrey",
-                    fontSize: responsiveFontSize(1.8) / fontScale,
+                    fontSize: moderateScale(14) / fontScale,
                     marginRight: "5%",
                   }}
                 >
@@ -1168,7 +1156,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.5) / fontScale,
+                      fontSize: moderateScale(34.8) / fontScale,
                       fontWeight: "700",
                     }}
                   >
@@ -1192,7 +1180,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={[
                       styles.smallText,
-                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                      { fontSize: moderateScale(14) / fontScale },
                     ]}
                   >
                     min
@@ -1228,7 +1216,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.5) / fontScale,
+                      fontSize: moderateScale(34.8) / fontScale,
                       fontWeight: "700",
                     }}
                   >
@@ -1246,13 +1234,12 @@ export default function GiverHomeScreen({ navigation }) {
                     height: "30%",
                     alignItems: "center",
                     justifyContent: "flex-start",
-                    //backgroundColor: "yellow",
                   }}
                 >
                   <Text
                     style={[
                       styles.smallText,
-                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                      { fontSize: moderateScale(14) / fontScale },
                     ]}
                   >
                     avg
@@ -1288,7 +1275,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.5) / fontScale,
+                      fontSize: moderateScale(34.8) / fontScale,
                       fontWeight: "700",
                     }}
                   >
@@ -1306,13 +1293,12 @@ export default function GiverHomeScreen({ navigation }) {
                     height: "30%",
                     alignItems: "center",
                     justifyContent: "flex-start",
-                    // backgroundColor: "yellow",
                   }}
                 >
                   <Text
                     style={[
                       styles.smallText,
-                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                      { fontSize: moderateScale(14) / fontScale },
                     ]}
                   >
                     max
@@ -1362,7 +1348,7 @@ export default function GiverHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.25) / fontScale,
+                    fontSize: moderateScale(17.5) / fontScale,
                     marginLeft: "5%",
                   }}
                 >
@@ -1401,7 +1387,7 @@ export default function GiverHomeScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2.25) / fontScale,
+                    fontSize: moderateScale(17.5) / fontScale,
                     marginLeft: "5%",
                     //marginVertical: "3%",
                   }}
@@ -1451,13 +1437,12 @@ export default function GiverHomeScreen({ navigation }) {
                     alignItems: "center",
                     width: "100%",
                     height: "70%",
-                    //backgroundColor: "blue",
                   }}
                 >
                   <Text
                     style={{
                       color: "black",
-                      fontSize: responsiveFontSize(4.5) / fontScale,
+                      fontSize: moderateScale(34.8) / fontScale,
                       fontWeight: "700",
                     }}
                     numberOfLines={1}
@@ -1473,7 +1458,6 @@ export default function GiverHomeScreen({ navigation }) {
                   style={{
                     width: "100%",
                     height: "30%",
-                    //backgroundColor: "red",
                     alignItems: "center",
                     justifyContent: "flex-start",
                   }}
@@ -1481,7 +1465,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={[
                       styles.smallText,
-                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                      { fontSize: moderateScale(14) / fontScale },
                     ]}
                   >
                     {!isEnabledMonitor
@@ -1563,7 +1547,7 @@ export default function GiverHomeScreen({ navigation }) {
                   <Text
                     style={[
                       styles.smallText,
-                      { fontSize: responsiveFontSize(1.8) / fontScale },
+                      { fontSize: moderateScale(14) / fontScale },
                     ]}
                   >
                     {isEnabledMonitor
@@ -1581,7 +1565,7 @@ export default function GiverHomeScreen({ navigation }) {
     </SafeAreaView>
   );
 }
-//const { fontScale } = useWindowDimensions();
+
 const styles = StyleSheet.create({
   caregiveeText: {
     color: "black",
@@ -1591,11 +1575,11 @@ const styles = StyleSheet.create({
   },
   lastActivityText: {
     color: "black",
-    fontSize: responsiveFontSize(2.2),
+    fontSize: moderateScale(17),
   },
   smallText: {
     color: "darkgrey",
-    fontSize: responsiveFontSize(1.8),
+    fontSize: moderateScale(14),
     fontWeight: "bold",
   },
   dateText: {
@@ -1612,7 +1596,7 @@ const styles = StyleSheet.create({
   },
   callText: {
     color: "dodgerblue",
-    fontSize: responsiveFontSize(2),
+    fontSize: moderateScale(15.5),
     fontWeight: "bold",
     // marginLeft: "2%",
   },

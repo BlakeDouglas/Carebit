@@ -11,6 +11,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import SelectDropdown from "react-native-select-dropdown";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
@@ -129,7 +130,6 @@ export default function CustomNotificationScreen({ navigation }) {
               <SafeAreaView
                 style={{
                   flex: 1,
-                  //backgroundColor: "blue",
                   alignItems: "center",
                   marginTop: "40%",
                 }}
@@ -169,7 +169,7 @@ export default function CustomNotificationScreen({ navigation }) {
             <Text
               style={[
                 styles.TitleNoSub,
-                { fontSize: responsiveFontSize(2.2) / fontScale },
+                { fontSize: moderateScale(17) / fontScale },
               ]}
             >
               Use Custom Alerts
@@ -186,7 +186,7 @@ export default function CustomNotificationScreen({ navigation }) {
             <Text
               style={[
                 styles.Descriptive,
-                { fontSize: responsiveFontSize(1.9) / fontScale },
+                { fontSize: moderateScale(14.7) / fontScale },
               ]}
             >
               {isCustom
@@ -199,7 +199,7 @@ export default function CustomNotificationScreen({ navigation }) {
               <Text
                 style={[
                   styles.TitleNoSub,
-                  { fontSize: responsiveFontSize(2.2) / fontScale },
+                  { fontSize: moderateScale(17) / fontScale },
                 ]}
               >
                 Heart Rate Alerts
@@ -220,7 +220,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 <Text
                   style={[
                     styles.Title,
-                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
                 >
                   Low Heart Rate
@@ -228,7 +228,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 <Text
                   style={[
                     styles.Example,
-                    { fontSize: responsiveFontSize(1.5) / fontScale },
+                    { fontSize: moderateScale(11.7) / fontScale },
                   ]}
                 >
                   e.g. 60 bpm
@@ -254,7 +254,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 buttonStyle={styles.downButtonStyle}
                 buttonTextStyle={{
                   color: "rgba(128,128,128,.9)",
-                  fontSize: responsiveFontSize(2.2),
+                  fontSize: moderateScale(17),
                 }}
                 data={lowHeartLimits}
                 onSelect={(selectedItem) => {
@@ -281,7 +281,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 <Text
                   style={[
                     styles.Title,
-                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
                 >
                   High Heart Rate
@@ -289,7 +289,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 <Text
                   style={[
                     styles.Example,
-                    { fontSize: responsiveFontSize(1.5) / fontScale },
+                    { fontSize: moderateScale(11.7) / fontScale },
                   ]}
                 >
                   e.g. 100 bpm
@@ -314,7 +314,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 buttonStyle={styles.downButtonStyle}
                 buttonTextStyle={{
                   color: "rgba(128,128,128,.9)",
-                  fontSize: responsiveFontSize(2.2),
+                  fontSize: moderateScale(17),
                 }}
                 data={highHeartLimits}
                 onSelect={(selectedItem) => {
@@ -339,7 +339,7 @@ export default function CustomNotificationScreen({ navigation }) {
               <Text
                 style={[
                   styles.TitleNoSub,
-                  { fontSize: responsiveFontSize(2.2) / fontScale },
+                  { fontSize: moderateScale(17) / fontScale },
                 ]}
               >
                 No Activity Alerts
@@ -359,7 +359,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 <Text
                   style={[
                     styles.Title,
-                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
                 >
                   Time Without Heart Rate
@@ -367,7 +367,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 <Text
                   style={[
                     styles.Example,
-                    { fontSize: responsiveFontSize(1.5) / fontScale },
+                    { fontSize: moderateScale(11.7) / fontScale },
                   ]}
                 >
                   e.g. 1 hour
@@ -396,7 +396,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 buttonStyle={styles.downButtonStyle}
                 buttonTextStyle={{
                   color: "rgba(128,128,128,.9)",
-                  fontSize: responsiveFontSize(2.2),
+                  fontSize: moderateScale(17),
                 }}
                 data={noActivityLimit}
                 onSelect={(selectedItem) => {
@@ -422,7 +422,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 <Text
                   style={[
                     styles.Title,
-                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
                 >
                   Time Without Steps
@@ -430,7 +430,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 <Text
                   style={[
                     styles.Example,
-                    { fontSize: responsiveFontSize(1.5) / fontScale },
+                    { fontSize: moderateScale(11.7) / fontScale },
                   ]}
                 >
                   e.g. 2 hours
@@ -459,7 +459,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 buttonStyle={styles.downButtonStyle}
                 buttonTextStyle={{
                   color: "rgba(128,128,128,.9)",
-                  fontSize: responsiveFontSize(2.2),
+                  fontSize: moderateScale(17),
                 }}
                 data={noActivityLimit}
                 onSelect={(selectedItem) => {
@@ -485,7 +485,7 @@ export default function CustomNotificationScreen({ navigation }) {
               <Text
                 style={[
                   styles.TitleNoSub,
-                  { fontSize: responsiveFontSize(2.2) / fontScale },
+                  { fontSize: moderateScale(17) / fontScale },
                 ]}
               >
                 Wandering Alerts
@@ -505,7 +505,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 <Text
                   style={[
                     styles.Title,
-                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
                 >
                   Max Steps in an Hour
@@ -513,7 +513,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 <Text
                   style={[
                     styles.Example,
-                    { fontSize: responsiveFontSize(1.5) / fontScale },
+                    { fontSize: moderateScale(11.7) / fontScale },
                   ]}
                 >
                   e.g. 2000 Steps
@@ -539,7 +539,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 buttonStyle={styles.downButtonStyle2}
                 buttonTextStyle={{
                   color: "rgba(128,128,128,.9)",
-                  fontSize: responsiveFontSize(2.2),
+                  fontSize: moderateScale(17),
                 }}
                 data={maxSteps}
                 onSelect={(selectedItem) => {
@@ -565,7 +565,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 <Text
                   style={[
                     styles.TitleNoSub,
-                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
                 >
                   No Sync Alerts
@@ -582,7 +582,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 <Text
                   style={[
                     styles.Descriptive,
-                    { fontSize: responsiveFontSize(1.9) / fontScale },
+                    { fontSize: moderateScale(14.7) / fontScale },
                   ]}
                 >
                   We'll send you an alert after {selectedUser.firstName}'s
@@ -598,7 +598,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 <Text
                   style={[
                     styles.TitleNoSub,
-                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
                 >
                   Empty Battery Alerts
@@ -615,7 +615,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 <Text
                   style={[
                     styles.Descriptive,
-                    { fontSize: responsiveFontSize(1.9) / fontScale },
+                    { fontSize: moderateScale(14.7) / fontScale },
                   ]}
                 >
                   We'll send you an alert when {selectedUser.firstName}'s Fitbit
@@ -632,8 +632,11 @@ export default function CustomNotificationScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   switchBody: {
-    marginRight: "3%",
-    transform: [{ scaleX: 1 }, { scaleY: 1 }],
+    transform: [
+      { scaleX: moderateScale(0.92) },
+      { scaleY: moderateScale(0.92) },
+    ],
+    marginRight: moderateScale(11, 0.9),
   },
   Box: {
     backgroundColor: "white",
@@ -641,22 +644,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     borderTopColor: "rgba(128,128,128,.1)",
-    borderTopWidth: 1,
+    borderTopWidth: moderateScale(1),
     borderBottomColor: "rgba(128,128,128,.1)",
-    borderBottomWidth: 1,
+    borderBottomWidth: moderateScale(1),
   },
   Title: {
-    fontSize: responsiveFontSize(2.2),
+    fontSize: moderateScale(17),
     fontWeight: "600",
   },
   TitleNoSub: {
-    fontSize: responsiveFontSize(2.2),
+    fontSize: moderateScale(17),
     fontWeight: "600",
     margin: "4%",
     alignSelf: "center",
   },
   Example: {
-    fontSize: responsiveFontSize(1.5),
+    fontSize: moderateScale(11.7),
     color: "lightgrey",
     fontWeight: "500",
     marginLeft: "4%",
@@ -671,7 +674,7 @@ const styles = StyleSheet.create({
   Inputs: {
     marginRight: "3%",
     color: "black",
-    fontSize: responsiveFontSize(2.2),
+    fontSize: moderateScale(17),
   },
   downButtonStyle: {
     height: "100%",

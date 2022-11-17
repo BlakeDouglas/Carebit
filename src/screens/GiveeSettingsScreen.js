@@ -13,7 +13,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { resetData } from "../redux/actions";
-import * as SecureStore from "expo-secure-store";
 import phone from "phone";
 import GlobalStyle from "../utils/GlobalStyle";
 import { deleteKeychain } from "../network/Auth";
@@ -49,7 +48,8 @@ export default function GiveeSettingsScreen({ navigation }) {
   let selectedNumber = selectedCountryCode
     ? selectedUser.phone.substring(selectedCountryCode.length)
     : null;
-
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
   const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
@@ -66,8 +66,8 @@ export default function GiveeSettingsScreen({ navigation }) {
         {/* Settings header container. Includes Setting image, name, and email */}
         <SafeAreaView
           style={{
-            marginTop: "8%",
-            height: "15%",
+            marginTop: scale(30),
+            height: moderateScale(windowHeight / 8.5, 0.4),
             width: "100%",
             borderTopColor: "rgba(255,255,255,0)",
             borderTopWidth: moderateScale(1),
@@ -79,7 +79,11 @@ export default function GiveeSettingsScreen({ navigation }) {
           }}
         >
           <Image
-            style={{ height: moderateScale(85), width: moderateScale(85), marginLeft: "6%" }}
+            style={{
+              height: moderateScale(85),
+              width: moderateScale(85),
+              marginLeft: "6%",
+            }}
             source={require("../../assets/images/avatar/DefaultAvatar.png")}
           />
           <SafeAreaView
@@ -91,7 +95,7 @@ export default function GiveeSettingsScreen({ navigation }) {
           >
             <Text
               style={{
-                fontSize: responsiveFontSize(2.8) / fontScale,
+                fontSize: moderateScale(21.5) / fontScale,
                 width: "100%",
                 color: "white",
               }}
@@ -101,7 +105,7 @@ export default function GiveeSettingsScreen({ navigation }) {
             </Text>
             <Text
               style={{
-                fontSize: responsiveFontSize(2.1) / fontScale,
+                fontSize: moderateScale(16.5) / fontScale,
                 color: "white",
               }}
               numberOfLines={1}
@@ -115,14 +119,13 @@ export default function GiveeSettingsScreen({ navigation }) {
           style={{
             width: "100%",
             height: "19%",
-            marginTop: "8%",
-            //backgroundColor: "blue",
+            marginTop: scale(29),
           }}
         >
           <Text
             style={[
               styles.Title,
-              { fontSize: responsiveFontSize(1.9) / fontScale },
+              { fontSize: moderateScale(14.6) / fontScale },
             ]}
           >
             PHYSICIAN INFO
@@ -131,7 +134,7 @@ export default function GiveeSettingsScreen({ navigation }) {
             <Text
               style={[
                 styles.BoxTitle,
-                { fontSize: responsiveFontSize(2.2) / fontScale },
+                { fontSize: moderateScale(17) / fontScale },
               ]}
             >
               Name
@@ -140,7 +143,6 @@ export default function GiveeSettingsScreen({ navigation }) {
               style={{
                 width: "80%",
                 height: "100%",
-                //backgroundColor: "blue",
                 justifyContent: "center",
               }}
             >
@@ -149,7 +151,7 @@ export default function GiveeSettingsScreen({ navigation }) {
                   styles.BoxSub,
                   {
                     textAlign: "right",
-                    fontSize: responsiveFontSize(2.2) / fontScale,
+                    fontSize: moderateScale(17) / fontScale,
                   },
                 ]}
                 numberOfLines={1}
@@ -162,7 +164,7 @@ export default function GiveeSettingsScreen({ navigation }) {
             <Text
               style={[
                 styles.BoxTitle,
-                { fontSize: responsiveFontSize(2.2) / fontScale },
+                { fontSize: moderateScale(17) / fontScale },
               ]}
             >
               Phone
@@ -171,7 +173,6 @@ export default function GiveeSettingsScreen({ navigation }) {
               style={{
                 width: "80%",
                 height: "100%",
-
                 justifyContent: "center",
               }}
             >
@@ -180,7 +181,7 @@ export default function GiveeSettingsScreen({ navigation }) {
                   styles.BoxSub,
                   {
                     textAlign: "right",
-                    fontSize: responsiveFontSize(2.2) / fontScale,
+                    fontSize: moderateScale(17) / fontScale,
                   },
                 ]}
               >
@@ -204,7 +205,7 @@ export default function GiveeSettingsScreen({ navigation }) {
         {selectedUser.phone ? (
           <SafeAreaView
             style={{
-              marginTop: "6%",
+              marginTop: scale(21),
               height: "19%",
               width: "100%",
             }}
@@ -212,7 +213,7 @@ export default function GiveeSettingsScreen({ navigation }) {
             <Text
               style={[
                 styles.Title,
-                { fontSize: responsiveFontSize(1.9) / fontScale },
+                { fontSize: moderateScale(14.6) / fontScale },
               ]}
             >
               SELECTED CAREGIVER
@@ -221,7 +222,7 @@ export default function GiveeSettingsScreen({ navigation }) {
               <Text
                 style={[
                   styles.BoxTitle,
-                  { fontSize: responsiveFontSize(2.2) / fontScale },
+                  { fontSize: moderateScale(17) / fontScale },
                 ]}
               >
                 Name
@@ -238,7 +239,7 @@ export default function GiveeSettingsScreen({ navigation }) {
                     styles.BoxSub,
                     {
                       textAlign: "right",
-                      fontSize: responsiveFontSize(2.2) / fontScale,
+                      fontSize: moderateScale(17) / fontScale,
                     },
                   ]}
                   numberOfLines={1}
@@ -252,7 +253,7 @@ export default function GiveeSettingsScreen({ navigation }) {
               <Text
                 style={[
                   styles.BoxTitle,
-                  { fontSize: responsiveFontSize(2.2) / fontScale },
+                  { fontSize: moderateScale(17) / fontScale },
                 ]}
               >
                 Email
@@ -270,7 +271,7 @@ export default function GiveeSettingsScreen({ navigation }) {
                     styles.BoxSub,
                     {
                       textAlign: "right",
-                      fontSize: responsiveFontSize(2.2) / fontScale,
+                      fontSize: moderateScale(17) / fontScale,
                     },
                   ]}
                   numberOfLines={1}
@@ -287,7 +288,6 @@ export default function GiveeSettingsScreen({ navigation }) {
               width: "100%",
               alignItems: "center",
               justifyContent: "flex-end",
-              //backgroundColor: "blue",
             }}
           >
             <SafeAreaView
@@ -295,14 +295,11 @@ export default function GiveeSettingsScreen({ navigation }) {
                 width: "92%",
                 height: "40%",
                 justifyContent: "center",
-
-                //backgroundColor: "blue",
               }}
             >
               <Text
                 style={{
-                  fontSize: responsiveFontSize(2.2) / fontScale,
-                  //fontWeight: "600",
+                  fontSize: moderateScale(17) / fontScale,
                   color: "white",
                   textAlign: "left",
                 }}
@@ -318,7 +315,6 @@ export default function GiveeSettingsScreen({ navigation }) {
                 width: "100%",
                 justifyContent: "center",
                 marginTop: "3%",
-                //backgroundColor: "green",
               }}
             >
               <TouchableOpacity
@@ -330,7 +326,7 @@ export default function GiveeSettingsScreen({ navigation }) {
                 <Text
                   style={[
                     GlobalStyle.ButtonText,
-                    { fontSize: responsiveFontSize(2.51) / fontScale },
+                    { fontSize: moderateScale(19.5) / fontScale },
                   ]}
                 >
                   View Requests
@@ -345,7 +341,7 @@ export default function GiveeSettingsScreen({ navigation }) {
                 <Text
                   style={[
                     GlobalStyle.ButtonText,
-                    { fontSize: responsiveFontSize(2.51) / fontScale },
+                    { fontSize: moderateScale(19.5) / fontScale },
                   ]}
                 >
                   Add Caregiver
@@ -369,7 +365,7 @@ export default function GiveeSettingsScreen({ navigation }) {
             <Text
               style={{
                 color: "red",
-                fontSize: responsiveFontSize(2.5) / fontScale,
+                fontSize: moderateScale(19.5) / fontScale,
                 fontWeight: "bold",
               }}
             >
@@ -422,13 +418,13 @@ const styles = StyleSheet.create({
     marginLeft: "4%",
   },
   BoxTitle: {
-    fontSize: responsiveFontSize(2.2),
+    fontSize: moderateScale(17),
     fontWeight: "600",
     marginLeft: "4%",
     color: "white",
   },
   BoxSub: {
-    fontSize: responsiveFontSize(2.2),
+    fontSize: moderateScale(17),
     marginRight: "4%",
     color: "white",
   },

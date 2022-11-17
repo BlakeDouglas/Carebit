@@ -18,13 +18,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { resetData, setTokenData } from "../redux/actions";
 import { deleteKeychain, getAuthRequest } from "../network/Auth";
 import { caregiveeCreateEndpoint, logoutEndpoint } from "../network/CarebitAPI";
-
+import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 
 export default function AuthenticationScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const dispatch = useDispatch();
-
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
   const [request, response, promptAsync] = getAuthRequest();
 
   const makeCaregivee = async (code) => {
@@ -74,19 +75,18 @@ export default function AuthenticationScreen({ navigation }) {
           <SafeAreaView
             style={{
               width: "100%",
-              height: "15%",
               flexDirection: "row",
-              marginTop: "25%",
               alignItems: "center",
+              marginTop: "25%",
             }}
           >
             <Image
-              style={{ marginRight: "1%" }}
+              style={{ marginRight: scale(5) }}
               source={require("../../assets/images/midCheck/icons-check.png")}
             />
             <Text
               style={{
-                fontSize: responsiveFontSize(2.8) / fontScale,
+                fontSize: moderateScale(21, 0.8) / fontScale,
                 color: "white",
               }}
             >
@@ -95,7 +95,7 @@ export default function AuthenticationScreen({ navigation }) {
           </SafeAreaView>
           <SafeAreaView
             style={{
-              height: "15%",
+              marginTop: moderateScale(30),
               width: "100%",
               justifyContent: "flex-end",
               alignItems: "center",
@@ -105,7 +105,7 @@ export default function AuthenticationScreen({ navigation }) {
               style={{
                 alignSelf: "center",
                 color: "white",
-                fontSize: responsiveFontSize(2.5) / fontScale,
+                fontSize: moderateScale(19.2) / fontScale,
               }}
             >
               To allow your Caregiver to monitor you, you'll need to link your
@@ -129,7 +129,7 @@ export default function AuthenticationScreen({ navigation }) {
               <Text
                 style={[
                   GlobalStyle.ButtonText,
-                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                  { fontSize: moderateScale(19.4) / fontScale },
                 ]}
               >
                 Link Fitbit
@@ -139,7 +139,7 @@ export default function AuthenticationScreen({ navigation }) {
             <TouchableOpacity
               style={[
                 GlobalStyle.Button,
-                { marginTop: 20, backgroundColor: "transparent" },
+                { marginTop: scale(15), backgroundColor: "transparent" },
               ]}
               onPress={() => {
                 logOutButtonHandler();
@@ -148,7 +148,7 @@ export default function AuthenticationScreen({ navigation }) {
               <Text
                 style={[
                   GlobalStyle.ButtonText,
-                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                  { fontSize: moderateScale(19.4) / fontScale },
                 ]}
               >
                 Cancel

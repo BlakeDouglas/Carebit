@@ -106,13 +106,13 @@ export default function ReceivedAlertsScreen({ navigation }) {
           marginLeft: "3%",
           width: "58%",
           marginRight: "4%",
-          marginVertical: "5%",
+          marginVertical: moderateScale(18.5),
           justifyContent: "center",
         }}
       >
         <Text
           style={{
-            fontSize: responsiveFontSize(2.2) / fontScale,
+            fontSize: moderateScale(17) / fontScale,
             fontWeight: "600",
           }}
         >
@@ -121,7 +121,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
         <Text
           style={{
             marginTop: "1%",
-            fontSize: responsiveFontSize(1.8) / fontScale,
+            fontSize: moderateScale(14) / fontScale,
             color: "gray",
           }}
           numberOfLines={3}
@@ -142,7 +142,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
               color: "rgba(0,225,200,.6)",
               fontWeight: "bold",
               textAlign: "center",
-              fontSize: responsiveFontSize(2.3) / fontScale,
+              fontSize: moderateScale(17.8) / fontScale,
               marginTop: "10%",
             }}
           >
@@ -152,7 +152,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
           <Text
             style={{
               textAlign: "right",
-              fontSize: responsiveFontSize(2.3) / fontScale,
+              fontSize: moderateScale(17.8) / fontScale,
               marginTop: "10%",
             }}
           >
@@ -163,7 +163,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
           style={{
             color: "grey",
             marginTop: "5%",
-            fontSize: responsiveFontSize(1.9) / fontScale,
+            fontSize: moderateScale(14.5) / fontScale,
           }}
         >
           {moment(time, ["HH:mm"]).format("h:mm a")}
@@ -172,7 +172,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
           style={{
             color: "grey",
             alignSelf: "center",
-            fontSize: responsiveFontSize(1.9) / fontScale,
+            fontSize: moderateScale(14.5) / fontScale,
           }}
         >
           {moment(date, ["MM:DD"]).format("MMM DD")}
@@ -201,7 +201,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
         <Text
           style={[
             styles.emptyText,
-            { fontSize: responsiveFontSize(3.5) / fontScale },
+            { fontSize: moderateScale(27) / fontScale },
           ]}
         >
           No alerts
@@ -209,7 +209,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
         <Text
           style={[
             styles.emptyText,
-            { fontSize: responsiveFontSize(3.5) / fontScale },
+            { fontSize: moderateScale(27) / fontScale },
           ]}
         >
           ...
@@ -224,7 +224,6 @@ export default function ReceivedAlertsScreen({ navigation }) {
         alignSelf: "flex-end",
         height: "100%",
         width: "97%",
-        //backgroundColor: "green",
       }}
     >
       <SafeAreaView
@@ -232,14 +231,13 @@ export default function ReceivedAlertsScreen({ navigation }) {
           width: "100%",
           alignSelf: "center",
           height: "7%",
-          //backgroundColor: "yellow",
           justifyContent: "flex-end",
-          marginBottom: "6%",
+          marginBottom: moderateScale(22),
         }}
       >
         <Text
           style={{
-            fontSize: responsiveFontSize(2.5) / fontScale,
+            fontSize: moderateScale(19.4) / fontScale,
             fontWeight: "600",
           }}
         >
@@ -254,7 +252,6 @@ export default function ReceivedAlertsScreen({ navigation }) {
         }
         keyExtractor={(item) => item.alertID}
         ListEmptyComponent={Empty}
-        //backgroundColor="blue"
       />
     </SafeAreaView>
   );

@@ -18,82 +18,8 @@ import moment from "moment";
 import { setSelectedUser, setTokenData } from "../redux/actions";
 import { getAlertsEndpoint, setAlertOkEndpoint } from "../network/CarebitAPI";
 
-const data_temp = [
-  {
-    alertType: "lowHeartRateAlert",
-    dateTime: "12:50pm",
-    title: "Low Heart Rate",
-    body: "Name has low heart rate",
-    caregiveeID: "BH32L",
-    alertID: "1",
-    ok: 1,
-  },
-  {
-    alertType: "noStepsAlert",
-    dateTime: "1:15am",
-    title: "No Steps",
-    body: "Name has gone more than x hour(s) without steps",
-    total: "0",
-    alertID: "2",
-    ok: 0,
-  },
-  {
-    alertType: "noHeartRateAlert",
-    dateTime: "1:18am",
-    title: "Heart Rate Not Recorded",
-    body: "Name's heart rate hasn't been recorded for over 8 hour(s)",
-    total: "0",
-    alertID: "3",
-    ok: 0,
-  },
-  {
-    alertType: "highHeartRateAlert",
-    dateTime: "10:16am",
-    title: "High Heart Rate",
-    body: "Name's heart rate was 162",
-    total: "162",
-    alertID: "4",
-    ok: 0,
-  },
-  {
-    alertType: "tooManyStepsAlert",
-    dateTime: "12:50pm",
-    title: "Too Many Steps",
-    body: "Name has taken more than 865 steps in the past hour",
-    total: "865",
-    alertID: "5",
-    ok: 0,
-  },
-  {
-    alertType: "noSyncAlert",
-    dateTime: "1:15am",
-    title: "No Sync",
-    body: "Name has gone more than x hour(s) without syncing",
-    total: "0",
-    alertID: "6",
-    ok: 1,
-  },
-  {
-    alertType: "batteryAlert",
-    dateTime: "8:16am",
-    title: "Battery Warning",
-    body: "Their Fitbit is dead",
-    total: "8",
-    alertID: "7",
-    ok: 0,
-  },
-  {
-    alertType: "lowHeartRateAlert",
-    dateTime: "10:16am",
-    title: "Low Heart Rate",
-    body: "Name's heart rate was 62",
-    total: "62",
-    alertID: "8",
-    ok: 0,
-  },
-];
-
 export default function GiveeReceivedAlertsScreen({ navigation }) {
+  const windowHeight = useWindowDimensions().height;
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const [data, setData] = useState([]);
@@ -169,8 +95,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
           flexDirection: "row",
           alignItems: "center",
           borderTopColor: "lightgrey",
-          borderTopWidth: 1,
-          //backgroundColor: "red",
+          borderTopWidth: moderateScale(1),
         }}
       >
         {alertType === "tooManyStepsAlert" && (
@@ -219,17 +144,15 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
         <SafeAreaView
           style={{
             marginLeft: "3%",
-            //height: "100%",
             width: "55%",
             marginRight: "2%",
-
-            marginVertical: "5%",
+            marginVertical: moderateScale(18.5),
             justifyContent: "center",
           }}
         >
           <Text
             style={{
-              fontSize: responsiveFontSize(2.2) / fontScale,
+              fontSize: moderateScale(17) / fontScale,
               fontWeight: "600",
             }}
           >
@@ -238,7 +161,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
           <Text
             style={{
               marginTop: "1%",
-              fontSize: responsiveFontSize(2) / fontScale,
+              fontSize: moderateScale(14) / fontScale,
               color: "gray",
             }}
             numberOfLines={3}
@@ -264,8 +187,6 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
               }}
               onPress={() => {
                 setOkID(alertID);
-                //getAlerts();
-
                 toggleModal1();
                 console.log("Okay Pressed");
               }}
@@ -276,7 +197,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                   fontWeight: "bold",
                   textAlign: "center",
                   margin: "2%",
-                  fontSize: responsiveFontSize(2.3) / fontScale,
+                  fontSize: moderateScale(17.8) / fontScale,
                 }}
               >
                 Check-in
@@ -289,7 +210,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                 fontWeight: "bold",
                 textAlign: "center",
                 margin: "2%",
-                fontSize: responsiveFontSize(2.3) / fontScale,
+                fontSize: moderateScale(17.8) / fontScale,
               }}
             >
               {""} Okay {""}
@@ -301,7 +222,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
               textAlign: "center",
               color: "grey",
               marginTop: "5%",
-              fontSize: responsiveFontSize(1.9) / fontScale,
+              fontSize: moderateScale(14.5) / fontScale,
             }}
           >
             {moment(time, ["HH:mm"]).format("h:mm a")}
@@ -310,7 +231,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
             style={{
               color: "grey",
               alignSelf: "center",
-              fontSize: responsiveFontSize(1.9) / fontScale,
+              fontSize: moderateScale(14.5) / fontScale,
             }}
           >
             {moment(date, ["MM:DD"]).format("MMM DD")}
@@ -341,7 +262,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
         <Text
           style={[
             styles.emptyText,
-            { fontSize: responsiveFontSize(3.5) / fontScale },
+            { fontSize: moderateScale(27) / fontScale },
           ]}
         >
           No alerts
@@ -349,7 +270,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
         <Text
           style={[
             styles.emptyText,
-            { fontSize: responsiveFontSize(3.5) / fontScale },
+            { fontSize: moderateScale(27) / fontScale },
           ]}
         >
           ...
@@ -375,7 +296,6 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
         alignSelf: "flex-end",
         height: "100%",
         width: "97%",
-        //backgroundColor: "green",
       }}
     >
       <Modal
@@ -389,7 +309,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
         <View
           style={{
             alignSelf: "center",
-            height: "31%",
+            height: moderateScale(windowHeight / 4, 0.7),
             width: "75%",
             backgroundColor: "white",
             borderRadius: moderateScale(8),
@@ -408,14 +328,14 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2) / fontScale,
+                fontSize: moderateScale(17, 0.6) / fontScale,
               }}
             >
               Mark You're Okay
             </Text>
             <Text
               style={{
-                fontSize: responsiveFontSize(1.8) / fontScale,
+                fontSize: moderateScale(13.75, 0.6) / fontScale,
                 fontWeight: "400",
                 textAlign: "left",
               }}
@@ -457,7 +377,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                 <Text
                   style={{
                     color: "rgba(0,225,200,.8)",
-                    fontSize: responsiveFontSize(2) / fontScale,
+                    fontSize: moderateScale(15.2, 0.6) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -487,7 +407,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: responsiveFontSize(2) / fontScale,
+                    fontSize: moderateScale(15.2, 0.6) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -503,14 +423,13 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
           width: "100%",
           alignSelf: "center",
           height: "7%",
-          //backgroundColor: "yellow",
           justifyContent: "flex-end",
-          marginBottom: "6%",
+          marginBottom: moderateScale(22),
         }}
       >
         <Text
           style={{
-            fontSize: responsiveFontSize(2.5) / fontScale,
+            fontSize: moderateScale(19.4) / fontScale,
             fontWeight: "600",
           }}
         >

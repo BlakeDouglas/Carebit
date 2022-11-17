@@ -12,7 +12,6 @@ import {
   useWindowDimensions,
 } from "react-native";
 import React, { useState } from "react";
-import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import CustomTextInput from "../utils/CustomTextInput";

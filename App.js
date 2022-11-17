@@ -98,7 +98,7 @@ const AuthStack = () => {
           title: "",
         }}
       >
-        <Stack.Screen name="TitleScreen" component={TitleScreen} />
+        <Stack.Screen name="TitleScreen" component={PhysicianInfoScreen} />
         <Stack.Screen name="RoleSelectScreen" component={RoleSelectScreen} />
         <Stack.Screen
           name="AccountCreationScreen"

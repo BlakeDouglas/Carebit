@@ -310,7 +310,7 @@ export default function AccountCreationScreen({ navigation }) {
                   <Text
                     style={[
                       GlobalStyle.ButtonText,
-                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                      { fontSize: moderateScale(19.4) / fontScale },
                     ]}
                   >
                     Create Account

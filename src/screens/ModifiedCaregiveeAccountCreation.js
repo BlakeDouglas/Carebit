@@ -19,6 +19,7 @@ import { phone } from "phone";
 import { userEndpoint } from "../network/CarebitAPI";
 import { setSelectedUser, setTokenData } from "../redux/actions";
 import { useSelector, useDispatch } from "react-redux";
+import { moderateScale } from "react-native-size-matters";
 
 export default function ModifiedCaregiveeAccountCreation({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
@@ -152,10 +153,10 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
         <View
           style={{
             alignSelf: "center",
-            height: "30%",
+            height: moderateScale(windowHeight / 4, 0.7),
             width: "75%",
             backgroundColor: "white",
-            borderRadius: 8,
+            borderRadius: moderateScale(8),
             alignItems: "center",
             justifyContent: "space-evenly",
           }}
@@ -171,14 +172,14 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: responsiveFontSize(2.2) / fontScale,
+                fontSize: moderateScale(17, 0.6) / fontScale,
               }}
             >
               Opting Out
             </Text>
             <Text
               style={{
-                fontSize: responsiveFontSize(1.8) / fontScale,
+                fontSize: moderateScale(14, 0.6) / fontScale,
                 fontWeight: "400",
                 textAlign: "left",
               }}
@@ -215,7 +216,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                 <Text
                   style={{
                     color: "dodgerblue",
-                    fontSize: responsiveFontSize(2) / fontScale,
+                    fontSize: moderateScale(15.1, 0.6) / fontScale,
                     fontWeight: "bold",
                   }}
                 >
@@ -234,8 +235,6 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
             GlobalStyle.Container,
             {
               marginTop: "0%",
-
-              //backgroundColor: "blue",
             },
           ]}
         >
@@ -243,15 +242,14 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
             style={{
               height: "22%",
               width: "100%",
-              //backgroundColor: "red",
               justifyContent: "flex-end",
-              marginBottom: "8%",
+              marginBottom: moderateScale(22),
             }}
           >
             <Text
               style={[
                 GlobalStyle.Subtitle2,
-                { fontSize: responsiveFontSize(3.71) / fontScale },
+                { fontSize: moderateScale(36.5) / fontScale },
               ]}
             >
               Caregivee Registration
@@ -263,7 +261,6 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                 style={{
                   height: "100%",
                   width: "100%",
-                  //backgroundColor: "blue",
                 }}
               >
                 <View style={{ flexDirection: "row" }}>
@@ -335,7 +332,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
               <View
                 style={{
                   height: "20%",
-                  marginTop: "7%",
+                  marginTop: moderateScale(20),
                   justifyContent: "center",
                 }}
               >
@@ -354,7 +351,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                   <Text
                     style={[
                       GlobalStyle.ButtonText,
-                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                      { fontSize: moderateScale(19.4) / fontScale },
                     ]}
                   >
                     Create Account

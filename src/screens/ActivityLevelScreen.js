@@ -14,6 +14,7 @@ import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedUser } from "../redux/actions";
 import { setActivityEndpoint } from "../network/CarebitAPI";
+import { moderateScale } from "react-native-size-matters";
 export default function ActivityLevelScreen({ navigation, route }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
@@ -53,7 +54,7 @@ export default function ActivityLevelScreen({ navigation, route }) {
               <Text
                 style={[
                   GlobalStyle.Subtitle,
-                  { fontSize: responsiveFontSize(6.3) / fontScale },
+                  { fontSize: moderateScale(49) / fontScale },
                 ]}
               >
                 Activity Level
@@ -62,7 +63,6 @@ export default function ActivityLevelScreen({ navigation, route }) {
               <SafeAreaView
                 style={{
                   flex: 1,
-                  //backgroundColor: "blue",
                   alignItems: "center",
                   marginTop: "40%",
                 }}
@@ -84,7 +84,7 @@ export default function ActivityLevelScreen({ navigation, route }) {
                   <Text
                     style={[
                       GlobalStyle.ButtonText,
-                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                      { fontSize: moderateScale(19) / fontScale },
                     ]}
                   >
                     Select Caregivee
@@ -105,7 +105,7 @@ export default function ActivityLevelScreen({ navigation, route }) {
               <Text
                 style={[
                   GlobalStyle.Subtitle,
-                  { fontSize: responsiveFontSize(6.3) / fontScale },
+                  { fontSize: moderateScale(49) / fontScale },
                 ]}
               >
                 Activity Level
@@ -115,7 +115,7 @@ export default function ActivityLevelScreen({ navigation, route }) {
                 <Text
                   style={[
                     styles.DescriptiveText,
-                    { fontSize: responsiveFontSize(2.2) / fontScale },
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
                 >
                   Choose the usual level of activity for your Caregivee
@@ -140,7 +140,7 @@ export default function ActivityLevelScreen({ navigation, route }) {
                     <Text
                       style={[
                         styles.InnerTitle,
-                        { fontSize: responsiveFontSize(2.4) / fontScale },
+                        { fontSize: moderateScale(18.5) / fontScale },
                       ]}
                     >
                       Active
@@ -148,7 +148,7 @@ export default function ActivityLevelScreen({ navigation, route }) {
                     <Text
                       style={[
                         styles.InnerText,
-                        { fontSize: responsiveFontSize(2.2) / fontScale },
+                        { fontSize: moderateScale(17) / fontScale },
                       ]}
                     >
                       Living an active life
@@ -170,7 +170,7 @@ export default function ActivityLevelScreen({ navigation, route }) {
                     <Text
                       style={[
                         styles.InnerTitle,
-                        { fontSize: responsiveFontSize(2.4) / fontScale },
+                        { fontSize: moderateScale(18.5) / fontScale },
                       ]}
                     >
                       Sedentary
@@ -178,7 +178,7 @@ export default function ActivityLevelScreen({ navigation, route }) {
                     <Text
                       style={[
                         styles.InnerText,
-                        { fontSize: responsiveFontSize(2.2) / fontScale },
+                        { fontSize: moderateScale(17) / fontScale },
                       ]}
                     >
                       Not active, but not homebound
@@ -199,7 +199,7 @@ export default function ActivityLevelScreen({ navigation, route }) {
                     <Text
                       style={[
                         styles.InnerTitle,
-                        { fontSize: responsiveFontSize(2.4) / fontScale },
+                        { fontSize: moderateScale(18.5) / fontScale },
                       ]}
                     >
                       Homebound
@@ -207,7 +207,7 @@ export default function ActivityLevelScreen({ navigation, route }) {
                     <Text
                       style={[
                         styles.InnerText,
-                        { fontSize: responsiveFontSize(2.2) / fontScale },
+                        { fontSize: moderateScale(17) / fontScale },
                       ]}
                     >
                       Unable able to leave home
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     marginTop: "5%",
   },
   DescriptiveText: {
-    fontSize: responsiveFontSize(2.2),
+    fontSize: moderateScale(17),
     color: "white",
   },
   InnerContainers: {
@@ -267,13 +267,13 @@ const styles = StyleSheet.create({
     marginLeft: "6%",
     color: "black",
     fontWeight: "600",
-    fontSize: responsiveFontSize(2.4),
+    fontSize: moderateScale(18.5),
   },
   InnerText: {
     marginLeft: "6%",
     marginTop: "2%",
     color: "darkgray",
     fontWeight: "400",
-    fontSize: responsiveFontSize(2.2),
+    fontSize: moderateScale(17),
   },
 });

@@ -17,7 +17,7 @@ import CustomTextInput from "../utils/CustomTextInput";
 import { useState } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
-import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { moderateScale } from "react-native-size-matters";
 import validator from "validator";
 import { phone } from "phone";
 import { getDefaultEndpoint, physicianEndpoint } from "../network/CarebitAPI";
@@ -130,7 +130,6 @@ export default function ModifiedPhysScreen({ navigation }) {
               marginTop: "25%",
               marginLeft: "5%",
               marginRight: "5%",
-              //backgroundColor: "blue",
             },
           ]}
         >
@@ -139,7 +138,7 @@ export default function ModifiedPhysScreen({ navigation }) {
               <Text
                 style={[
                   GlobalStyle.Subtitle,
-                  { fontSize: responsiveFontSize(5.1) / fontScale },
+                  { fontSize: moderateScale(39.5) / fontScale },
                 ]}
               >
                 Physician Contact
@@ -191,7 +190,7 @@ export default function ModifiedPhysScreen({ navigation }) {
                   <Text
                     style={[
                       GlobalStyle.ButtonText,
-                      { fontSize: responsiveFontSize(2.51) / fontScale },
+                      { fontSize: moderateScale(19.4) / fontScale },
                     ]}
                   >
                     Create Account
