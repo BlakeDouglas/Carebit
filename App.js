@@ -525,7 +525,7 @@ const HomeStack = () => {
                       height: moderateScale(25),
                       marginRight: scale(10),
                     }}
-                    source={require("./assets/images/editIcon/edit.png")}
+                    source={require("./assets/images/editIcon/editIcon.png")}
                   />
                 </TouchableOpacity>
               ) : null,
