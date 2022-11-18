@@ -215,7 +215,7 @@ export default function LinkUsersScreen({ navigation }) {
                         { fontSize: scale(18) / fontScale },
                       ]}
                     >
-                      Use App
+                      They Have The App
                     </Text>
                   </TouchableOpacity>
                 </SafeAreaView>

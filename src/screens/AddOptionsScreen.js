@@ -17,10 +17,12 @@ import {
   setTokenData,
 } from "../redux/actions";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
+import { moderateScale, scale } from "react-native-size-matters";
 
 export default function AddOptionsScreen({ navigation }) {
   const dispatch = useDispatch();
-  // Sends user back to Link Users
+
+  // Sends user back to Link Users Screen
   const ContinueButtonHandler = () => {
     goBack();
   };
@@ -45,7 +47,6 @@ export default function AddOptionsScreen({ navigation }) {
             style={{
               width: "100%",
               height: "15%",
-              //backgroundColor: "blue",
               alignSelf: "center",
             }}
           >
@@ -54,25 +55,23 @@ export default function AddOptionsScreen({ navigation }) {
                 GlobalStyle.Subtitle,
                 {
                   textAlign: "center",
-                  fontSize: responsiveFontSize(6.3) / fontScale,
+                  fontSize: moderateScale(44) / fontScale,
                 },
               ]}
             >
-              App Options
+              Adding Options
             </Text>
           </SafeAreaView>
           <SafeAreaView
             style={{
-              marginTop: "5%",
-
+              marginTop: scale(16),
               width: "100%",
-              //backgroundColor: "red",
             }}
           >
             <Text
               style={{
                 color: "white",
-                fontSize: responsiveFontSize(3) / fontScale,
+                fontSize: moderateScale(23) / fontScale,
                 textAlign: "center",
                 textDecorationLine: "underline",
               }}
@@ -82,14 +81,14 @@ export default function AddOptionsScreen({ navigation }) {
             <Text
               style={{
                 color: "white",
-                fontSize: responsiveFontSize(2.3) / fontScale,
+                fontSize: moderateScale(17.2) / fontScale,
                 marginTop: "5%",
                 alignSelf: "center",
                 textAlign: "left",
               }}
             >
               {
-                "If your Caregivee decides to download the app, they will have the benefit of privacy options, the ability to mark notifications that they're okay, and their own dashboard. This is the recommended method.\n"
+                "Downloading the app provides your caregivee the benefit of privacy options, the ability to mark notifications that they're okay, and their own dashboard.\n"
               }
             </Text>
           </SafeAreaView>
@@ -102,24 +101,24 @@ export default function AddOptionsScreen({ navigation }) {
             <Text
               style={{
                 color: "white",
-                fontSize: responsiveFontSize(3) / fontScale,
+                fontSize: moderateScale(23) / fontScale,
                 textAlign: "center",
                 textDecorationLine: "underline",
               }}
             >
-              Caregivee Opts Out
+              Using One Device
             </Text>
             <Text
               style={{
                 color: "white",
-                fontSize: responsiveFontSize(2.3) / fontScale,
-                marginTop: "5%",
+                fontSize: moderateScale(17.2) / fontScale,
+                marginTop: scale(16),
                 alignSelf: "center",
                 textAlign: "left",
               }}
             >
               {
-                "Carebit also offers the option to connect with your Caregivee without them using the app. Only choose this option if you will be able to sign-in to their fitbit account.\n"
+                "If your Caregivee doesn't want the app, you can make them an account through your phone, as long as you can sign into their Fitbit account. THey can still get the app in the future if they choose this option\n"
               }
             </Text>
           </SafeAreaView>
@@ -133,7 +132,7 @@ export default function AddOptionsScreen({ navigation }) {
               <Text
                 style={[
                   GlobalStyle.ButtonText,
-                  { fontSize: responsiveFontSize(2.51) / fontScale },
+                  { fontSize: moderateScale(19.4) / fontScale },
                 ]}
               >
                 Continue
