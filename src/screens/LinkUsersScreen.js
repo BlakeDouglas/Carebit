@@ -106,6 +106,30 @@ export default function LinkUsersScreen({ navigation }) {
       );
     }
   };
+  const moreInfoAlert = () => {
+    navigation.navigate("AddOptionsScreen");
+  };
+  const warningAlert = () =>
+    Alert.alert(
+      "Warning",
+      "You will need to sign in to your caregivee's Fitbit device. Only continue if you know their Fitbit credentials",
+      [
+        {
+          text: "Continue",
+          onPress: () => {
+            dispatch(setTokenData({ ...tokenData, authPhase: 10 }));
+          },
+          style: "continue",
+        },
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    );
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
   return (
@@ -121,124 +145,6 @@ export default function LinkUsersScreen({ navigation }) {
             translucent={true}
             backgroundColor="black"
           />
-          <Modal
-            isVisible={isModal1Visible}
-            backdropOpacity={0.5}
-            useNativeDriverForBackdrop={true}
-            hideModalContentWhileAnimating={true}
-            animationIn={"fadeIn"}
-            animationOut={"fadeOut"}
-          >
-            <View
-              style={{
-                alignSelf: "center",
-                height: moderateScale(windowHeight / 4, 0.7),
-                width: "75%",
-                backgroundColor: "white",
-                borderRadius: moderateScale(8),
-                alignItems: "center",
-                justifyContent: "space-evenly",
-              }}
-            >
-              <SafeAreaView
-                style={{
-                  alignItems: "center",
-                  width: "90%",
-                  height: "60%",
-                  justifyContent: "space-evenly",
-                }}
-              >
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: moderateScale(18) / fontScale,
-                  }}
-                >
-                  Warning
-                </Text>
-                <Text
-                  style={{
-                    fontSize: moderateScale(14) / fontScale,
-                    fontWeight: "400",
-                    textAlign: "left",
-                  }}
-                >
-                  You will need to sign in to your caregivee's Fitbit device.
-                  Only continue if you know their Fitbit credentials
-                </Text>
-              </SafeAreaView>
-              <SafeAreaView
-                style={{
-                  height: "40%",
-                  width: "100%",
-                  alignItems: "center",
-                  justifyContent: "space-evenly",
-                }}
-              >
-                <SafeAreaView
-                  style={{
-                    height: "50%",
-                    width: "100%",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderTopColor: "rgba(128, 128, 128, .2)",
-                    borderTopWidth: moderateScale(1),
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: "100%",
-                      width: "100%",
-                    }}
-                    onPress={() => {
-                      toggleModal1();
-                      dispatch(setTokenData({ ...tokenData, authPhase: 10 }));
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: "dodgerblue",
-                        fontSize: moderateScale(15.5) / fontScale,
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Continue
-                    </Text>
-                  </TouchableOpacity>
-                </SafeAreaView>
-                <SafeAreaView
-                  style={{
-                    height: "50%",
-                    width: "100%",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderTopColor: "rgba(128, 128, 128, .2)",
-                    borderTopWidth: moderateScale(1),
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{ alignItems: "center", justifyContent: "center" }}
-                    onPress={() => {
-                      toggleModal1();
-                      console.log("Cancel Pressed");
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: "dodgerblue",
-                        fontSize: moderateScale(15.5) / fontScale,
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Cancel
-                    </Text>
-                  </TouchableOpacity>
-                </SafeAreaView>
-              </SafeAreaView>
-            </View>
-          </Modal>
 
           <SafeAreaView
             style={[
@@ -256,100 +162,84 @@ export default function LinkUsersScreen({ navigation }) {
                 Connect to a Caregivee
               </Text>
             </SafeAreaView>
-            <SafeAreaView
-              style={{
-                height: "75%",
-                width: "100%",
-                marginTop: moderateScale(20),
-                justifyContent: "center",
-              }}
-            >
+            <SafeAreaView style={{ flex: 1 }}>
               <SafeAreaView
                 style={{
-                  height: "50%",
+                  height: verticalScale(windowHeight / 4.5),
                   width: "100%",
-                  alignSelf: "center",
+                  marginTop: moderateScale(20),
                   justifyContent: "center",
                 }}
               >
                 <Text
                   style={[
                     GlobalStyle.Text,
-                    { fontSize: moderateScale(17, 0.6) / fontScale },
+                    { fontSize: moderateScale(18, 0.4) / fontScale },
                   ]}
                 >
-                  Request a Caregivee for monitoring {"\n"}(recommended method)
-                </Text>
-                <SafeAreaView
-                  style={{
-                    alignSelf: "center",
-                    width: "100%",
-                    justifyContent: "center",
-                    marginTop: moderateScale(10, 0.1),
-                  }}
-                >
-                  <CustomTextInput
-                    label={
-                      typeOfRequester === "caregivee"
-                        ? "Caregivee's Phone Number"
-                        : "Caregiver's Phone Number"
-                    }
-                    error={errors.phone}
-                    onChangeFormattedText={(text) => {
-                      handleChange(text, "phone");
-                      handleError(null, "phone");
-                    }}
-                    phone
-                  />
-                </SafeAreaView>
-                <TouchableOpacity
-                  style={[
-                    GlobalStyle.Button,
-                    { marginTop: moderateScale(10, 0.1) },
-                  ]}
-                  onPress={validate}
-                >
+                  There are two options to connect to your Caregivee:{"\n\n"}
+                  They can either download the app to use, or they can register
+                  directly through your phone if they don't want to use the app.{" "}
                   <Text
+                    onPress={() => moreInfoAlert()}
                     style={[
-                      GlobalStyle.ButtonText,
-                      { fontSize: scale(18) / fontScale },
+                      GlobalStyle.Text,
+                      {
+                        textDecorationLine: "underline",
+                        fontSize: moderateScale(18, 0.4) / fontScale,
+                      },
                     ]}
                   >
-                    Send Request
+                    Read More
                   </Text>
-                </TouchableOpacity>
+                </Text>
               </SafeAreaView>
               <SafeAreaView
                 style={{
                   flex: 1,
-                  marginTop: moderateScale(40, 0.6),
-                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <Text
-                  style={[
-                    GlobalStyle.Text,
-                    { fontSize: moderateScale(17, 0.6) / fontScale },
-                  ]}
+                <SafeAreaView
+                  style={{
+                    alignItems: "center",
+                  }}
                 >
-                  Proceed without your Caregivee using the app
-                </Text>
-                <TouchableOpacity
-                  style={[
-                    GlobalStyle.Button,
-                    { marginTop: moderateScale(15, 0.1) },
-                  ]}
-                  onPress={toggleModal1}
-                >
-                  <Text
-                    style={[
-                      GlobalStyle.ButtonText,
-                      { fontSize: scale(18) / fontScale },
-                    ]}
+                  <TouchableOpacity
+                    style={[GlobalStyle.Button]}
+                    onPress={() => navigation.navigate("AddScreen")}
                   >
-                    Opt Out
-                  </Text>
-                </TouchableOpacity>
+                    <Text
+                      style={[
+                        GlobalStyle.ButtonText,
+                        { fontSize: scale(18) / fontScale },
+                      ]}
+                    >
+                      Use App
+                    </Text>
+                  </TouchableOpacity>
+                </SafeAreaView>
+
+                <SafeAreaView
+                  style={{
+                    marginTop: moderateScale(25),
+                    alignItems: "center",
+                  }}
+                >
+                  <TouchableOpacity
+                    style={[GlobalStyle.Button]}
+                    onPress={warningAlert}
+                  >
+                    <Text
+                      style={[
+                        GlobalStyle.ButtonText,
+                        { fontSize: scale(18) / fontScale },
+                      ]}
+                    >
+                      Use My Device
+                    </Text>
+                  </TouchableOpacity>
+                </SafeAreaView>
               </SafeAreaView>
             </SafeAreaView>
           </SafeAreaView>

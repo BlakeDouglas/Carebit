@@ -20,9 +20,9 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 export default function AddOptionsScreen({ navigation }) {
   const dispatch = useDispatch();
-  // Sends user to Link user screen
+  // Sends user back to Link Users
   const ContinueButtonHandler = () => {
-    navigation.navigate("LinkUsersScreen");
+    goBack();
   };
   const { fontScale } = useWindowDimensions();
   return (
