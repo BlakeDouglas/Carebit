@@ -39,7 +39,7 @@ export default function AddOptionsScreen({ navigation }) {
         <SafeAreaView
           style={[
             GlobalStyle.Container,
-            { marginTop: "12%", marginRight: "6%", marginLeft: "6%" },
+            { marginRight: "6%", marginLeft: "6%" },
           ]}
         >
           {/* Title Container */}
