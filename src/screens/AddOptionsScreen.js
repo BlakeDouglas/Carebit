@@ -24,7 +24,7 @@ export default function AddOptionsScreen({ navigation }) {
 
   // Sends user back to Link Users Screen
   const ContinueButtonHandler = () => {
-    goBack();
+    navigation.goBack();
   };
   const { fontScale } = useWindowDimensions();
   return (

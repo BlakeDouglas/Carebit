@@ -18,18 +18,21 @@ import CustomTextInput from "../utils/CustomTextInput";
 import { phone } from "phone";
 import { createRequestEndpoint } from "../network/CarebitAPI";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
-export default function AddScreen({ navigation: { goBack } }) {
-  const handleChange = (text, input) => {
-    setInputs((prevState) => ({ ...prevState, [input]: text }));
-  };
+import { setTokenData } from "../redux/actions";
+export default function AddScreen({ navigation }) {
+  const [errors, setErrors] = useState({});
+  const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const dispatch = useDispatch();
+
   const [inputs, setInputs] = useState({
     phone: "",
   });
+  const handleChange = (text, input) => {
+    setInputs((prevState) => ({ ...prevState, [input]: text }));
+  };
   const handleError = (errorMessage, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
-  const [errors, setErrors] = useState({});
-  const tokenData = useSelector((state) => state.Reducers.tokenData);
   const typeOfRequester =
     tokenData.type === "caregivee" ? "caregiver" : "caregivee";
 
@@ -40,13 +43,17 @@ export default function AddScreen({ navigation: { goBack } }) {
     let phoneData = phone(inputs.phone);
 
     if (!phoneData.isValid) {
-      handleError(" Invalid Number", "phone");
+      handleError(" Invalid Phone", "phone");
       valid = false;
     } else {
       inputs.phone = phoneData.phoneNumber;
     }
     if (inputs.phone === tokenData.phone) {
-      handleError("  Invalid Number", "phone");
+      handleError("  Invalid Phone", "phone");
+      valid = false;
+    }
+    if (!inputs.phone || !tokenData.phone) {
+      handleError("  Account Error", "phone");
       valid = false;
     }
 
@@ -78,15 +85,23 @@ export default function AddScreen({ navigation: { goBack } }) {
       } else {
         handleError("  Not Found", "phone");
       }
-    } else {
-      goBack();
-      if (json.request)
-        Alert.alert(
-          "Sent!",
-          "Your request has been sent. Once accepted, you will be able to view their Fitbit data.",
-          [{ text: "Continue", onPress: () => console.log("Continue") }]
-        );
-    }
+    } else if (json.request) {
+      Alert.alert(
+        "Sent!",
+        "Your request has been sent. Once accepted, you will be able to view their Fitbit data.",
+        [
+          {
+            text: "Continue",
+            onPress: () => {
+              if (tokenData.authPhase === 1) {
+                dispatch(setTokenData({ ...tokenData, authPhase: 2 }));
+              } else navigation.goBack();
+            },
+          },
+        ]
+      );
+    } else
+      console.log("No response and no error. This should not be happening.");
   };
   const { fontScale } = useWindowDimensions();
   return (

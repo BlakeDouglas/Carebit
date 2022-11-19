@@ -131,43 +131,47 @@ const MiddleStack = () => {
           />
         )}
         {tokenData.authPhase === 1 && (
-          <Stack.Screen
-            name="LinkUsersScreen"
-            component={LinkUsersScreen}
-            options={({ navigation }) => ({
+          <Stack.Group
+            screenOptions={{
               headerTransparent: true,
-              headerTitleAlign: "center",
-
-              headerStyle: {
-                backgroundColor: "transparent",
-              },
-              headerRight: () => (
-                <TouchableOpacity
-                  onPress={() =>
-                    dispatch(setTokenData({ ...tokenData, authPhase: 2 }))
-                  }
-                  style={{ marginRight: scale(10) }}
-                >
-                  <Text
-                    style={{
-                      fontSize: moderateScale(20) / fontScale,
-                      color: "white",
-                    }}
+              headerTintColor: "#fff",
+              title: "",
+            }}
+          >
+            <Stack.Screen
+              name="LinkUsersScreen"
+              component={LinkUsersScreen}
+              options={({ navigation }) => ({
+                headerRight: () => (
+                  <TouchableOpacity
+                    onPress={() =>
+                      dispatch(setTokenData({ ...tokenData, authPhase: 2 }))
+                    }
+                    style={{ marginRight: scale(10) }}
                   >
-                    Skip
-                  </Text>
-                </TouchableOpacity>
-              ),
-            })}
-          />
+                    <Text
+                      style={{
+                        fontSize: moderateScale(20) / fontScale,
+                        color: "white",
+                      }}
+                    >
+                      Skip
+                    </Text>
+                  </TouchableOpacity>
+                ),
+              })}
+            />
+            <Stack.Screen
+              name="AddOptionsScreen"
+              component={AddOptionsScreen}
+            />
+            <Stack.Screen
+              name="ModifiedCaregiveeAccountCreation"
+              component={ModifiedCaregiveeAccountCreation}
+            />
+            <Stack.Screen name="AddScreen" component={AddScreen} />
+          </Stack.Group>
         )}
-        {tokenData.authPhase === 10 && (
-          <Stack.Screen
-            name="ModifiedCaregiveeAccountCreation"
-            component={ModifiedCaregiveeAccountCreation}
-          />
-        )}
-
         {tokenData.authPhase === 3 && (
           <Stack.Screen
             name="ModifiedAuthScreen"

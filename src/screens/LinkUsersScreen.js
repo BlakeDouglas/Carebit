@@ -61,6 +61,10 @@ export default function LinkUsersScreen({ navigation }) {
       handleError("  Invalid Number", "phone");
       valid = false;
     }
+    if (!inputs.phone || !tokenData.phone) {
+      handleError("  Account Error", "phone");
+      valid = false;
+    }
 
     if (valid) {
       makeRequest();
@@ -68,19 +72,11 @@ export default function LinkUsersScreen({ navigation }) {
   };
 
   const makeRequest = async () => {
-    if (!tokenData.phone || !inputs.phone) return;
-    const body =
-      tokenData.type !== "caregiver"
-        ? {
-            caregiveePhone: tokenData.phone,
-            caregiverPhone: inputs.phone,
-            sender: tokenData.type,
-          }
-        : {
-            caregiverPhone: tokenData.phone,
-            caregiveePhone: inputs.phone,
-            sender: tokenData.type,
-          };
+    const body = {
+      caregiverPhone: tokenData.phone,
+      caregiveePhone: inputs.phone,
+      sender: "caregiver",
+    };
     const params = { auth: tokenData.access_token, body: body };
     const json = await createRequestEndpoint(params);
     if (json.error) {
@@ -117,7 +113,7 @@ export default function LinkUsersScreen({ navigation }) {
         {
           text: "Continue",
           onPress: () => {
-            dispatch(setTokenData({ ...tokenData, authPhase: 10 }));
+            navigation.navigate("ModifiedCaregiveeAccountCreation");
           },
           style: "continue",
         },
@@ -228,7 +224,9 @@ export default function LinkUsersScreen({ navigation }) {
                 >
                   <TouchableOpacity
                     style={[GlobalStyle.Button]}
-                    onPress={warningAlert}
+                    onPress={() => {
+                      warningAlert();
+                    }}
                   >
                     <Text
                       style={[

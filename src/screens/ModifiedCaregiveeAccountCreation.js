@@ -24,8 +24,10 @@ import { moderateScale } from "react-native-size-matters";
 export default function ModifiedCaregiveeAccountCreation({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
-  const requiredText = " Input required";
   const dispatch = useDispatch();
+
+  const requiredText = " Input required";
+  const windowHeight = useWindowDimensions().height;
   // Content between this point and the return statement
   // are inspired by kymzTech's React Native Tutorial
 
