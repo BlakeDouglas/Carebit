@@ -44,64 +44,6 @@ export default function LinkUsersScreen({ navigation }) {
   const toggleModal1 = () => {
     setModal1Visible(!isModal1Visible);
   };
-
-  const validate = () => {
-    Keyboard.dismiss();
-    let valid = true;
-
-    let phoneData = phone(inputs.phone);
-
-    if (!phoneData.isValid) {
-      handleError(" Invalid Number", "phone");
-      valid = false;
-    } else {
-      inputs.phone = phoneData.phoneNumber;
-    }
-    if (inputs.phone === tokenData.phone) {
-      handleError("  Invalid Number", "phone");
-      valid = false;
-    }
-    if (!inputs.phone || !tokenData.phone) {
-      handleError("  Account Error", "phone");
-      valid = false;
-    }
-
-    if (valid) {
-      makeRequest();
-    }
-  };
-
-  const makeRequest = async () => {
-    const body = {
-      caregiverPhone: tokenData.phone,
-      caregiveePhone: inputs.phone,
-      sender: "caregiver",
-    };
-    const params = { auth: tokenData.access_token, body: body };
-    const json = await createRequestEndpoint(params);
-    if (json.error) {
-      if (json.error === "This request already exists") {
-        handleError("  Already added", "phone");
-      } else {
-        handleError("  Not Found", "phone");
-      }
-      return;
-    }
-    if (json.request) {
-      Alert.alert(
-        "Sent!",
-        "Your request has been sent. Once accepted, you will be able to view their Fitbit data.",
-        [
-          {
-            text: "Continue",
-            onPress: () => {
-              dispatch(setTokenData({ ...tokenData, authPhase: 2 }));
-            },
-          },
-        ]
-      );
-    }
-  };
   const moreInfoAlert = () => {
     navigation.navigate("AddOptionsScreen");
   };
@@ -203,7 +145,9 @@ export default function LinkUsersScreen({ navigation }) {
                 >
                   <TouchableOpacity
                     style={[GlobalStyle.Button]}
-                    onPress={() => navigation.navigate("AddScreen")}
+                    onPress={() => {
+                      navigation.navigate("NavigationAddScreen");
+                    }}
                   >
                     <Text
                       style={[

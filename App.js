@@ -74,6 +74,7 @@ const App = () => {
 
 const RootNavigation = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  console.log("AuthPhase: ", tokenData.authPhase);
   return (
     <NavigationContainer>
       {tokenData.authPhase === 0 ? (
@@ -169,7 +170,7 @@ const MiddleStack = () => {
               name="ModifiedCaregiveeAccountCreation"
               component={ModifiedCaregiveeAccountCreation}
             />
-            <Stack.Screen name="AddScreen" component={AddScreen} />
+            <Stack.Screen name="NavigationAddScreen" component={AddScreen} />
           </Stack.Group>
         )}
         {tokenData.authPhase === 3 && (

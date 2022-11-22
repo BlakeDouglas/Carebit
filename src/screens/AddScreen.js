@@ -52,7 +52,7 @@ export default function AddScreen({ navigation }) {
       handleError("  Invalid Phone", "phone");
       valid = false;
     }
-    if (!inputs.phone || !tokenData.phone) {
+    if (!tokenData.phone) {
       handleError("  Account Error", "phone");
       valid = false;
     }
@@ -95,7 +95,9 @@ export default function AddScreen({ navigation }) {
             onPress: () => {
               if (tokenData.authPhase === 1) {
                 dispatch(setTokenData({ ...tokenData, authPhase: 2 }));
-              } else navigation.goBack();
+              } else {
+                navigation.goBack();
+              }
             },
           },
         ]
