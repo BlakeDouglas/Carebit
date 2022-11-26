@@ -266,7 +266,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
             fontWeight: "600",
           }}
         >
-          Today
+          All Alerts
         </Text>
       </SafeAreaView>
       <FlatList
