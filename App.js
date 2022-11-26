@@ -44,18 +44,7 @@ import { initializeApp } from "firebase/app";
 import { setTokenData } from "./src/redux/actions";
 import { getFontScale } from "react-native/Libraries/Utilities/PixelRatio";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAu69cdb30ONSKMcrIrL7P4YT0ghQoNEdg",
-  authDomain: "carebit-48f39.firebaseapp.com",
-  databaseURL: "https://carebit-48f39.firebaseio.com",
-  projectId: "carebit-48f39",
-  storageBucket: "carebit-48f39.appspot.com",
-  messagingSenderId: "1042058218989",
-  appId: "1:1042058218989:web:f28598ffbacb69e3a9ebe4",
-  measurementId: "G-QCBPVPX8QC",
-};
 const Stack = createStackNavigator();
-initializeApp(firebaseConfig);
 
 const App = () => {
   const [loaded] = useFonts({
@@ -226,12 +215,12 @@ const HomeStack = () => {
   };
   const { fontScale } = useWindowDimensions();
   const openMenu = () => setVisible(true);
-  // Refreshes every x seconds to check if a friend request exists
+  // Refreshes every x milliseconds to check if a friend request exists
   // If one does, set visibleAlert to true to show the alert icons
   useEffect(() => {
     const toggle = setInterval(() => {
       showAlert();
-    }, 30000);
+    }, 8000);
     return () => clearInterval(toggle);
   });
 

@@ -103,7 +103,7 @@ export default function LinkUsersScreen({ navigation }) {
             <SafeAreaView style={{ flex: 1 }}>
               <SafeAreaView
                 style={{
-                  height: verticalScale(windowHeight / 4.5),
+                  height: verticalScale(windowHeight / 3.5),
                   width: "100%",
                   marginTop: moderateScale(20),
                   justifyContent: "center",

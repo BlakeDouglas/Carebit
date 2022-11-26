@@ -231,7 +231,7 @@ const RequestScreen = ({ navigation }) => {
   useEffect(() => {
     const toggle = setInterval(() => {
       isFocused ? getRequests() : clearInterval(toggle);
-    }, 10000);
+    }, 8000);
     return () => clearInterval(toggle);
   });
 

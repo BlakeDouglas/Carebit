@@ -135,7 +135,7 @@ export default function AddOptionsScreen({ navigation }) {
                   { fontSize: moderateScale(19.4) / fontScale },
                 ]}
               >
-                Continue
+                Go Back
               </Text>
             </TouchableOpacity>
           </SafeAreaView>
