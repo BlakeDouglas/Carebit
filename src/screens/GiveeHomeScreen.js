@@ -31,7 +31,8 @@ import {
   fitbitDataEndpoint,
   alertCounter,
 } from "../network/CarebitAPI";
-
+import { LogBox } from "react-native";
+LogBox.ignoreLogs(["Possible Unhandled Promise Rejection"]);
 export default function GiveeHomeScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);

@@ -381,6 +381,7 @@ export default function GiverSettingsScreen({ navigation }) {
           <SafeAreaView
             style={{
               height: "50%",
+              marginTop: moderateScale(33, 0.1),
               width: "100%",
               alignItems: "center",
               justifyContent: "flex-end",

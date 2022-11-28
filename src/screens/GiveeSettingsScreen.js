@@ -119,7 +119,7 @@ export default function GiveeSettingsScreen({ navigation }) {
           style={{
             width: "100%",
             height: "19%",
-            marginTop: scale(29),
+            marginTop: moderateScale(28, 0.1),
           }}
         >
           <Text
@@ -286,6 +286,7 @@ export default function GiveeSettingsScreen({ navigation }) {
             style={{
               height: "39%",
               width: "100%",
+              marginTop: moderateScale(25, 0.1),
               alignItems: "center",
               justifyContent: "flex-end",
             }}

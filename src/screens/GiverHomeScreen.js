@@ -32,7 +32,8 @@ import {
   getLastNoSyncAlert,
   setLastNoSyncAlert,
 } from "../network/CarebitAPI";
-
+import { LogBox } from "react-native";
+LogBox.ignoreLogs(["Possible Unhandled Promise Rejection"]);
 export default function GiverHomeScreen({ navigation }) {
   const { fontScale } = useWindowDimensions();
   const [dailySteps, setDailySteps] = useState(null);
