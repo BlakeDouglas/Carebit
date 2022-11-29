@@ -203,7 +203,7 @@ export default function GiverHomeScreen({ navigation }) {
       return diffSeconds + " second" + (diffSeconds === 1 ? "" : "s") + " ago";
     }
 
-    if (diffSeconds === 0) {
+    if (diffSeconds <= 0) {
       return "now";
     }
 
@@ -390,7 +390,7 @@ export default function GiverHomeScreen({ navigation }) {
       isFocused
         ? getCaregiveeInfo() && fetchData() && getAlertCounter()
         : clearInterval(toggle);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(toggle);
   });
 
