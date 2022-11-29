@@ -390,7 +390,7 @@ export default function GiverHomeScreen({ navigation }) {
       isFocused
         ? getCaregiveeInfo() && fetchData() && getAlertCounter()
         : clearInterval(toggle);
-    }, 15000);
+    }, 5000);
     return () => clearInterval(toggle);
   });
 

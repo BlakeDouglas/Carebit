@@ -530,9 +530,7 @@ export default function CustomNotificationScreen({ navigation }) {
                   );
                 }}
                 dropdownIconPosition={"right"}
-                defaultValue={
-                  thresholds ? thresholds.stepThreshold + " steps" : "N/A"
-                }
+                defaultValue={thresholds ? 500 + " steps" : "N/A"}
                 disableAutoScroll={true}
                 //search={true}
                 selectedRowStyle={{ backgroundColor: "lightgray" }}
