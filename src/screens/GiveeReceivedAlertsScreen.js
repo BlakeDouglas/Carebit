@@ -31,6 +31,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
 
   const [maxShown, setMaxShown] = useState(0);
 
+  // Sends ok notification to database to show on giver side
   const sendOk = async (alertID) => {
     const params = { targetID: alertID, auth: tokenData.access_token };
     const json = await setAlertOkEndpoint(params);
@@ -40,6 +41,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
     } else console.log("Error setting Ok");
   };
 
+  // Gets first notifications to display
   const getFirst = (arr, n) => {
     if (n === 0) return [];
     if (arr.length === 0) return [];
@@ -66,15 +68,20 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
     }
   };
 
+  // Get all alerts once this screen is loaded
   useEffect(() => {
     getAlerts();
   }, []);
 
+  // Find what notifications to show when screen is loaded
   useEffect(() => {
     setData(getFirst(backgroundData, maxShown));
   }, [maxShown, backgroundData]);
 
+  // Used to fix accessbility zoom
   const { fontScale } = useWindowDimensions();
+
+  // Modal to show the Mark Okay option
   const [isModal1Visible, setModal1Visible] = useState(false);
   const toggleModal1 = () => {
     console.log(isModal1Visible);
@@ -83,12 +90,14 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
   // Sends alertID to modal
   const [okID, setOkID] = useState(null);
 
+  // Info to be rendered
   const Item = ({ alertType, time, date, body, title, alertID, ok }) => (
     <SafeAreaView
       style={{
         justifyContent: "center",
       }}
     >
+      {/* Renders picture depending on title of alert */}
       <SafeAreaView
         style={{
           marginVertical: "1%",
@@ -140,7 +149,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
             source={require("../../assets/images/icons-alert-battery.imageset/icons-alert-battery.png")}
           />
         )}
-
+        {/* Places title and text provided by api call to description part of alert */}
         <SafeAreaView
           style={{
             marginLeft: "3%",
@@ -177,6 +186,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
             flex: 1,
           }}
         >
+          {/* Checks if ok has been set or not */}
           {ok === 0 ? (
             <TouchableOpacity
               style={{
@@ -240,7 +250,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
       </SafeAreaView>
     </SafeAreaView>
   );
-
+  // Sends data to item to be rendered
   const renderItem = ({ item }) => (
     <Item
       alertType={item.alertType}
@@ -255,7 +265,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
       ok={item.ok}
     />
   );
-
+  // This is what is rendered if the list is empty
   const Empty = () => {
     return (
       <View style={styles.emptyContainer}>
@@ -290,6 +300,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
+  // Main return for showing data. Adds title and flatlist
   return (
     <SafeAreaView
       style={{
@@ -298,6 +309,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
         width: "97%",
       }}
     >
+      {/* Modal for marking alert as okay or not */}
       <Modal
         isVisible={isModal1Visible}
         backdropOpacity={0.2}
@@ -418,6 +430,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
           </SafeAreaView>
         </View>
       </Modal>
+      {/* Title Container */}
       <SafeAreaView
         style={{
           width: "100%",
@@ -436,6 +449,7 @@ export default function GiveeReceivedAlertsScreen({ navigation }) {
           All Alerts
         </Text>
       </SafeAreaView>
+      {/* Flatlist to dynamically load all alerts */}
       <FlatList
         data={data}
         renderItem={renderItem}

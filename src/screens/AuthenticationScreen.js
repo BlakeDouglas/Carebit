@@ -28,6 +28,7 @@ export default function AuthenticationScreen({ navigation }) {
   const windowHeight = useWindowDimensions().height;
   const [request, response, promptAsync] = getAuthRequest();
 
+  // Gives caregivee account their missing info from Fitbit (caregiveeID)
   const makeCaregivee = async (code) => {
     const params = {
       auth: tokenData.access_token,
@@ -44,7 +45,7 @@ export default function AuthenticationScreen({ navigation }) {
         { text: "Ok", onPress: () => {}, style: "cancel" },
       ]);
   };
-
+  // If you get stuck on this screen, you can log out using this
   const logOutButtonHandler = async () => {
     const json = await logoutEndpoint({
       auth: tokenData.access_token,
@@ -61,7 +62,9 @@ export default function AuthenticationScreen({ navigation }) {
   React.useEffect(() => {
     if (response?.type === "success") makeCaregivee(response.params.code);
   }, [response]);
+  // Used for accessibility zoom fix
   const { fontScale } = useWindowDimensions();
+  // Redirect URI for testing in Development mode
   console.log(makeRedirectUri({ scheme: "carebit", path: "callback" }));
   return (
     <ImageBackground
@@ -72,6 +75,7 @@ export default function AuthenticationScreen({ navigation }) {
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
         <SafeAreaView style={GlobalStyle.Container}>
+          {/* Title container for Check mark/Account created */}
           <SafeAreaView
             style={{
               width: "100%",
@@ -93,6 +97,7 @@ export default function AuthenticationScreen({ navigation }) {
               Account Created
             </Text>
           </SafeAreaView>
+          {/* Container for description */}
           <SafeAreaView
             style={{
               marginTop: moderateScale(30),
@@ -112,6 +117,7 @@ export default function AuthenticationScreen({ navigation }) {
               Fitbit account
             </Text>
           </SafeAreaView>
+          {/* Link button container */}
           <SafeAreaView
             style={{
               width: "100%",
@@ -120,6 +126,7 @@ export default function AuthenticationScreen({ navigation }) {
               justifyContent: "flex-start",
             }}
           >
+            {/* On press will send you to Fitbit page and have you sign in to permit access */}
             <TouchableOpacity
               style={[GlobalStyle.Button]}
               onPress={() => {
@@ -135,7 +142,7 @@ export default function AuthenticationScreen({ navigation }) {
                 Link Fitbit
               </Text>
             </TouchableOpacity>
-
+            {/* Used if you get stuck on this screen with no Fitbit account */}
             <TouchableOpacity
               style={[
                 GlobalStyle.Button,

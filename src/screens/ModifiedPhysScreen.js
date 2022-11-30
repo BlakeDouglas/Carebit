@@ -38,6 +38,7 @@ export default function ModifiedPhysScreen({ navigation }) {
 
   const [errors, setErrors] = useState({});
 
+  // Validates all input fields before sending to back end
   const validate = () => {
     Keyboard.dismiss();
     let valid = true;
@@ -59,6 +60,7 @@ export default function ModifiedPhysScreen({ navigation }) {
     }
   };
 
+  // Sends physician info for caregivee 'shell' account
   const registerPhysician = async () => {
     if (!selectedUser.caregiveeID) {
       console.log(
@@ -81,7 +83,7 @@ export default function ModifiedPhysScreen({ navigation }) {
       dispatch(setTokenData({ ...tokenData, authPhase: 5 }));
     } else console.log("Error on /physician: ", json.error);
   };
-
+  // Returns default user to change authPhase
   const getDefault = async () => {
     const params = {
       auth: tokenData.access_token,
@@ -122,7 +124,7 @@ export default function ModifiedPhysScreen({ navigation }) {
     >
       <SafeAreaView style={{ height: windowHeight, width: windowWidth }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
-
+        {/* Title container */}
         <View
           style={[
             GlobalStyle.Container,
@@ -174,7 +176,7 @@ export default function ModifiedPhysScreen({ navigation }) {
                 }}
                 phone
               />
-
+              {/* Create account button container */}
               <View style={{ width: "100%", marginTop: "12%" }}>
                 <TouchableOpacity
                   style={[

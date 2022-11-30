@@ -18,12 +18,15 @@ export default function RoleSelectScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
+  // Handles navigation if caregiver is chosen
   const caregiverCreateAccountButtonHandler = () => {
     dispatch(setTokenData({ ...tokenData, type: "caregiver" }));
     navigation.navigate("AccountCreationScreen");
   };
-  const { fontScale } = useWindowDimensions();
 
+  // Fixes accessibility zoom issue
+  const { fontScale } = useWindowDimensions();
+  // Handles navigation if caregivee is chosen
   const caregiveeCreateAccountButtonHandler = () => {
     dispatch(setTokenData({ ...tokenData, type: "caregivee" }));
     navigation.navigate("AccountCreationScreen");
@@ -36,6 +39,7 @@ export default function RoleSelectScreen({ navigation }) {
     >
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
+        {/* Title container */}
         <SafeAreaView style={GlobalStyle.Container}>
           <Text
             style={[
@@ -53,6 +57,7 @@ export default function RoleSelectScreen({ navigation }) {
           >
             Role
           </Text>
+          {/* Description container */}
           <SafeAreaView
             style={{
               height: "25%",
@@ -71,6 +76,7 @@ export default function RoleSelectScreen({ navigation }) {
               being cared for
             </Text>
           </SafeAreaView>
+          {/* Caregiver button */}
           <TouchableOpacity
             style={[GlobalStyle.Button, { marginBottom: "4%" }]}
             onPress={caregiverCreateAccountButtonHandler}
@@ -85,6 +91,7 @@ export default function RoleSelectScreen({ navigation }) {
             </Text>
           </TouchableOpacity>
           <Text />
+          {/* Caregivee Button */}
           <TouchableOpacity
             style={GlobalStyle.Button}
             onPress={caregiveeCreateAccountButtonHandler}

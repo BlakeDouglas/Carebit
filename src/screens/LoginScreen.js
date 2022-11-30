@@ -40,6 +40,7 @@ export default function LoginScreen({ navigation }) {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
 
+  // Validate the input to make sure they exist
   const validate = () => {
     Keyboard.dismiss();
     let valid = true;
@@ -62,6 +63,7 @@ export default function LoginScreen({ navigation }) {
     }
   };
 
+  // Tries to login with user credentials
   const login = async (email, password) => {
     const body = { email: email, password: password };
 
@@ -80,7 +82,7 @@ export default function LoginScreen({ navigation }) {
       }
     }
   };
-
+  // Returns default user
   const getDefault = async (tokenJson) => {
     const body =
       tokenJson.type === "caregiver"
@@ -104,6 +106,7 @@ export default function LoginScreen({ navigation }) {
       dispatch(setSelectedUser(json.default));
     }
   };
+  // Fixes accessibility zoom issue
   const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
@@ -117,6 +120,7 @@ export default function LoginScreen({ navigation }) {
           style={{ flex: 1 }}
           keyboardShouldPersistTaps="always"
         >
+          {/* Title container */}
           <SafeAreaView style={GlobalStyle.Container}>
             <Text
               style={[
@@ -133,6 +137,7 @@ export default function LoginScreen({ navigation }) {
                 justifyContent: "space-evenly",
               }}
             >
+              {/* CustomTextInput Prop in CustomTextInput.js file under utils */}
               <CustomTextInput
                 placeholder="Enter your email address"
                 iconName="email-outline"
@@ -158,7 +163,7 @@ export default function LoginScreen({ navigation }) {
                 }}
                 password
               />
-
+              {/* Log in button. Validates input once selected */}
               <TouchableOpacity
                 style={[
                   GlobalStyle.Button,
@@ -180,6 +185,7 @@ export default function LoginScreen({ navigation }) {
               </TouchableOpacity>
               <Text></Text>
             </SafeAreaView>
+            {/* Extra space created to make scrolling look better and not block aspects */}
             <Text></Text>
             <Text></Text>
           </SafeAreaView>

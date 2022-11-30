@@ -48,23 +48,26 @@ const ListOfFriendsScreen = ({ navigation }) => {
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
+  // Refresh prop to get requests on manual refresh
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     getRequests();
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
+  // Find requests and who is default when you load the screen
   useEffect(() => {
     getRequests();
     getDefault();
   }, []);
 
+  // Set data when you load the screen
   useEffect(() => {
     setData(backgroundData.filter((iter) => iter.status === "accepted"));
     getDefault();
   }, [backgroundData]);
 
-  // Auto refreshes every 10 seconds as long as the screen is focused
+  // Auto refreshes every x milliseconds as long as the screen is focused
   useEffect(() => {
     const toggle = setInterval(() => {
       isFocused ? getRequests() : clearInterval(toggle);
@@ -72,6 +75,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
     return () => clearInterval(toggle);
   });
 
+  // Set your default selected user
   const setSelected = () => {
     const selected = data.filter((iter) => iter.requestID === selectedId)[0];
     dispatch(setSelectedUser(selected));
@@ -79,6 +83,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
+  // Find your default user
   const getDefault = async () => {
     const body =
       tokenData.type === "caregiver"
@@ -107,6 +112,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
     }
   };
 
+  // Set a new default connection (Main view)
   const setDefault = async (selected) => {
     const body =
       tokenData.type === "caregiver"
@@ -125,6 +131,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
     if (json.error) console.log("Error setting default: ", json.error);
   };
 
+  // Returns json of all requests accepted
   const getRequests = async () => {
     const body =
       tokenData.type === "caregivee"
@@ -140,6 +147,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
     }
   };
 
+  // Removes person from your list and removes access to your data
   const deleteConnection = async (rejectID) => {
     const params = { auth: tokenData.access_token, targetID: rejectID };
     const json = await deleteRequestEndpoint(params);
@@ -155,6 +163,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
     else dispatch(resetSelectedData());
   };
 
+  // Delete button handler
   const onPressDelete = (item) => {
     const oppositeUser =
       tokenData.type === "caregiver" ? "caregivee" : "caregiver";
@@ -176,6 +185,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
     );
   };
 
+  // Sends data to item prop for flatlist
   const renderItem = ({ item }) => {
     const backgroundColor =
       item.requestID === selectedId ? "#bfb6a5" : "#f3f2f1";
@@ -187,6 +197,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
     } else {
       phoneNumber = item.phone.substring(countryCode.length);
     }
+
     return (
       <Item
         item={item}
@@ -197,7 +208,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
       />
     );
   };
-
+  // Item prop to render info for flatlist
   const Item = ({
     item,
     phoneNumber,
@@ -235,7 +246,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
       </TouchableOpacity>
     </SafeAreaView>
   );
-
+  // Displays if the list is empty
   const Empty = () => {
     return (
       <View style={styles.emptyContainer}>
@@ -258,7 +269,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
       </View>
     );
   };
-
+  // Main return
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
@@ -271,6 +282,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
           translucent={true}
           backgroundColor="dodgerblue"
         />
+        {/* Title container */}
         <SafeAreaView
           style={{
             alignSelf: "center",
@@ -292,6 +304,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
               : "Added Caregivees"}
           </Text>
         </SafeAreaView>
+        {/* Flatlist to dynamically load content with scrolling ability */}
         <FlatList
           data={data}
           refreshControl={
@@ -302,6 +315,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
           ListEmptyComponent={Empty}
           extraData={selectedId}
         />
+        {/* Select and delete button container */}
         <View style={styles.optionsPane}>
           {selectedId !== null && (
             <View
@@ -314,6 +328,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
                 justifyContent: "center",
               }}
             >
+              {/* Select button */}
               <TouchableOpacity
                 style={{
                   justifyContent: "center",
@@ -340,6 +355,8 @@ const ListOfFriendsScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           )}
+          {/* Must remove buttons if !selectedId otherwise they will remain and */}
+          {/* Crash the program if clicked with empty list */}
           {selectedId !== null && (
             <View
               style={{
@@ -349,6 +366,7 @@ const ListOfFriendsScreen = ({ navigation }) => {
                 marginTop: "5%",
               }}
             >
+              {/* Delete button */}
               <TouchableOpacity
                 style={{
                   justifyContent: "center",

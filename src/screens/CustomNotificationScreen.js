@@ -32,6 +32,7 @@ export default function CustomNotificationScreen({ navigation }) {
   const [isBattery, setIsBattery] = useState(true);
   const [thresholds, setThresholds] = useState(null);
 
+  // All the option toggle handlers
   const toggleCustom = () => {
     dispatch(setSelectedUser({ ...selectedUser, healthProfile: 4 }));
     setIsCustom(!isCustom);
@@ -51,7 +52,7 @@ export default function CustomNotificationScreen({ navigation }) {
   const toggleBattery = () => {
     setIsBattery(!isBattery);
   };
-
+  // Provides a range for each opening module
   const range = (start, end, mult = 1, unit) => {
     var arr = [];
     let addUnit = unit;
@@ -69,6 +70,7 @@ export default function CustomNotificationScreen({ navigation }) {
     thresholdsAPI("GET");
   }, []);
 
+  // Grabs default values for thresholds or sets it to custom
   const thresholdsAPI = async (type, newJson) => {
     if (type === "PUT" && !thresholds) type = "GET";
     if (!newJson) newJson = thresholds;
@@ -89,13 +91,14 @@ export default function CustomNotificationScreen({ navigation }) {
       }
     }
   };
-
+  // Holds range values for the opening modules by using range function
   const lowHeartLimits = range(25, 90, 1, " bpm");
   const highHeartLimits = range(90, 150, 1, " bpm");
   const noActivityLimit = range(1, 24, 1, " hours");
   const maxSteps = range(1, 40, 250, " steps");
-
+  // Checks if a selected user exists
   let doesSelectedUserExist = selectedUser.email !== "";
+  // Used for fixing accessibility zoom
   const { fontScale } = useWindowDimensions();
   console.log(thresholds);
   return (
@@ -105,6 +108,7 @@ export default function CustomNotificationScreen({ navigation }) {
         translucent={false}
         backgroundColor="dodgerblue"
       />
+      {/* If there isn't a selected user, show them this. Should never see this screen */}
       {!doesSelectedUserExist && (
         <SafeAreaView style={{ height: "120%", width: "100%" }}>
           <ImageBackground
@@ -163,8 +167,10 @@ export default function CustomNotificationScreen({ navigation }) {
           </ImageBackground>
         </SafeAreaView>
       )}
+      {/* Main screen container */}
       {doesSelectedUserExist && (
         <ScrollView>
+          {/* Custom toggle container */}
           <SafeAreaView style={[styles.Box, { marginTop: "3%" }]}>
             <Text
               style={[
@@ -182,6 +188,7 @@ export default function CustomNotificationScreen({ navigation }) {
               value={isCustom}
             />
           </SafeAreaView>
+          {/* Description container */}
           <SafeAreaView>
             <Text
               style={[
@@ -194,6 +201,7 @@ export default function CustomNotificationScreen({ navigation }) {
                 : "Turn on to use Custom Thresholds instead of Activity Levels for notifications"}
             </Text>
           </SafeAreaView>
+          {/* Heart Rate alerts container */}
           {isCustom ? (
             <SafeAreaView style={[styles.Box, { marginTop: "5%" }]}>
               <Text
@@ -214,6 +222,7 @@ export default function CustomNotificationScreen({ navigation }) {
               />
             </SafeAreaView>
           ) : null}
+          {/* Checks if the custom slider is on and if the hr slider is on */}
           {isHrAlerts && isCustom ? (
             <SafeAreaView style={styles.Box}>
               <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
@@ -275,6 +284,7 @@ export default function CustomNotificationScreen({ navigation }) {
               />
             </SafeAreaView>
           ) : null}
+          {/* Checks if custom toggle and hr toggle are on */}
           {isHrAlerts && isCustom && (
             <SafeAreaView style={styles.Box}>
               <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
@@ -334,6 +344,7 @@ export default function CustomNotificationScreen({ navigation }) {
               />
             </SafeAreaView>
           )}
+          {/* Checks if custom toggle is turned on. Otherwise, don't show */}
           {isCustom && (
             <SafeAreaView style={[styles.Box, { marginTop: "10%" }]}>
               <Text
@@ -353,6 +364,7 @@ export default function CustomNotificationScreen({ navigation }) {
               />
             </SafeAreaView>
           )}
+          {/* Checks if activity alerts and custom toggle are on */}
           {isActivityAlerts && isCustom && (
             <SafeAreaView style={styles.Box}>
               <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
@@ -416,6 +428,7 @@ export default function CustomNotificationScreen({ navigation }) {
               />
             </SafeAreaView>
           )}
+          {/* Checks if activity alerts and custom toggle are on */}
           {isActivityAlerts && isCustom && (
             <SafeAreaView style={styles.Box}>
               <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
@@ -479,7 +492,7 @@ export default function CustomNotificationScreen({ navigation }) {
               />
             </SafeAreaView>
           )}
-
+          {/* Checks if custom toggle is on. Otherwise doesn't show this container */}
           {isCustom && (
             <SafeAreaView style={[styles.Box, { marginTop: "10%" }]}>
               <Text
@@ -499,6 +512,7 @@ export default function CustomNotificationScreen({ navigation }) {
               />
             </SafeAreaView>
           )}
+          {/* Checks if wandering alerts and custom toggle are on */}
           {isWandering && isCustom && (
             <SafeAreaView style={styles.Box}>
               <SafeAreaView style={{ marginLeft: "4%", marginTop: "3.5%" }}>
@@ -557,6 +571,7 @@ export default function CustomNotificationScreen({ navigation }) {
               />
             </SafeAreaView>
           )}
+          {/* Checks if custom toggle is on */}
           {isCustom && (
             <SafeAreaView>
               <SafeAreaView style={[styles.Box, { marginTop: "10%" }]}>
@@ -589,7 +604,7 @@ export default function CustomNotificationScreen({ navigation }) {
               </SafeAreaView>
             </SafeAreaView>
           )}
-
+          {/* Checks if custom toggle is on */}
           {isCustom && (
             <SafeAreaView>
               <SafeAreaView style={[styles.Box, { marginTop: "5%" }]}>

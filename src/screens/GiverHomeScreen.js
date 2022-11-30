@@ -35,7 +35,10 @@ import {
 import { LogBox } from "react-native";
 LogBox.ignoreLogs(["Possible Unhandled Promise Rejection"]);
 export default function GiverHomeScreen({ navigation }) {
+  // Fixes accessibility zoom
   const { fontScale } = useWindowDimensions();
+
+  // Holds all fitbit returned values
   const [dailySteps, setDailySteps] = useState(null);
   const [hourlySteps, setHourlySteps] = useState(null);
   const [stepUpdate, setStepUpdate] = useState(null);
@@ -56,9 +59,11 @@ export default function GiverHomeScreen({ navigation }) {
 
   const dispatch = useDispatch();
 
+  // Finds date to display
   const moment = extendMoment(Moment);
   let date = moment().format("dddd, MMM D");
 
+  // Sets phone number
   var number = selectedUser.phone || null;
   var args = {
     number,
@@ -66,6 +71,7 @@ export default function GiverHomeScreen({ navigation }) {
     skipCanOpen: true,
   };
 
+  // Refreshing prop to grab all info on manual refresh
   const [refreshing, setRefreshing] = React.useState(false);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -77,6 +83,7 @@ export default function GiverHomeScreen({ navigation }) {
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
+  // Sets privacy option variables to givee privacy options
   const getCaregiveeInfo = async () => {
     if (!selectedUser.caregiveeID) return;
     const params = {
@@ -91,6 +98,7 @@ export default function GiverHomeScreen({ navigation }) {
     }
   };
 
+  // Returns default givee
   const getDefault = async () => {
     const params = {
       auth: tokenData.access_token,
@@ -114,7 +122,7 @@ export default function GiverHomeScreen({ navigation }) {
       dispatch(setSelectedUser(json.default));
     }
   };
-
+  // Resets all values if user is deleted or no one selected
   const reset = () => {
     dispatch(resetSelectedData());
     setBatteryLevel(null);
@@ -177,6 +185,7 @@ export default function GiverHomeScreen({ navigation }) {
     // TODO: Implement error catching here
   };
 
+  // Returns time for all fields to show when we pulled the data
   const calculateTime = (pullTime) => {
     let currTime = moment().format("YYYY-MM-DD HH:mm:ss");
     let range = moment.range(pullTime, currTime);
@@ -210,6 +219,7 @@ export default function GiverHomeScreen({ navigation }) {
     return "Invalid Time";
   };
 
+  // Returns # daily alerts
   const getAlertCounter = async () => {
     if (!selectedUser.caregiveeID) {
       return;
@@ -228,6 +238,7 @@ export default function GiverHomeScreen({ navigation }) {
     }
   };
 
+  // Returns last sync time to limit # no sync alerts
   const getLastSyncTime = async (syncTime) => {
     if (!selectedUser.caregiveeID) {
       return;
@@ -246,6 +257,7 @@ export default function GiverHomeScreen({ navigation }) {
     return json.lastSyncAlert;
   };
 
+  // Sets last sync time to compare against getLastSyncTime so no alerts for an hour
   const setLastSyncTime = async (syncTime) => {
     console.log(syncTime);
     if (!selectedUser.caregiveeID) {
@@ -263,6 +275,7 @@ export default function GiverHomeScreen({ navigation }) {
     }
   };
 
+  // Sends no sync alert since we have running counter on front end
   const noSyncAlert = async () => {
     if (!selectedUser.caregiveeID) {
       return;
@@ -277,7 +290,7 @@ export default function GiverHomeScreen({ navigation }) {
       return;
     }
   };
-
+  // Returns all givee Fitbit data
   const fetchData = async () => {
     if (!selectedUser.caregiveeID) {
       return;
@@ -354,11 +367,11 @@ export default function GiverHomeScreen({ navigation }) {
       );
     }
   };
+  // Returns all info when screen is loaded
   useEffect(() => {
     registerForPushNotificationsAsync();
     getCaregiveeInfo();
     getAlertCounter();
-    // TODO: Do this on login / account creation
   }, []);
 
   useEffect(() => {
@@ -368,7 +381,7 @@ export default function GiverHomeScreen({ navigation }) {
       fetchData();
       getAlertCounter();
     } else reset();
-
+    // Sets phone number
     number = selectedUser.phone || null;
     args = {
       number,
@@ -422,6 +435,7 @@ export default function GiverHomeScreen({ navigation }) {
               width: "100%",
             }}
           >
+            {/* White container for alert # and view history */}
             <SafeAreaView style={{ marginLeft: "4%", flexDirection: "row" }}>
               <Image
                 style={{
@@ -463,6 +477,7 @@ export default function GiverHomeScreen({ navigation }) {
                 View History
               </Text>
             </TouchableOpacity>
+            {/* Checks status to find what header to display */}
           </SafeAreaView>
           {!isEnabledSleep && !isEnabledDisturb && isEnabledMonitor ? (
             <SafeAreaView
@@ -724,7 +739,7 @@ export default function GiverHomeScreen({ navigation }) {
               borderBottomWidth: 1,
             }}
           ></SafeAreaView>
-
+          {/* Container for last recorded activity */}
           <SafeAreaView
             style={{
               flexDirection: "row",
@@ -757,7 +772,7 @@ export default function GiverHomeScreen({ navigation }) {
                 : ""}
             </Text>
           </SafeAreaView>
-
+          {/* Container for heart rate and daily steps */}
           <SafeAreaView style={{ marginTop: "4%", height: "17%" }}>
             <SafeAreaView
               style={{
@@ -767,6 +782,7 @@ export default function GiverHomeScreen({ navigation }) {
                 width: "100%",
               }}
             >
+              {/* Heart rate title container */}
               <SafeAreaView
                 style={{
                   backgroundColor: "white",
@@ -805,7 +821,7 @@ export default function GiverHomeScreen({ navigation }) {
                   Heart Rate
                 </Text>
               </SafeAreaView>
-
+              {/* Daily step title container */}
               <SafeAreaView
                 style={{
                   backgroundColor: "white",
@@ -845,7 +861,7 @@ export default function GiverHomeScreen({ navigation }) {
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
-
+            {/* Heart rate and daily step body container */}
             <SafeAreaView
               style={{
                 width: "100%",
@@ -854,6 +870,7 @@ export default function GiverHomeScreen({ navigation }) {
                 justifyContent: "space-evenly",
               }}
             >
+              {/* Heart rate body container */}
               <SafeAreaView
                 style={{
                   backgroundColor: "whitesmoke",
@@ -929,7 +946,7 @@ export default function GiverHomeScreen({ navigation }) {
                   </Text>
                 </SafeAreaView>
               </SafeAreaView>
-
+              {/* Daily step body container */}
               <SafeAreaView
                 style={{
                   backgroundColor: "whitesmoke",
@@ -978,6 +995,7 @@ export default function GiverHomeScreen({ navigation }) {
                       : "--"}
                   </Text>
                 </SafeAreaView>
+                {/* Tells user to sync if it's been over an hour */}
                 <SafeAreaView
                   style={{
                     width: "92%",
@@ -1006,6 +1024,7 @@ export default function GiverHomeScreen({ navigation }) {
               </SafeAreaView>
             </SafeAreaView>
           </SafeAreaView>
+
           <SafeAreaView
             style={{
               borderBottomColor: "lightgray",
@@ -1013,12 +1032,12 @@ export default function GiverHomeScreen({ navigation }) {
               marginTop: "7%",
             }}
           ></SafeAreaView>
+
           <SafeAreaView
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "center",
-              //backgroundColor: "red",
               height: "6%",
             }}
           >
@@ -1043,7 +1062,7 @@ export default function GiverHomeScreen({ navigation }) {
               {date}
             </Text>
           </SafeAreaView>
-
+          {/* Heart rate summary container */}
           <SafeAreaView
             style={{
               alignSelf: "center",
@@ -1054,6 +1073,7 @@ export default function GiverHomeScreen({ navigation }) {
               borderRadius: moderateScale(5),
             }}
           >
+            {/* Heart rate summary title container */}
             <SafeAreaView
               style={{
                 backgroundColor: "white",
@@ -1111,7 +1131,7 @@ export default function GiverHomeScreen({ navigation }) {
                 </Text>
               </SafeAreaView>
             </SafeAreaView>
-
+            {/* Heart rate summary body container */}
             <SafeAreaView
               style={{
                 backgroundColor: "whitesmoke",
@@ -1142,7 +1162,6 @@ export default function GiverHomeScreen({ navigation }) {
                   height: "100%",
                   alignItems: "center",
                   justifyContent: "center",
-                  // backgroundColor: "green",
                   flexDirection: "column",
                 }}
               >
@@ -1261,7 +1280,6 @@ export default function GiverHomeScreen({ navigation }) {
                   height: "100%",
                   alignItems: "center",
                   justifyContent: "center",
-                  //backgroundColor: "green",
                   flexDirection: "column",
                 }}
               >
@@ -1318,6 +1336,7 @@ export default function GiverHomeScreen({ navigation }) {
                 width: "100%",
               }}
             >
+              {/* Total step title container */}
               <SafeAreaView
                 style={{
                   backgroundColor: "white",
@@ -1356,7 +1375,7 @@ export default function GiverHomeScreen({ navigation }) {
                   Total Steps
                 </Text>
               </SafeAreaView>
-
+              {/* Fitbit battery title container */}
               <SafeAreaView
                 style={{
                   backgroundColor: "white",
@@ -1404,9 +1423,9 @@ export default function GiverHomeScreen({ navigation }) {
                 height: "75%",
                 flexDirection: "row",
                 justifyContent: "space-evenly",
-                //backgroundColor: "green",
               }}
             >
+              {/* Total step body container */}
               <SafeAreaView
                 style={{
                   backgroundColor: "whitesmoke",
@@ -1477,7 +1496,7 @@ export default function GiverHomeScreen({ navigation }) {
                   </Text>
                 </SafeAreaView>
               </SafeAreaView>
-
+              {/* Fitbit battery body container */}
               <SafeAreaView
                 style={{
                   backgroundColor: "whitesmoke",

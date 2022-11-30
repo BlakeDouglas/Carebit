@@ -62,6 +62,7 @@ export default function AddOptionsScreen({ navigation }) {
               Adding Options
             </Text>
           </SafeAreaView>
+          {/* Using the app container */}
           <SafeAreaView
             style={{
               marginTop: scale(16),
@@ -92,6 +93,7 @@ export default function AddOptionsScreen({ navigation }) {
               }
             </Text>
           </SafeAreaView>
+          {/* Using one device container */}
           <SafeAreaView
             style={{
               width: "100%",
@@ -122,9 +124,9 @@ export default function AddOptionsScreen({ navigation }) {
               }
             </Text>
           </SafeAreaView>
-          {/* Log in and make account button container */}
+
           <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
-            {/* Button to create an account along with onPress navigation */}
+            {/* Button to go back along with onPress navigation */}
             <TouchableOpacity
               style={GlobalStyle.Button}
               onPress={ContinueButtonHandler}

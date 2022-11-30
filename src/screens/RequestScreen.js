@@ -36,6 +36,7 @@ const RequestScreen = ({ navigation }) => {
   // Stores all requests
   const [backgroundData, setBackgroundData] = useState([]);
 
+  // Delete button warning
   const onPressDelete = (item) => {
     Alert.alert(
       "Delete the request from\n" + item.firstName + " " + item.lastName,
@@ -54,6 +55,7 @@ const RequestScreen = ({ navigation }) => {
     );
   };
 
+  // Add button warning/confirmation
   const onPressAdd = (item) => {
     const typeOfRequester =
       tokenData.type === "caregivee" ? "caregiver" : "caregivee";
@@ -97,6 +99,7 @@ const RequestScreen = ({ navigation }) => {
     );
   };
 
+  // Deletes request from your list and doesn't grant access to data
   const rejectRequest = async (rejectID) => {
     const params = { auth: tokenData.access_token, targetID: rejectID };
     const json = await deleteRequestEndpoint(params);
@@ -104,6 +107,7 @@ const RequestScreen = ({ navigation }) => {
     if (json.error) console.log("Error on delete: ", json.error);
   };
 
+  // Finds your default user
   const getDefault = async () => {
     const body =
       tokenData.type === "caregiver"
@@ -135,6 +139,7 @@ const RequestScreen = ({ navigation }) => {
     }
   };
 
+  // Changes pending request to accepted and places them in My Caregivee/ers list
   const acceptRequest = async (item) => {
     const params = {
       auth: tokenData.access_token,
@@ -163,6 +168,7 @@ const RequestScreen = ({ navigation }) => {
       dispatch(setSelectedUser(json.newCaregiver));
   };
 
+  // Returns json of all your requests
   const getRequests = async () => {
     if (!tokenData.type) return;
     const params = {
@@ -180,6 +186,7 @@ const RequestScreen = ({ navigation }) => {
       setBackgroundData(json.connections);
   };
 
+  // Loads all pending request when screen is loaded
   useEffect(() => {
     setData(
       backgroundData.filter(
@@ -192,6 +199,7 @@ const RequestScreen = ({ navigation }) => {
     getRequests();
   }, []);
 
+  // Sets data to feed item prop for flatlist
   const renderItem = ({ item }) => {
     const backgroundColor =
       item.requestID === selectedId ? "#bfb6a5" : "#f3f2f1";
@@ -220,6 +228,7 @@ const RequestScreen = ({ navigation }) => {
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
+  // Refresh prop to find requests on manual refresh
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     getRequests();
@@ -227,14 +236,14 @@ const RequestScreen = ({ navigation }) => {
   }, []);
 
   const isFocused = useIsFocused();
-  // Auto refreshes every 10 seconds as long as the screen is focused
+  // Auto refreshes every x milliseconds as long as the screen is focused
   useEffect(() => {
     const toggle = setInterval(() => {
       isFocused ? getRequests() : clearInterval(toggle);
     }, 8000);
     return () => clearInterval(toggle);
   });
-
+  // Used to fix accessibility zoom issue
   const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
@@ -248,6 +257,7 @@ const RequestScreen = ({ navigation }) => {
           translucent={true}
           backgroundColor="dodgerblue"
         />
+        {/* Title container */}
         <SafeAreaView
           style={{
             alignSelf: "center",
@@ -267,6 +277,7 @@ const RequestScreen = ({ navigation }) => {
             All Incoming Requests
           </Text>
         </SafeAreaView>
+        {/* Flatlist for all content */}
         <FlatList
           data={data}
           refreshControl={
@@ -343,7 +354,7 @@ const RequestScreen = ({ navigation }) => {
     </ImageBackground>
   );
 };
-
+// Content rendered in flatlist
 const Item = ({
   item,
   phoneNumber,
@@ -373,6 +384,7 @@ const Item = ({
   </TouchableOpacity>
 );
 
+// Content rendered for empty flatlist
 const Empty = () => {
   const { fontScale } = useWindowDimensions();
   return (

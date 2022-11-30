@@ -31,6 +31,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
   // Content between this point and the return statement
   // are inspired by kymzTech's React Native Tutorial
 
+  // Data to send back end
   const [inputs, setInputs] = useState({
     firstName: "",
     lastName: "",
@@ -72,7 +73,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
     } else {
       inputs.phone = phoneData.phoneNumber;
     }
-
+    // Check password strength
     if (!validator.isStrongPassword(inputs.password, { minSymbols: 0 })) {
       valid = false;
       if (!inputs.password) {
@@ -92,6 +93,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
     }
   };
 
+  // Creates caregivee account with inputs variables
   const registerShellCaregivee = async () => {
     const body = {
       ...inputs,
@@ -134,6 +136,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
 
+  // Modal to tell them to use this account if they do download the app
   const [isModal2Visible, setModal2Visible] = useState(false);
   const toggleModal2 = () => {
     setModal2Visible(!isModal2Visible);
@@ -144,6 +147,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
       resizeMode="cover"
       style={GlobalStyle.Background}
     >
+      {/* Use this account if they do download the app popup */}
       <Modal
         isVisible={isModal2Visible}
         backdropOpacity={0.5}
@@ -229,9 +233,11 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
           </SafeAreaView>
         </View>
       </Modal>
+
+      {/* Main content container */}
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
-
+        {/* Title container */}
         <View
           style={[
             GlobalStyle.Container,
@@ -281,6 +287,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                     />
                   </View>
                   <View style={GlobalStyle.Background}>
+                    {/* Sends data to CustomTextInput prop found in CustomTextInput.js under utils folder */}
                     <CustomTextInput
                       placeholder="Last Name"
                       label="  "
@@ -331,6 +338,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
                   password
                 />
               </View>
+              {/* Create account button container */}
               <View
                 style={{
                   height: "20%",

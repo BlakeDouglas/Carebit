@@ -39,14 +39,19 @@ export default function LinkUsersScreen({ navigation }) {
   const dispatch = useDispatch();
   const typeOfRequester =
     tokenData.type === "caregivee" ? "caregiver" : "caregivee";
+  // Fixes accessibility zoom
   const { fontScale } = useWindowDimensions();
   const [isModal1Visible, setModal1Visible] = useState(false);
   const toggleModal1 = () => {
     setModal1Visible(!isModal1Visible);
   };
+
+  // If they click read more, send them to this screen
   const moreInfoAlert = () => {
     navigation.navigate("AddOptionsScreen");
   };
+
+  // Warning they will need to log in to fitbit
   const warningAlert = () =>
     Alert.alert(
       "Warning",
@@ -83,7 +88,7 @@ export default function LinkUsersScreen({ navigation }) {
             translucent={true}
             backgroundColor="black"
           />
-
+          {/* Title container */}
           <SafeAreaView
             style={[
               GlobalStyle.Container,
@@ -101,6 +106,7 @@ export default function LinkUsersScreen({ navigation }) {
               </Text>
             </SafeAreaView>
             <SafeAreaView style={{ flex: 1 }}>
+              {/* Description container */}
               <SafeAreaView
                 style={{
                   height: verticalScale(windowHeight / 3.5),
@@ -132,6 +138,7 @@ export default function LinkUsersScreen({ navigation }) {
                   </Text>
                 </Text>
               </SafeAreaView>
+              {/* They have the app container for adding their caregivee */}
               <SafeAreaView
                 style={{
                   flex: 1,
@@ -159,7 +166,7 @@ export default function LinkUsersScreen({ navigation }) {
                     </Text>
                   </TouchableOpacity>
                 </SafeAreaView>
-
+                {/* Use My Device Button container for opting out of caregivee install */}
                 <SafeAreaView
                   style={{
                     marginTop: moderateScale(25),

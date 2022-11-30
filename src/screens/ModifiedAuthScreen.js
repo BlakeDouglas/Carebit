@@ -35,12 +35,14 @@ export default function ModifiedAuthScreen({ navigation }) {
 
   const [request, response, promptAsync] = getAuthRequest();
 
+  // If success from Fitbit, finish caregivee account
   React.useEffect(() => {
     if (response?.type === "success") {
       makeCaregivee(response.params.code, selectedUser.userID);
     }
   }, [response]);
 
+  // Adds caregiveeID to caregivee if success from Fitbit
   const makeCaregivee = async (code, userID) => {
     const params = {
       auth: tokenData.access_token,
@@ -63,6 +65,7 @@ export default function ModifiedAuthScreen({ navigation }) {
       ]);
   };
 
+  // Auto send link request between the two accounts so they don't need to log in
   const makeRequest = async () => {
     if (!tokenData.phone || !selectedUser.phone) return;
     const body =
@@ -97,6 +100,7 @@ export default function ModifiedAuthScreen({ navigation }) {
     }
   };
 
+  // Auto accept the request so they don't need to log in
   const acceptRequest = async (caregiveeID, caregiverID) => {
     const params = {
       auth: tokenData.access_token,
@@ -121,6 +125,7 @@ export default function ModifiedAuthScreen({ navigation }) {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
 
+  // Log out handler in case you get stuck on this screen
   const logOutButtonHandler = async () => {
     const json = await logoutEndpoint({
       auth: tokenData.access_token,
@@ -133,6 +138,7 @@ export default function ModifiedAuthScreen({ navigation }) {
     deleteKeychain();
     dispatch(resetData());
   };
+  // Fixes accessibility zoom issue
   const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
@@ -143,6 +149,7 @@ export default function ModifiedAuthScreen({ navigation }) {
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
         <SafeAreaView style={GlobalStyle.Container}>
+          {/* Title container */}
           <SafeAreaView
             style={{
               width: "100%",
@@ -165,6 +172,7 @@ export default function ModifiedAuthScreen({ navigation }) {
               Account Created
             </Text>
           </SafeAreaView>
+          {/* Description container */}
           <SafeAreaView
             style={{
               height: moderateScale(30),
@@ -192,6 +200,7 @@ export default function ModifiedAuthScreen({ navigation }) {
               justifyContent: "flex-start",
             }}
           >
+            {/* Link Fitbit button */}
             <TouchableOpacity
               style={[GlobalStyle.Button]}
               onPress={() => {
@@ -207,7 +216,7 @@ export default function ModifiedAuthScreen({ navigation }) {
                 Link Fitbit
               </Text>
             </TouchableOpacity>
-
+            {/* Cancel button to log out */}
             <TouchableOpacity
               style={[
                 GlobalStyle.Button,

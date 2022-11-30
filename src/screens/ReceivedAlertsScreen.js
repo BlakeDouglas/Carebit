@@ -33,14 +33,17 @@ export default function ReceivedAlertsScreen({ navigation }) {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
 
+  // Used to fix accessibility zoom issue
   const { fontScale } = useWindowDimensions();
 
+  // Refresh prop to check for alerts on manual refresh
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     getAlerts();
     wait(1000).then(() => setRefreshing(false));
   }, []);
 
+  // Calculates first list to dynamically load
   const getFirst = (arr, n) => {
     if (n === 0) return [];
     if (arr.length === 0) return [];
@@ -51,6 +54,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
     return retArr;
   };
 
+  // Returns json of all alerts
   const getAlerts = async () => {
     if (!selectedUser.caregiveeID) return;
     const params = {
@@ -66,14 +70,17 @@ export default function ReceivedAlertsScreen({ navigation }) {
     }
   };
 
+  // Get all alerts when screen is loaded
   useEffect(() => {
     getAlerts();
   }, []);
 
+  // Load first amount of alerts
   useEffect(() => {
     setData(getFirst(backgroundData, maxShown));
   }, [maxShown, backgroundData]);
 
+  // Main rendered content
   const Item = ({ alertType, time, date, body, title, ok }) => (
     <SafeAreaView
       style={{
@@ -84,6 +91,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
         borderTopWidth: moderateScale(1),
       }}
     >
+      {/* Renders appropriate image based on type returned from database */}
       {alertType === "tooManyStepsAlert" && (
         <Image
           style={styles.images}
@@ -126,6 +134,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
           source={require("../../assets/images/icons-alert-battery.imageset/icons-alert-battery.png")}
         />
       )}
+      {/* Title and description container */}
       <SafeAreaView
         style={{
           marginLeft: "3%",
@@ -161,6 +170,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
           justifyContent: "space-evenly",
         }}
       >
+        {/* Checks if ok has been set or not to display OKAY mark */}
         {ok === 1 ? (
           <Text
             style={{
@@ -205,7 +215,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
       </SafeAreaView>
     </SafeAreaView>
   );
-
+  // Feeds item prop the correct data
   const renderItem = ({ item }) => (
     <Item
       alertType={item.alertType}
@@ -219,7 +229,7 @@ export default function ReceivedAlertsScreen({ navigation }) {
       ok={item.ok}
     />
   );
-
+  // Content rendered for empty flatlist
   const Empty = () => {
     return (
       <View style={styles.emptyContainer}>

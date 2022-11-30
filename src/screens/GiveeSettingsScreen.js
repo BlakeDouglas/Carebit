@@ -114,7 +114,7 @@ export default function GiveeSettingsScreen({ navigation }) {
             </Text>
           </SafeAreaView>
         </SafeAreaView>
-
+        {/* Container for physician info of settings data */}
         <SafeAreaView
           style={{
             width: "100%",
@@ -291,6 +291,7 @@ export default function GiveeSettingsScreen({ navigation }) {
               justifyContent: "flex-end",
             }}
           >
+            {/* Renders this instead of no selected user is chosen */}
             <SafeAreaView
               style={{
                 width: "92%",
@@ -351,7 +352,7 @@ export default function GiveeSettingsScreen({ navigation }) {
             </SafeAreaView>
           </SafeAreaView>
         )}
-
+        {/* Logout button container */}
         <SafeAreaView
           style={{
             flex: 1,

@@ -22,6 +22,8 @@ export default function GiverSettingsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
+
+  // Logs user out and removes their keychain
   const logOutButtonHandler = async () => {
     const json = await logoutEndpoint({
       auth: tokenData.access_token,
@@ -34,11 +36,14 @@ export default function GiverSettingsScreen({ navigation }) {
     deleteKeychain();
     dispatch(resetData());
   };
+
+  // Used for fixing accessbility zoom
   const { fontScale } = useWindowDimensions();
+  // Sends to appropriate page if they choose custom alerts
   const customAlertButtonHandler = () => {
     navigation.navigate("CustomNotification");
   };
-
+  // Sends to activity level if they choose this for alerts
   const activityButtonHandler = () => {
     navigation.navigate("ActivityLevel");
   };
@@ -72,6 +77,7 @@ export default function GiverSettingsScreen({ navigation }) {
           translucent={false}
           backgroundColor="dodgerblue"
         />
+        {/* Container for avatar, name, and email */}
         <SafeAreaView
           style={{
             marginTop: moderateScale(35, 0.1),
@@ -387,6 +393,7 @@ export default function GiverSettingsScreen({ navigation }) {
               justifyContent: "flex-end",
             }}
           >
+            {/* Render this if no selected user */}
             <SafeAreaView
               style={{
                 width: "92%",
@@ -448,6 +455,7 @@ export default function GiverSettingsScreen({ navigation }) {
             </SafeAreaView>
           </SafeAreaView>
         )}
+        {/* Log out button container and handler */}
         <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
           <TouchableOpacity
             style={{

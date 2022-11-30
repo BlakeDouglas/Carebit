@@ -63,7 +63,7 @@ export default function ModifiedActivityScreen({ navigation }) {
     >
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
-
+        {/* Title container */}
         <SafeAreaView style={{ flex: 1 }}>
           <SafeAreaView
             style={[
@@ -79,7 +79,7 @@ export default function ModifiedActivityScreen({ navigation }) {
             >
               Activity Level
             </Text>
-
+            {/* Description container */}
             <SafeAreaView style={styles.TextBox}>
               <Text
                 style={[
@@ -90,7 +90,7 @@ export default function ModifiedActivityScreen({ navigation }) {
                 Choose the usual level of activity for this account
               </Text>
             </SafeAreaView>
-
+            {/* Activity levels container */}
             <SafeAreaView
               style={{
                 width: "100%",
@@ -99,6 +99,7 @@ export default function ModifiedActivityScreen({ navigation }) {
                 alignItems: "center",
               }}
             >
+              {/* Each button sends appropriate level to back end which handles thresholds based off that */}
               <TouchableOpacity
                 style={styles.InnerContainers}
                 onPress={() => {

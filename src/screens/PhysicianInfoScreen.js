@@ -36,6 +36,7 @@ export default function PhysicianInfoScreen({ navigation }) {
   const windowHeight = useWindowDimensions().height;
   const [errors, setErrors] = useState({});
 
+  // Validates all input fields before sending to back end
   const validate = () => {
     Keyboard.dismiss();
     let valid = true;
@@ -51,6 +52,7 @@ export default function PhysicianInfoScreen({ navigation }) {
     }
   };
 
+  // Sends physician info to back end
   const registerPhysician = async () => {
     // If you somehow got here without giveeID, then log out
     if (!tokenData.caregiveeID) {
@@ -102,7 +104,7 @@ export default function PhysicianInfoScreen({ navigation }) {
     >
       <SafeAreaView style={{ height: windowHeight, width: windowWidth }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
-
+        {/* Title container */}
         <View
           style={[
             GlobalStyle.Container,
@@ -153,7 +155,7 @@ export default function PhysicianInfoScreen({ navigation }) {
                 }}
                 phone
               />
-
+              {/* Create account button container */}
               <View style={{ width: "100%", marginTop: "12%" }}>
                 <TouchableOpacity
                   style={[

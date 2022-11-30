@@ -24,6 +24,7 @@ const CustomTextInput = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [hidePassword, setHidePassword] = useState(password);
+  // Loads icons locally rather than fetching them for instant access
   const imageFile = "../../assets/images/" + iconName + ".png";
   const accountImage = require("../../assets/images/account-outline.png");
   const phoneImage = require("../../assets/images/phone-outline.png");
@@ -31,6 +32,7 @@ const CustomTextInput = ({
   const lockImage = require("../../assets/images/lock-outline.png");
   const eyeImage = require("../../assets/images/eye-outline.png");
   const eyeOffImage = require("../../assets/images/eye-off-outline.png");
+  // Fixes accessibility zoom issue
   const { fontScale } = useWindowDimensions();
   return (
     <View

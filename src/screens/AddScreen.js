@@ -36,12 +36,13 @@ export default function AddScreen({ navigation }) {
   const typeOfRequester =
     tokenData.type === "caregivee" ? "caregiver" : "caregivee";
 
+  // Validates all input fields
   const validate = () => {
     Keyboard.dismiss();
     let valid = true;
 
     let phoneData = phone(inputs.phone);
-
+    // Error handler for invalid phone number
     if (!phoneData.isValid) {
       handleError(" Invalid Phone", "phone");
       valid = false;
@@ -56,12 +57,12 @@ export default function AddScreen({ navigation }) {
       handleError("  Account Error", "phone");
       valid = false;
     }
-
+    // If we reach here, all inputs are valid
     if (valid) {
       makeRequest();
     }
   };
-
+  // Sends link request to either caregiver or caregivee
   const makeRequest = async () => {
     const params = {
       auth: tokenData.access_token,
@@ -105,6 +106,7 @@ export default function AddScreen({ navigation }) {
     } else
       console.log("No response and no error. This should not be happening.");
   };
+  // Used for fixing accessibility zoom
   const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
@@ -119,7 +121,7 @@ export default function AddScreen({ navigation }) {
             translucent={true}
             backgroundColor="transparent"
           />
-
+          {/* Title container */}
           <SafeAreaView
             style={{
               height: "20%",
@@ -143,7 +145,7 @@ export default function AddScreen({ navigation }) {
                 : "Add Caregiver"}
             </Text>
           </SafeAreaView>
-
+          {/* Main body description container */}
           <SafeAreaView
             style={{
               height: "20%",
@@ -164,6 +166,7 @@ export default function AddScreen({ navigation }) {
                 : "Please enter your Caregiver's phone number to add them"}
             </Text>
           </SafeAreaView>
+          {/* Custom Text Input Field for adding users */}
           <SafeAreaView
             style={{
               height: "80%",
@@ -186,7 +189,9 @@ export default function AddScreen({ navigation }) {
               }}
               phone
             />
-            <SafeAreaView style={{}}>
+            {/* Send request button container */}
+            <SafeAreaView>
+              {/* Sends inputs to be validated on presss */}
               <TouchableOpacity
                 style={[GlobalStyle.Button, { marginTop: scale(22) }]}
                 onPress={validate}

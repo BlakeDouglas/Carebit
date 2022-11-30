@@ -20,6 +20,7 @@ export default function ActivityLevelScreen({ navigation, route }) {
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
 
+  // Sends activity level of 1, 2, or 3 to database which handles thresholds
   const setActivity = async (level) => {
     const params = {
       targetID: selectedUser.caregiveeID,
@@ -33,7 +34,9 @@ export default function ActivityLevelScreen({ navigation, route }) {
       navigation.goBack();
     } else console.log("Error setting activity level");
   };
+  // Boolean if a user is selected
   let doesSelectedUserExist = selectedUser.email !== "";
+  // Used for scaling with accessibility zoom on
   const { fontScale } = useWindowDimensions();
   return (
     <ImageBackground
@@ -43,6 +46,7 @@ export default function ActivityLevelScreen({ navigation, route }) {
     >
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar hidden={false} translucent={true} backgroundColor="black" />
+        {/* Should never reach here, but for error handling if it does, ask to select a user first */}
         {!doesSelectedUserExist && (
           <SafeAreaView style={{ flex: 1 }}>
             <SafeAreaView
@@ -94,8 +98,10 @@ export default function ActivityLevelScreen({ navigation, route }) {
             </SafeAreaView>
           </SafeAreaView>
         )}
+        {/* Main screen */}
         {doesSelectedUserExist && (
           <SafeAreaView style={{ flex: 1 }}>
+            {/* Title container */}
             <SafeAreaView
               style={[
                 GlobalStyle.Container,
@@ -110,7 +116,7 @@ export default function ActivityLevelScreen({ navigation, route }) {
               >
                 Activity Level
               </Text>
-
+              {/* Description container */}
               <SafeAreaView style={styles.TextBox}>
                 <Text
                   style={[
@@ -121,7 +127,8 @@ export default function ActivityLevelScreen({ navigation, route }) {
                   Choose the usual level of activity for your Caregivee
                 </Text>
               </SafeAreaView>
-
+              {/* Options for default activity level */}
+              {/* Thresholds for each value are held in the database */}
               <SafeAreaView
                 style={{
                   width: "100%",
