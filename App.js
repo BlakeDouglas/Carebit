@@ -374,6 +374,18 @@ const HomeStack = () => {
                           : "Add Caregivee"
                       }
                     />
+                    <Divider />
+                    <Menu.Item
+                      leadingIcon={require("./assets/images/settings/settings.png")}
+                      onPress={() => (
+                        closeMenu(), navigation.navigate("SettingsScreen")
+                      )}
+                      titleStyle={{
+                        color: "black",
+                        fontSize: moderateScale(14.5) / fontScale,
+                      }}
+                      title="Settings"
+                    />
                   </Menu>
                 </View>
               </Provider2>

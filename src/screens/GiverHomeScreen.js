@@ -212,11 +212,11 @@ export default function GiverHomeScreen({ navigation }) {
       return diffSeconds + " second" + (diffSeconds === 1 ? "" : "s") + " ago";
     }
 
-    if (diffSeconds <= 0) {
+    if (diffSeconds === 0) {
       return "now";
     }
 
-    return "Invalid Time";
+    return "now";
   };
 
   // Returns # daily alerts

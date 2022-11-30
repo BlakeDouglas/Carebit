@@ -94,7 +94,6 @@ export default function GiveeHomeScreen({ navigation }) {
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
-
   // When the user refreshes the page, it calls these functions
   // Sets refreshing prop to false after x seconds
   const onRefresh = React.useCallback(() => {
@@ -258,11 +257,11 @@ export default function GiveeHomeScreen({ navigation }) {
       return diffSeconds + " second" + (diffSeconds === 1 ? "" : "s") + " ago";
     }
 
-    if (diffSeconds <= 0) {
+    if (diffSeconds === 0) {
       return "now";
     }
 
-    return "Invalid Time";
+    return "now";
   };
 
   // Returns device info (battery data)
