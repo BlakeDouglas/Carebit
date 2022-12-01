@@ -124,7 +124,6 @@ export default function GiverHomeScreen({ navigation }) {
   };
   // Resets all values if user is deleted or no one selected
   const reset = () => {
-    dispatch(resetSelectedData());
     setBatteryLevel(null);
     setBatterySyncTime(null);
     setHeart(null);
@@ -211,11 +210,6 @@ export default function GiverHomeScreen({ navigation }) {
     if (diffSeconds > 0) {
       return diffSeconds + " second" + (diffSeconds === 1 ? "" : "s") + " ago";
     }
-
-    if (diffSeconds === 0) {
-      return "now";
-    }
-
     return "now";
   };
 
@@ -375,12 +369,14 @@ export default function GiverHomeScreen({ navigation }) {
   }, []);
 
   useEffect(() => {
-    // When selected user changes, either reset or fetch data depending on whether selected user is valid
+    // Reset to ensure fitbit data is cleared
+    reset();
+    // Pull fitbit data from the selected user
     if (selectedUser.caregiveeID) {
       getCaregiveeInfo();
       fetchData();
       getAlertCounter();
-    } else reset();
+    }
     // Sets phone number
     number = selectedUser.phone || null;
     args = {
@@ -388,7 +384,7 @@ export default function GiverHomeScreen({ navigation }) {
       prompt: true,
       skipCanOpen: true,
     };
-  }, [selectedUser]);
+  }, [selectedUser.caregiveeID]);
 
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;

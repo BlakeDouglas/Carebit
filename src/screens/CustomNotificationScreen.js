@@ -60,9 +60,17 @@ export default function CustomNotificationScreen({ navigation }) {
         targetID: selectedUser.caregiveeID,
       };
       let resp = await caregiveeGetEndpoint(params);
-      if (resp.healthProfile && resp.healthProfile)
+      console.log("RESP: ", resp);
+      if (resp.caregivee.healthProfile)
         setActivity(resp.caregivee.healthProfile);
-      else console.log("Unknown error. Consult Evan");
+      else {
+        console.log(
+          "Error toggling custom notifications: Couldn't find the caregivee\n",
+          "This occurs when the Caregivee hasn't connected to Fitbit\n",
+          "Setting healthProfile to Sedentary as a backup\n"
+        );
+        setActivity(2);
+      }
     } else {
       // If it's enabling custom alerts, set healthProfile to 4 by calling /thresholds
       thresholdsAPI("PUT", thresholds);

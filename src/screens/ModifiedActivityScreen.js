@@ -12,9 +12,14 @@ import {
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedUser, setTokenData } from "../redux/actions";
+import {
+  resetSelectedData,
+  setSelectedUser,
+  setTokenData,
+} from "../redux/actions";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import {
+  getDefaultEndpoint,
   setActivityEndpoint,
   setDefaultActivityEndpoint,
 } from "../network/CarebitAPI";
@@ -34,7 +39,16 @@ export default function ModifiedActivityScreen({ navigation }) {
     if (tokenData.type === "caregiver") {
       params.body.caregiverID = tokenData.caregiverID;
       params.body.caregiveeID = selectedUser.caregiveeID;
-      dispatch(setSelectedUser({ ...selectedUser, healthProfile: level }));
+
+      // Set the default fresh and set connection-specific activity as well
+      let subParams = {
+        level: level,
+        targetID: selectedUser.caregiveeID,
+        selfID: tokenData.caregiverID,
+        auth: tokenData.access_token,
+      };
+      await setActivityEndpoint(subParams);
+      getDefault();
     }
     // Account creation, caregivee edition, authPhase = 8, will be set to 9 after calling /updateHealthProfile
     else {
@@ -53,6 +67,35 @@ export default function ModifiedActivityScreen({ navigation }) {
         })
       );
     } else console.log("Error setting activity level: ", responseText);
+  };
+
+  // Find your default user
+  const getDefault = async () => {
+    const body =
+      tokenData.type === "caregiver"
+        ? {
+            caregiverID: tokenData.caregiverID,
+            caregiveeID: null,
+          }
+        : {
+            caregiverID: null,
+            caregiveeID: tokenData.caregiveeID,
+          };
+    const params = { auth: tokenData.access_token, body: body };
+    const json = await getDefaultEndpoint(params);
+
+    if (json.error) {
+      if (json.error.startsWith("request not")) {
+        dispatch(resetSelectedData());
+      } else {
+        console.log("Error getting default: ", json.error);
+      }
+      return;
+    }
+
+    if (json.default) {
+      dispatch(setSelectedUser(json.default));
+    }
   };
 
   return (

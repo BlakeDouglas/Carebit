@@ -76,10 +76,10 @@ const ListOfFriendsScreen = ({ navigation }) => {
   });
 
   // Set your default selected user
-  const setSelected = () => {
+  const setSelected = async () => {
     const selected = data.filter((iter) => iter.requestID === selectedId)[0];
-    dispatch(setSelectedUser(selected));
-    setDefault(selected);
+    await setDefault(selected);
+    await getDefault();
     navigation.goBack();
   };
 
