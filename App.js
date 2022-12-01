@@ -43,6 +43,7 @@ import { getRequestCount } from "./src/network/CarebitAPI";
 import { initializeApp } from "firebase/app";
 import { setTokenData } from "./src/redux/actions";
 import { getFontScale } from "react-native/Libraries/Utilities/PixelRatio";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const Stack = createStackNavigator();
 
@@ -253,7 +254,19 @@ const HomeStack = () => {
             headerStyle: {
               backgroundColor: "dodgerblue",
             },
-            headerTitle: "Carebit",
+            headerTitle: () => (
+              // Used to dismiss menu when you click near carebit title
+              <TouchableWithoutFeedback onPress={() => closeMenu()}>
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: moderateScale(19.5) / fontScale,
+                  }}
+                >
+                  Carebit
+                </Text>
+              </TouchableWithoutFeedback>
+            ),
 
             headerLeft: () => (
               <Provider2>
