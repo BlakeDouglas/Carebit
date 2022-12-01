@@ -66,7 +66,7 @@ export default function ModifiedPhysScreen({ navigation }) {
       console.log(
         "selectedUser.caregiveeID is not defined. Canceling registration"
       );
-      return;
+      dispatch(setTokenData({ ...tokenData, authPhase: 2 }));
     }
     const params = {
       body: {
