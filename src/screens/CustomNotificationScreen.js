@@ -19,7 +19,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { setSelectedUser, setTokenData } from "../redux/actions";
 import GlobalStyle from "../utils/GlobalStyle";
-import { thresholdsEndpoint } from "../network/CarebitAPI";
+import {
+  thresholdsEndpoint,
+  caregiveeGetEndpoint,
+  setActivityEndpoint,
+} from "../network/CarebitAPI";
 export default function CustomNotificationScreen({ navigation }) {
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
@@ -32,9 +36,37 @@ export default function CustomNotificationScreen({ navigation }) {
   const [isBattery, setIsBattery] = useState(true);
   const [thresholds, setThresholds] = useState(null);
 
+  // Sends activity level of 1, 2, or 3 to database which handles thresholds
+  const setActivity = async (level) => {
+    const params = {
+      targetID: selectedUser.caregiveeID,
+      selfID: tokenData.caregiverID,
+      level: level,
+      auth: tokenData.access_token,
+    };
+    const responseText = await setActivityEndpoint(params);
+    if (!responseText) {
+      dispatch(setSelectedUser({ ...selectedUser, healthProfile: level }));
+      navigation.goBack();
+    } else console.log("Error setting activity level");
+  };
+
   // All the option toggle handlers
-  const toggleCustom = () => {
-    dispatch(setSelectedUser({ ...selectedUser, healthProfile: 4 }));
+  const toggleCustom = async () => {
+    if (isCustom) {
+      // If it's disabling custom alerts, get their default healthProfile and set it
+      let params = {
+        auth: tokenData.access_token,
+        targetID: selectedUser.caregiveeID,
+      };
+      let resp = await caregiveeGetEndpoint(params);
+      if (resp.healthProfile && resp.healthProfile)
+        setActivity(resp.caregivee.healthProfile);
+      else console.log("Unknown error. Consult Evan");
+    } else {
+      // If it's enabling custom alerts, set healthProfile to 4 by calling /thresholds
+      thresholdsAPI("PUT", thresholds);
+    }
     setIsCustom(!isCustom);
   };
   const toggleHrAlerts = () => {
