@@ -153,7 +153,9 @@ export default function LinkUsersScreen({ navigation }) {
                   <TouchableOpacity
                     style={[GlobalStyle.Button]}
                     onPress={() => {
-                      navigation.navigate("NavigationAddScreen");
+                      if (tokenData.authPhase === 1)
+                        navigation.navigate("NavigationAddScreen");
+                      else navigation.navigate("AddScreen");
                     }}
                   >
                     <Text

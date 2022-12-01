@@ -193,6 +193,7 @@ const MiddleStack = () => {
 
 const HomeStack = () => {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
+  const dispatch = useDispatch();
   const [visible, setVisible] = React.useState(false);
   const [visibleAlert, setVisibleAlert] = React.useState(false);
 
@@ -362,7 +363,7 @@ const HomeStack = () => {
                     <Menu.Item
                       leadingIcon={require("./assets/images/avatar/addUser.png")}
                       onPress={() => (
-                        closeMenu(), navigation.navigate("AddScreen")
+                        closeMenu(), navigation.navigate("LinkUsersScreen")
                       )}
                       titleStyle={{
                         color: "black",
@@ -535,6 +536,12 @@ const HomeStack = () => {
                 </TouchableOpacity>
               ) : null,
           })}
+        />
+        <Stack.Screen name="LinkUsersScreen" component={LinkUsersScreen} />
+        <Stack.Screen name="AddOptionsScreen" component={AddOptionsScreen} />
+        <Stack.Screen
+          name="ModifiedCaregiveeAccountCreation"
+          component={ModifiedCaregiveeAccountCreation}
         />
         <Stack.Screen name="AddScreen" component={AddScreen} />
       </Stack.Group>
