@@ -35,11 +35,16 @@ export default function GiveeSettingsScreen({ navigation }) {
   };
   // Grab country code from phone number
   const physCountryCode = phone(tokenData.physPhone).countryCode;
+  const ownCountryCode = phone(tokenData.phone).countryCode;
+
   // Separate phone number from country code
   let physNumber;
   if (!physCountryCode) physNumber = tokenData.physPhone;
   else physNumber = tokenData.physPhone.substring(physCountryCode.length);
 
+  let ownNumber;
+  if (!ownCountryCode) ownNumber = tokenData.phone;
+  else ownNumber = tokenData.phone.substring(ownCountryCode.length);
   // Grab country code from phone number
   let selectedCountryCode = selectedUser
     ? phone(selectedUser.phone).countryCode
@@ -111,6 +116,26 @@ export default function GiveeSettingsScreen({ navigation }) {
               numberOfLines={1}
             >
               {tokenData.email || "email error"}
+            </Text>
+            <Text
+              style={{
+                fontSize: moderateScale(15) / fontScale,
+                width: "100%",
+                color: "white",
+              }}
+              numberOfLines={1}
+            >
+              {tokenData.phone
+                ? ownCountryCode === "+1"
+                  ? ownCountryCode +
+                    " (" +
+                    ownNumber.substring(0, 3) +
+                    ") " +
+                    ownNumber.substring(3, 6) +
+                    "-" +
+                    ownNumber.substring(6)
+                  : ownCountryCode + " " + ownNumber
+                : ""}
             </Text>
           </SafeAreaView>
         </SafeAreaView>
