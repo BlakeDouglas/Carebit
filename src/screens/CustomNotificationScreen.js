@@ -91,7 +91,9 @@ export default function CustomNotificationScreen({ navigation }) {
     for (let i = start; i <= end; i++) {
       let addUnit = unit;
       i <= 1 ? (addUnit === " hours" ? (addUnit = " hour") : addUnit) : addUnit;
-      arr.push(i * mult + addUnit);
+      let number = i * mult;
+      number === 624 ? (number += 1) : number;
+      arr.push(number + addUnit);
     }
     return arr.map((num) => {
       return num;
@@ -127,7 +129,7 @@ export default function CustomNotificationScreen({ navigation }) {
   const lowHeartLimits = range(25, 90, 1, " bpm");
   const highHeartLimits = range(90, 150, 1, " bpm");
   const noActivityLimit = range(1, 24, 1, " hours");
-  const maxSteps = range(1, 40, 250, " steps");
+  const maxSteps = range(1, 40, 156, " steps");
   // Checks if a selected user exists
   let doesSelectedUserExist = selectedUser.email !== "";
   // Used for fixing accessibility zoom
@@ -576,7 +578,9 @@ export default function CustomNotificationScreen({ navigation }) {
                   );
                 }}
                 dropdownIconPosition={"right"}
-                defaultValue={thresholds ? 500 + " steps" : "N/A"}
+                defaultValue={
+                  thresholds ? thresholds.stepThreshold + " steps" : "N/A"
+                }
                 disableAutoScroll={true}
                 //search={true}
                 selectedRowStyle={{ backgroundColor: "lightgray" }}
