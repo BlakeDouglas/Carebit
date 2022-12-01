@@ -17,7 +17,11 @@ import { responsiveFontSize } from "react-native-responsive-dimensions";
 import validator from "validator";
 import { phone } from "phone";
 import { userEndpoint } from "../network/CarebitAPI";
-import { setSelectedUser, setTokenData } from "../redux/actions";
+import {
+  resetSelectedData,
+  setSelectedUser,
+  setTokenData,
+} from "../redux/actions";
 import { useSelector, useDispatch } from "react-redux";
 import { moderateScale } from "react-native-size-matters";
 
@@ -103,6 +107,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
     };
     const json = await userEndpoint(body);
     if (json.access_token) {
+      dispatch(resetSelectedData());
       dispatch(
         setTokenData({
           ...tokenData,
