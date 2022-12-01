@@ -37,8 +37,6 @@ export default function ModifiedActivityScreen({ navigation }) {
     };
     // In case we're going through the opt-out feature
     if (tokenData.type === "caregiver") {
-      if (!selectedUser.caregiveeID)
-        dispatch(setTokenData({ ...tokenData, authPhase: 2 }));
       params.body.caregiverID = tokenData.caregiverID;
       params.body.caregiveeID = selectedUser.caregiveeID;
 

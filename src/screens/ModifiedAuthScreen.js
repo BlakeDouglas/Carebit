@@ -204,9 +204,7 @@ export default function ModifiedAuthScreen({ navigation }) {
             <TouchableOpacity
               style={[GlobalStyle.Button]}
               onPress={() => {
-                if (!selectedUser.userID)
-                  dispatch(setTokenData({ ...tokenData, authPhase: 2 }));
-                else promptAsync();
+                promptAsync();
               }}
             >
               <Text
