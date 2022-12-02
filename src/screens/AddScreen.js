@@ -89,7 +89,7 @@ export default function AddScreen({ navigation }) {
     } else if (json.request) {
       Alert.alert(
         "Sent!",
-        "Your request has been sent. Once accepted, you will be able to view their Fitbit data. For privacy reasons, please note that Fitbit's daily steps might not match for one day.",
+        "Your request has been sent. Once accepted, you will be able to view their Fitbit data.",
         [
           {
             text: "Continue",
