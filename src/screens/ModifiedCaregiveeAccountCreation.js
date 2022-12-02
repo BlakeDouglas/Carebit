@@ -103,6 +103,8 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
     };
     const json = await userEndpoint(body);
     if (json.access_token) {
+      console.log("Calling set number");
+      await setOptNumber(json.phone.substring(2, 12));
       dispatch(
         setTokenData({
           ...tokenData,
@@ -116,8 +118,6 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
           userID: json.userID,
         })
       );
-      console.log("Calling set number");
-      await setOptNumber(json.phone.substring(2, 12));
     } else if (json.error === "Phone number already exists.") {
       handleError(" Phone number taken", "phone");
       console.log(json.error);

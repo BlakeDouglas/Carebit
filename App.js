@@ -433,7 +433,7 @@ const HomeStack = () => {
                     <Menu.Item
                       leadingIcon={require("./assets/images/avatar/addUser.png")}
                       onPress={() => (
-                        closeMenu(), navigation.navigate("LinkUsersScreen")
+                        closeMenu(), navigation.navigate("LinkUsersScreen2")
                       )}
                       titleStyle={{
                         color: "black",
@@ -607,7 +607,7 @@ const HomeStack = () => {
               ) : null,
           })}
         />
-        <Stack.Screen name="LinkUsersScreen" component={LinkUsersScreen} />
+        <Stack.Screen name="LinkUsersScreen2" component={LinkUsersScreen} />
         <Stack.Screen name="AddOptionsScreen" component={AddOptionsScreen} />
         <Stack.Screen
           name="ModifiedActivityLevel"

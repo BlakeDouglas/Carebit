@@ -111,7 +111,7 @@ export default function ModifiedAuthScreen({ navigation }) {
   const getOptNumber = async () => {
     const params = {
       auth: tokenData.access_token,
-      type: "GET",
+      type: "POST",
       body: {
         caregiverID: tokenData.caregiverID,
       },
