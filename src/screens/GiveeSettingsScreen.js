@@ -59,7 +59,6 @@ export default function GiveeSettingsScreen({ navigation }) {
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
   const { fontScale } = useWindowDimensions();
-  console.log("New health Profile: " + tokenData.healthProfile);
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
@@ -234,10 +233,9 @@ export default function GiveeSettingsScreen({ navigation }) {
         {selectedUser.phone ? (
           <SafeAreaView
             style={{
-              height: moderateScale(windowHeight / 3.25),
+              height: moderateScale(windowHeight / 3.25, 0.1),
               width: "100%",
-              marginTop: scale(21),
-              //backgroundColor: "blue",
+              marginTop: moderateScale(21, 0.4),
             }}
           >
             <SafeAreaView
@@ -319,7 +317,7 @@ export default function GiveeSettingsScreen({ navigation }) {
             </SafeAreaView>
             <SafeAreaView
               style={{
-                marginTop: moderateScale(22),
+                marginTop: moderateScale(21, 0.4),
                 height: "50%",
                 width: "100%",
               }}
