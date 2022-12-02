@@ -167,50 +167,12 @@ const MiddleStack = () => {
           <Stack.Screen
             name="ModifiedAuthScreen"
             component={ModifiedAuthScreen}
-            options={({ navigation }) => ({
-              headerRight: () => (
-                <TouchableOpacity
-                  onPress={() =>
-                    dispatch(setTokenData({ ...tokenData, authPhase: 2 }))
-                  }
-                  style={{ marginRight: scale(10) }}
-                >
-                  <Text
-                    style={{
-                      fontSize: moderateScale(20) / fontScale,
-                      color: "white",
-                    }}
-                  >
-                    Skip
-                  </Text>
-                </TouchableOpacity>
-              ),
-            })}
           />
         )}
         {tokenData.authPhase === 4 && (
           <Stack.Screen
             name="ModifiedPhysScreen"
             component={ModifiedPhysScreen}
-            options={({ navigation }) => ({
-              headerRight: () => (
-                <TouchableOpacity
-                  onPress={() =>
-                    dispatch(setTokenData({ ...tokenData, authPhase: 2 }))
-                  }
-                  style={{ marginRight: scale(10) }}
-                >
-                  <Text
-                    style={{
-                      fontSize: moderateScale(20) / fontScale,
-                      color: "white",
-                    }}
-                  >
-                    Skip
-                  </Text>
-                </TouchableOpacity>
-              ),
-            })}
           />
         )}
         {tokenData.authPhase === 7 && (
@@ -223,25 +185,6 @@ const MiddleStack = () => {
           <Stack.Screen
             name="ModifiedActivityScreen"
             component={ModifiedActivityScreen}
-            options={({ navigation }) => ({
-              headerRight: () => (
-                <TouchableOpacity
-                  onPress={() =>
-                    dispatch(setTokenData({ ...tokenData, authPhase: 2 }))
-                  }
-                  style={{ marginRight: scale(10) }}
-                >
-                  <Text
-                    style={{
-                      fontSize: moderateScale(20) / fontScale,
-                      color: "white",
-                    }}
-                  >
-                    Skip
-                  </Text>
-                </TouchableOpacity>
-              ),
-            })}
           />
         )}
       </Stack.Group>

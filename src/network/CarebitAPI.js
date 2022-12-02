@@ -274,7 +274,7 @@ export async function getRequestCount(params) {
     });
     const responseText = await response.text();
     if (responseText.startsWith("<")) {
-      throw "Server error in /activity: " + responseText;
+      throw "Server error in /getRequestCount: " + responseText;
     }
     return responseText;
   } catch (error) {

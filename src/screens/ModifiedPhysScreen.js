@@ -14,13 +14,17 @@ import {
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import CustomTextInput from "../utils/CustomTextInput";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GlobalStyle from "../utils/GlobalStyle";
 import { useSelector, useDispatch } from "react-redux";
 import { moderateScale } from "react-native-size-matters";
 import validator from "validator";
 import { phone } from "phone";
-import { getDefaultEndpoint, physicianEndpoint } from "../network/CarebitAPI";
+import {
+  getDefaultEndpoint,
+  physicianEndpoint,
+  optHolder,
+} from "../network/CarebitAPI";
 import {
   resetSelectedData,
   setSelectedUser,
@@ -113,6 +117,42 @@ export default function ModifiedPhysScreen({ navigation }) {
     setErrors((prevState) => ({ ...prevState, [input]: errorMessage }));
   };
 
+  // Sets selectedUser to opt out person if needed
+  useEffect(() => {
+    getOptNumber();
+  }, []);
+
+  // Retrieve user info if they logged out
+  const getOptNumber = async () => {
+    const params = {
+      auth: tokenData.access_token,
+      type: "POST",
+      body: {
+        caregiverID: tokenData.caregiverID,
+      },
+    };
+    const json = await optHolder(params);
+    if (!json) {
+      console.log("Problem getting opt number");
+    }
+    console.log("json returned from getOpt");
+
+    dispatch(
+      setSelectedUser({
+        ...selectedUser,
+        caregiveeID: json.caregiveeID,
+        caregiverID: tokenData.caregiverID,
+        userID: json.caregivee.userID,
+        firstName: json.caregivee.firstName,
+        lastName: json.caregivee.lastName,
+        email: json.caregivee.email,
+        phone: json.caregivee.phone,
+      })
+    );
+    //console.log(selectedUser);
+    return json;
+  };
+  console.log(selectedUser);
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
   const { fontScale } = useWindowDimensions();

@@ -120,7 +120,7 @@ export default function ModifiedAuthScreen({ navigation }) {
     if (!json) {
       console.log("Problem getting opt number");
     }
-    console.log("json returned from getOpt");
+
     dispatch(
       setSelectedUser({
         ...selectedUser,
@@ -190,7 +190,7 @@ export default function ModifiedAuthScreen({ navigation }) {
               width: "100%",
               height: "15%",
               flexDirection: "row",
-              marginTop: "25%",
+              marginTop: moderateScale(30, 0.2),
               alignItems: "center",
             }}
           >
@@ -210,9 +210,9 @@ export default function ModifiedAuthScreen({ navigation }) {
           {/* Description container */}
           <SafeAreaView
             style={{
-              height: moderateScale(30),
+              height: moderateScale(100),
               width: "100%",
-              justifyContent: "flex-end",
+              justifyContent: "center",
               alignItems: "center",
             }}
           >

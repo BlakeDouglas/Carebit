@@ -81,7 +81,7 @@ export default function AuthenticationScreen({ navigation }) {
               width: "100%",
               flexDirection: "row",
               alignItems: "center",
-              marginTop: "25%",
+              marginTop: moderateScale(30, 0.2),
             }}
           >
             <Image

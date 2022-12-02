@@ -22,7 +22,9 @@ import {
   getDefaultEndpoint,
   setActivityEndpoint,
   setDefaultActivityEndpoint,
+  optHolder,
 } from "../network/CarebitAPI";
+import { useEffect } from "react";
 export default function ModifiedActivityScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
@@ -50,6 +52,7 @@ export default function ModifiedActivityScreen({ navigation }) {
         auth: tokenData.access_token,
       };
       await setActivityEndpoint(subParams);
+      dispatch(setSelectedUser({ ...selectedUser, healthProfile: level }));
       getDefault();
     }
     // Account creation, caregivee edition, authPhase = 8, will be set to 9 after calling /updateHealthProfile
@@ -75,6 +78,40 @@ export default function ModifiedActivityScreen({ navigation }) {
         })
       );
     } else console.log("Error setting activity level: ", responseText);
+  };
+  console.log(selectedUser);
+  // Sets selectedUser to opt out person if needed
+  useEffect(() => {
+    getOptNumber();
+  }, []);
+
+  // Retrieve user info if they logged out
+  const getOptNumber = async () => {
+    const params = {
+      auth: tokenData.access_token,
+      type: "POST",
+      body: {
+        caregiverID: tokenData.caregiverID,
+      },
+    };
+    const json = await optHolder(params);
+    if (!json) {
+      console.log("Problem getting opt number");
+    }
+
+    dispatch(
+      setSelectedUser({
+        ...selectedUser,
+        caregiveeID: json.caregiveeID,
+        caregiverID: tokenData.caregiverID,
+        userID: json.caregivee.userID,
+        firstName: json.caregivee.firstName,
+        lastName: json.caregivee.lastName,
+        email: json.caregivee.email,
+        phone: json.caregivee.phone,
+      })
+    );
+    return json;
   };
 
   // Find your default user
