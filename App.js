@@ -556,6 +556,10 @@ const HomeStack = () => {
         <Stack.Screen name="LinkUsersScreen" component={LinkUsersScreen} />
         <Stack.Screen name="AddOptionsScreen" component={AddOptionsScreen} />
         <Stack.Screen
+          name="ModifiedActivityLevel"
+          component={ModifiedActivityScreen}
+        />
+        <Stack.Screen
           name="ModifiedCaregiveeAccountCreation"
           component={ModifiedCaregiveeAccountCreation}
         />

@@ -28,6 +28,8 @@ export default function ModifiedActivityScreen({ navigation }) {
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
   const { fontScale } = useWindowDimensions();
+
+  // Used to set default activity level on givee side that givers use initially
   const setActivity = async (level) => {
     let params = {
       auth: tokenData.access_token,
@@ -57,7 +59,12 @@ export default function ModifiedActivityScreen({ navigation }) {
       dispatch(setTokenData({ ...tokenData, healthProfile: level }));
     }
     let responseText = await setDefaultActivityEndpoint(params);
+
     if (!responseText) {
+      // If we are just changing the value and already completed account creation
+      if (tokenData.authPhase === 9) {
+        navigation.goBack();
+      }
       // Send to 2 (giverhome) for opt-out, and 9 (giveehome) for normal givee account creation
       let newPhase = tokenData.type === "caregiver" ? 2 : 9;
       dispatch(

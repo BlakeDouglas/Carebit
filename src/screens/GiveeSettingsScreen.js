@@ -21,6 +21,9 @@ export default function GiveeSettingsScreen({ navigation }) {
   const tokenData = useSelector((state) => state.Reducers.tokenData);
   const selectedUser = useSelector((state) => state.Reducers.selectedUser);
   const dispatch = useDispatch();
+  const activityButtonHandler = () => {
+    navigation.navigate("ModifiedActivityLevel");
+  };
   const logOutButtonHandler = async () => {
     const json = await logoutEndpoint({
       auth: tokenData.access_token,
@@ -56,6 +59,7 @@ export default function GiveeSettingsScreen({ navigation }) {
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
   const { fontScale } = useWindowDimensions();
+  console.log("New health Profile: " + tokenData.healthProfile);
   return (
     <ImageBackground
       source={require("../../assets/images/background-hearts.imageset/background02.png")}
@@ -230,79 +234,145 @@ export default function GiveeSettingsScreen({ navigation }) {
         {selectedUser.phone ? (
           <SafeAreaView
             style={{
-              marginTop: scale(21),
-              height: "19%",
+              height: moderateScale(windowHeight / 3.25),
               width: "100%",
+              marginTop: scale(21),
+              //backgroundColor: "blue",
             }}
           >
-            <Text
-              style={[
-                styles.Title,
-                { fontSize: moderateScale(14.6) / fontScale },
-              ]}
+            <SafeAreaView
+              style={{
+                height: "50%",
+                width: "100%",
+              }}
             >
-              SELECTED CAREGIVER
-            </Text>
-            <SafeAreaView style={styles.Box}>
               <Text
                 style={[
-                  styles.BoxTitle,
-                  { fontSize: moderateScale(17) / fontScale },
+                  styles.Title,
+                  { fontSize: moderateScale(14.6) / fontScale },
                 ]}
               >
-                Name
+                SELECTED CAREGIVER
               </Text>
-              <SafeAreaView
-                style={{
-                  width: "80%",
-                  height: "100%",
-                  justifyContent: "center",
-                }}
-              >
+              <SafeAreaView style={styles.Box}>
                 <Text
                   style={[
-                    styles.BoxSub,
-                    {
-                      textAlign: "right",
-                      fontSize: moderateScale(17) / fontScale,
-                    },
+                    styles.BoxTitle,
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
-                  numberOfLines={1}
                 >
-                  {selectedUser.firstName || ""}{" "}
-                  {selectedUser.lastName || "N/A"}
+                  Name
                 </Text>
+                <SafeAreaView
+                  style={{
+                    width: "80%",
+                    height: "100%",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.BoxSub,
+                      {
+                        textAlign: "right",
+                        fontSize: moderateScale(17) / fontScale,
+                      },
+                    ]}
+                    numberOfLines={1}
+                  >
+                    {selectedUser.firstName || ""}{" "}
+                    {selectedUser.lastName || "N/A"}
+                  </Text>
+                </SafeAreaView>
+              </SafeAreaView>
+              <SafeAreaView style={styles.Box2}>
+                <Text
+                  style={[
+                    styles.BoxTitle,
+                    { fontSize: moderateScale(17) / fontScale },
+                  ]}
+                >
+                  Email
+                </Text>
+                <SafeAreaView
+                  style={{
+                    width: "80%",
+                    height: "100%",
+
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.BoxSub,
+                      {
+                        textAlign: "right",
+                        fontSize: moderateScale(17) / fontScale,
+                      },
+                    ]}
+                    numberOfLines={1}
+                  >
+                    {selectedUser.email || "N/A"}
+                  </Text>
+                </SafeAreaView>
               </SafeAreaView>
             </SafeAreaView>
-            <SafeAreaView style={styles.Box2}>
+            <SafeAreaView
+              style={{
+                marginTop: moderateScale(22),
+                height: "50%",
+                width: "100%",
+              }}
+            >
               <Text
                 style={[
-                  styles.BoxTitle,
-                  { fontSize: moderateScale(17) / fontScale },
+                  styles.Title,
+                  { fontSize: moderateScale(14.6) / fontScale },
                 ]}
               >
-                Email
+                ACTIVITY LEVEL
               </Text>
-              <SafeAreaView
-                style={{
-                  width: "80%",
-                  height: "100%",
-
-                  justifyContent: "center",
-                }}
-              >
+              <SafeAreaView style={styles.Box}>
                 <Text
                   style={[
-                    styles.BoxSub,
-                    {
-                      textAlign: "right",
-                      fontSize: moderateScale(17) / fontScale,
-                    },
+                    styles.BoxTitle,
+                    { fontSize: moderateScale(17) / fontScale },
                   ]}
-                  numberOfLines={1}
                 >
-                  {selectedUser.email || "N/A"}
+                  Activity Level
                 </Text>
+                <TouchableOpacity
+                  onPress={activityButtonHandler}
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "row",
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.BoxSub,
+                      { fontSize: moderateScale(17) / fontScale },
+                    ]}
+                  >
+                    {tokenData.healthProfile === 1
+                      ? "Active"
+                      : tokenData.healthProfile === 2
+                      ? "Sedentary"
+                      : tokenData.healthProfile === 3
+                      ? "Homebound"
+                      : "Select a preset"}
+                  </Text>
+                  <Image
+                    style={{
+                      height: moderateScale(15),
+                      width: moderateScale(15),
+                      marginLeft: "1%",
+                      alignSelf: "center",
+                    }}
+                    source={require("../../assets/images/icons-forward-light.imageset/icons-forward-light.png")}
+                  />
+                </TouchableOpacity>
               </SafeAreaView>
             </SafeAreaView>
           </SafeAreaView>
