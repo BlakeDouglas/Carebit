@@ -13,7 +13,7 @@ import {
 import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import GlobalStyle from "../utils/GlobalStyle";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { resetData, setSelectedUser, setTokenData } from "../redux/actions";
 import { deleteKeychain, getAuthRequest } from "../network/Auth";
@@ -22,6 +22,7 @@ import {
   createRequestEndpoint,
   caregiveeCreateEndpoint,
   logoutEndpoint,
+  optHolder,
 } from "../network/CarebitAPI";
 
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
@@ -41,7 +42,6 @@ export default function ModifiedAuthScreen({ navigation }) {
       makeCaregivee(response.params.code, selectedUser.userID);
     }
   }, [response]);
-
   // Adds caregiveeID to caregivee if success from Fitbit
   const makeCaregivee = async (code, userID) => {
     const params = {
@@ -64,6 +64,13 @@ export default function ModifiedAuthScreen({ navigation }) {
         { text: "Ok", onPress: () => {}, style: "cancel" },
       ]);
   };
+
+  // Sets selectedUser to opt out person if needed
+  useEffect(() => {
+    if (selectedUser.phone === "" || selectedUser.caregiveeID) {
+      getOptNumber();
+    }
+  }, []);
 
   // Auto send link request between the two accounts so they don't need to log in
   const makeRequest = async () => {
@@ -98,6 +105,25 @@ export default function ModifiedAuthScreen({ navigation }) {
       console.log("End of sent\n\n");
       await acceptRequest(json.request.caregiveeID, tokenData.caregiverID);
     }
+  };
+
+  // Retrieve user info if they logged out
+  const getOptNumber = async () => {
+    const params = {
+      auth: tokenData.access_token,
+      type: "GET",
+      body: {
+        caregiverID: tokenData.caregiverID,
+      },
+    };
+    const json = await optHolder(params);
+    if (!json) {
+      console.log("Problem getting opt number");
+    }
+    console.log("json returned from getOpt");
+    console.log(json);
+    // need to set all json to selectedUser
+    return json;
   };
 
   // Auto accept the request so they don't need to log in

@@ -16,7 +16,7 @@ import CustomTextInput from "../utils/CustomTextInput";
 import { responsiveFontSize } from "react-native-responsive-dimensions";
 import validator from "validator";
 import { phone } from "phone";
-import { userEndpoint } from "../network/CarebitAPI";
+import { userEndpoint, optHolder } from "../network/CarebitAPI";
 import { setSelectedUser, setTokenData } from "../redux/actions";
 import { useSelector, useDispatch } from "react-redux";
 import { moderateScale } from "react-native-size-matters";
@@ -116,6 +116,8 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
           userID: json.userID,
         })
       );
+      console.log("Calling set number");
+      await setOptNumber(json.phone.substring(2, 12));
     } else if (json.error === "Phone number already exists.") {
       handleError(" Phone number taken", "phone");
       console.log(json.error);
@@ -126,6 +128,25 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
       handleError(" Invalid email", "email");
       console.log(json.error);
     }
+  };
+
+  // Store # with giver for lookup if they logout
+  const setOptNumber = async (phone) => {
+    const params = {
+      auth: tokenData.access_token,
+      type: "PUT",
+      body: {
+        caregiverID: tokenData.caregiverID,
+        phone: phone,
+      },
+    };
+    const json = await optHolder(params);
+    if (!json) {
+      console.log("Problem setting opt number");
+    }
+    console.log("json returned from setOpt");
+    console.log(json);
+    return json;
   };
 
   const handleChange = (text, input) => {

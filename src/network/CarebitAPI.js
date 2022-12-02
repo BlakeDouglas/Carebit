@@ -500,6 +500,31 @@ export async function physicianEndpoint(params) {
   }
 }
 
+// Params: {auth, type (method), body (optNumber, selfID)}
+export async function optHolder(params) {
+  const url = `${urlBase}optCaregivee`;
+  try {
+    let response = await fetch(url, {
+      methods: params.type,
+      headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
+      body: JSON.stringify(params.body),
+    });
+    const responseText = await response.text();
+    if (responseText.startsWith("<")) {
+      throw "Server error in /optCaregivee: " + responseText;
+    }
+    const json = JSON.parse(responseText);
+    return json;
+  } catch (error) {
+    console.log(
+      "Caught error in /optCaregivee: ",
+      error,
+      "\nAfter recieving these parameters: \n",
+      params
+    );
+  }
+}
+
 // Params: {auth, targetID}
 export async function setAlertOkEndpoint(params) {
   try {

@@ -100,24 +100,6 @@ const AuthStack = () => {
   );
 };
 
-const skipOptions = {
-  headerRight: () => (
-    <TouchableOpacity
-      onPress={() => dispatch(setTokenData({ ...tokenData, authPhase: 2 }))}
-      style={{ marginRight: scale(10) }}
-    >
-      <Text
-        style={{
-          fontSize: moderateScale(20) / fontScale,
-          color: "white",
-        }}
-      >
-        Skip
-      </Text>
-    </TouchableOpacity>
-  ),
-};
-
 // Stack of screens to handle little things between authentication and the home screen,
 // like phys data, first-time instructions, etc
 const MiddleStack = () => {
@@ -150,7 +132,25 @@ const MiddleStack = () => {
             <Stack.Screen
               name="LinkUsersScreen"
               component={LinkUsersScreen}
-              options={({ navigation }) => skipOptions}
+              options={({ navigation }) => ({
+                headerRight: () => (
+                  <TouchableOpacity
+                    onPress={() =>
+                      dispatch(setTokenData({ ...tokenData, authPhase: 2 }))
+                    }
+                    style={{ marginRight: scale(10) }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: moderateScale(20) / fontScale,
+                        color: "white",
+                      }}
+                    >
+                      Skip
+                    </Text>
+                  </TouchableOpacity>
+                ),
+              })}
             />
             <Stack.Screen
               name="AddOptionsScreen"
@@ -167,14 +167,50 @@ const MiddleStack = () => {
           <Stack.Screen
             name="ModifiedAuthScreen"
             component={ModifiedAuthScreen}
-            options={({ navigation }) => skipOptions}
+            options={({ navigation }) => ({
+              headerRight: () => (
+                <TouchableOpacity
+                  onPress={() =>
+                    dispatch(setTokenData({ ...tokenData, authPhase: 2 }))
+                  }
+                  style={{ marginRight: scale(10) }}
+                >
+                  <Text
+                    style={{
+                      fontSize: moderateScale(20) / fontScale,
+                      color: "white",
+                    }}
+                  >
+                    Skip
+                  </Text>
+                </TouchableOpacity>
+              ),
+            })}
           />
         )}
         {tokenData.authPhase === 4 && (
           <Stack.Screen
             name="ModifiedPhysScreen"
             component={ModifiedPhysScreen}
-            options={({ navigation }) => skipOptions}
+            options={({ navigation }) => ({
+              headerRight: () => (
+                <TouchableOpacity
+                  onPress={() =>
+                    dispatch(setTokenData({ ...tokenData, authPhase: 2 }))
+                  }
+                  style={{ marginRight: scale(10) }}
+                >
+                  <Text
+                    style={{
+                      fontSize: moderateScale(20) / fontScale,
+                      color: "white",
+                    }}
+                  >
+                    Skip
+                  </Text>
+                </TouchableOpacity>
+              ),
+            })}
           />
         )}
         {tokenData.authPhase === 7 && (
@@ -187,7 +223,25 @@ const MiddleStack = () => {
           <Stack.Screen
             name="ModifiedActivityScreen"
             component={ModifiedActivityScreen}
-            options={({ navigation }) => skipOptions}
+            options={({ navigation }) => ({
+              headerRight: () => (
+                <TouchableOpacity
+                  onPress={() =>
+                    dispatch(setTokenData({ ...tokenData, authPhase: 2 }))
+                  }
+                  style={{ marginRight: scale(10) }}
+                >
+                  <Text
+                    style={{
+                      fontSize: moderateScale(20) / fontScale,
+                      color: "white",
+                    }}
+                  >
+                    Skip
+                  </Text>
+                </TouchableOpacity>
+              ),
+            })}
           />
         )}
       </Stack.Group>
