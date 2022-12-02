@@ -64,6 +64,7 @@ export default function ModifiedActivityScreen({ navigation }) {
       // If we are just changing the value and already completed account creation
       if (tokenData.authPhase === 9) {
         navigation.goBack();
+        return;
       }
       // Send to 2 (giverhome) for opt-out, and 9 (giveehome) for normal givee account creation
       let newPhase = tokenData.type === "caregiver" ? 2 : 9;
