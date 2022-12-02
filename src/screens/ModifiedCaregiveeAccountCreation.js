@@ -141,12 +141,12 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
       },
     };
     const json = await optHolder(params);
-    if (!json) {
+    if (json) {
       console.log("Problem setting opt number");
     }
-    console.log("json returned from setOpt");
-    console.log(json);
-    return json;
+    if (!json) {
+      console.log("Set opt number correctly");
+    }
   };
 
   const handleChange = (text, input) => {

@@ -505,13 +505,16 @@ export async function optHolder(params) {
   const url = `${urlBase}optCaregivee`;
   try {
     let response = await fetch(url, {
-      methods: params.type,
+      method: params.type,
       headers: { ...headerSettings, Authorization: "Bearer " + params.auth },
       body: JSON.stringify(params.body),
     });
     const responseText = await response.text();
     if (responseText.startsWith("<")) {
       throw "Server error in /optCaregivee: " + responseText;
+    }
+    if (responseText === "") {
+      return responseText;
     }
     const json = JSON.parse(responseText);
     return json;
