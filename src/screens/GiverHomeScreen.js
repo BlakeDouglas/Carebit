@@ -394,8 +394,6 @@ export default function GiverHomeScreen({ navigation }) {
   // Auto refreshes every x milliseconds as long as the screen is focused
   useEffect(() => {
     const toggle = setInterval(() => {
-      console.log("here");
-      console.log(StepsSyncTime);
       isFocused
         ? getCaregiveeInfo() && fetchData() && getAlertCounter()
         : clearInterval(toggle);
