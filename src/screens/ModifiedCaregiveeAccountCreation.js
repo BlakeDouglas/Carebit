@@ -104,7 +104,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
     const json = await userEndpoint(body);
     if (json.access_token) {
       console.log("Calling set number");
-      await setOptNumber(json.phone.substring(2, 12));
+      await setOptNumber(json.phone);
       dispatch(
         setTokenData({
           ...tokenData,
@@ -132,6 +132,7 @@ export default function ModifiedCaregiveeAccountCreation({ navigation }) {
 
   // Store # with giver for lookup if they logout
   const setOptNumber = async (phone) => {
+    console.log("Sending phone " + phone);
     const params = {
       auth: tokenData.access_token,
       type: "PUT",

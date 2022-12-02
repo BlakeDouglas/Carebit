@@ -121,11 +121,20 @@ export default function ModifiedAuthScreen({ navigation }) {
       console.log("Problem getting opt number");
     }
     console.log("json returned from getOpt");
-    console.log(json);
-    // need to set all json to selectedUser
+    dispatch(
+      setSelectedUser({
+        ...selectedUser,
+        caregiverID: tokenData.caregiverID,
+        userID: json.caregivee.userID,
+        firstName: json.caregivee.firstName,
+        lastName: json.caregivee.lastName,
+        email: json.caregivee.email,
+        phone: json.caregivee.phone,
+      })
+    );
     return json;
   };
-
+  console.log(selectedUser);
   // Auto accept the request so they don't need to log in
   const acceptRequest = async (caregiveeID, caregiverID) => {
     const params = {

@@ -217,7 +217,7 @@ export default function ActivityLevelScreen({ navigation, route }) {
                         { fontSize: moderateScale(17) / fontScale },
                       ]}
                     >
-                      Unable able to leave home
+                      Unable to leave home
                     </Text>
                   </SafeAreaView>
 
