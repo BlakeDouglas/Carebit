@@ -97,7 +97,7 @@ export default function AddScreen({ navigation }) {
               if (tokenData.authPhase === 1) {
                 dispatch(setTokenData({ ...tokenData, authPhase: 2 }));
               } else {
-                navigation.goBack();
+                navigation.navigate("HomeScreen");
               }
             },
           },
