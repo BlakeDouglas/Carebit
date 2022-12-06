@@ -142,7 +142,7 @@ export default function CustomNotificationScreen({ navigation }) {
   let doesSelectedUserExist = selectedUser.email !== "";
   // Used for fixing accessibility zoom
   const { fontScale } = useWindowDimensions();
-  console.log(thresholds);
+  //console.log(thresholds);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar
@@ -631,7 +631,14 @@ export default function CustomNotificationScreen({ navigation }) {
                   trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                   thumbColor={isSync ? "white" : "white"}
                   style={styles.switchBody}
-                  onValueChange={toggleSync}
+                  onValueChange={() => {
+                    // Sends boolean for sync alerts on or off
+                    toggleSync();
+                    thresholdsAPI("PUT", {
+                      ...thresholds,
+                      sendNoSync: isSync ? 0 : 1,
+                    });
+                  }}
                   value={isSync}
                 />
               </SafeAreaView>
@@ -664,7 +671,14 @@ export default function CustomNotificationScreen({ navigation }) {
                   trackColor={{ false: "lightgray", true: "mediumaquamarine" }}
                   thumbColor={isBattery ? "white" : "white"}
                   style={styles.switchBody}
-                  onValueChange={toggleBattery}
+                  onValueChange={() => {
+                    // Sends boolean for sync alerts on or off
+                    toggleBattery();
+                    thresholdsAPI("PUT", {
+                      ...thresholds,
+                      sendNoBattery: isBattery ? 0 : 1,
+                    });
+                  }}
                   value={isBattery}
                 />
               </SafeAreaView>
